@@ -4,13 +4,15 @@ import pump from "@/assets/cat-pump.jpg";
 import heater from "@/assets/cat-heater.jpg";
 import light from "@/assets/cat-light.jpg";
 import cleaner from "@/assets/cat-cleaner.jpg";
+import { useCart } from "./cart-context";
 
 const products = [
-  { name: "Variable-Speed IntelliFlo Pump", brand: "Pentair", price: 1289, rating: 4.9, img: pump },
-  { name: "Digital Pool Heater Pro 400K", brand: "Raypak", price: 2499, rating: 4.8, img: heater },
-  { name: "ColorLogic LED Pool Light", brand: "Hayward", price: 349, rating: 4.9, img: light },
-  { name: "Robotic Pool Cleaner CX-3", brand: "Jandy", price: 899, rating: 4.7, img: cleaner },
+  { id: "p-intelliflo", name: "Variable-Speed IntelliFlo Pump", brand: "Pentair", price: 1289, rating: 4.9, img: pump },
+  { id: "p-raypak-400k", name: "Digital Pool Heater Pro 400K", brand: "Raypak", price: 2499, rating: 4.8, img: heater },
+  { id: "p-colorlogic", name: "ColorLogic LED Pool Light", brand: "Hayward", price: 349, rating: 4.9, img: light },
+  { id: "p-cx3", name: "Robotic Pool Cleaner CX-3", brand: "Jandy", price: 899, rating: 4.7, img: cleaner },
 ];
+
 
 export function BestSellers() {
   return (
