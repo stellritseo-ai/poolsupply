@@ -1,29 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Header } from "@/components/site/Header";
+import { Hero } from "@/components/site/Hero";
+import { Categories } from "@/components/site/Categories";
+import { Brands } from "@/components/site/Brands";
+import { BestSellers } from "@/components/site/BestSellers";
+import { WhyUs } from "@/components/site/WhyUs";
+import { Finder } from "@/components/site/Finder";
+import { Testimonials } from "@/components/site/Testimonials";
+import { CTA } from "@/components/site/CTA";
+import { Footer } from "@/components/site/Footer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "AquaPro — Premium Pool Equipment at Wholesale Prices" },
+      { name: "description", content: "Wholesale pool pumps, heaters, filters, cleaners, lights and automation from Pentair, Hayward, Jandy, Raypak and more. Trusted by 5,000+ pool professionals." },
+      { property: "og:title", content: "AquaPro — Premium Pool Equipment Wholesale" },
+      { property: "og:description", content: "Wholesale pool equipment from the industry's leading brands. Fast shipping, expert support, professional pricing." },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <Header />
+      <main>
+        <Hero />
+        <Categories />
+        <Brands />
+        <BestSellers />
+        <WhyUs />
+        <Finder />
+        <Testimonials />
+        <CTA />
+      </main>
+      <Footer />
     </div>
   );
 }
