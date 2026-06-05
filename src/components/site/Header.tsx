@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Search, User, ShoppingBag, Menu, X, Waves } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "@tanstack/react-router";
+import { useCart } from "./cart-context";
+
 
 const NAV = [
   { label: "Shop", href: "#categories" },
@@ -16,6 +19,8 @@ const NAV = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const cart = useCart();
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -34,7 +39,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 flex items-center justify-between gap-6">
-        <a href="#" className="flex items-center gap-2 group">
+        <Link to="/" className="flex items-center gap-2 group">
           <span className="grid place-items-center size-10 rounded-xl bg-gradient-ocean text-white shadow-[var(--shadow-soft)] group-hover:scale-105 transition">
             <Waves className="size-5" />
           </span>
@@ -42,7 +47,8 @@ export function Header() {
             <span className="font-extrabold tracking-tight text-foreground text-lg">AquaPro</span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Wholesale</span>
           </span>
-        </a>
+        </Link>
+
 
         <nav className="hidden lg:flex items-center gap-7 text-sm font-medium">
           {NAV.map((n) => (
@@ -59,10 +65,15 @@ export function Header() {
           <button aria-label="Account" className="size-10 grid place-items-center rounded-full hover:bg-muted transition">
             <User className="size-[18px]" />
           </button>
-          <button aria-label="Cart" className="relative size-10 grid place-items-center rounded-full hover:bg-muted transition">
+          <button aria-label="Cart" onClick={cart.open} className="relative size-10 grid place-items-center rounded-full hover:bg-muted transition">
             <ShoppingBag className="size-[18px]" />
-            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-gradient-ocean" />
+            {cart.count > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-ocean text-white text-[10px] font-bold grid place-items-center">
+                {cart.count}
+              </span>
+            )}
           </button>
+
           <button aria-label="Menu" onClick={() => setOpen(!open)} className="lg:hidden size-10 grid place-items-center rounded-full hover:bg-muted transition">
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>

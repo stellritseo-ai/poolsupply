@@ -4,16 +4,20 @@ import pump from "@/assets/cat-pump.jpg";
 import heater from "@/assets/cat-heater.jpg";
 import light from "@/assets/cat-light.jpg";
 import cleaner from "@/assets/cat-cleaner.jpg";
+import { useCart } from "./cart-context";
 
 const products = [
-  { name: "Variable-Speed IntelliFlo Pump", brand: "Pentair", price: 1289, rating: 4.9, img: pump },
-  { name: "Digital Pool Heater Pro 400K", brand: "Raypak", price: 2499, rating: 4.8, img: heater },
-  { name: "ColorLogic LED Pool Light", brand: "Hayward", price: 349, rating: 4.9, img: light },
-  { name: "Robotic Pool Cleaner CX-3", brand: "Jandy", price: 899, rating: 4.7, img: cleaner },
+  { id: "p-intelliflo", name: "Variable-Speed IntelliFlo Pump", brand: "Pentair", price: 1289, rating: 4.9, img: pump },
+  { id: "p-raypak-400k", name: "Digital Pool Heater Pro 400K", brand: "Raypak", price: 2499, rating: 4.8, img: heater },
+  { id: "p-colorlogic", name: "ColorLogic LED Pool Light", brand: "Hayward", price: 349, rating: 4.9, img: light },
+  { id: "p-cx3", name: "Robotic Pool Cleaner CX-3", brand: "Jandy", price: 899, rating: 4.7, img: cleaner },
 ];
 
+
 export function BestSellers() {
+  const { add } = useCart();
   return (
+
     <section className="py-24 lg:py-32 bg-surface">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
@@ -26,7 +30,8 @@ export function BestSellers() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {products.map((p, i) => (
             <motion.article
-              key={p.name}
+              key={p.id}
+
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -49,8 +54,12 @@ export function BestSellers() {
               <h3 className="mt-1.5 font-semibold text-foreground leading-snug min-h-[3rem]">{p.name}</h3>
               <div className="mt-4 flex items-center justify-between">
                 <div className="text-2xl font-extrabold tracking-tight">${p.price.toLocaleString()}</div>
-                <button className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-foreground text-background text-xs font-semibold hover:bg-[oklch(0.50_0.14_232)] transition">
+                <button
+                  onClick={() => add({ id: p.id, name: p.name, brand: p.brand, price: p.price, img: p.img })}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-foreground text-background text-xs font-semibold hover:bg-[oklch(0.50_0.14_232)] transition"
+                >
                   <ShoppingBag className="size-3.5" /> Add
+
                 </button>
               </div>
             </motion.article>
