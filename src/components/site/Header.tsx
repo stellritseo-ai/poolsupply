@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Search, User, ShoppingBag, Menu, X, Waves } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "@tanstack/react-router";
+import { useCart } from "./cart-context";
+
 
 const NAV = [
   { label: "Shop", href: "#categories" },
