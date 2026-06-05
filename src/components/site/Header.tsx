@@ -19,6 +19,8 @@ const NAV = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const cart = useCart();
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
