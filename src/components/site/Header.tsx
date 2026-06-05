@@ -65,10 +65,15 @@ export function Header() {
           <button aria-label="Account" className="size-10 grid place-items-center rounded-full hover:bg-muted transition">
             <User className="size-[18px]" />
           </button>
-          <button aria-label="Cart" className="relative size-10 grid place-items-center rounded-full hover:bg-muted transition">
+          <button aria-label="Cart" onClick={cart.open} className="relative size-10 grid place-items-center rounded-full hover:bg-muted transition">
             <ShoppingBag className="size-[18px]" />
-            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-gradient-ocean" />
+            {cart.count > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-ocean text-white text-[10px] font-bold grid place-items-center">
+                {cart.count}
+              </span>
+            )}
           </button>
+
           <button aria-label="Menu" onClick={() => setOpen(!open)} className="lg:hidden size-10 grid place-items-center rounded-full hover:bg-muted transition">
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
