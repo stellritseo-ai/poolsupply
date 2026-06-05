@@ -39,7 +39,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 flex items-center justify-between gap-6">
-        <a href="#" className="flex items-center gap-2 group">
+        <Link to="/" className="flex items-center gap-2 group">
           <span className="grid place-items-center size-10 rounded-xl bg-gradient-ocean text-white shadow-[var(--shadow-soft)] group-hover:scale-105 transition">
             <Waves className="size-5" />
           </span>
@@ -47,7 +47,8 @@ export function Header() {
             <span className="font-extrabold tracking-tight text-foreground text-lg">AquaPro</span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Wholesale</span>
           </span>
-        </a>
+        </Link>
+
 
         <nav className="hidden lg:flex items-center gap-7 text-sm font-medium">
           {NAV.map((n) => (
