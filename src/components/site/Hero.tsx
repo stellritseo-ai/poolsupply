@@ -50,7 +50,7 @@ export function Hero() {
             <span className="size-1.5 rounded-full bg-[oklch(0.82_0.10_215)]" /> Trusted by 5,000+ pool professionals
           </span>
 
-          <h1 className="mt-6 text-white font-extrabold tracking-tight text-[40px] md:text-[55px] leading-[1.05]">
+          <h1 className="mt-6 text-white font-extrabold tracking-tight text-[30px] sm:text-[45px] lg:text-[55px] leading-tight lg:leading-[1.05]">
             Premium Pool Equipment.
             <span className="block mt-2 bg-gradient-to-r from-white via-[oklch(0.92_0.06_215)] to-[oklch(0.82_0.10_215)] bg-clip-text text-transparent">
               Wholesale Pricing.

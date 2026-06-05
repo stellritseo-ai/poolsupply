@@ -29,7 +29,7 @@ export function Finder() {
               <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">
                 <Calculator className="size-4" /> Product Finder
               </span>
-              <h2 className="mt-3 text-3xl md:text-[40px] leading-tight md:leading-[45px] font-extrabold tracking-tight">
+              <h2 className="mt-3 text-[25px] md:text-[40px] leading-tight md:leading-[45px] font-extrabold tracking-tight">
                 Find the right equipment for your pool.
               </h2>
               <p className="mt-4 text-muted-foreground leading-relaxed">

@@ -14,7 +14,7 @@ export function CTA() {
         <div className="absolute -top-20 -left-20 size-80 rounded-full border border-white/20 animate-ripple" />
         <div className="absolute -bottom-32 -right-20 size-96 rounded-full border border-white/10 animate-ripple [animation-delay:1.5s]" />
         <div className="relative max-w-4xl">
-          <h2 className="text-3xl md:text-[45px] font-extrabold tracking-tight leading-[1]">
+          <h2 className="text-[26px] md:text-[45px] text-center md:text-left font-extrabold tracking-tight leading-[36px] md:leading-[1]">
             Ready to upgrade your pool equipment?
           </h2>
           <p className="mt-5 text-lg text-white/85 max-w-xl">
