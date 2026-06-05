@@ -59,19 +59,31 @@ export function CartDrawer() {
                   {items.map((it) => (
                     <li key={it.id} className="flex gap-3 p-3 rounded-2xl border border-border">
                       <div className="size-20 shrink-0 rounded-xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] grid place-items-center overflow-hidden">
-                        <img src={it.img} alt={it.name} className="size-full object-contain p-2" />
+                        <img src={it.img} alt={it.name} className="size-full object-contain p-2 mix-blend-multiply" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{it.brand}</div>
                         <div className="font-semibold text-sm leading-snug line-clamp-2">{it.name}</div>
                         <div className="mt-2 flex items-center justify-between">
-                          <div className="flex items-center border border-border rounded-full">
-                            <button aria-label="Decrease" onClick={() => setQty(it.id, it.qty - 1)} className="size-7 grid place-items-center hover:bg-muted rounded-l-full">
-                              <Minus className="size-3.5" />
+                          <div className="flex items-center bg-muted/60 rounded-full p-0.5 border border-border/30 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+                            <button
+                              type="button"
+                              aria-label="Decrease quantity"
+                              onClick={() => setQty(it.id, it.qty - 1)}
+                              className="size-7 grid place-items-center hover:bg-white hover:shadow-sm rounded-full text-foreground/80 hover:text-foreground transition-all active:scale-90"
+                            >
+                              <Minus className="size-3" />
                             </button>
-                            <span className="w-8 text-center text-sm font-semibold">{it.qty}</span>
-                            <button aria-label="Increase" onClick={() => setQty(it.id, it.qty + 1)} className="size-7 grid place-items-center hover:bg-muted rounded-r-full">
-                              <Plus className="size-3.5" />
+                            <span className="w-8 text-center text-sm font-bold text-foreground tabular-nums select-none">
+                              {it.qty}
+                            </span>
+                            <button
+                              type="button"
+                              aria-label="Increase quantity"
+                              onClick={() => setQty(it.id, it.qty + 1)}
+                              className="size-7 grid place-items-center hover:bg-white hover:shadow-sm rounded-full text-foreground/80 hover:text-foreground transition-all active:scale-90"
+                            >
+                              <Plus className="size-3" />
                             </button>
                           </div>
                           <div className="font-bold tracking-tight">{formatUSD(it.price * it.qty)}</div>

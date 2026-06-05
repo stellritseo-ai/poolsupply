@@ -9,13 +9,14 @@ import { Finder } from "@/components/site/Finder";
 import { Testimonials } from "@/components/site/Testimonials";
 import { CTA } from "@/components/site/CTA";
 import { Footer } from "@/components/site/Footer";
+import { ContactUs } from "@/components/site/ContactUs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AquaPro — Premium Pool Equipment at Wholesale Prices" },
+      { title: "Pool Supply Wholesalers — Premium Pool Equipment at Wholesale Prices" },
       { name: "description", content: "Wholesale pool pumps, heaters, filters, cleaners, lights and automation from Pentair, Hayward, Jandy, Raypak and more. Trusted by 5,000+ pool professionals." },
-      { property: "og:title", content: "AquaPro — Premium Pool Equipment Wholesale" },
+      { property: "og:title", content: "Pool Supply Wholesalers — Premium Pool Equipment Wholesale" },
       { property: "og:description", content: "Wholesale pool equipment from the industry's leading brands. Fast shipping, expert support, professional pricing." },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -35,6 +36,7 @@ function Index() {
         <WhyUs />
         <Finder />
         <Testimonials />
+        <ContactUs />
         <CTA />
       </main>
       <Footer />

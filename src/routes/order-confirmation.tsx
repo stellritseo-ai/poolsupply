@@ -17,6 +17,8 @@ type Order = {
   shipping: number;
   tax: number;
   total: number;
+  discount?: number;
+  promoCode?: string | null;
   method: "standard" | "express";
 };
 
@@ -24,8 +26,8 @@ export const Route = createFileRoute("/order-confirmation")({
   validateSearch: (s: Record<string, unknown>) => ({ id: typeof s.id === "string" ? s.id : undefined }),
   head: () => ({
     meta: [
-      { title: "Order Confirmed — AquaPro" },
-      { name: "description", content: "Your AquaPro order has been confirmed." },
+      { title: "Order Confirmed — Pool Supply Wholesalers" },
+      { name: "description", content: "Your Pool Supply Wholesalers order has been confirmed." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -51,7 +53,7 @@ function ConfirmationPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header alwaysDark />
       <main className="pt-28 pb-20">
         <div className="mx-auto max-w-3xl px-6">
           <motion.div
@@ -120,6 +122,9 @@ function ConfirmationPage() {
                       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Summary</h3>
                       <div className="space-y-1.5 text-sm">
                         <Row label="Subtotal" value={formatUSD(order.subtotal)} />
+                        {order.discount !== undefined && order.discount > 0 && (
+                          <Row label={`Discount (${order.promoCode || "Applied"})`} value={`-${formatUSD(order.discount)}`} className="text-green-600 font-medium" />
+                        )}
                         <Row label="Shipping" value={order.shipping === 0 ? "Free" : formatUSD(order.shipping)} muted />
                         <Row label="Tax" value={formatUSD(order.tax)} muted />
                         <div className="h-px bg-border my-1" />
@@ -156,9 +161,9 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Row({ label, value, muted, bold }: { label: string; value: string; muted?: boolean; bold?: boolean }) {
+function Row({ label, value, muted, bold, className }: { label: string; value: string; muted?: boolean; bold?: boolean; className?: string }) {
   return (
-    <div className={`flex items-center justify-between ${muted ? "text-muted-foreground" : ""} ${bold ? "text-base font-bold text-foreground" : ""}`}>
+    <div className={`flex items-center justify-between ${muted ? "text-muted-foreground" : ""} ${bold ? "text-base font-bold text-foreground" : ""} ${className || ""}`}>
       <span>{label}</span>
       <span className={bold ? "tracking-tight" : ""}>{value}</span>
     </div>

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Truck, Award, Tag, Headphones } from "lucide-react";
-import heroImg from "@/assets/hero-pool.jpg";
+import heroVideo from "@/assets/video/herovideo.mp4";
 
 const features = [
   { icon: Truck, label: "Fast Shipping" },
@@ -18,16 +18,19 @@ const stats = [
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-end pt-28 pb-16 overflow-hidden">
+    <section className="relative min-h-screen flex items-end pt-28 pb-16 overflow-hidden isolate">
       {/* Background */}
       <div className="absolute inset-0 -z-10">
-        <img
-          src={heroImg}
-          alt="Luxury swimming pool with crystal clear water"
-          width={1920}
-          height={1080}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-full h-full object-cover scale-105 animate-float"
-        />
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.50_0.14_232/0.55)] via-[oklch(0.50_0.14_232/0.25)] to-background" />
         <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.18_0.02_256/0.45)] to-transparent" />
       </div>
@@ -41,29 +44,29 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-3xl"
+          className="max-w-5xl"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-white text-xs font-medium tracking-wide uppercase">
+          <span className="mt-[100px] md:mt-[150px] inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-white text-xs font-medium tracking-wide uppercase">
             <span className="size-1.5 rounded-full bg-[oklch(0.82_0.10_215)]" /> Trusted by 5,000+ pool professionals
           </span>
 
-          <h1 className="mt-6 text-white font-extrabold tracking-tight text-5xl sm:text-6xl lg:text-7xl leading-[0.95]">
+          <h1 className="mt-6 text-white font-extrabold tracking-tight text-[40px] md:text-[55px] leading-[1.05]">
             Premium Pool Equipment.
             <span className="block mt-2 bg-gradient-to-r from-white via-[oklch(0.92_0.06_215)] to-[oklch(0.82_0.10_215)] bg-clip-text text-transparent">
               Wholesale Pricing.
             </span>
           </h1>
 
-          <p className="mt-6 text-lg sm:text-xl text-white/85 max-w-2xl leading-relaxed">
-            Trusted supplier of pumps, heaters, filters, cleaners, automation systems and pool accessories from the industry's leading brands — built for professionals and homeowners alike.
+          <p className="mt-6 text-lg sm:text-xl text-white/85 leading-relaxed">
+            Trusted supplier of pumps, heaters, filters, cleaners, automation systems and pool accessories <br className="hidden sm:block" /> from the industry's leading brands — built for professionals and homeowners alike.
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
-            <a href="#categories" className="group inline-flex items-center gap-2 px-7 py-4 rounded-full bg-white text-[oklch(0.50_0.14_232)] font-semibold shadow-[var(--shadow-float)] hover:shadow-[0_40px_80px_-30px_oklch(0.50_0.14_232/0.55)] transition-all hover:-translate-y-0.5">
+            <a href="#categories" className="group inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full bg-white text-[oklch(0.50_0.14_232)] font-semibold shadow-[var(--shadow-float)] hover:shadow-[0_40px_80px_-30px_oklch(0.50_0.14_232/0.55)] transition-all hover:-translate-y-0.5">
               Shop Equipment
               <ArrowRight className="size-4 group-hover:translate-x-1 transition" />
             </a>
-            <a href="#brands" className="inline-flex items-center gap-2 px-7 py-4 rounded-full glass text-white font-semibold hover:bg-white/20 transition">
+            <a href="#brands" className="inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full glass text-white font-semibold hover:bg-white/20 transition">
               View Brands
             </a>
           </div>
@@ -88,7 +91,7 @@ export function Hero() {
           className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
         >
           {stats.map((s) => (
-            <div key={s.label} className="glass rounded-2xl p-5 text-white">
+            <div key={s.label} className="rounded-2xl p-5 text-white bg-black/40 backdrop-blur-md border border-white/10 shadow-[var(--shadow-float)]">
               <div className="text-3xl lg:text-4xl font-extrabold tracking-tight">{s.value}</div>
               <div className="text-xs uppercase tracking-widest text-white/75 mt-1">{s.label}</div>
             </div>

@@ -80,10 +80,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AquaPro — Premium Pool Equipment at Wholesale Prices" },
+      { title: "Pool Supply Wholesalers — Premium Pool Equipment at Wholesale Prices" },
       { name: "description", content: "Trusted wholesale supplier of premium pool pumps, heaters, filters, cleaners, lights and automation from Pentair, Hayward, Jandy and more." },
-      { name: "author", content: "AquaPro" },
-      { property: "og:title", content: "AquaPro — Premium Pool Equipment Wholesale" },
+      { name: "author", content: "Pool Supply Wholesalers" },
+      { property: "og:title", content: "Pool Supply Wholesalers — Premium Pool Equipment Wholesale" },
       { property: "og:description", content: "Pool pumps, heaters, filters, cleaners and automation systems from the industry's leading brands at wholesale pricing." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

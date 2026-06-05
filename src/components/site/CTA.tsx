@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export function CTA() {
   return (
-    <section id="cta" className="px-6 py-20">
+    <section id="cta" className="px-6 py-[60px]">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -13,8 +13,8 @@ export function CTA() {
       >
         <div className="absolute -top-20 -left-20 size-80 rounded-full border border-white/20 animate-ripple" />
         <div className="absolute -bottom-32 -right-20 size-96 rounded-full border border-white/10 animate-ripple [animation-delay:1.5s]" />
-        <div className="relative max-w-2xl">
-          <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-[1]">
+        <div className="relative max-w-4xl">
+          <h2 className="text-3xl md:text-[45px] font-extrabold tracking-tight leading-[1]">
             Ready to upgrade your pool equipment?
           </h2>
           <p className="mt-5 text-lg text-white/85 max-w-xl">

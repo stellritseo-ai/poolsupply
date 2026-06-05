@@ -10,11 +10,11 @@ const items = [
 
 export function WhyUs() {
   return (
-    <section id="why" className="py-24 lg:py-32">
+    <section id="why" className="py-[60px]">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="max-w-2xl mb-14">
-          <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Why AquaPro</span>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold tracking-tight">
+        <div className="max-w-4xl mb-14">
+          <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Why Us</span>
+          <h2 className="mt-3 text-3xl md:text-[35px] font-extrabold tracking-tight">
             A wholesale supplier you can build a business on.
           </h2>
         </div>

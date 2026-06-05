@@ -14,7 +14,7 @@ export function Finder() {
   }, [gallons, climate]);
 
   return (
-    <section className="py-24 lg:py-32 bg-surface">
+    <section id="finder" className="py-[60px] bg-surface">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -29,7 +29,7 @@ export function Finder() {
               <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">
                 <Calculator className="size-4" /> Product Finder
               </span>
-              <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold tracking-tight">
+              <h2 className="mt-3 text-3xl md:text-[40px] leading-tight md:leading-[45px] font-extrabold tracking-tight">
                 Find the right equipment for your pool.
               </h2>
               <p className="mt-4 text-muted-foreground leading-relaxed">
@@ -55,10 +55,10 @@ export function Finder() {
                       <button
                         key={c}
                         onClick={() => setClimate(c)}
-                        className={`py-3 rounded-xl text-sm font-semibold capitalize transition ${
+                        className={`py-3 rounded-xl text-sm font-semibold capitalize transition-all duration-200 active:scale-[0.97] ${
                           climate === c
-                            ? "bg-gradient-ocean text-white shadow-[var(--shadow-soft)]"
-                            : "bg-muted text-foreground/70 hover:text-foreground"
+                            ? "bg-gradient-ocean text-white shadow-[var(--shadow-soft)] animate-shimmer"
+                            : "bg-muted hover:bg-muted/85 text-foreground/70 hover:text-foreground"
                         }`}
                       >
                         {c}
