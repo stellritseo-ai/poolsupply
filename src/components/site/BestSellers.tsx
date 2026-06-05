@@ -54,8 +54,12 @@ export function BestSellers() {
               <h3 className="mt-1.5 font-semibold text-foreground leading-snug min-h-[3rem]">{p.name}</h3>
               <div className="mt-4 flex items-center justify-between">
                 <div className="text-2xl font-extrabold tracking-tight">${p.price.toLocaleString()}</div>
-                <button className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-foreground text-background text-xs font-semibold hover:bg-[oklch(0.50_0.14_232)] transition">
+                <button
+                  onClick={() => add({ id: p.id, name: p.name, brand: p.brand, price: p.price, img: p.img })}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-foreground text-background text-xs font-semibold hover:bg-[oklch(0.50_0.14_232)] transition"
+                >
                   <ShoppingBag className="size-3.5" /> Add
+
                 </button>
               </div>
             </motion.article>
