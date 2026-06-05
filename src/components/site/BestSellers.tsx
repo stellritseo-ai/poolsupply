@@ -15,7 +15,9 @@ const products = [
 
 
 export function BestSellers() {
+  const { add } = useCart();
   return (
+
     <section className="py-24 lg:py-32 bg-surface">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
