@@ -4,6 +4,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
 import { getProductById, getRelatedProducts, Review, Product } from "@/lib/products";
+import { addReviewDb } from "@/lib/api/products.functions";
 import { 
   Star, 
   ShoppingBag, 
@@ -100,7 +101,7 @@ function ProductDetailPage() {
     ? +(reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
     : product.rating;
 
-  const handleAddReview = (e: React.FormEvent) => {
+  const handleAddReview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAuthor.trim() || !newTitle.trim() || !newContent.trim()) return;
 
@@ -147,6 +148,12 @@ function ProductDetailPage() {
     setWriteOpen(false);
     setSuccessMsg("Review submitted successfully! Thank you for your feedback.");
     setTimeout(() => setSuccessMsg(""), 4000);
+
+    try {
+      await addReviewDb({ data: { productId: product.id, review } });
+    } catch (err) {
+      console.error("Failed to sync new review to DB:", err);
+    }
   };
 
   const scrollToReviews = () => {

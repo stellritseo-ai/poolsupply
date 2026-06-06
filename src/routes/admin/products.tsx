@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { uploadImage } from "@/lib/api/upload.functions";
+import { saveProductDb, deleteProductDb } from "@/lib/api/products.functions";
 
 export const Route = createFileRoute("/admin/products")({
   component: ProductsManager,
@@ -119,7 +120,7 @@ function ProductsManager() {
     setFormOpen(true);
   };
 
-  const saveProduct = (e: React.FormEvent) => {
+  const saveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !brand.trim() || !sku.trim() || !description.trim()) {
       triggerToast("Please fill in all required fields.");
@@ -128,30 +129,37 @@ function ProductsManager() {
 
     if (editingProduct) {
       // Edit mode
+      const updatedProduct: Product = {
+        ...editingProduct,
+        name,
+        brand,
+        category,
+        price: Number(price),
+        msrp: Number(msrp),
+        sku,
+        stock: Number(stock),
+        description,
+        img
+      };
+
       const updated = productsList.map(p => {
         if (p.id === editingProduct.id) {
-          return {
-            ...p,
-            name,
-            brand,
-            category,
-            price: Number(price),
-            msrp: Number(msrp),
-            sku,
-            stock: Number(stock),
-            description,
-            img
-          };
+          return updatedProduct;
         }
         return p;
       });
       setProductsList(updated);
       localStorage.setItem("aquapro_db_products", JSON.stringify(updated));
       triggerToast(`Product '${name}' updated successfully.`);
+
+      try {
+        await saveProductDb({ data: { product: updatedProduct } });
+      } catch (err) {
+        console.error("Failed to sync updated product to DB:", err);
+      }
     } else {
       // Add mode
       const newId = `p-${brand.toLowerCase().replace(/\s+/g, "-")}-${Date.now()}`;
-      // Import a generic fallback image from existing list or set standard placeholder
       const fallbackImg = productsList[0]?.img || ""; 
       const finalImg = img.trim() !== "" ? img : fallbackImg;
       
@@ -178,6 +186,12 @@ function ProductsManager() {
       setProductsList(updated);
       localStorage.setItem("aquapro_db_products", JSON.stringify(updated));
       triggerToast(`Product '${name}' added to catalog.`);
+
+      try {
+        await saveProductDb({ data: { product: newProduct } });
+      } catch (err) {
+        console.error("Failed to sync new product to DB:", err);
+      }
     }
 
     setFormOpen(false);
@@ -187,7 +201,6 @@ function ProductsManager() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Optional: Check file size (e.g., limit to 5MB)
     if (file.size > 5 * 1024 * 1024) {
       triggerToast("Image must be smaller than 5MB");
       return;
@@ -221,7 +234,7 @@ function ProductsManager() {
     }
   };
 
-  const deleteProduct = () => {
+  const deleteProduct = async () => {
     if (!deleteId) return;
     const item = productsList.find(p => p.id === deleteId);
     const updated = productsList.filter(p => p.id !== deleteId);
@@ -229,6 +242,12 @@ function ProductsManager() {
     localStorage.setItem("aquapro_db_products", JSON.stringify(updated));
     triggerToast(`Product '${item?.name}' removed from catalog.`);
     setDeleteId(null);
+
+    try {
+      await deleteProductDb({ data: { id: deleteId } });
+    } catch (err) {
+      console.error("Failed to delete product from DB:", err);
+    }
   };
 
   return (

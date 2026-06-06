@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/components/site/cart-context";
 import { CartDrawer } from "@/components/site/CartDrawer";
 import { getGlobalSettings } from "@/lib/api/settings.functions";
+import { getProductsDb } from "@/lib/api/products.functions";
 import { Toaster } from "@/components/ui/sonner";
 
 
@@ -149,6 +150,20 @@ function RootComponent() {
     
     checkMaintenance();
   }, [router.state.location.pathname]);
+
+  useEffect(() => {
+    async function syncProducts() {
+      try {
+        const res = await getProductsDb();
+        if (res.success && res.products) {
+          localStorage.setItem("aquapro_db_products", JSON.stringify(res.products));
+        }
+      } catch (e) {
+        console.error("Failed to sync products from database:", e);
+      }
+    }
+    syncProducts();
+  }, []);
 
   if (isChecking && !router.state.location.pathname.startsWith("/admin")) {
     return (

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Search, User, ShoppingBag, Menu, X, Waves } from "lucide-react";
+import { Search, User, ShoppingBag, Menu, X, Waves, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { useCart } from "./cart-context";
 import logo from "@/assets/logo.png";
+import { searchProductsDb } from "@/lib/api/products.functions";
+import { Product } from "@/lib/products";
 
 
 const NAV = [
@@ -41,12 +43,51 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
   const cart = useCart();
   const isDarkText = alwaysDark || scrolled || open || searchOpen || userMenuOpen;
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    const timer = setTimeout(async () => {
+      try {
+        const res = await searchProductsDb({ data: { query: searchQuery } });
+        if (res.success && res.products) {
+          setSearchResults(res.products);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (err) {
+        console.error("Search API error:", err);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (!searchOpen) {
+      setSearchQuery("");
+      setSearchResults([]);
+      setIsSearching(false);
+    }
+  }, [searchOpen]);
 
   return (
     <>
@@ -174,14 +215,76 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             exit={{ opacity: 0, height: 0 }}
             className="absolute top-full left-0 w-full glass border-t border-border/50 overflow-hidden shadow-[var(--shadow-float)]"
           >
-            <div className="mx-auto max-w-7xl px-6 py-4 flex items-center gap-4">
-              <Search className="size-5 text-muted-foreground" />
-              <input
-                autoFocus
-                type="text"
-                placeholder="Search for pool pumps, heaters, brands..."
-                className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/60 text-base"
-              />
+            <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col gap-4">
+              <div className="flex items-center gap-4">
+                <Search className="size-5 text-muted-foreground" />
+                <input
+                  autoFocus
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for pool pumps, heaters, brands..."
+                  className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/60 text-base"
+                />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery("")} 
+                    className="text-xs font-semibold text-muted-foreground hover:text-foreground transition cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Dynamic search results list */}
+              {(isSearching || searchResults.length > 0 || searchQuery.trim() !== "") && (
+                <div className="border-t border-border/40 pt-4 max-h-[350px] overflow-y-auto space-y-2 pb-2 scrollbar-thin">
+                  {isSearching ? (
+                    <div className="flex items-center justify-center py-8 gap-2.5 text-muted-foreground text-sm font-semibold">
+                      <Loader2 className="size-4 animate-spin text-[oklch(0.50_0.14_232)]" />
+                      Searching inventory...
+                    </div>
+                  ) : searchResults.length > 0 ? (
+                    <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-1">
+                      {searchResults.map((product) => (
+                        <Link
+                          key={product.id}
+                          to="/products/$productId"
+                          params={{ productId: product.id }}
+                          onClick={() => {
+                            setSearchOpen(false);
+                            setSearchQuery("");
+                          }}
+                          className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/40 border border-transparent hover:border-border/30 transition-all group"
+                        >
+                          <div className="size-12 rounded-xl bg-white border border-border/50 p-1 shrink-0 flex items-center justify-center overflow-hidden">
+                            <img 
+                              src={product.img} 
+                              alt={product.name} 
+                              className="size-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform" 
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[9px] uppercase font-extrabold text-muted-foreground/80 tracking-widest block">{product.brand}</span>
+                            <h4 className="text-xs sm:text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{product.name}</h4>
+                            <span className="text-[10px] text-muted-foreground/80 font-medium">{product.category}</span>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <div className="text-sm font-black text-[oklch(0.50_0.14_232)]">${product.price.toLocaleString()}</div>
+                            {product.msrp && (
+                              <div className="text-[10px] text-muted-foreground line-through font-medium">${product.msrp.toLocaleString()}</div>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground text-sm">
+                      No products found matching <span className="font-semibold text-foreground">"{searchQuery}"</span>.
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </motion.div>
         )}
