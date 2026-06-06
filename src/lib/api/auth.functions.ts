@@ -77,6 +77,6 @@ export const loginAdmin = createServerFn({ method: "POST" })
       };
     } catch (e: any) {
       console.error("Login Error:", e);
-      return { success: false, error: "Internal server error during authentication." };
+      return { success: false, error: `Login Error: ${e.message || String(e)}` };
     }
   });
