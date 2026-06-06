@@ -152,19 +152,6 @@ function RootComponent() {
     checkMaintenance();
   }, [router.state.location.pathname]);
 
-  useEffect(() => {
-    async function syncProducts() {
-      try {
-        const res = await getProductsDb();
-        if (res.success && res.products) {
-          syncLocalProducts(res.products);
-        }
-      } catch (e) {
-        console.error("Failed to sync products from database:", e);
-      }
-    }
-    syncProducts();
-  }, []);
 
   if (isChecking && !router.state.location.pathname.startsWith("/admin")) {
     return (

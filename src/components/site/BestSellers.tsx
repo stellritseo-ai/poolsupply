@@ -2,12 +2,21 @@ import { motion } from "framer-motion";
 import { Star, ShoppingBag, Eye } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCart } from "./cart-context";
-import { useProducts } from "@/lib/products";
+import { useProductsQuery } from "@/lib/products";
+import { Loader2 } from "lucide-react";
 
 export function BestSellers() {
   const { add } = useCart();
-  const products = useProducts();
+  const { data: products = [], isLoading } = useProductsQuery();
   const bestSellers = products.slice(0, 4);
+
+  if (isLoading) {
+    return (
+      <section className="py-[60px] bg-surface flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </section>
+    );
+  }
 
   return (
     <section className="py-[60px] bg-surface">

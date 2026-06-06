@@ -2,9 +2,9 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { useProducts, Product } from "@/lib/products";
+import { useProductsQuery, Product } from "@/lib/products";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { Star, ShoppingBag, Eye, Filter, ArrowUpDown } from "lucide-react";
+import { Star, ShoppingBag, Eye, Filter, ArrowUpDown, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/brands/$brand")({
@@ -47,7 +47,7 @@ function BrandPage() {
   const brandName = getBrandName(brand);
   const overview = getBrandOverview(brand);
   const { add } = useCart();
-  const dbProducts = useProducts();
+  const { data: dbProducts = [], isLoading } = useProductsQuery();
 
   // Filters & Sorting State
   const [sortBy, setSortBy] = useState<"price-asc" | "price-desc" | "rating-desc">("rating-desc");
@@ -153,7 +153,13 @@ function BrandPage() {
 
             {/* Products Layout */}
             <div className="space-y-6">
-              {/* Toolbar */}
+              {isLoading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                </div>
+              ) : (
+                <>
+                  {/* Toolbar */}
               <div className="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-border/50">
                 <div className="text-xs font-semibold text-muted-foreground">
                   Showing {filteredProducts.length} of {dbProducts.filter(p => p.brand.toLowerCase() === brandName.toLowerCase()).length} products
@@ -229,6 +235,8 @@ function BrandPage() {
                   <p className="text-sm font-semibold text-muted-foreground">No products found matching filters</p>
                   <p className="text-xs text-muted-foreground/75 mt-1">Try clearing selected filters or check another brand.</p>
                 </div>
+              )}
+                </>
               )}
             </div>
           </div>

@@ -3,8 +3,10 @@ import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { getProductById, getRelatedProducts, syncLocalProducts, useProducts, Review, Product } from "@/lib/products";
+import { useQueryClient } from "@tanstack/react-query";
+import { getProductById, getRelatedProducts, useProductsQuery, invalidateProductsCache, Review, Product } from "@/lib/products";
 import { addReviewDb } from "@/lib/api/products.functions";
+import { Loader2 } from "lucide-react";
 import { 
   Star, 
   ShoppingBag, 
@@ -35,15 +37,16 @@ export const Route = createFileRoute("/products/$productId")({
 
 function ProductDetailPage() {
   const { productId } = useParams({ from: "/products/$productId" });
-  const productsList = useProducts();
+  const { data: productsList = [], isLoading } = useProductsQuery();
+  const queryClient = useQueryClient();
   const product = productsList.find(p => p.id === productId);
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs">("description");
   const reviewsEndRef = useRef<HTMLDivElement>(null);
   
-  // Custom reviews logic with localStorage persistence
-  const [reviews, setReviews] = useState<Review[]>([]);
+  // Product Reviews State
+  const reviews = product?.reviews || [];
   const [writeOpen, setWriteOpen] = useState(false);
   const [newAuthor, setNewAuthor] = useState("");
   const [newRating, setNewRating] = useState(5);
@@ -52,28 +55,22 @@ function ProductDetailPage() {
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    if (!product) return;
-    const key = `aquapro_reviews_${product.id}`;
-    const stored = localStorage.getItem(key);
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setReviews(parsed);
-          setQty(1); // Reset quantity on product change
-          setSuccessMsg("");
-          setWriteOpen(false);
-          return;
-        }
-      } catch (e) {
-        console.error("Failed to parse product reviews", e);
-      }
-    }
-    setReviews(product.reviews || []);
     setQty(1); // Reset quantity on product change
     setSuccessMsg("");
     setWriteOpen(false);
-  }, [productId, product]);
+  }, [productId]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Header alwaysDark />
+        <main className="flex-1 grid place-items-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -115,30 +112,11 @@ function ProductDetailPage() {
       content: newContent
     };
 
-    const updated = [review, ...reviews];
-    setReviews(updated);
-    localStorage.setItem(`aquapro_reviews_${product.id}`, JSON.stringify(updated));
-
-    // Also update the global product list in localStorage so the admin review dashboard sees it
-    const storedProducts = localStorage.getItem("aquapro_db_products");
-    if (storedProducts) {
-      try {
-        const parsedProducts = JSON.parse(storedProducts);
-        if (Array.isArray(parsedProducts)) {
-          const updatedProducts = parsedProducts.map(p => {
-            if (p.id === product.id) {
-              return {
-                ...p,
-                reviews: [review, ...(p.reviews || [])]
-              };
-            }
-            return p;
-          });
-          syncLocalProducts(updatedProducts);
-        }
-      } catch (err) {
-        console.error("Failed to sync new review to global product database", err);
-      }
+    try {
+      await addReviewDb({ data: { productId: product.id, review } });
+      invalidateProductsCache(queryClient);
+    } catch (err) {
+      console.error("Failed to sync new review to DB:", err);
     }
 
     // Clear form
@@ -150,11 +128,6 @@ function ProductDetailPage() {
     setSuccessMsg("Review submitted successfully! Thank you for your feedback.");
     setTimeout(() => setSuccessMsg(""), 4000);
 
-    try {
-      await addReviewDb({ data: { productId: product.id, review } });
-    } catch (err) {
-      console.error("Failed to sync new review to DB:", err);
-    }
   };
 
   const scrollToReviews = () => {

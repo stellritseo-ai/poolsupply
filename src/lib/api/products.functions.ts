@@ -135,3 +135,25 @@ export const addReviewDb = createServerFn({ method: "POST" })
       return { success: false, error: "Failed to submit review to database." };
     }
   });
+
+export const deleteReviewDb = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ productId: z.string(), reviewId: z.string() }))
+  .handler(async ({ data }) => {
+    try {
+      const db = await connectDB();
+      const productsCol = db.collection("products");
+      
+      await productsCol.updateOne(
+        { _id: data.productId },
+        { 
+          $pull: { 
+            reviews: { id: data.reviewId } 
+          } as any
+        }
+      );
+      return { success: true };
+    } catch (e: any) {
+      console.error("Failed to delete review from DB:", e);
+      return { success: false, error: "Failed to delete review from database." };
+    }
+  });

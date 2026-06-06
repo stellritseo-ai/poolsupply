@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products, syncLocalProducts, useProducts } from "@/lib/products";
+import { useProductsQuery } from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
 import {
   DollarSign,
@@ -12,7 +12,9 @@ import {
   Package,
   Star,
   Activity,
-  Zap
+  Activity,
+  Zap,
+  Loader2
 } from "lucide-react";
 import {
   AreaChart,
@@ -133,7 +135,7 @@ function GlassCard({ children, className = "", gradient = false }: { children: R
 
 function DashboardIndex() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const adminProducts = useProducts();
+  const { data: adminProducts = [], isLoading } = useProductsQuery();
 
   useEffect(() => {
     const storedOrders = localStorage.getItem("aquapro_orders");
@@ -215,8 +217,8 @@ function DashboardIndex() {
     },
     {
       title: "Low Stock Alerts",
-      value: metrics.lowStock.toString(),
-      change: metrics.lowStock > 0 ? "Needs Attention" : "All Good",
+      value: isLoading ? "..." : metrics.lowStock.toString(),
+      change: isLoading ? "Loading..." : metrics.lowStock > 0 ? "Needs Attention" : "All Good",
       up: metrics.lowStock === 0,
       icon: AlertTriangle,
       accent: metrics.lowStock > 0 ? "#f43f5e" : "#10b981",

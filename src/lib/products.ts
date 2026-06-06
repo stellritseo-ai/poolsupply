@@ -5,6 +5,8 @@ import filter from "@/assets/cat-filter.jpg";
 import cleaner from "@/assets/cat-cleaner.jpg";
 import automation from "@/assets/cat-automation.jpg";
 import { useState, useEffect } from "react";
+import { useQuery, QueryClient } from "@tanstack/react-query";
+import { getProductsDb } from "@/lib/api/products.functions";
 
 export type Review = {
   id: string;
@@ -478,29 +480,20 @@ export function getRelatedProducts(product: Product, limit = 4): Product[] {
     .slice(0, limit);
 }
 
-export function syncLocalProducts(productsToSync: Product[]) {
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem("aquapro_db_products", JSON.stringify(productsToSync));
-    window.dispatchEvent(new Event("products_updated"));
-  }
+export function invalidateProductsCache(queryClient: QueryClient) {
+  queryClient.invalidateQueries({ queryKey: ["products"] });
 }
 
-export function useProducts(): Product[] {
-  const [productsList, setProductsList] = useState<Product[]>(getProductsList());
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setProductsList(getProductsList());
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("products_updated", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("products_updated", handleStorageChange);
-    };
-  }, []);
-
-  return productsList;
+export function useProductsQuery() {
+  return useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await getProductsDb();
+      if (res.success && res.products) {
+        return res.products as Product[];
+      }
+      return products; // fallback to defaults if fail
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+  });
 }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products as initialProducts, Product, syncLocalProducts, useProducts } from "@/lib/products";
+import { useQueryClient } from "@tanstack/react-query";
+import { products as initialProducts, Product, useProductsQuery, invalidateProductsCache } from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
 import { 
   Plus, 
@@ -35,7 +36,8 @@ const CATEGORIES = [
 ];
 
 function ProductsManager() {
-  const productsList = useProducts();
+  const { data: productsList = [], isLoading } = useProductsQuery();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   
@@ -127,17 +129,10 @@ function ProductsManager() {
         img
       };
 
-      const updated = productsList.map(p => {
-        if (p.id === editingProduct.id) {
-          return updatedProduct;
-        }
-        return p;
-      });
-      syncLocalProducts(updated);
-      triggerToast(`Product '${name}' updated successfully.`);
-
       try {
         await saveProductDb({ data: { product: updatedProduct } });
+        invalidateProductsCache(queryClient);
+        triggerToast(`Product '${name}' updated successfully.`);
       } catch (err) {
         console.error("Failed to sync updated product to DB:", err);
       }
@@ -165,12 +160,10 @@ function ProductsManager() {
         },
         reviews: []
       };
-      const updated = [...productsList, newProduct];
-      syncLocalProducts(updated);
-      triggerToast(`Product '${name}' added to catalog.`);
-
       try {
         await saveProductDb({ data: { product: newProduct } });
+        invalidateProductsCache(queryClient);
+        triggerToast(`Product '${name}' added to catalog.`);
       } catch (err) {
         console.error("Failed to sync new product to DB:", err);
       }
@@ -219,13 +212,10 @@ function ProductsManager() {
   const deleteProduct = async () => {
     if (!deleteId) return;
     const item = productsList.find(p => p.id === deleteId);
-    const updated = productsList.filter(p => p.id !== deleteId);
-    syncLocalProducts(updated);
-    triggerToast(`Product '${item?.name}' removed from catalog.`);
-    setDeleteId(null);
-
     try {
       await deleteProductDb({ data: { id: deleteId } });
+      invalidateProductsCache(queryClient);
+      triggerToast(`Product '${item?.name}' removed from catalog.`);
     } catch (err) {
       console.error("Failed to delete product from DB:", err);
     }

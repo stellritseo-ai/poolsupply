@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products as initialProducts, getProductsList, syncLocalProducts, Product, Review } from "@/lib/products";
+import { products as initialProducts, useProductsQuery, invalidateProductsCache, Product, Review } from "@/lib/products";
+import { useQueryClient } from "@tanstack/react-query";
+import { deleteReviewDb } from "@/lib/api/products.functions";
 import { 
   Star, 
   Search, 
@@ -29,6 +31,8 @@ type CompliedReview = {
 };
 
 function ReviewsModerator() {
+  const { data: dbProducts = [], isLoading } = useProductsQuery();
+  const queryClient = useQueryClient();
   const [compiledList, setCompiledList] = useState<CompliedReview[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [ratingFilter, setRatingFilter] = useState("all");
@@ -36,20 +40,6 @@ function ReviewsModerator() {
 
   // Load reviews on mount
   useEffect(() => {
-    // 1. Load products reviews
-    let dbProducts = initialProducts;
-    const dbProductsRaw = localStorage.getItem("aquapro_db_products");
-    if (dbProductsRaw) {
-      try {
-        const parsed = JSON.parse(dbProductsRaw);
-        if (Array.isArray(parsed)) {
-          dbProducts = parsed;
-        }
-      } catch (e) {
-        console.error("Failed to parse products database for reviews", e);
-      }
-    }
-    
     let list: CompliedReview[] = [];
     dbProducts.forEach(p => {
       if (p.reviews && p.reviews.length > 0) {
@@ -131,7 +121,7 @@ function ReviewsModerator() {
     }
 
     setCompiledList(list);
-  }, []);
+  }, [dbProducts]);
 
   const triggerToast = (msg: string) => {
     setToast(msg);
@@ -151,7 +141,7 @@ function ReviewsModerator() {
   }, [compiledList, searchTerm, ratingFilter]);
 
   // Moderate/Delete review
-  const deleteReview = (rev: CompliedReview) => {
+  const deleteReview = async (rev: CompliedReview) => {
     // 1. Remove from local compiled state
     const updatedCompiled = compiledList.filter(item => item.id !== rev.id);
     setCompiledList(updatedCompiled);
@@ -165,19 +155,11 @@ function ReviewsModerator() {
         localStorage.setItem("aquapro_global_reviews", JSON.stringify(updated));
       }
     } else {
-      const dbProductsRaw = localStorage.getItem("aquapro_db_products");
-      if (dbProductsRaw) {
-        const dbProducts: Product[] = JSON.parse(dbProductsRaw);
-        const updated = dbProducts.map(p => {
-          if (p.id === rev.productId) {
-            return {
-              ...p,
-              reviews: p.reviews.filter(r => r.id !== rev.id)
-            };
-          }
-          return p;
-        });
-        syncLocalProducts(updated);
+      try {
+        await deleteReviewDb({ data: { productId: rev.productId, reviewId: rev.id } });
+        invalidateProductsCache(queryClient);
+      } catch (err) {
+        console.error("Failed to delete review from DB:", err);
       }
     }
 
