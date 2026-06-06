@@ -2,7 +2,7 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { getProductsList, Product } from "@/lib/products";
+import { useProducts, Product } from "@/lib/products";
 import { useCart, formatUSD } from "@/components/site/cart-context";
 import { Star, ShoppingBag, Eye, Filter, ArrowUpDown } from "lucide-react";
 import { motion } from "framer-motion";
@@ -47,11 +47,7 @@ function BrandPage() {
   const brandName = getBrandName(brand);
   const overview = getBrandOverview(brand);
   const { add } = useCart();
-  const [dbProducts, setDbProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    setDbProducts(getProductsList());
-  }, [brand]);
+  const dbProducts = useProducts();
 
   // Filters & Sorting State
   const [sortBy, setSortBy] = useState<"price-asc" | "price-desc" | "rating-desc">("rating-desc");

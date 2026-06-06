@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products } from "@/lib/products";
+import { products, syncLocalProducts } from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
 import {
   DollarSign,
@@ -186,7 +186,7 @@ function DashboardIndex() {
       }
     } else {
       setAdminProducts(products);
-      localStorage.setItem("aquapro_db_products", JSON.stringify(products));
+      syncLocalProducts(products);
     }
   }, []);
 

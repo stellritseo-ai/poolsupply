@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { getProductById, getRelatedProducts, Review, Product } from "@/lib/products";
+import { getProductById, getRelatedProducts, syncLocalProducts, useProducts, Review, Product } from "@/lib/products";
 import { addReviewDb } from "@/lib/api/products.functions";
 import { 
   Star, 
@@ -35,7 +35,8 @@ export const Route = createFileRoute("/products/$productId")({
 
 function ProductDetailPage() {
   const { productId } = useParams({ from: "/products/$productId" });
-  const product = getProductById(productId);
+  const productsList = useProducts();
+  const product = productsList.find(p => p.id === productId);
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs">("description");
@@ -133,7 +134,7 @@ function ProductDetailPage() {
             }
             return p;
           });
-          localStorage.setItem("aquapro_db_products", JSON.stringify(updatedProducts));
+          syncLocalProducts(updatedProducts);
         }
       } catch (err) {
         console.error("Failed to sync new review to global product database", err);

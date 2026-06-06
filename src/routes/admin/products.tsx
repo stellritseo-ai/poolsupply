@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products as initialProducts, Product } from "@/lib/products";
+import { products as initialProducts, Product, syncLocalProducts } from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
 import { 
   Plus, 
@@ -73,7 +73,7 @@ function ProductsManager() {
       }
     }
     setProductsList(initialProducts);
-    localStorage.setItem("aquapro_db_products", JSON.stringify(initialProducts));
+    syncLocalProducts(initialProducts);
   }, []);
 
   const triggerToast = (msg: string) => {
@@ -149,7 +149,7 @@ function ProductsManager() {
         return p;
       });
       setProductsList(updated);
-      localStorage.setItem("aquapro_db_products", JSON.stringify(updated));
+      syncLocalProducts(updated);
       triggerToast(`Product '${name}' updated successfully.`);
 
       try {
@@ -181,10 +181,9 @@ function ProductsManager() {
         },
         reviews: []
       };
-      
       const updated = [...productsList, newProduct];
       setProductsList(updated);
-      localStorage.setItem("aquapro_db_products", JSON.stringify(updated));
+      syncLocalProducts(updated);
       triggerToast(`Product '${name}' added to catalog.`);
 
       try {
@@ -239,7 +238,7 @@ function ProductsManager() {
     const item = productsList.find(p => p.id === deleteId);
     const updated = productsList.filter(p => p.id !== deleteId);
     setProductsList(updated);
-    localStorage.setItem("aquapro_db_products", JSON.stringify(updated));
+    syncLocalProducts(updated);
     triggerToast(`Product '${item?.name}' removed from catalog.`);
     setDeleteId(null);
 

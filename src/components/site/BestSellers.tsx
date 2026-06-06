@@ -2,16 +2,12 @@ import { motion } from "framer-motion";
 import { Star, ShoppingBag, Eye } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCart } from "./cart-context";
-import { getProductsList } from "@/lib/products";
-import { useEffect, useState } from "react";
+import { useProducts } from "@/lib/products";
 
 export function BestSellers() {
   const { add } = useCart();
-  const [bestSellers, setBestSellers] = useState<any[]>([]);
-
-  useEffect(() => {
-    setBestSellers(getProductsList().slice(0, 4));
-  }, []);
+  const products = useProducts();
+  const bestSellers = products.slice(0, 4);
 
   return (
     <section className="py-[60px] bg-surface">

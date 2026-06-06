@@ -16,6 +16,7 @@ import { CartProvider } from "@/components/site/cart-context";
 import { CartDrawer } from "@/components/site/CartDrawer";
 import { getGlobalSettings } from "@/lib/api/settings.functions";
 import { getProductsDb } from "@/lib/api/products.functions";
+import { syncLocalProducts } from "@/lib/products";
 import { Toaster } from "@/components/ui/sonner";
 
 
@@ -156,7 +157,7 @@ function RootComponent() {
       try {
         const res = await getProductsDb();
         if (res.success && res.products) {
-          localStorage.setItem("aquapro_db_products", JSON.stringify(res.products));
+          syncLocalProducts(res.products);
         }
       } catch (e) {
         console.error("Failed to sync products from database:", e);

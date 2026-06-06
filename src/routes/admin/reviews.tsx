@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products as initialProducts, Product, Review } from "@/lib/products";
+import { products as initialProducts, getProductsList, syncLocalProducts, Product, Review } from "@/lib/products";
 import { 
   Star, 
   Search, 
@@ -177,7 +177,7 @@ function ReviewsModerator() {
           }
           return p;
         });
-        localStorage.setItem("aquapro_db_products", JSON.stringify(updated));
+        syncLocalProducts(updated);
       }
     }
 
