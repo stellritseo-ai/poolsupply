@@ -15,6 +15,7 @@ export async function connectDB(): Promise<Db> {
     return dbConnection;
   }
   
+  const maskedUri = uri.replace(/:([^@:]*)@/, ':******@');
   try {
     if (!client) {
       const { MongoClient } = await import('mongodb');
@@ -25,9 +26,10 @@ export async function connectDB(): Promise<Db> {
     dbConnection = client.db('aquapro');
     console.log("Successfully connected to MongoDB");
     return dbConnection;
-  } catch (error) {
-    console.error("MongoDB connection failed:", error);
-    throw error;
+  } catch (error: any) {
+    const diagMessage = `MongoDB connection failed. URI: ${maskedUri} | Length: ${uri.length} | startsWithQuotes: ${uri.startsWith('"') || uri.startsWith("'")} | endsWithQuotes: ${uri.endsWith('"') || uri.endsWith("'")} | isEnvVarSet: ${!!process.env.MONGODB_URI} | Error: ${error.message}`;
+    console.error(diagMessage, error);
+    throw new Error(diagMessage);
   }
 }
 
@@ -37,4 +39,5 @@ export async function connectDB(): Promise<Db> {
 export function getClient(): any {
   return client;
 }
+
 
