@@ -29,4 +29,3 @@ export function renderErrorPage(details?: string): string {
   </body>
 </html>`;
 }
-

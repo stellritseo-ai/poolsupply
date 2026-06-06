@@ -39,5 +39,3 @@ export async function connectDB(): Promise<Db> {
 export function getClient(): any {
   return client;
 }
-
-
