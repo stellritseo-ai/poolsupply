@@ -12,16 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
-  vite: {
-    ssr: {
-      external: ["mongodb", "bcryptjs"]
-    }
-  },
   nitro: { 
-    preset: "vercel",
-    // @ts-ignore
-    rollupConfig: {
-      external: ["mongodb", "bcryptjs"]
-    }
+    preset: "vercel"
   },
 });
+
+
