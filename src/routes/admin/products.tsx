@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products as initialProducts, Product, syncLocalProducts } from "@/lib/products";
+import { products as initialProducts, Product, syncLocalProducts, useProducts } from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
 import { 
   Plus, 
@@ -35,7 +35,7 @@ const CATEGORIES = [
 ];
 
 function ProductsManager() {
-  const [productsList, setProductsList] = useState<Product[]>([]);
+  const productsList = useProducts();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   
@@ -59,22 +59,7 @@ function ProductsManager() {
   const [img, setImg] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("aquapro_db_products");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setProductsList(parsed);
-          return;
-        }
-      } catch (e) {
-        console.error("Failed to parse products database", e);
-      }
-    }
-    setProductsList(initialProducts);
-    syncLocalProducts(initialProducts);
-  }, []);
+
 
   const triggerToast = (msg: string) => {
     setToast(msg);
@@ -148,7 +133,6 @@ function ProductsManager() {
         }
         return p;
       });
-      setProductsList(updated);
       syncLocalProducts(updated);
       triggerToast(`Product '${name}' updated successfully.`);
 
@@ -182,7 +166,6 @@ function ProductsManager() {
         reviews: []
       };
       const updated = [...productsList, newProduct];
-      setProductsList(updated);
       syncLocalProducts(updated);
       triggerToast(`Product '${name}' added to catalog.`);
 
@@ -237,7 +220,6 @@ function ProductsManager() {
     if (!deleteId) return;
     const item = productsList.find(p => p.id === deleteId);
     const updated = productsList.filter(p => p.id !== deleteId);
-    setProductsList(updated);
     syncLocalProducts(updated);
     triggerToast(`Product '${item?.name}' removed from catalog.`);
     setDeleteId(null);

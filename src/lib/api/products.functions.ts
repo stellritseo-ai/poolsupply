@@ -18,7 +18,7 @@ async function getOrSeedProducts(productsCol: any): Promise<any[]> {
   return await productsCol.find().toArray();
 }
 
-export const getProductsDb = createServerFn({ method: "GET" })
+export const getProductsDb = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();

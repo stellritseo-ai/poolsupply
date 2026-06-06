@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products, syncLocalProducts } from "@/lib/products";
+import { products, syncLocalProducts, useProducts } from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
 import {
   DollarSign,
@@ -133,7 +133,7 @@ function GlassCard({ children, className = "", gradient = false }: { children: R
 
 function DashboardIndex() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [adminProducts, setAdminProducts] = useState<any[]>([]);
+  const adminProducts = useProducts();
 
   useEffect(() => {
     const storedOrders = localStorage.getItem("aquapro_orders");
@@ -172,22 +172,6 @@ function DashboardIndex() {
       localStorage.setItem("aquapro_orders", JSON.stringify(MOCK_ORDERS));
     }
 
-    const storedProducts = localStorage.getItem("aquapro_db_products");
-    if (storedProducts) {
-      try {
-        const parsed = JSON.parse(storedProducts);
-        if (Array.isArray(parsed)) {
-          setAdminProducts(parsed);
-        } else {
-          setAdminProducts(products);
-        }
-      } catch (e) {
-        setAdminProducts(products);
-      }
-    } else {
-      setAdminProducts(products);
-      syncLocalProducts(products);
-    }
   }, []);
 
   const metrics = useMemo(() => {
