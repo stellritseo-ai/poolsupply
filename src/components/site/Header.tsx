@@ -9,28 +9,28 @@ import logo from "@/assets/logo.png";
 const NAV = [
   { 
     label: "Shop", 
-    href: "#categories",
+    to: "/shop/pool-pumps",
     items: [
-      { label: "Pool Pumps", href: "#" },
-      { label: "Pool Lights", href: "#" },
-      { label: "Pool Cleaners", href: "#" },
-      { label: "Pool Heaters", href: "#" },
-      { label: "Electric Heat Pumps", href: "#" },
+      { label: "Pool Pumps", to: "/shop/pool-pumps" },
+      { label: "Pool Lights", to: "/shop/pool-lights" },
+      { label: "Pool Cleaners", to: "/shop/pool-cleaners" },
+      { label: "Pool Heaters", to: "/shop/pool-heaters" },
+      { label: "Electric Heat Pumps", to: "/shop/electric-heat-pumps" },
     ]
   },
   { 
     label: "Shop By Brand", 
-    href: "#brands",
+    to: "/brands/hayward",
     items: [
-      { label: "Hayward", href: "#" },
-      { label: "Pentair", href: "#" },
-      { label: "Jandy", href: "#" },
+      { label: "Hayward", to: "/brands/hayward" },
+      { label: "Pentair", to: "/brands/pentair" },
+      { label: "Jandy", to: "/brands/jandy" },
     ]
   },
-  { label: "Product Finder", href: "#finder" },
-  { label: "Why Us", href: "#why" },
-  { label: "Reviews", href: "#testimonials" },
-  { label: "Contact", href: "#cta" },
+  { label: "Product Finder", to: "/finder" },
+  { label: "Why Us", to: "/why-us" },
+  { label: "Reviews", to: "/reviews" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
@@ -73,32 +73,32 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
           {NAV.map((n) => (
             n.items ? (
               <div key={n.label} className="relative group">
-                <a
-                  href={n.href}
+                <Link
+                  to={n.to}
                   className={`transition-colors duration-300 relative py-2 ${
                     isDarkText ? "text-foreground/75 hover:text-foreground" : "text-white/75 hover:text-white"
                   }`}
                 >
                   {n.label}
-                </a>
+                </Link>
                 <div className="absolute left-0 top-full mt-2 w-56 rounded-2xl glass p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 shadow-lg">
                   {n.items.map(sub => (
-                    <a key={sub.label} href={sub.href} className="block px-3 py-2 text-base text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors">
+                    <Link key={sub.label} to={sub.to} className="block px-3 py-2 text-base text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors">
                       {sub.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
             ) : (
-              <a
+              <Link
                 key={n.label}
-                href={n.href}
+                to={n.to}
                 className={`transition-colors duration-300 relative after:absolute after:left-0 after:-bottom-1 after:h-px after:w-0 after:bg-gradient-ocean hover:after:w-full after:transition-all ${
                   isDarkText ? "text-foreground/75 hover:text-foreground" : "text-white/75 hover:text-white"
                 }`}
               >
                 {n.label}
-              </a>
+              </Link>
             )
           ))}
         </nav>
@@ -198,15 +198,15 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             <div className="p-5 grid gap-3">
               {NAV.map((n) => (
                 <div key={n.label} className="grid gap-1">
-                  <a href={n.href} onClick={() => !n.items && setOpen(false)} className="text-foreground/80 hover:text-foreground py-1 font-semibold">
+                  <Link to={n.to} onClick={() => !n.items && setOpen(false)} className="text-foreground/80 hover:text-foreground py-1 font-semibold block">
                     {n.label}
-                  </a>
+                  </Link>
                   {n.items && (
                     <div className="pl-4 grid gap-1 border-l-2 border-border/50 ml-1 mt-1">
                       {n.items.map(sub => (
-                        <a key={sub.label} href={sub.href} onClick={() => setOpen(false)} className="text-foreground/60 hover:text-foreground py-1 text-base">
+                        <Link key={sub.label} to={sub.to} onClick={() => setOpen(false)} className="text-foreground/60 hover:text-foreground py-1 text-base block">
                           {sub.label}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   )}

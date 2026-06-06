@@ -58,12 +58,24 @@ export function CartDrawer() {
                 <ul className="space-y-3">
                   {items.map((it) => (
                     <li key={it.id} className="flex gap-3 p-3 rounded-2xl border border-border">
-                      <div className="size-20 shrink-0 rounded-xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] grid place-items-center overflow-hidden">
+                      <Link
+                        to="/products/$productId"
+                        params={{ productId: it.id }}
+                        onClick={close}
+                        className="size-20 shrink-0 rounded-xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] grid place-items-center overflow-hidden hover:opacity-90 transition-opacity"
+                      >
                         <img src={it.img} alt={it.name} className="size-full object-contain p-2 mix-blend-multiply" />
-                      </div>
+                      </Link>
                       <div className="flex-1 min-w-0">
                         <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{it.brand}</div>
-                        <div className="font-semibold text-sm leading-snug line-clamp-2">{it.name}</div>
+                        <Link
+                          to="/products/$productId"
+                          params={{ productId: it.id }}
+                          onClick={close}
+                          className="font-semibold text-sm leading-snug line-clamp-2 hover:text-primary transition-colors block"
+                        >
+                          {it.name}
+                        </Link>
                         <div className="mt-2 flex items-center justify-between">
                           <div className="flex items-center bg-muted/60 rounded-full p-0.5 border border-border/30 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
                             <button

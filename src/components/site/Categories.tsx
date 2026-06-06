@@ -46,7 +46,7 @@ export function Categories() {
               <div className="relative aspect-[4/3] w-full mb-5 grid place-items-center overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-surface to-muted/40 border border-border/40">
                 {/* Subtle overlay reflection */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
+
                 {/* Floating Image */}
                 <img
                   src={c.img}
@@ -56,13 +56,13 @@ export function Categories() {
                   height={600}
                   className="w-[82%] h-[82%] object-contain mix-blend-multiply group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-700 ease-out"
                 />
-                
+
                 {/* Floating pill badge */}
                 <span className="absolute top-4 left-4 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-white/90 backdrop-blur border border-white/50 rounded-full shadow-sm">
                   {c.count}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between mt-1 px-1">
                 <div>
                   <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">{c.name}</h3>
@@ -70,7 +70,7 @@ export function Categories() {
                     Explore Equipment <ArrowUpRight className="size-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </span>
                 </div>
-                
+
                 <span className="size-10 rounded-full bg-muted group-hover:bg-primary group-hover:text-white text-foreground/80 grid place-items-center transition-all duration-300 shadow-sm active:scale-90 shrink-0">
                   <ArrowUpRight className="size-4" />
                 </span>

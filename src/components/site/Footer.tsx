@@ -1,5 +1,8 @@
 import { Waves, Mail, Phone, MapPin } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useState } from "react";
+import { toast } from "sonner";
+import { subscribeEmail } from "@/lib/api/subscribers.functions";
 
 const cols = [
   { title: "Products", links: ["Pool Pumps", "Heaters", "Filters", "Lights", "Cleaners", "Automation"] },
@@ -9,6 +12,30 @@ const cols = [
 ];
 
 export function Footer() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await subscribeEmail({ data: { email } });
+      if (res.success) {
+        toast.success("Successfully subscribed to product updates!");
+        setEmail("");
+      } else {
+        toast.error(res.error || "Failed to subscribe.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <footer className="bg-[oklch(0.16_0.02_256)] text-white/80">
       <div className="mx-auto max-w-7xl px-6 py-20">
@@ -24,14 +51,22 @@ export function Footer() {
             <p className="mt-5 text-sm leading-relaxed max-w-sm">
               Premium pool equipment and supplies at wholesale pricing — trusted by 5,000+ professionals across the United States since 2003.
             </p>
-            <form className="mt-6 flex gap-2">
+            <form onSubmit={handleSubmit} className="mt-6 flex gap-2">
               <input
                 type="email"
+                required
+                disabled={isSubmitting}
                 placeholder="Email for product updates"
-                className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-pool focus:ring-2 focus:ring-cyan-pool/20 transition-all duration-200"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-pool focus:ring-2 focus:ring-cyan-pool/20 transition-all duration-200 disabled:opacity-50"
               />
-              <button className="px-5 py-3 rounded-xl bg-gradient-ocean hover:opacity-90 hover:shadow-[0_0_15px_rgba(0,180,216,0.3)] text-white text-sm font-semibold transition-all duration-200 active:scale-[0.98]">
-                Subscribe
+              <button 
+                type="submit"
+                disabled={isSubmitting}
+                className="px-5 py-3 rounded-xl bg-gradient-ocean hover:opacity-90 hover:shadow-[0_0_15px_rgba(0,180,216,0.3)] text-white text-sm font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Subscribing..." : "Subscribe"}
               </button>
             </form>
             <div className="mt-6 space-y-2 text-sm">

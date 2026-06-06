@@ -136,7 +136,12 @@ function CheckoutPage() {
       promoCode: appliedPromo,
       method: form.method,
     };
-    try { window.localStorage.setItem("aquapro_last_order", JSON.stringify(order)); } catch {}
+    try { 
+      window.localStorage.setItem("aquapro_last_order", JSON.stringify(order)); 
+      const rawOrders = window.localStorage.getItem("aquapro_orders");
+      const list = rawOrders ? JSON.parse(rawOrders) : [];
+      window.localStorage.setItem("aquapro_orders", JSON.stringify([order, ...list]));
+    } catch {}
     setTimeout(() => {
       clear();
       navigate({ to: "/order-confirmation", search: { id: orderId } });
@@ -166,8 +171,8 @@ function CheckoutPage() {
       <Header alwaysDark />
       <main className="pt-28 pb-20">
         <div className="mx-auto max-w-7xl px-6">
-          <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition mb-6">
-            <ChevronLeft className="size-4" /> Back to store
+          <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition mt-[35px] mb-6 font-semibold">
+            &lt;Back to store
           </Link>
 
           <div className="flex items-end justify-between flex-wrap gap-3 mb-10">
@@ -247,15 +252,25 @@ function CheckoutPage() {
                 <ul className="divide-y divide-border max-h-72 overflow-y-auto -mx-2 px-2">
                   {items.map((it) => (
                     <li key={it.id} className="flex gap-3 py-3">
-                      <div className="relative size-14 shrink-0 rounded-xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] grid place-items-center overflow-hidden">
+                      <Link
+                        to="/products/$productId"
+                        params={{ productId: it.id }}
+                        className="relative size-14 shrink-0 rounded-xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] grid place-items-center overflow-hidden hover:opacity-90 transition-opacity"
+                      >
                         <img src={it.img} alt={it.name} className="size-full object-contain p-1.5 mix-blend-multiply" />
                         <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-foreground text-background text-[10px] font-bold grid place-items-center">
                           {it.qty}
                         </span>
-                      </div>
+                      </Link>
                       <div className="flex-1 min-w-0">
                         <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{it.brand}</div>
-                        <div className="text-sm font-medium leading-snug line-clamp-2">{it.name}</div>
+                        <Link
+                          to="/products/$productId"
+                          params={{ productId: it.id }}
+                          className="text-sm font-medium leading-snug line-clamp-2 hover:text-primary transition-colors block"
+                        >
+                          {it.name}
+                        </Link>
                       </div>
                       <div className="text-sm font-semibold whitespace-nowrap">{formatUSD(it.price * it.qty)}</div>
                     </li>

@@ -42,10 +42,36 @@ function ConfirmationPage() {
     try {
       const raw = window.localStorage.getItem("aquapro_last_order");
       if (raw) {
-        const o = JSON.parse(raw) as Order;
-        if (!id || o.id === id) setOrder(o);
+        const o = JSON.parse(raw);
+        if (o && typeof o === "object") {
+          const sanitized: Order = {
+            id: typeof o.id === "string" ? o.id : id || "AQ-UNKNOWN",
+            placedAt: typeof o.placedAt === "string" ? o.placedAt : new Date().toISOString(),
+            email: typeof o.email === "string" ? o.email : "",
+            name: typeof o.name === "string" ? o.name : "Valued Customer",
+            address: {
+              line1: typeof o.address?.line1 === "string" ? o.address.line1 : "No street address",
+              line2: typeof o.address?.line2 === "string" ? o.address.line2 : "",
+              city: typeof o.address?.city === "string" ? o.address.city : "",
+              state: typeof o.address?.state === "string" ? o.address.state : "",
+              zip: typeof o.address?.zip === "string" ? o.address.zip : "",
+              country: typeof o.address?.country === "string" ? o.address.country : "United States"
+            },
+            items: Array.isArray(o.items) ? o.items : [],
+            subtotal: typeof o.subtotal === "number" ? o.subtotal : 0,
+            shipping: typeof o.shipping === "number" ? o.shipping : 0,
+            tax: typeof o.tax === "number" ? o.tax : 0,
+            total: typeof o.total === "number" ? o.total : 0,
+            discount: typeof o.discount === "number" ? o.discount : 0,
+            promoCode: o.promoCode,
+            method: o.method === "express" ? "express" : "standard"
+          };
+          if (!id || sanitized.id === id) setOrder(sanitized);
+        }
       }
-    } catch {}
+    } catch (e) {
+      console.error("Failed to parse last order details", e);
+    }
   }, [id]);
 
   const deliveryDate = new Date();

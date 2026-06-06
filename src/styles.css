@@ -78,7 +78,7 @@
   --input: oklch(0.92 0.01 240);
   --ring: var(--aqua);
 
-  --gradient-ocean: linear-gradient(135deg, oklch(0.50 0.14 232), oklch(0.72 0.13 220) 60%, oklch(0.82 0.10 215));
+  --gradient-ocean: linear-gradient(to right, #0089C9, #59D2F3);
   --gradient-soft: linear-gradient(180deg, oklch(0.99 0.005 240), oklch(0.96 0.02 220));
   --shadow-glass: 0 8px 32px -8px oklch(0.50 0.14 232 / 0.18), 0 2px 8px -2px oklch(0.50 0.14 232 / 0.08);
   --shadow-float: 0 30px 60px -25px oklch(0.50 0.14 232 / 0.35), 0 10px 25px -10px oklch(0.50 0.14 232 / 0.18);
