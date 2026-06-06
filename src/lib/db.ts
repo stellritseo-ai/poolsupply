@@ -1,10 +1,9 @@
-import { MongoClient, Db } from 'mongodb';
+import type { Db } from 'mongodb';
 
 // Replace the uri string with your MongoDB deployment's connection string.
 const uri = process.env.MONGODB_URI || "mongodb+srv://Pools_database_db_user:pPH0aCfvACpdl0vR@pools.4nsntwy.mongodb.net/?appName=Pools";
 
-const client = new MongoClient(uri);
-
+let client: any = null;
 let dbConnection: Db | null = null;
 
 /**
@@ -17,10 +16,14 @@ export async function connectDB(): Promise<Db> {
   }
   
   try {
+    if (!client) {
+      const { MongoClient } = await import('mongodb');
+      client = new MongoClient(uri);
+    }
     await client.connect();
     // Defaulting database name to 'aquapro' which fits the application context
     dbConnection = client.db('aquapro');
-    console.log("Successfully connected to MongoDB at localhost:27017");
+    console.log("Successfully connected to MongoDB");
     return dbConnection;
   } catch (error) {
     console.error("MongoDB connection failed:", error);
@@ -31,6 +34,7 @@ export async function connectDB(): Promise<Db> {
 /**
  * Returns the underlying MongoClient instance.
  */
-export function getClient(): MongoClient {
+export function getClient(): any {
   return client;
 }
+
