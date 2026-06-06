@@ -6,22 +6,32 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// Rollup plugin: inject `createRequire` shim into every chunk that uses require().
+// MongoDB v7 internally calls require() inside resolveRuntimeAdapters(), which fails
+// in an ESM-bundled .mjs file. This fixes it without un-bundling the package.
+const cjsRequireShimPlugin = {
+  name: "cjs-require-shim",
+  renderChunk(code: string) {
+    if (!code.includes("require(")) return null;
+    return {
+      code: `import { createRequire as __createRequire } from 'module';\nconst require = __createRequire(import.meta.url);\n${code}`,
+      map: null,
+    };
+  },
+};
+
 export default defineConfig({
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
     server: { entry: "server" },
   },
-  nitro: { 
+  nitro: {
     preset: "vercel",
-    // Bundle mongodb into the serverless function so Vercel can find it at runtime.
-    // Do NOT mark it as external — Vercel Lambda cannot resolve bare node_modules at runtime.
-    bundledStorage: [],
-    externals: {
-      inline: ["mongodb", "bcryptjs"],
+    rollupConfig: {
+      plugins: [cjsRequireShimPlugin],
     },
   },
 });
+
 
 
 
