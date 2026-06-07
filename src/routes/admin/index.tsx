@@ -26,8 +26,7 @@ import {
   BarChart,
   Bar,
   Cell,
-  ComposedChart,
-  Area
+  ComposedChart
 } from "recharts";
 import { motion } from "framer-motion";
 
@@ -143,7 +142,7 @@ function DashboardIndex() {
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
-    
+
     // Generate last 6 months buckets
     const buckets = [];
     for (let i = 5; i >= 0; i--) {
