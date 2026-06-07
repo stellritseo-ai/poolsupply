@@ -1,9 +1,9 @@
-import pump from "@/assets/cat-pump.jpg";
-import heater from "@/assets/cat-heater.jpg";
-import light from "@/assets/cat-light.jpg";
-import filter from "@/assets/cat-filter.jpg";
-import cleaner from "@/assets/cat-cleaner.jpg";
-import automation from "@/assets/cat-automation.jpg";
+const pump = "/assets/cat-pump.jpg";
+const heater = "/assets/cat-heater.jpg";
+const light = "/assets/cat-light.jpg";
+const filter = "/assets/cat-filter.jpg";
+const cleaner = "/assets/cat-cleaner.jpg";
+const automation = "/assets/cat-automation.jpg";
 import { Product } from "./products";
 
 export const products: Product[] = [
