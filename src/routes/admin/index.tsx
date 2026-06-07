@@ -26,7 +26,12 @@ import {
   BarChart,
   Bar,
   Cell,
-  ComposedChart
+  ComposedChart,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar
 } from "recharts";
 import { motion } from "framer-motion";
 
@@ -372,20 +377,17 @@ function DashboardIndex() {
             </div>
             <div className="flex-1 min-h-[220px] -ml-2">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={dynamicCategoryData} layout="vertical" margin={{ top: 10, right: 20, left: 0, bottom: 0 }} barSize={16}>
-                  <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} width={70} />
+                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={dynamicCategoryData}>
+                  <PolarGrid stroke="rgba(0,0,0,0.08)" />
+                  <PolarAngleAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
+                  <Radar name="Sales" dataKey="sales" stroke="#0089C9" strokeWidth={2} fill="#59D2F3" fillOpacity={0.4} />
                   <Tooltip
                     formatter={(v) => [v, "Units"]}
                     contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
-                    cursor={{ fill: "rgba(0,137,201,0.05)" }}
+                    itemStyle={{ color: "#fff", fontWeight: "bold" }}
                   />
-                  <Bar dataKey="sales" radius={[0, 8, 8, 0]}>
-                    {dynamicCategoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
+                </RadarChart>
               </ResponsiveContainer>
             </div>
           </GlassCard>
