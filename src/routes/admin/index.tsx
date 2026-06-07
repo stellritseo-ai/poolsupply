@@ -23,15 +23,11 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
   Cell,
   ComposedChart,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar
+  PieChart,
+  Pie,
+  Bar
 } from "recharts";
 import { motion } from "framer-motion";
 
@@ -377,17 +373,30 @@ function DashboardIndex() {
             </div>
             <div className="flex-1 min-h-[220px] -ml-2">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={dynamicCategoryData}>
-                  <PolarGrid stroke="rgba(0,0,0,0.08)" />
-                  <PolarAngleAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }} />
-                  <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
-                  <Radar name="Sales" dataKey="sales" stroke="#0089C9" strokeWidth={2} fill="#59D2F3" fillOpacity={0.4} />
+                <PieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
                   <Tooltip
                     formatter={(v) => [v, "Units"]}
                     contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
                     itemStyle={{ color: "#fff", fontWeight: "bold" }}
                   />
-                </RadarChart>
+                  <Pie
+                    data={dynamicCategoryData}
+                    dataKey="sales"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={75}
+                    paddingAngle={2}
+                    stroke="none"
+                    labelLine={{ stroke: "#94a3b8", strokeWidth: 1 }}
+                    label={({ value, percent }) => `${value} units (${(percent * 100).toFixed(1)}%)`}
+                  >
+                    {dynamicCategoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
               </ResponsiveContainer>
             </div>
           </GlassCard>
