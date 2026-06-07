@@ -178,7 +178,13 @@ function CategoryPage() {
                         <div>
                           <Link to="/products/$productId" params={{ productId: p.id }} className="block">
                             <div className="relative aspect-square rounded-2xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] overflow-hidden grid place-items-center">
-                              <img src={p.img} alt={p.name} loading="lazy" className="size-[80%] object-contain p-4 group-hover:scale-105 transition-transform duration-700 mix-blend-multiply" />
+                              <img 
+                                src={p.img || "https://placehold.co/400x400/png?text=Image+N/A"} 
+                                alt={p.name} 
+                                loading="lazy" 
+                                className="size-[80%] object-contain p-4 group-hover:scale-105 transition-transform duration-700 mix-blend-multiply" 
+                                onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400/png?text=Image+N/A"; }}
+                              />
                               <span aria-label="Quick view" className="absolute top-3 right-3 size-10 grid place-items-center rounded-full bg-white/80 backdrop-blur opacity-0 group-hover:opacity-100 transition shadow-[var(--shadow-soft)]">
                                 <Eye className="size-4" />
                               </span>

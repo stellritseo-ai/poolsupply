@@ -222,9 +222,10 @@ function ProductDetailPage() {
             >
               <div className="relative aspect-square rounded-[2rem] bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] border border-border/70 overflow-hidden flex items-center justify-center p-10 shadow-[var(--shadow-soft)]">
                 <img
-                  src={product.img}
+                  src={product.img || "https://placehold.co/400x400/png?text=Image+N/A"}
                   alt={product.name}
                   className="max-h-[90%] max-w-[90%] object-contain mix-blend-multiply hover:scale-105 transition-transform duration-700 ease-out"
+                  onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400/png?text=Image+N/A"; }}
                 />
 
                 {/* Floating stock pill */}
@@ -565,12 +566,13 @@ function ProductDetailPage() {
                     <Link to="/products/$productId" params={{ productId: p.id }} className="block">
                       <div className="relative aspect-square rounded-2xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] overflow-hidden grid place-items-center">
                         <img
-                          src={p.img}
+                          src={p.img || "https://placehold.co/400x400/png?text=Image+N/A"}
                           alt={p.name}
                           loading="lazy"
                           width={300}
                           height={300}
                           className="size-[80%] object-contain p-4 group-hover:scale-110 transition-transform duration-700 mix-blend-multiply"
+                          onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400/png?text=Image+N/A"; }}
                         />
                       </div>
                       <div className="mt-4 flex items-center justify-between">
