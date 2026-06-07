@@ -25,7 +25,11 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  Cell
+  Cell,
+  ComposedChart,
+  PieChart,
+  Pie,
+  Legend
 } from "recharts";
 import { motion } from "framer-motion";
 
@@ -84,14 +88,6 @@ const MOCK_ORDERS: Order[] = [
   }
 ];
 
-const SALES_DATA = [
-  { name: "Jan", revenue: 18400 },
-  { name: "Feb", revenue: 22100 },
-  { name: "Mar", revenue: 29400 },
-  { name: "Apr", revenue: 38200 },
-  { name: "May", revenue: 47900 },
-  { name: "Jun", revenue: 54300 }
-];
 
 const CATEGORY_DATA = [
   { name: "Pumps", sales: 42, color: "#0089C9" },
@@ -142,6 +138,61 @@ function DashboardIndex() {
     const lowStockCount = adminProducts.filter(p => p.stock < 10).length;
     const totalReviews = adminProducts.reduce((acc, p) => acc + (p.reviews?.length || 0), 0);
     return { revenue: totalRev, ordersCount: orders.length, avgOrder: avgOrderVal, lowStock: lowStockCount, reviews: totalReviews };
+  }, [orders, adminProducts]);
+
+  const dynamicSalesData = useMemo(() => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    // Generate last 6 months buckets
+    const buckets = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(currentYear, currentMonth - i, 1);
+      buckets.push({
+        name: months[d.getMonth()],
+        month: d.getMonth(),
+        year: d.getFullYear(),
+        revenue: 0,
+        ordersCount: 0
+      });
+    }
+
+    // Populate buckets
+    orders.forEach(order => {
+      const d = new Date(order.placedAt);
+      const m = d.getMonth();
+      const y = d.getFullYear();
+      const bucket = buckets.find(b => b.month === m && b.year === y);
+      if (bucket) {
+        bucket.revenue += order.total;
+        bucket.ordersCount += 1;
+      }
+    });
+
+    return buckets;
+  }, [orders]);
+
+  const dynamicCategoryData = useMemo(() => {
+    const categories: Record<string, number> = {};
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        const product = adminProducts.find(p => p.id === item.id);
+        // If product isn't found or has no category, default to "Other"
+        const catName = product?.category || "Other";
+        categories[catName] = (categories[catName] || 0) + item.qty;
+      });
+    });
+
+    const colors = ["#0089C9", "#59D2F3", "#006DAB", "#48CAE4", "#8b5cf6", "#10b981"];
+    const data = Object.keys(categories).map((cat, idx) => ({
+      name: cat,
+      sales: categories[cat],
+      color: colors[idx % colors.length]
+    })).sort((a, b) => b.sales - a.sales);
+
+    return data.length > 0 ? data : CATEGORY_DATA;
   }, [orders, adminProducts]);
 
   const kpis = [
@@ -288,23 +339,28 @@ function DashboardIndex() {
 
             <div className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={SALES_DATA} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                <ComposedChart data={dynamicSalesData} margin={{ top: 15, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0089C9" stopOpacity={0.25} />
-                      <stop offset="95%" stopColor="#59D2F3" stopOpacity={0} />
+                      <stop offset="0%" stopColor="#0089C9" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="#59D2F3" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#59D2F3" stopOpacity={0.8} />
+                      <stop offset="100%" stopColor="#0089C9" stopOpacity={0.2} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.04)" />
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v / 1000}k`} />
+                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v / 1000}k`} dx={-10} />
                   <Tooltip
                     formatter={(v) => [formatUSD(v as number), "Revenue"]}
-                    contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px" }}
-                    cursor={{ stroke: "rgba(0,137,201,0.2)", strokeWidth: 2 }}
+                    contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
+                    cursor={{ fill: "rgba(0,137,201,0.05)" }}
                   />
-                  <Area type="monotone" dataKey="revenue" stroke="#0089C9" strokeWidth={2.5} fill="url(#revGrad)" dot={false} activeDot={{ r: 5, fill: "#0089C9", stroke: "#fff", strokeWidth: 2 }} />
-                </AreaChart>
+                  <Bar dataKey="revenue" fill="url(#barGrad)" radius={[6, 6, 0, 0]} barSize={24} />
+                  <Area type="monotone" dataKey="revenue" stroke="#0089C9" strokeWidth={3} fill="url(#revGrad)" dot={{ r: 4, fill: "#fff", stroke: "#0089C9", strokeWidth: 2 }} activeDot={{ r: 6, fill: "#0089C9", stroke: "#fff", strokeWidth: 2 }} />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </GlassCard>
@@ -317,22 +373,38 @@ function DashboardIndex() {
               <h3 className="font-black text-slate-900 text-base tracking-tight">Sales by Category</h3>
               <p className="text-xs text-slate-400 mt-0.5">Units sold by equipment segment</p>
             </div>
-            <div className="flex-1 min-h-[200px]">
+            <div className="flex-1 min-h-[220px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={CATEGORY_DATA} margin={{ top: 0, right: 0, left: -30, bottom: 0 }} barSize={18}>
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
+                <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                   <Tooltip
                     formatter={(v) => [v, "Units"]}
-                    contentStyle={{ backgroundColor: "#0f172a", borderRadius: "0.75rem", border: "none", color: "#fff", fontSize: "11px", padding: "8px 12px" }}
-                    cursor={{ fill: "rgba(0,0,0,0.04)" }}
+                    contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
+                    itemStyle={{ color: "#fff", fontWeight: "bold" }}
                   />
-                  <Bar dataKey="sales" radius={[8, 8, 0, 0]}>
-                    {CATEGORY_DATA.map((entry, index) => (
+                  <Pie
+                    data={dynamicCategoryData}
+                    dataKey="sales"
+                    nameKey="name"
+                    cx="50%"
+                    cy="45%"
+                    innerRadius={65}
+                    outerRadius={85}
+                    paddingAngle={5}
+                    stroke="none"
+                    cornerRadius={8}
+                  >
+                    {dynamicCategoryData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
-                  </Bar>
-                </BarChart>
+                  </Pie>
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={36} 
+                    iconType="circle"
+                    iconSize={8}
+                    wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', color: '#94a3b8' }}
+                  />
+                </PieChart>
               </ResponsiveContainer>
             </div>
           </GlassCard>
