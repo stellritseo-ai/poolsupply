@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { ServerCrash, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -167,22 +168,79 @@ function RootComponent() {
       <html lang="en">
         <HeadContent />
         <body>
-          <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-center font-sans selection:bg-primary/30 relative overflow-hidden">
-            <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/20 blur-[120px] pointer-events-none" />
+          <div className="min-h-screen relative flex items-center justify-center p-6 text-center font-sans overflow-hidden bg-slate-900 selection:bg-white/20">
+            {/* Background Blur Image */}
+            <div 
+              className="absolute inset-0 z-0 opacity-50 scale-110"
+              style={{
+                backgroundImage: `url('https://res.cloudinary.com/dmanafb84/image/upload/v1780845960/pool-products/uinvsu9cddj77qn8nnvn.png')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: 'blur(24px)'
+              }}
+            />
             
-            <div className="relative z-10 max-w-lg mx-auto backdrop-blur-xl bg-white/5 border border-white/10 p-12 rounded-[3rem] shadow-2xl">
-              <div className="w-24 h-24 bg-primary/20 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-primary/30 shadow-[0_0_30px_rgba(2,132,199,0.3)]">
-                <ServerCrash className="w-10 h-10 text-primary animate-pulse" />
-              </div>
-              <h1 className="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tight">System Upgrade</h1>
-              <p className="text-slate-400 text-sm sm:text-base font-medium leading-relaxed mb-8">
-                We are currently performing scheduled maintenance on our storefront to serve you better. We'll be back online shortly.
-              </p>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-slate-300 uppercase tracking-widest">
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            {/* Glassmorphism Card */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative z-10 w-full max-w-xl mx-auto rounded-[2.5rem] overflow-hidden p-10 sm:p-14 border border-white/20 shadow-2xl"
+              style={{
+                background: "rgba(255, 255, 255, 0.08)",
+                backdropFilter: "blur(40px)",
+                WebkitBackdropFilter: "blur(40px)",
+                boxShadow: "0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)"
+              }}
+            >
+              <div className="absolute top-0 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+              
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.6, type: "spring", stiffness: 200 }}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02))",
+                  border: "1px solid rgba(255,255,255,0.2)"
+                }}
+              >
+                <div className="absolute inset-0 rounded-full border border-white/20 animate-[spin_5s_linear_infinite]" />
+                <div className="absolute inset-2 rounded-full border border-white/10 animate-[spin_4s_linear_infinite_reverse]" />
+                <ServerCrash className="w-10 h-10 sm:w-12 sm:h-12 text-white/90 drop-shadow-md" />
+              </motion.div>
+
+              <motion.h1 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="text-4xl sm:text-5xl font-black text-white mb-5 tracking-tight drop-shadow-sm"
+              >
+                System Upgrade
+              </motion.h1>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="text-white/80 text-sm sm:text-base font-medium leading-relaxed mb-10 max-w-md mx-auto"
+              >
+                We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates.
+              </motion.p>
+              
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/20 border border-white/10 text-[11px] sm:text-xs font-bold text-white/90 uppercase tracking-[0.15em] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md"
+              >
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span>
+                </span>
                 Under Maintenance
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
           <Scripts />
         </body>
