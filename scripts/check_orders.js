@@ -1,7 +1,8 @@
 import { MongoClient } from "mongodb";
 
 async function checkOrders() {
-  const uri = process.env.MONGODB_URI || "mongodb+srv://Pools_database_db_user:pPH0aCfvACpdl0vR@pools.4nsntwy.mongodb.net/?appName=Pools";
+  const uri = process.env.MONGODB_URI;
+  if (!uri) throw new Error("Missing MONGODB_URI");
   const client = new MongoClient(uri);
   await client.connect();
   const db = client.db("aquapro");
