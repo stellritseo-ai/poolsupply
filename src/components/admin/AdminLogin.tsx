@@ -82,7 +82,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
       >
         {/* Card */}
         <div
-          className="relative rounded-[2.5rem] overflow-hidden p-10"
+          className="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden p-6 sm:p-10"
           style={{
             background: "rgba(255,255,255,0.08)",
             backdropFilter: "blur(32px)",
