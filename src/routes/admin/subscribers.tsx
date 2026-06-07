@@ -199,7 +199,7 @@ function SubscribersList() {
           <h3 className="font-extrabold text-slate-900">Database Connection Error</h3>
           <p className="text-xs text-slate-500 max-w-sm mt-1 mb-4">{error}</p>
           <button 
-            onClick={loadSubscribers}
+            onClick={() => loadSubscribers()}
             className="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition"
           >
             Retry Connection

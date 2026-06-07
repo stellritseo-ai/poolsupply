@@ -1,7 +1,17 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
-import { products as defaultProducts, Product } from "../products";
+import { Product } from "../products";
+import { products as defaultProducts } from "../default-products";
+import { ObjectId } from "mongodb";
+
+function toQueryId(id: string): any {
+  try {
+    return new ObjectId(id);
+  } catch {
+    return id;
+  }
+}
 
 // Helper function to verify and seed products if database collection is empty
 async function getOrSeedProducts(productsCol: any): Promise<any[]> {
@@ -23,11 +33,11 @@ export const getProductsDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       const productsCol = db.collection("products");
-      
+
       const rawProducts = await getOrSeedProducts(productsCol);
-      
+
       const formatted = rawProducts.map((p: any) => {
-        const item = { ...p, id: p._id };
+        const item = { ...p, id: p._id.toString() };
         delete item._id;
         return item as Product;
       });
@@ -45,7 +55,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       const productsCol = db.collection("products");
-      
+
       // Ensure seed has run at least once
       await getOrSeedProducts(productsCol);
 
@@ -66,7 +76,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
       }).limit(8).toArray();
 
       const formatted = matched.map((p: any) => {
-        const item = { ...p, id: p._id };
+        const item = { ...p, id: p._id.toString() };
         delete item._id;
         return item as Product;
       });
@@ -84,11 +94,12 @@ export const saveProductDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       const productsCol = db.collection("products");
-      
+
       const product = data.product;
-      const doc = { ...product, _id: product.id };
-      
-      await productsCol.replaceOne({ _id: product.id }, doc, { upsert: true });
+      const queryId = toQueryId(product.id);
+      const doc = { ...product, _id: queryId };
+
+      await productsCol.replaceOne({ _id: queryId }, doc, { upsert: true });
       return { success: true };
     } catch (e: any) {
       console.error("Failed to save product to DB:", e);
@@ -102,8 +113,9 @@ export const deleteProductDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       const productsCol = db.collection("products");
-      
-      await productsCol.deleteOne({ _id: data.id });
+
+      const queryId = toQueryId(data.id);
+      await productsCol.deleteOne({ _id: queryId });
       return { success: true };
     } catch (e: any) {
       console.error("Failed to delete product from DB:", e);
@@ -117,18 +129,30 @@ export const addReviewDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       const productsCol = db.collection("products");
+
+      const queryId = toQueryId(data.productId);
       
+      // 1. Embed in the product document for fast frontend loading
       await productsCol.updateOne(
-        { _id: data.productId },
-        { 
-          $push: { 
-            reviews: { 
-              $each: [data.review], 
-              $position: 0 
-            } 
-          } 
+        { _id: queryId },
+        {
+          $push: {
+            reviews: {
+              $each: [data.review],
+              $position: 0
+            }
+          } as any
         }
       );
+
+      // 2. Also insert into the dedicated 'reviews' collection for database visibility
+      const reviewsCol = db.collection("reviews");
+      const standaloneReview = {
+        ...data.review,
+        productId: data.productId, // Link it to the product
+        _id: toQueryId(data.review.id)
+      };
+      await reviewsCol.insertOne(standaloneReview);
       return { success: true };
     } catch (e: any) {
       console.error("Failed to add review to DB:", e);
@@ -142,15 +166,22 @@ export const deleteReviewDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       const productsCol = db.collection("products");
+
+      const queryId = toQueryId(data.productId);
       
+      // 1. Remove from embedded product document
       await productsCol.updateOne(
-        { _id: data.productId },
-        { 
-          $pull: { 
-            reviews: { id: data.reviewId } 
+        { _id: queryId },
+        {
+          $pull: {
+            reviews: { id: data.reviewId }
           } as any
         }
       );
+
+      // 2. Remove from the dedicated 'reviews' collection
+      const reviewsCol = db.collection("reviews");
+      await reviewsCol.deleteOne({ id: data.reviewId });
       return { success: true };
     } catch (e: any) {
       console.error("Failed to delete review from DB:", e);

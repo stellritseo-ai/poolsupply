@@ -61,7 +61,7 @@ export function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-pool focus:ring-2 focus:ring-cyan-pool/20 transition-all duration-200 disabled:opacity-50"
               />
-              <button 
+              <button
                 type="submit"
                 disabled={isSubmitting}
                 className="px-5 py-3 rounded-xl bg-gradient-ocean hover:opacity-90 hover:shadow-[0_0_15px_rgba(0,180,216,0.3)] text-white text-sm font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"

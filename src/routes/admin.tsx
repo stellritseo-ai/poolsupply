@@ -1,13 +1,13 @@
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingBag, 
-  MessageSquare, 
-  ArrowLeft, 
-  Menu, 
-  X, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingBag,
+  MessageSquare,
+  ArrowLeft,
+  Menu,
+  X,
   User,
   Users,
   Bell,
@@ -16,11 +16,11 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
 import { AdminLogin } from "@/components/admin/AdminLogin";
-import { 
-  getNotifications, 
-  markNotificationAsRead, 
-  markAllNotificationsAsRead, 
-  deleteNotification 
+import {
+  getNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  deleteNotification
 } from "@/lib/api/notifications.functions";
 
 function timeAgo(date: Date | string) {
@@ -49,7 +49,7 @@ function AdminLayout() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  
+
   // Notifications State
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -58,7 +58,7 @@ function AdminLayout() {
     const token = localStorage.getItem("aquapro_admin_token");
     if (token) {
       setIsAuthenticated(true);
-      
+
       // Fetch notifications
       getNotifications().then(res => {
         if (res.success && res.notifications) {
@@ -118,7 +118,7 @@ function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-[#F7F7F8] text-slate-900 flex font-sans selection:bg-primary/20">
-      
+
       {/* PREMIUM DESKTOP SIDEBAR */}
       <aside className="hidden lg:flex flex-col w-[260px] bg-gradient-ocean text-white/80 shrink-0 border-r border-white/10 shadow-2xl z-40">
         <div className="h-16 px-6 flex items-center gap-3 border-b border-white/10">
@@ -130,7 +130,7 @@ function AdminLayout() {
             Admin
           </span>
         </div>
-        
+
         <div className="px-4 py-4 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/70">
           Menu
         </div>
@@ -143,11 +143,10 @@ function AdminLayout() {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${
-                  active 
-                    ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]" 
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${active
+                    ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
                     : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                  }`}
               >
                 <Icon className={`size-4 ${active ? 'text-white' : 'text-white/70'}`} />
                 {item.label}
@@ -157,8 +156,8 @@ function AdminLayout() {
         </nav>
 
         <div className="p-4 mt-auto">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 border border-transparent hover:border-white/10"
           >
             <ArrowLeft className="size-4" />
@@ -207,11 +206,10 @@ function AdminLayout() {
                       key={item.label}
                       to={item.to}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${
-                        active 
-                          ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]" 
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${active
+                          ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
                           : "text-white/80 hover:bg-white/10 hover:text-white"
-                      }`}
+                        }`}
                     >
                       <Icon className={`size-4 ${active ? 'text-white' : 'text-white/70'}`} />
                       {item.label}
@@ -221,8 +219,8 @@ function AdminLayout() {
               </nav>
 
               <div className="p-4">
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 border border-transparent hover:border-white/10"
                 >
@@ -237,10 +235,10 @@ function AdminLayout() {
 
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col overflow-x-hidden relative">
-        
+
         {/* PREMIUM HEADER */}
         <header className="h-16 bg-[#F7F7F8]/80 backdrop-blur-xl border-b border-black/[0.04] px-6 md:px-8 flex items-center justify-between lg:justify-end gap-4 shrink-0 z-30 sticky top-0">
-          <button 
+          <button
             onClick={() => setMobileOpen(true)}
             className="lg:hidden size-9 grid place-items-center rounded-lg bg-white border border-black/[0.08] shadow-sm text-slate-600 hover:bg-slate-50 transition active:scale-95"
           >
@@ -250,13 +248,12 @@ function AdminLayout() {
           <div className="flex items-center gap-3 md:gap-5">
             {/* Refined Notification Widget */}
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className={`relative size-9 grid place-items-center rounded-full transition-all duration-200 active:scale-95 ${
-                  notificationsOpen 
-                    ? 'bg-primary/10 text-primary' 
+                className={`relative size-9 grid place-items-center rounded-full transition-all duration-200 active:scale-95 ${notificationsOpen
+                    ? 'bg-primary/10 text-primary'
                     : 'bg-transparent hover:bg-black/5 text-slate-500 hover:text-slate-800'
-                }`}
+                  }`}
               >
                 <Bell className="size-4" />
                 {unreadCount > 0 && (
@@ -300,7 +297,7 @@ function AdminLayout() {
                               <div key={n.id} className={`p-4 transition-colors relative group ${!n.read ? 'bg-white' : 'hover:bg-white'}`}>
                                 {!n.read && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 bg-primary rounded-r-full group-hover:h-8 transition-all duration-300" />}
                                 {!n.read && <span className="absolute right-4 top-4 size-2 rounded-full bg-primary" />}
-                                
+
                                 <div className="flex gap-3">
                                   <div className="flex-1 min-w-0 pr-4">
                                     <p className={`text-[13px] leading-snug mb-1 ${!n.read ? 'font-semibold text-slate-900' : 'font-medium text-slate-600'}`}>
@@ -309,7 +306,7 @@ function AdminLayout() {
                                     <p className="text-[12px] text-slate-500 line-clamp-2 leading-relaxed">{n.message}</p>
                                     <div className="mt-2 flex items-center justify-between">
                                       <span className="text-[11px] font-medium text-slate-400">{timeAgo(n.createdAt)}</span>
-                                      
+
                                       <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                                         {!n.read && (
                                           <button onClick={() => handleMarkAsRead(n.id)} className="text-[11px] font-semibold text-primary hover:text-primary/80 transition-colors">

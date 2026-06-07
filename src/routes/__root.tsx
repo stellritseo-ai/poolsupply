@@ -13,6 +13,7 @@ import { ServerCrash, Loader2 } from "lucide-react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/components/site/cart-context";
+import { AuthProvider } from "@/components/site/auth-context";
 import { CartDrawer } from "@/components/site/CartDrawer";
 import { getGlobalSettings } from "@/lib/api/settings.functions";
 import { getProductsDb } from "@/lib/api/products.functions";
@@ -191,12 +192,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-        <CartDrawer />
-        <Toaster />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+          <CartDrawer />
+          <Toaster />
+        </CartProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

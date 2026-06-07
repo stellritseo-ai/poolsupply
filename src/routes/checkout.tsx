@@ -5,6 +5,8 @@ import { ChevronLeft, Lock, CreditCard, Truck, ShieldCheck } from "lucide-react"
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { computeTotals, formatUSD, useCart, SHIPPING_FREE_OVER } from "@/components/site/cart-context";
+import { useAuth } from "@/components/site/auth-context";
+import { createOrderDb } from "@/lib/api/orders.functions";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -46,7 +48,14 @@ const INITIAL: FormState = {
 function CheckoutPage() {
   const { items, subtotal, clear } = useCart();
   const navigate = useNavigate();
-  const [form, setForm] = useState<FormState>(INITIAL);
+  const { user } = useAuth();
+  
+  const [form, setForm] = useState<FormState>({
+    ...INITIAL,
+    email: user?.email || "",
+    firstName: user?.name ? user.name.split(" ")[0] : "",
+    lastName: user?.name ? user.name.split(" ").slice(1).join(" ") : "",
+  });
   const [submitting, setSubmitting] = useState(false);
 
   const [promoInput, setPromoInput] = useState("");
@@ -119,7 +128,7 @@ function CheckoutPage() {
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((f) => ({ ...f, [k]: v }));
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (items.length === 0) return;
     setSubmitting(true);
@@ -137,11 +146,14 @@ function CheckoutPage() {
       method: form.method,
     };
     try { 
+      // Save order to the database
+      await createOrderDb({ data: order as any });
+      
+      // Save only to last_order for confirmation page
       window.localStorage.setItem("aquapro_last_order", JSON.stringify(order)); 
-      const rawOrders = window.localStorage.getItem("aquapro_orders");
-      const list = rawOrders ? JSON.parse(rawOrders) : [];
-      window.localStorage.setItem("aquapro_orders", JSON.stringify([order, ...list]));
-    } catch {}
+    } catch (err) {
+      console.error("Failed to create order:", err);
+    }
     setTimeout(() => {
       clear();
       navigate({ to: "/order-confirmation", search: { id: orderId } });

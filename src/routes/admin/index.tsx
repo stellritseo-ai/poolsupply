@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { useProductsQuery } from "@/lib/products";
+import { products, syncLocalProducts, useProducts } from "@/lib/products";
+import { useOrders } from "@/lib/orders";
 import { formatUSD } from "@/components/site/cart-context";
 import {
   DollarSign,
@@ -12,9 +13,7 @@ import {
   Package,
   Star,
   Activity,
-  Activity,
-  Zap,
-  Loader2
+  Zap
 } from "lucide-react";
 import {
   AreaChart,
@@ -95,12 +94,12 @@ const SALES_DATA = [
 ];
 
 const CATEGORY_DATA = [
-  { name: "Pumps",      sales: 42, color: "#0089C9" },
-  { name: "Heaters",   sales: 28, color: "#59D2F3" },
-  { name: "Lights",    sales: 35, color: "#006DAB" },
-  { name: "Filters",   sales: 21, color: "#004A7C" },
-  { name: "Cleaners",  sales: 31, color: "#00B4D8" },
-  { name: "Auto",      sales: 15, color: "#48CAE4" }
+  { name: "Pumps", sales: 42, color: "#0089C9" },
+  { name: "Heaters", sales: 28, color: "#59D2F3" },
+  { name: "Lights", sales: 35, color: "#006DAB" },
+  { name: "Filters", sales: 21, color: "#004A7C" },
+  { name: "Cleaners", sales: 31, color: "#00B4D8" },
+  { name: "Auto", sales: 15, color: "#48CAE4" }
 ];
 
 const containerVariants = {
@@ -110,7 +109,7 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } }
 };
 
 function GlassCard({ children, className = "", gradient = false }: { children: React.ReactNode; className?: string; gradient?: boolean }) {
@@ -134,47 +133,8 @@ function GlassCard({ children, className = "", gradient = false }: { children: R
 }
 
 function DashboardIndex() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const { data: adminProducts = [], isLoading } = useProductsQuery();
-
-  useEffect(() => {
-    const storedOrders = localStorage.getItem("aquapro_orders");
-    if (storedOrders) {
-      try {
-        const parsed = JSON.parse(storedOrders);
-        if (Array.isArray(parsed)) {
-          const sanitized = parsed.map((o: any) => {
-            const id = typeof o?.id === "string" && o.id.trim() !== "" ? o.id : `AQ-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-            const placedAt = typeof o?.placedAt === "string" && o.placedAt.trim() !== "" ? o.placedAt : new Date().toISOString();
-            const email = typeof o?.email === "string" ? o.email : "no-email@example.com";
-            const name = typeof o?.name === "string" ? o.name : "Anonymous Customer";
-            const items = Array.isArray(o?.items) ? o.items.map((item: any) => ({
-              id: typeof item?.id === "string" ? item.id : `p-${Math.random()}`,
-              name: typeof item?.name === "string" ? item.name : "Unknown Product",
-              brand: typeof item?.brand === "string" ? item.brand : "Generic",
-              price: typeof item?.price === "number" && !isNaN(item.price) ? item.price : 0,
-              qty: typeof item?.qty === "number" && !isNaN(item.qty) ? item.qty : 1
-            })) : [];
-            const subtotal = typeof o?.subtotal === "number" && !isNaN(o.subtotal) ? o.subtotal : items.reduce((acc: number, it: any) => acc + (it.price * it.qty), 0);
-            const shipping = typeof o?.shipping === "number" && !isNaN(o.shipping) ? o.shipping : 0;
-            const tax = typeof o?.tax === "number" && !isNaN(o.tax) ? o.tax : 0;
-            const total = typeof o?.total === "number" && !isNaN(o.total) ? o.total : (subtotal + shipping + tax);
-            const method = typeof o?.method === "string" ? o.method : "standard";
-            return { id, placedAt, email, name, items, subtotal, shipping, tax, total, method };
-          });
-          setOrders(sanitized);
-        } else {
-          setOrders(MOCK_ORDERS);
-        }
-      } catch (e) {
-        setOrders(MOCK_ORDERS);
-      }
-    } else {
-      setOrders(MOCK_ORDERS);
-      localStorage.setItem("aquapro_orders", JSON.stringify(MOCK_ORDERS));
-    }
-
-  }, []);
+  const { orders } = useOrders();
+  const { products: adminProducts } = useProducts();
 
   const metrics = useMemo(() => {
     const totalRev = orders.reduce((acc, o) => acc + o.total, 0);
@@ -217,8 +177,8 @@ function DashboardIndex() {
     },
     {
       title: "Low Stock Alerts",
-      value: isLoading ? "..." : metrics.lowStock.toString(),
-      change: isLoading ? "Loading..." : metrics.lowStock > 0 ? "Needs Attention" : "All Good",
+      value: metrics.lowStock.toString(),
+      change: metrics.lowStock > 0 ? "Needs Attention" : "All Good",
       up: metrics.lowStock === 0,
       icon: AlertTriangle,
       accent: metrics.lowStock > 0 ? "#f43f5e" : "#10b981",

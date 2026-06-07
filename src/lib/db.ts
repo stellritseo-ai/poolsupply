@@ -1,7 +1,7 @@
 import type { Db } from 'mongodb';
 
 // Replace the uri string with your MongoDB deployment's connection string.
-const uri = process.env.MONGODB_URI || "mongodb+srv://Pools_database_db_user:pPH0aCfvACpdl0vR@pools.4nsntwy.mongodb.net/?appName=Pools";
+const uri = process.env.MONGODB_URI;
 
 let client: any = null;
 let dbConnection: Db | null = null;
@@ -12,7 +12,11 @@ let dbConnection: Db | null = null;
  */
 export async function connectDB(): Promise<Db> {
   if (dbConnection) {
-    return dbConnection;
+    return dbConnection as Db;
+  }
+  
+  if (!uri) {
+    throw new Error("MONGODB_URI environment variable is missing.");
   }
   
   const maskedUri = uri.replace(/:([^@:]*)@/, ':******@');
@@ -25,7 +29,7 @@ export async function connectDB(): Promise<Db> {
     // Defaulting database name to 'aquapro' which fits the application context
     dbConnection = client.db('aquapro');
     console.log("Successfully connected to MongoDB");
-    return dbConnection;
+    return dbConnection as Db;
   } catch (error: any) {
     const diagMessage = `MongoDB connection failed. URI: ${maskedUri} | Length: ${uri.length} | startsWithQuotes: ${uri.startsWith('"') || uri.startsWith("'")} | endsWithQuotes: ${uri.endsWith('"') || uri.endsWith("'")} | isEnvVarSet: ${!!process.env.MONGODB_URI} | Error: ${error.message}`;
     console.error(diagMessage, error);

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
+import crypto from "node:crypto";
 
 export const loginAdmin = createServerFn({ method: "POST" })
   .inputValidator(z.object({
@@ -64,8 +65,8 @@ export const loginAdmin = createServerFn({ method: "POST" })
         }
       }
 
-      // Generate a simple token for the client session
-      const token = Buffer.from(`${user.username}-admin-${Date.now()}`).toString('base64');
+      // Generate a secure token for the client session
+      const token = crypto.randomBytes(32).toString('hex');
 
       return {
         success: true,

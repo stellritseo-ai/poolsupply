@@ -1,18 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products as initialProducts, useProductsQuery, invalidateProductsCache, Product, Review } from "@/lib/products";
-import { useQueryClient } from "@tanstack/react-query";
-import { deleteReviewDb } from "@/lib/api/products.functions";
-import { 
-  Star, 
-  Search, 
-  Trash2, 
+import { products as initialProducts, getProductsList, syncLocalProducts, Product, Review, useProducts } from "@/lib/products";
+import {
+  Star,
+  Search,
+  Trash2,
   AlertTriangle,
   MessageSquare,
   CheckCircle,
   ThumbsUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { deleteReviewDb } from "@/lib/api/products.functions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin/reviews")({
   component: ReviewsModerator,
@@ -31,12 +31,13 @@ type CompliedReview = {
 };
 
 function ReviewsModerator() {
-  const { data: dbProducts = [], isLoading } = useProductsQuery();
-  const queryClient = useQueryClient();
   const [compiledList, setCompiledList] = useState<CompliedReview[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [ratingFilter, setRatingFilter] = useState("all");
   const [toast, setToast] = useState("");
+
+  const { products: dbProducts } = useProducts();
+  const queryClient = useQueryClient();
 
   // Load reviews on mount
   useEffect(() => {
@@ -59,67 +60,6 @@ function ReviewsModerator() {
       }
     });
 
-    // 2. Load global reviews
-    const globalRaw = localStorage.getItem("aquapro_global_reviews");
-    if (globalRaw) {
-      try {
-        const parsed = JSON.parse(globalRaw);
-        if (Array.isArray(parsed)) {
-          parsed.forEach((r: any) => {
-            list.push({
-              id: r.id || `gr-${Math.random()}`,
-              productId: "global",
-              targetName: "Global Storefront",
-              author: r.author || "Anonymous Reviewer",
-              role: r.role || "Trade Client",
-              rating: typeof r.rating === "number" ? r.rating : 5,
-              date: r.date || new Date().toISOString().split("T")[0],
-              title: r.title || "No Title",
-              content: r.content || ""
-            });
-          });
-        }
-      } catch (e) {
-        console.error("Failed to parse global reviews database", e);
-      }
-    } else {
-      // Seed default global reviews
-      const SEED_GLOBAL = [
-        {
-          id: "gr-1",
-          author: "Robert P., CEO",
-          role: "BlueWave Pool Builders",
-          rating: 5,
-          date: "2026-05-28",
-          title: "Saves us thousands on every build",
-          content: "The wholesale pricing here is unparalleled. We order all of our Pentair pumps and Hayward heaters through this portal. Delivery is consistently on time, which is critical for construction milestones."
-        },
-        {
-          id: "gr-2",
-          author: "Elena M., Owner",
-          role: "Aqualux Pool Service",
-          rating: 5,
-          date: "2026-05-15",
-          title: "Best logistics in the business",
-          content: "With three service trucks on the road, we need parts fast. Having localized shipping out of their TN warehouse means standard delivery reaches us in 24 hours. Incredible speed."
-        }
-      ];
-      SEED_GLOBAL.forEach((r: any) => {
-        list.push({
-          id: r.id,
-          productId: "global",
-          targetName: "Global Storefront",
-          author: r.author,
-          role: r.role,
-          rating: r.rating,
-          date: r.date,
-          title: r.title,
-          content: r.content
-        });
-      });
-      localStorage.setItem("aquapro_global_reviews", JSON.stringify(SEED_GLOBAL));
-    }
-
     setCompiledList(list);
   }, [dbProducts]);
 
@@ -131,37 +71,27 @@ function ReviewsModerator() {
   // Filter reviews
   const filteredReviews = useMemo(() => {
     return compiledList.filter(r => {
-      const matchSearch = r.author.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          r.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          r.targetName.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchSearch = r.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.targetName.toLowerCase().includes(searchTerm.toLowerCase());
       const matchRating = ratingFilter === "all" || r.rating === Number(ratingFilter);
       return matchSearch && matchRating;
     });
   }, [compiledList, searchTerm, ratingFilter]);
 
   // Moderate/Delete review
-  const deleteReview = async (rev: CompliedReview) => {
+  const deleteReview = (rev: CompliedReview) => {
     // 1. Remove from local compiled state
     const updatedCompiled = compiledList.filter(item => item.id !== rev.id);
     setCompiledList(updatedCompiled);
 
-    // 2. Persist removal to databases
-    if (rev.productId === "global") {
-      const globalRaw = localStorage.getItem("aquapro_global_reviews");
-      if (globalRaw) {
-        const parsed = JSON.parse(globalRaw);
-        const updated = parsed.filter((r: any) => r.id !== rev.id);
-        localStorage.setItem("aquapro_global_reviews", JSON.stringify(updated));
-      }
-    } else {
-      try {
-        await deleteReviewDb({ data: { productId: rev.productId, reviewId: rev.id } });
-        invalidateProductsCache(queryClient);
-      } catch (err) {
-        console.error("Failed to delete review from DB:", err);
-      }
-    }
+    // 2. Remove from DB
+    deleteReviewDb({ data: { productId: rev.productId, reviewId: rev.id } }).then(() => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    }).catch(e => {
+      console.error("Failed to delete review from DB", e);
+    });
 
     triggerToast(`Review by ${rev.author} has been moderated (removed).`);
   };
@@ -201,7 +131,7 @@ function ReviewsModerator() {
             className="w-full pl-9 h-11 border border-slate-200 bg-slate-50 rounded-xl text-xs focus:outline-none focus:border-primary focus:bg-white transition-all"
           />
         </div>
-        
+
         <select
           value={ratingFilter}
           onChange={(e) => setRatingFilter(e.target.value)}
@@ -239,20 +169,19 @@ function ReviewsModerator() {
                       <div className="text-[10px] text-slate-400 mt-0.5">{rev.role}</div>
                     </td>
                     <td className="p-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                        rev.productId === "global" 
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-100" 
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${rev.productId === "global"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
                           : "bg-slate-100 text-slate-600"
-                      }`}>
+                        }`}>
                         {rev.targetName}
                       </span>
                     </td>
                     <td className="p-4 text-center">
                       <div className="flex items-center justify-center gap-0.5">
                         {[...Array(5)].map((_, i) => (
-                          <Star 
-                            key={i} 
-                            className={`size-3 ${i < rev.rating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-slate-200"}`} 
+                          <Star
+                            key={i}
+                            className={`size-3 ${i < rev.rating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-slate-200"}`}
                           />
                         ))}
                       </div>

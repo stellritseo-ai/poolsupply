@@ -3,19 +3,18 @@ import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { useQueryClient } from "@tanstack/react-query";
-import { getProductById, getRelatedProducts, useProductsQuery, invalidateProductsCache, Review, Product } from "@/lib/products";
+import { getProductById, getRelatedProducts, syncLocalProducts, useProducts, Review, Product } from "@/lib/products";
 import { addReviewDb } from "@/lib/api/products.functions";
-import { Loader2 } from "lucide-react";
-import { 
-  Star, 
-  ShoppingBag, 
-  Plus, 
-  Minus, 
-  ChevronRight, 
-  ShieldCheck, 
-  Truck, 
-  Wrench, 
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  Star,
+  ShoppingBag,
+  Plus,
+  Minus,
+  ChevronRight,
+  ShieldCheck,
+  Truck,
+  Wrench,
   MessageSquare,
   Sparkles,
   ArrowLeft
@@ -37,16 +36,17 @@ export const Route = createFileRoute("/products/$productId")({
 
 function ProductDetailPage() {
   const { productId } = useParams({ from: "/products/$productId" });
-  const { data: productsList = [], isLoading } = useProductsQuery();
-  const queryClient = useQueryClient();
+  const { products: productsList } = useProducts();
   const product = productsList.find(p => p.id === productId);
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs">("description");
   const reviewsEndRef = useRef<HTMLDivElement>(null);
-  
-  // Product Reviews State
-  const reviews = product?.reviews || [];
+
+  const queryClient = useQueryClient();
+
+  // Custom reviews logic with localStorage persistence
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [writeOpen, setWriteOpen] = useState(false);
   const [newAuthor, setNewAuthor] = useState("");
   const [newRating, setNewRating] = useState(5);
@@ -55,22 +55,28 @@ function ProductDetailPage() {
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
+    if (!product) return;
+    const key = `aquapro_reviews_${product.id}`;
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setReviews(parsed);
+          setQty(1); // Reset quantity on product change
+          setSuccessMsg("");
+          setWriteOpen(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to parse product reviews", e);
+      }
+    }
+    setReviews(product.reviews || []);
     setQty(1); // Reset quantity on product change
     setSuccessMsg("");
     setWriteOpen(false);
-  }, [productId]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header alwaysDark />
-        <main className="flex-1 grid place-items-center">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  }, [productId, product]);
 
   if (!product) {
     return (
@@ -95,7 +101,7 @@ function ProductDetailPage() {
   const related = getRelatedProducts(product);
 
   // Calculate average rating
-  const avgRating = reviews.length > 0 
+  const avgRating = reviews.length > 0
     ? +(reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
     : product.rating;
 
@@ -112,9 +118,35 @@ function ProductDetailPage() {
       content: newContent
     };
 
+    const updated = [review, ...reviews];
+    setReviews(updated);
+    localStorage.setItem(`aquapro_reviews_${product.id}`, JSON.stringify(updated));
+
+    // Also update the global product list in localStorage for immediate sync (optional, but good for local cache)
+    const storedProducts = localStorage.getItem("aquapro_db_products");
+    if (storedProducts) {
+      try {
+        const parsedProducts = JSON.parse(storedProducts);
+        if (Array.isArray(parsedProducts)) {
+          const updatedProducts = parsedProducts.map(p => {
+            if (p.id === product.id) {
+              return {
+                ...p,
+                reviews: [review, ...(p.reviews || [])]
+              };
+            }
+            return p;
+          });
+          syncLocalProducts(updatedProducts);
+        }
+      } catch (err) {
+        console.error("Failed to sync new review to global product database", err);
+      }
+    }
+
     try {
       await addReviewDb({ data: { productId: product.id, review } });
-      invalidateProductsCache(queryClient);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     } catch (err) {
       console.error("Failed to sync new review to DB:", err);
     }
@@ -166,7 +198,7 @@ function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header alwaysDark />
-      
+
       <main className="flex-1 pt-28 pb-20">
         <div className="mx-auto max-w-7xl px-6">
           {/* Breadcrumbs */}
@@ -182,25 +214,25 @@ function ProductDetailPage() {
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Left Column: Image Gallery */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="space-y-6"
             >
               <div className="relative aspect-square rounded-[2rem] bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] border border-border/70 overflow-hidden flex items-center justify-center p-10 shadow-[var(--shadow-soft)]">
-                <img 
-                  src={product.img} 
-                  alt={product.name} 
-                  className="max-h-[90%] max-w-[90%] object-contain mix-blend-multiply hover:scale-105 transition-transform duration-700 ease-out" 
+                <img
+                  src={product.img}
+                  alt={product.name}
+                  className="max-h-[90%] max-w-[90%] object-contain mix-blend-multiply hover:scale-105 transition-transform duration-700 ease-out"
                 />
-                
+
                 {/* Floating stock pill */}
                 <div className="absolute top-5 left-5">
                   {getStockBadge()}
                 </div>
               </div>
-              
+
               {/* Wholesaler Badges */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-surface border border-border/40">
@@ -231,17 +263,17 @@ function ProductDetailPage() {
               <div>
                 <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">{product.brand}</span>
                 <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">{product.name}</h1>
-                
+
                 {/* Rating & Reviews anchor */}
-                <button 
-                  onClick={scrollToReviews} 
+                <button
+                  onClick={scrollToReviews}
                   className="mt-3 flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition group"
                 >
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`size-4 ${i < Math.round(avgRating) ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`} 
+                      <Star
+                        key={i}
+                        className={`size-4 ${i < Math.round(avgRating) ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
                       />
                     ))}
                   </div>
@@ -259,9 +291,9 @@ function ProductDetailPage() {
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
                   <Sparkles className="size-3" /> Save {formatUSD(savings)} ({savingsPercent}% Off MSRP)
                 </div>
-                
+
                 <div className="h-px bg-border/40" />
-                
+
                 <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
                   <div>
                     <span className="text-muted-foreground uppercase tracking-wider text-[10px]">SKU</span>
@@ -316,7 +348,7 @@ function ProductDetailPage() {
                     Out of Stock
                   </button>
                 )}
-                
+
                 <p className="text-xs text-muted-foreground text-center">
                   🚚 Free standard delivery on orders over $500. Same day shipping for orders placed before 2 PM.
                 </p>
@@ -324,8 +356,8 @@ function ProductDetailPage() {
 
               {/* Product Tabs */}
               <div className="border-b border-border/80 flex gap-6 text-sm font-bold">
-                <button 
-                  onClick={() => setActiveTab("description")} 
+                <button
+                  onClick={() => setActiveTab("description")}
                   className={`pb-3 relative ${activeTab === "description" ? "text-primary" : "text-muted-foreground hover:text-foreground"} transition-colors`}
                 >
                   Description
@@ -333,8 +365,8 @@ function ProductDetailPage() {
                     <motion.span layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
                   )}
                 </button>
-                <button 
-                  onClick={() => setActiveTab("specs")} 
+                <button
+                  onClick={() => setActiveTab("specs")}
                   className={`pb-3 relative ${activeTab === "specs" ? "text-primary" : "text-muted-foreground hover:text-foreground"} transition-colors`}
                 >
                   Specifications
@@ -367,22 +399,22 @@ function ProductDetailPage() {
               {/* Ratings Summary */}
               <div>
                 <h2 className="text-2xl font-extrabold tracking-tight">Customer Reviews</h2>
-                
+
                 <div className="mt-4 flex items-center gap-3">
                   <div className="text-5xl font-black text-foreground">{avgRating}</div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-0.5">
                       {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`size-3.5 ${i < Math.round(avgRating) ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`} 
+                        <Star
+                          key={i}
+                          className={`size-3.5 ${i < Math.round(avgRating) ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
                         />
                       ))}
                     </div>
                     <div className="text-xs text-muted-foreground font-semibold">{reviews.length} Reviews</div>
                   </div>
                 </div>
-                
+
                 <button
                   onClick={() => setWriteOpen(!writeOpen)}
                   className="mt-6 w-full py-2.5 rounded-full border border-border hover:border-foreground/20 hover:bg-surface font-semibold text-xs text-foreground transition-all active:scale-97"
@@ -401,14 +433,14 @@ function ProductDetailPage() {
 
                 {/* Review Form */}
                 {writeOpen && (
-                  <motion.form 
+                  <motion.form
                     initial={{ opacity: 0, y: -15 }}
                     animate={{ opacity: 1, y: 0 }}
                     onSubmit={handleAddReview}
                     className="p-6 rounded-3xl bg-surface border border-border/80 space-y-4 overflow-hidden"
                   >
                     <h3 className="font-bold text-base text-foreground">Write a Customer Review</h3>
-                    
+
                     <div className="grid sm:grid-cols-2 gap-4">
                       <label className="block">
                         <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Your Name</span>
@@ -421,7 +453,7 @@ function ProductDetailPage() {
                           className="w-full h-10 px-3 rounded-xl border border-border bg-white text-xs focus:outline-none focus:border-primary transition"
                         />
                       </label>
-                      
+
                       <div>
                         <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Rating</span>
                         <div className="flex items-center gap-1.5 h-10">
@@ -432,8 +464,8 @@ function ProductDetailPage() {
                               onClick={() => setNewRating(star)}
                               className="size-7 grid place-items-center hover:scale-110 transition"
                             >
-                              <Star 
-                                className={`size-6 ${star <= newRating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`} 
+                              <Star
+                                className={`size-6 ${star <= newRating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
                               />
                             </button>
                           ))}
@@ -492,9 +524,9 @@ function ProductDetailPage() {
                           <div className="flex items-center gap-2">
                             <div className="flex gap-0.5">
                               {[...Array(5)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`size-3 ${i < rev.rating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`} 
+                                <Star
+                                  key={i}
+                                  className={`size-3 ${i < rev.rating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
                                 />
                               ))}
                             </div>
@@ -523,22 +555,22 @@ function ProductDetailPage() {
             <section className="mt-24 pt-12 border-t border-border">
               <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Recommendations</span>
               <h2 className="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">Related Products</h2>
-              
+
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {related.map((p) => (
-                  <article 
+                  <article
                     key={p.id}
                     className="group bg-white rounded-3xl p-5 border border-border hover:shadow-[var(--shadow-float)] hover:-translate-y-1 transition-all"
                   >
                     <Link to="/products/$productId" params={{ productId: p.id }} className="block">
                       <div className="relative aspect-square rounded-2xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] overflow-hidden grid place-items-center">
-                        <img 
-                          src={p.img} 
-                          alt={p.name} 
-                          loading="lazy" 
-                          width={300} 
-                          height={300} 
-                          className="size-[80%] object-contain p-4 group-hover:scale-110 transition-transform duration-700 mix-blend-multiply" 
+                        <img
+                          src={p.img}
+                          alt={p.name}
+                          loading="lazy"
+                          width={300}
+                          height={300}
+                          className="size-[80%] object-contain p-4 group-hover:scale-110 transition-transform duration-700 mix-blend-multiply"
                         />
                       </div>
                       <div className="mt-4 flex items-center justify-between">
@@ -550,7 +582,7 @@ function ProductDetailPage() {
                       </div>
                       <h3 className="mt-1.5 font-bold text-sm text-foreground leading-snug line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">{p.name}</h3>
                     </Link>
-                    
+
                     <div className="mt-3 flex items-center justify-between">
                       <div className="text-lg font-black tracking-tight">${p.price.toLocaleString()}</div>
                       <button

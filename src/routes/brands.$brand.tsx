@@ -2,9 +2,9 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { useProductsQuery, Product } from "@/lib/products";
+import { useProducts, Product } from "@/lib/products";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { Star, ShoppingBag, Eye, Filter, ArrowUpDown, Loader2 } from "lucide-react";
+import { Star, ShoppingBag, Eye, Filter, ArrowUpDown } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/brands/$brand")({
@@ -47,7 +47,7 @@ function BrandPage() {
   const brandName = getBrandName(brand);
   const overview = getBrandOverview(brand);
   const { add } = useCart();
-  const { data: dbProducts = [], isLoading } = useProductsQuery();
+  const { products: dbProducts } = useProducts();
 
   // Filters & Sorting State
   const [sortBy, setSortBy] = useState<"price-asc" | "price-desc" | "rating-desc">("rating-desc");
@@ -58,7 +58,7 @@ function BrandPage() {
   const filteredProducts = useMemo(() => {
     // Filter matching brand
     let items = dbProducts.filter(p => p.brand.toLowerCase() === brandName.toLowerCase());
-    
+
     // Category filter
     if (selectedCategories.length > 0) {
       items = items.filter(p => selectedCategories.includes(p.category.toLowerCase()));
@@ -87,7 +87,7 @@ function BrandPage() {
 
   const toggleCategory = (cat: string) => {
     const lower = cat.toLowerCase();
-    setSelectedCategories(prev => 
+    setSelectedCategories(prev =>
       prev.includes(lower) ? prev.filter(c => c !== lower) : [...prev, lower]
     );
   };
@@ -153,13 +153,7 @@ function BrandPage() {
 
             {/* Products Layout */}
             <div className="space-y-6">
-              {isLoading ? (
-                <div className="flex items-center justify-center py-20">
-                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                </div>
-              ) : (
-                <>
-                  {/* Toolbar */}
+              {/* Toolbar */}
               <div className="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-border/50">
                 <div className="text-xs font-semibold text-muted-foreground">
                   Showing {filteredProducts.length} of {dbProducts.filter(p => p.brand.toLowerCase() === brandName.toLowerCase()).length} products
@@ -211,14 +205,14 @@ function BrandPage() {
                             <h3 className="mt-1.5 font-bold text-foreground leading-snug min-h-[3rem] group-hover:text-primary transition-colors">{p.name}</h3>
                           </Link>
                         </div>
-                        
+
                         <div className="mt-4 pt-4 border-t border-border/40 flex items-center justify-between">
                           <div>
                             <div className="text-xs text-muted-foreground/80 line-through">MSRP {formatUSD(p.msrp)}</div>
                             <div className="text-xl font-black tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(p.price)}</div>
                             <div className="text-[9px] font-bold text-emerald-600 mt-0.5">Save {formatUSD(savings)}</div>
                           </div>
-                          
+
                           <button
                             onClick={() => add(p, 1)}
                             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-foreground text-background text-xs font-semibold hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition"
@@ -235,8 +229,6 @@ function BrandPage() {
                   <p className="text-sm font-semibold text-muted-foreground">No products found matching filters</p>
                   <p className="text-xs text-muted-foreground/75 mt-1">Try clearing selected filters or check another brand.</p>
                 </div>
-              )}
-                </>
               )}
             </div>
           </div>

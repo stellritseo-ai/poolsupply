@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useOrders } from "@/lib/orders";
+import { updateOrderStatusDb, deleteOrderDb, seedMockOrdersDb } from "@/lib/api/orders.functions";
 import { formatUSD } from "@/components/site/cart-context";
 import { 
   Search, 
@@ -98,100 +101,59 @@ const MOCK_ORDERS: Order[] = [
 ];
 
 function OrdersManager() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const { orders: dbOrders, isLoading, refetch } = useOrders();
+  const queryClient = useQueryClient();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
+  // Seed on empty, auto-select first order
   useEffect(() => {
-    const stored = localStorage.getItem("aquapro_orders");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          const sanitized = parsed.map((o: any) => {
-            const id = typeof o?.id === "string" && o.id.trim() !== "" ? o.id : `AQ-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-            const placedAt = typeof o?.placedAt === "string" && o.placedAt.trim() !== "" ? o.placedAt : new Date().toISOString();
-            const email = typeof o?.email === "string" ? o.email : "no-email@example.com";
-            const name = typeof o?.name === "string" ? o.name : "Anonymous Customer";
-            
-            const rawAddress = o?.address || {};
-            const address = {
-              line1: typeof rawAddress.line1 === "string" ? rawAddress.line1 : "No street address",
-              line2: typeof rawAddress.line2 === "string" ? rawAddress.line2 : "",
-              city: typeof rawAddress.city === "string" ? rawAddress.city : "",
-              state: typeof rawAddress.state === "string" ? rawAddress.state : "",
-              zip: typeof rawAddress.zip === "string" ? rawAddress.zip : "",
-              country: typeof rawAddress.country === "string" ? rawAddress.country : "United States"
-            };
-
-            const items = Array.isArray(o?.items) ? o.items.map((item: any) => ({
-              id: typeof item?.id === "string" ? item.id : `p-${Math.random()}`,
-              name: typeof item?.name === "string" ? item.name : "Unknown Product",
-              brand: typeof item?.brand === "string" ? item.brand : "Generic",
-              price: typeof item?.price === "number" && !isNaN(item.price) ? item.price : 0,
-              qty: typeof item?.qty === "number" && !isNaN(item.qty) ? item.qty : 1
-            })) : [];
-
-            const subtotal = typeof o?.subtotal === "number" && !isNaN(o.subtotal) ? o.subtotal : items.reduce((acc, it) => acc + (it.price * it.qty), 0);
-            const shipping = typeof o?.shipping === "number" && !isNaN(o.shipping) ? o.shipping : 0;
-            const tax = typeof o?.tax === "number" && !isNaN(o.tax) ? o.tax : 0;
-            const total = typeof o?.total === "number" && !isNaN(o.total) ? o.total : (subtotal + shipping + tax);
-            const status = ["Pending", "Shipped", "Delivered", "Cancelled"].includes(o?.status) ? o.status : "Pending";
-            const method = typeof o?.method === "string" ? o.method : "standard";
-
-            return { id, placedAt, email, name, address, items, subtotal, shipping, tax, total, status, method };
-          });
-          setOrders(sanitized);
-          if (sanitized.length > 0) setSelectedOrder(sanitized[0]);
-          localStorage.setItem("aquapro_orders", JSON.stringify(sanitized));
-          return;
-        }
-      } catch (e) {
-        console.error("Failed to parse orders database", e);
+    if (!isLoading) {
+      if (dbOrders.length === 0) {
+        seedMockOrdersDb({ data: MOCK_ORDERS }).then(() => refetch());
+      } else if (!selectedOrder) {
+        setSelectedOrder(dbOrders[0]);
+      } else {
+        // Update selected order if data changes
+        const updatedSelected = dbOrders.find(o => o.id === selectedOrder.id);
+        if (updatedSelected) setSelectedOrder(updatedSelected);
       }
     }
-    
-    // Default seed fallback
-    setOrders(MOCK_ORDERS);
-    localStorage.setItem("aquapro_orders", JSON.stringify(MOCK_ORDERS));
-    setSelectedOrder(MOCK_ORDERS[0]);
-  }, []);
+  }, [dbOrders, isLoading]);
 
-  // Update status in LocalStorage
-  const updateStatus = (id: string, nextStatus: Order["status"]) => {
-    const updated = orders.map(o => {
-      if (o.id === id) {
-        const withStatus = { ...o, status: nextStatus };
-        if (selectedOrder?.id === id) setSelectedOrder(withStatus);
-        return withStatus;
-      }
-      return o;
-    });
-    setOrders(updated);
-    localStorage.setItem("aquapro_orders", JSON.stringify(updated));
+  // Update status in DB
+  const updateStatus = async (id: string, nextStatus: Order["status"]) => {
+    // Optimistic UI update
+    if (selectedOrder?.id === id) {
+      setSelectedOrder({ ...selectedOrder, status: nextStatus });
+    }
+    
+    await updateOrderStatusDb({ data: { id, status: nextStatus! } });
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
   };
 
   // Delete/Cancel order
-  const deleteOrder = (id: string) => {
-    const updated = orders.filter(o => o.id !== id);
-    setOrders(updated);
-    localStorage.setItem("aquapro_orders", JSON.stringify(updated));
+  const deleteOrder = async (id: string) => {
+    const updated = dbOrders.filter(o => o.id !== id);
     if (selectedOrder?.id === id) {
       setSelectedOrder(updated.length > 0 ? updated[0] : null);
     }
+
+    await deleteOrderDb({ data: { id } });
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
   };
 
   // Filter orders
   const filteredOrders = useMemo(() => {
-    return orders.filter(o => {
+    return dbOrders.filter(o => {
       const matchSearch = o.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           o.email.toLowerCase().includes(searchTerm.toLowerCase());
       const matchStatus = statusFilter === "all" || o.status === statusFilter;
       return matchSearch && matchStatus;
     });
-  }, [orders, searchTerm, statusFilter]);
+  }, [dbOrders, searchTerm, statusFilter]);
 
   // Status Styling Helper
   const getStatusStyle = (status: Order["status"]) => {

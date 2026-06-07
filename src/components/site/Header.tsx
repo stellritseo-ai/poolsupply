@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Search, User, ShoppingBag, Menu, X, Waves, Loader2 } from "lucide-react";
+import { Search, User, ShoppingBag, Menu, X, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { useCart } from "./cart-context";
+import { useAuth } from "./auth-context";
+import { AuthModal } from "./AuthModal";
 import logo from "@/assets/logo.png";
 import { searchProductsDb } from "@/lib/api/products.functions";
 import { Product } from "@/lib/products";
@@ -41,6 +43,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const cart = useCart();
+  const { user, logout, openAuthModal } = useAuth();
   const isDarkText = alwaysDark || scrolled || open || searchOpen || userMenuOpen;
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -172,10 +175,21 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                   exit={{ opacity: 0, y: 10 }}
                   className="absolute right-0 top-full mt-2 w-48 rounded-2xl glass p-2 shadow-lg"
                 >
-                  <a href="#" onClick={() => setUserMenuOpen(false)} className="block px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors">Sign In</a>
-                  <a href="#" onClick={() => setUserMenuOpen(false)} className="block px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors">Create Account</a>
-                  <div className="h-px bg-border my-1 mx-2" />
-                  <a href="#" onClick={() => setUserMenuOpen(false)} className="block px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors">My Orders</a>
+                  {!user ? (
+                    <>
+                      <button onClick={() => { setUserMenuOpen(false); openAuthModal("login"); }} className="w-full text-left px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors font-medium">Sign In</button>
+                      <button onClick={() => { setUserMenuOpen(false); openAuthModal("register"); }} className="w-full text-left px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors font-medium">Create Account</button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 truncate">
+                        Hi, {user.name.split(" ")[0]}
+                      </div>
+                      <Link to="/account" onClick={() => setUserMenuOpen(false)} className="block px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors font-medium">My Orders</Link>
+                      <div className="h-px bg-border my-1 mx-2" />
+                      <button onClick={() => { setUserMenuOpen(false); logout(); }} className="w-full text-left px-3 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-lg transition-colors font-medium">Sign Out</button>
+                    </>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -332,6 +346,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
           />
         )}
       </AnimatePresence>
+      <AuthModal />
     </>
   );
 }

@@ -26,6 +26,7 @@ export default defineConfig({
   },
   nitro: {
     preset: "vercel",
+    // @ts-expect-error - rollupConfig is valid for nitro but missing in Lovable's types
     rollupConfig: {
       plugins: [cjsRequireShimPlugin],
     },

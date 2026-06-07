@@ -1,14 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { products as initialProducts, Product, useProductsQuery, invalidateProductsCache } from "@/lib/products";
+import { products as initialProducts, Product, syncLocalProducts, useProducts } from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  X, 
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  X,
   AlertTriangle,
   CheckCircle,
   FileText,
@@ -36,16 +35,15 @@ const CATEGORIES = [
 ];
 
 function ProductsManager() {
-  const { data: productsList = [], isLoading } = useProductsQuery();
-  const queryClient = useQueryClient();
+  const { products: productsList } = useProducts();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  
+
   // Modals state
   const [formOpen, setFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  
+
   // Notification State
   const [toast, setToast] = useState("");
 
@@ -71,9 +69,9 @@ function ProductsManager() {
   // Filtered products
   const filteredProducts = useMemo(() => {
     return productsList.filter(p => {
-      const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          p.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          p.brand.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchTerm.toLowerCase());
       const matchCat = selectedCategory === "all" || p.category.toLowerCase() === selectedCategory.toLowerCase();
       return matchSearch && matchCat;
     });
@@ -129,19 +127,26 @@ function ProductsManager() {
         img
       };
 
+      const updated = productsList.map(p => {
+        if (p.id === editingProduct.id) {
+          return updatedProduct;
+        }
+        return p;
+      });
+      syncLocalProducts(updated);
+      triggerToast(`Product '${name}' updated successfully.`);
+
       try {
         await saveProductDb({ data: { product: updatedProduct } });
-        invalidateProductsCache(queryClient);
-        triggerToast(`Product '${name}' updated successfully.`);
       } catch (err) {
         console.error("Failed to sync updated product to DB:", err);
       }
     } else {
       // Add mode
       const newId = `p-${brand.toLowerCase().replace(/\s+/g, "-")}-${Date.now()}`;
-      const fallbackImg = productsList[0]?.img || ""; 
+      const fallbackImg = productsList[0]?.img || "";
       const finalImg = img.trim() !== "" ? img : fallbackImg;
-      
+
       const newProduct: Product = {
         id: newId,
         name,
@@ -160,10 +165,12 @@ function ProductsManager() {
         },
         reviews: []
       };
+      const updated = [...productsList, newProduct];
+      syncLocalProducts(updated);
+      triggerToast(`Product '${name}' added to catalog.`);
+
       try {
         await saveProductDb({ data: { product: newProduct } });
-        invalidateProductsCache(queryClient);
-        triggerToast(`Product '${name}' added to catalog.`);
       } catch (err) {
         console.error("Failed to sync new product to DB:", err);
       }
@@ -212,10 +219,13 @@ function ProductsManager() {
   const deleteProduct = async () => {
     if (!deleteId) return;
     const item = productsList.find(p => p.id === deleteId);
+    const updated = productsList.filter(p => p.id !== deleteId);
+    syncLocalProducts(updated);
+    triggerToast(`Product '${item?.name}' removed from catalog.`);
+    setDeleteId(null);
+
     try {
       await deleteProductDb({ data: { id: deleteId } });
-      invalidateProductsCache(queryClient);
-      triggerToast(`Product '${item?.name}' removed from catalog.`);
     } catch (err) {
       console.error("Failed to delete product from DB:", err);
     }
@@ -264,7 +274,7 @@ function ProductsManager() {
             className="w-full pl-9 h-11 border border-slate-200 bg-slate-50 rounded-xl text-xs focus:outline-none focus:border-primary focus:bg-white transition-all"
           />
         </div>
-        
+
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
@@ -422,16 +432,16 @@ function ProductsManager() {
 
                 <div className="block">
                   <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Product Image</span>
-                  
+
                   <div className="relative overflow-hidden rounded-xl border-2 border-dashed border-slate-200 hover:border-primary/50 bg-slate-50 transition-colors group">
                     <input
-                      type="file" 
+                      type="file"
                       accept="image/png, image/jpeg, image/webp"
                       onChange={handleImageUpload}
                       disabled={isUploading}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
                     />
-                    
+
                     <div className="p-4 flex items-center justify-center gap-4">
                       {isUploading ? (
                         <div className="flex flex-col items-center justify-center text-slate-400 py-2">
@@ -554,7 +564,7 @@ function ProductsManager() {
               <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                 Are you sure you want to delete this product? This will remove the item from active consumer catalog grids. This action cannot be undone.
               </p>
-              
+
               <div className="flex gap-3 mt-6 justify-center">
                 <button
                   onClick={() => setDeleteId(null)}

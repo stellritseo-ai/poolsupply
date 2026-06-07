@@ -1,22 +1,42 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Loader2 } from "lucide-react";
 import pump from "@/assets/cat-pump.jpg";
 import heater from "@/assets/cat-heater.jpg";
 import light from "@/assets/cat-light.jpg";
 import filter from "@/assets/cat-filter.jpg";
 import cleaner from "@/assets/cat-cleaner.jpg";
 import automation from "@/assets/cat-automation.jpg";
+import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getProductsDb } from "@/lib/api/products.functions";
 
-const cats = [
-  { name: "Pool Pumps", count: "120+ products", img: pump },
-  { name: "Pool Heaters", count: "85+ products", img: heater },
-  { name: "Pool Lights", count: "60+ products", img: light },
-  { name: "Pool Filters", count: "95+ products", img: filter },
-  { name: "Pool Cleaners", count: "70+ products", img: cleaner },
-  { name: "Automation Systems", count: "40+ products", img: automation },
+const baseCats = [
+  { name: "Pool Pumps", slug: "pool-pumps", img: pump },
+  { name: "Pool Heaters", slug: "pool-heaters", img: heater },
+  { name: "Pool Lights", slug: "pool-lights", img: light },
+  { name: "Pool Filters", slug: "pool-filters", img: filter },
+  { name: "Pool Cleaners", slug: "pool-cleaners", img: cleaner },
+  { name: "Automation Systems", slug: "automation-systems", img: automation },
 ];
 
 export function Categories() {
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["all_products"],
+    queryFn: async () => {
+      const res = await getProductsDb();
+      return res.success && res.products ? res.products : [];
+    }
+  });
+
+  const getCount = (catName: string) => {
+    if (!products) return "0 products";
+    const nameWithoutS = catName.toLowerCase().replace("systems", "").replace("s", "").trim();
+    const count = products.filter(p => 
+      p.category?.toLowerCase() === catName.toLowerCase() || 
+      p.name.toLowerCase().includes(nameWithoutS)
+    ).length;
+    return `${count}+ products`;
+  };
   return (
     <section id="categories" className="py-[60px] bg-surface">
       <div className="mx-auto max-w-7xl px-6">
@@ -33,16 +53,21 @@ export function Categories() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cats.map((c, i) => (
-            <motion.a
-              href="#"
+          {baseCats.map((c, i) => (
+            <motion.div
               key={c.name}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: i * 0.05 }}
-              className="group relative overflow-hidden rounded-[2rem] bg-white border border-border/80 p-5 hover:shadow-[0_30px_60px_-15px_oklch(0.50_0.14_232/0.12)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
             >
+              <Link
+                // @ts-expect-error - Route is generated dynamically
+                to="/shop/$category"
+                // @ts-expect-error - Dynamic param
+                params={{ category: c.slug }}
+                className="group relative overflow-hidden rounded-[2rem] bg-white border border-border/80 p-5 hover:shadow-[0_30px_60px_-15px_oklch(0.50_0.14_232/0.12)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full block"
+              >
               <div className="relative aspect-[4/3] w-full mb-5 grid place-items-center overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-surface to-muted/40 border border-border/40">
                 {/* Subtle overlay reflection */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -58,8 +83,9 @@ export function Categories() {
                 />
 
                 {/* Floating pill badge */}
-                <span className="absolute top-4 left-4 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-white/90 backdrop-blur border border-white/50 rounded-full shadow-sm">
-                  {c.count}
+                <span className="absolute top-4 left-4 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-white/90 backdrop-blur border border-white/50 rounded-full shadow-sm flex items-center gap-1.5">
+                  {isLoading && <Loader2 className="size-3 animate-spin" />}
+                  {isLoading ? "Loading..." : getCount(c.name)}
                 </span>
               </div>
 
@@ -75,7 +101,8 @@ export function Categories() {
                   <ArrowUpRight className="size-4" />
                 </span>
               </div>
-            </motion.a>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>
