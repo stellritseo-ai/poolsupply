@@ -96,6 +96,7 @@ function AdminLayout() {
     { label: "Dashboard", to: "/admin", icon: LayoutDashboard },
     { label: "Products", to: "/admin/products", icon: Package },
     { label: "Orders", to: "/admin/orders", icon: ShoppingBag },
+    { label: "Customers", to: "/admin/customers", icon: User },
     { label: "Reviews", to: "/admin/reviews", icon: MessageSquare },
     { label: "Subscribers", to: "/admin/subscribers", icon: Users },
     { label: "System Settings", to: "/admin/settings", icon: Settings },

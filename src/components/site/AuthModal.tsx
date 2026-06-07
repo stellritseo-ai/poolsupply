@@ -9,7 +9,7 @@ export function AuthModal() {
   const { isAuthModalOpen, closeAuthModal, authModalType, openAuthModal, login } = useAuth();
   const isLogin = authModalType === "login";
 
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export function AuthModal() {
 
     try {
       if (isLogin) {
-        const res = await loginCustomer({ data: { email, password } });
+        const res = await loginCustomer({ data: { identifier, password } });
         if (res.success && res.token && res.user) {
           login(res.user, res.token);
           toast.success(`Welcome back, ${res.user.name}!`);
@@ -31,7 +31,7 @@ export function AuthModal() {
           toast.error(res.error || "Login failed.");
         }
       } else {
-        const res = await registerCustomer({ data: { name, email, password } });
+        const res = await registerCustomer({ data: { name, identifier, password } });
         if (res.success && res.token && res.user) {
           login(res.user, res.token);
           toast.success("Account created successfully!");
@@ -103,11 +103,11 @@ export function AuthModal() {
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
               <input
-                type="email"
-                placeholder="Email Address"
+                type="text"
+                placeholder="Email or Mobile Number"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 className="w-full rounded-2xl border border-black/10 bg-white/50 px-12 py-4 text-sm font-medium outline-none transition-all focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 dark:border-white/10 dark:bg-black/20 dark:focus:bg-black/40"
               />
             </div>

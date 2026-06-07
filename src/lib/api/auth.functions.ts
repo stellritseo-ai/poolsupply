@@ -26,19 +26,6 @@ export const loginAdmin = createServerFn({ method: "POST" })
           createdAt: new Date()
         });
         console.log("Database seeded with default admin credentials (encrypted).");
-      } else {
-        // Guarantee that the default 'pools' user uses 'pools12' password
-        const poolsUser = await usersCol.findOne({ username: "pools" });
-        if (poolsUser) {
-          const isMatch = await bcrypt.compare("pools12", poolsUser.password);
-          if (!isMatch && poolsUser.password !== "pools12") {
-            await usersCol.updateOne(
-              { username: "pools" },
-              { $set: { password: hashedPassword } }
-            );
-            console.log("Updated default admin password to pools12.");
-          }
-        }
       }
 
       // Authenticate
