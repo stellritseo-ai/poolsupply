@@ -27,9 +27,7 @@ import {
   Bar,
   Cell,
   ComposedChart,
-  PieChart,
-  Pie,
-  Legend
+  Area
 } from "recharts";
 import { motion } from "framer-motion";
 
@@ -373,38 +371,22 @@ function DashboardIndex() {
               <h3 className="font-black text-slate-900 text-base tracking-tight">Sales by Category</h3>
               <p className="text-xs text-slate-400 mt-0.5">Units sold by equipment segment</p>
             </div>
-            <div className="flex-1 min-h-[220px]">
+            <div className="flex-1 min-h-[220px] -ml-2">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <BarChart data={dynamicCategoryData} layout="vertical" margin={{ top: 10, right: 20, left: 0, bottom: 0 }} barSize={16}>
+                  <XAxis type="number" hide />
+                  <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} width={70} />
                   <Tooltip
                     formatter={(v) => [v, "Units"]}
                     contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
-                    itemStyle={{ color: "#fff", fontWeight: "bold" }}
+                    cursor={{ fill: "rgba(0,137,201,0.05)" }}
                   />
-                  <Pie
-                    data={dynamicCategoryData}
-                    dataKey="sales"
-                    nameKey="name"
-                    cx="50%"
-                    cy="45%"
-                    innerRadius={65}
-                    outerRadius={85}
-                    paddingAngle={5}
-                    stroke="none"
-                    cornerRadius={8}
-                  >
+                  <Bar dataKey="sales" radius={[0, 8, 8, 0]}>
                     {dynamicCategoryData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
-                  </Pie>
-                  <Legend 
-                    verticalAlign="bottom" 
-                    height={36} 
-                    iconType="circle"
-                    iconSize={8}
-                    wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', color: '#94a3b8' }}
-                  />
-                </PieChart>
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </GlassCard>
