@@ -53,6 +53,7 @@ function CheckoutPage() {
   const [form, setForm] = useState<FormState>({
     ...INITIAL,
     email: user?.email || "",
+    phone: user?.phone || "",
     firstName: user?.name ? user.name.split(" ")[0] : "",
     lastName: user?.name ? user.name.split(" ").slice(1).join(" ") : "",
   });
@@ -137,6 +138,7 @@ function CheckoutPage() {
       id: orderId,
       placedAt: new Date().toISOString(),
       email: form.email,
+      phone: form.phone,
       name: `${form.firstName} ${form.lastName}`.trim(),
       address: { line1: form.address1, line2: form.address2, city: form.city, state: form.state, zip: form.zip, country: form.country },
       items,

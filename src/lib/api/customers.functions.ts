@@ -91,13 +91,16 @@ export const loginCustomer = createServerFn({ method: "POST" })
 
 // Get Customer Orders
 export const getCustomerOrders = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ email: z.string() }))
+  .inputValidator(z.object({ identifier: z.string() }))
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
       const ordersCol = db.collection("orders");
 
-      const orders = await ordersCol.find({ email: data.email }).sort({ placedAt: -1 }).toArray();
+      const isEmail = data.identifier.includes('@');
+      const searchCriteria = isEmail ? { email: data.identifier } : { phone: data.identifier };
+
+      const orders = await ordersCol.find(searchCriteria).sort({ placedAt: -1 }).toArray();
 
       const formatted = orders.map(o => ({
         id: o.id || o._id.toString(),
@@ -132,8 +135,13 @@ export const getAdminCustomers = createServerFn({ method: "GET" })
       const orders = await ordersCol.find().toArray();
 
       const customersWithStats = customers.map(c => {
-        // match by email (or phone if we added phone to orders, currently orders only have email)
-        const customerOrders = orders.filter(o => o.email === c.email);
+        // match by email or phone
+        const customerOrders = orders.filter(o => {
+          if (c.email && o.email === c.email) return true;
+          if (c.phone && o.phone === c.phone) return true;
+          if (c.phone && o.email === c.phone) return true; // some orders might store phone in the email field if they bypassed validation
+          return false;
+        });
         
         const totalSpent = customerOrders.reduce((sum, o) => sum + (o.total || 0), 0);
         const totalProductsPurchased = customerOrders.reduce((sum, o) => {

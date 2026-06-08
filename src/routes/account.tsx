@@ -36,7 +36,7 @@ function AccountPage() {
     async function fetchOrders() {
       if (!user) return;
       try {
-        const res = await getCustomerOrders({ data: { email: user.email } });
+        const res = await getCustomerOrders({ data: { identifier: user.email || user.phone || "" } });
         if (res.success) setOrders(res.orders || []);
       } catch (e) {
         console.error(e);

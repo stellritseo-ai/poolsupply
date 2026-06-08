@@ -33,6 +33,7 @@ const OrderSchema = z.object({
   id: z.string(),
   placedAt: z.string(),
   email: z.string(),
+  phone: z.string().optional(),
   name: z.string(),
   address: AddressSchema,
   items: z.array(OrderItemSchema),

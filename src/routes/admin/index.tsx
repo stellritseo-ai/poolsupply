@@ -145,7 +145,7 @@ function DashboardIndex() {
     const currentYear = now.getFullYear();
 
     // Generate last 6 months buckets
-    const buckets = [];
+    const buckets: { name: string; month: number; year: number; revenue: number; ordersCount: number; }[] = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date(currentYear, currentMonth - i, 1);
       buckets.push({

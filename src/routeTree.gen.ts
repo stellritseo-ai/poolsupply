@@ -28,6 +28,7 @@ import { Route as AdminReviewsRouteImport } from './routes/admin/reviews'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
+import { Route as AdminChatRouteImport } from './routes/admin/chat'
 
 const WhyUsRoute = WhyUsRouteImport.update({
   id: '/why-us',
@@ -124,6 +125,11 @@ const AdminCustomersRoute = AdminCustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminChatRoute = AdminChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/order-confirmation': typeof OrderConfirmationRoute
   '/reviews': typeof ReviewsRoute
   '/why-us': typeof WhyUsRoute
+  '/admin/chat': typeof AdminChatRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/products': typeof AdminProductsRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/order-confirmation': typeof OrderConfirmationRoute
   '/reviews': typeof ReviewsRoute
   '/why-us': typeof WhyUsRoute
+  '/admin/chat': typeof AdminChatRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/products': typeof AdminProductsRoute
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/order-confirmation': typeof OrderConfirmationRoute
   '/reviews': typeof ReviewsRoute
   '/why-us': typeof WhyUsRoute
+  '/admin/chat': typeof AdminChatRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/products': typeof AdminProductsRoute
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/order-confirmation'
     | '/reviews'
     | '/why-us'
+    | '/admin/chat'
     | '/admin/customers'
     | '/admin/orders'
     | '/admin/products'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/order-confirmation'
     | '/reviews'
     | '/why-us'
+    | '/admin/chat'
     | '/admin/customers'
     | '/admin/orders'
     | '/admin/products'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/order-confirmation'
     | '/reviews'
     | '/why-us'
+    | '/admin/chat'
     | '/admin/customers'
     | '/admin/orders'
     | '/admin/products'
@@ -403,10 +415,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCustomersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/chat': {
+      id: '/admin/chat'
+      path: '/chat'
+      fullPath: '/admin/chat'
+      preLoaderRoute: typeof AdminChatRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminChatRoute: typeof AdminChatRoute
   AdminCustomersRoute: typeof AdminCustomersRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminProductsRoute: typeof AdminProductsRoute
@@ -417,6 +437,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminChatRoute: AdminChatRoute,
   AdminCustomersRoute: AdminCustomersRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminProductsRoute: AdminProductsRoute,

@@ -20,6 +20,7 @@ import { getGlobalSettings } from "@/lib/api/settings.functions";
 import { getProductsDb } from "@/lib/api/products.functions";
 import { syncLocalProducts } from "@/lib/products";
 import { Toaster } from "@/components/ui/sonner";
+import { FloatingChat } from "@/components/FloatingChat";
 
 
 
@@ -256,6 +257,7 @@ function RootComponent() {
           <Outlet />
           <CartDrawer />
           <Toaster />
+          <FloatingChat />
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>

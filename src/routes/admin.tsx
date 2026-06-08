@@ -5,6 +5,7 @@ import {
   Package,
   ShoppingBag,
   MessageSquare,
+  MessageCircle,
   ArrowLeft,
   Menu,
   X,
@@ -98,6 +99,7 @@ function AdminLayout() {
     { label: "Orders", to: "/admin/orders", icon: ShoppingBag },
     { label: "Customers", to: "/admin/customers", icon: User },
     { label: "Reviews", to: "/admin/reviews", icon: MessageSquare },
+    { label: "Live Chat", to: "/admin/chat", icon: MessageCircle },
     { label: "Subscribers", to: "/admin/subscribers", icon: Users },
     { label: "System Settings", to: "/admin/settings", icon: Settings },
   ];
@@ -145,8 +147,8 @@ function AdminLayout() {
                 key={item.label}
                 to={item.to}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${active
-                    ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                  ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
               >
                 <Icon className={`size-4 ${active ? 'text-white' : 'text-white/70'}`} />
@@ -208,8 +210,8 @@ function AdminLayout() {
                       to={item.to}
                       onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${active
-                          ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-                          : "text-white/80 hover:bg-white/10 hover:text-white"
+                        ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+                        : "text-white/80 hover:bg-white/10 hover:text-white"
                         }`}
                     >
                       <Icon className={`size-4 ${active ? 'text-white' : 'text-white/70'}`} />
@@ -252,8 +254,8 @@ function AdminLayout() {
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 className={`relative size-9 grid place-items-center rounded-full transition-all duration-200 active:scale-95 ${notificationsOpen
-                    ? 'bg-primary/10 text-primary'
-                    : 'bg-transparent hover:bg-black/5 text-slate-500 hover:text-slate-800'
+                  ? 'bg-primary/10 text-primary'
+                  : 'bg-transparent hover:bg-black/5 text-slate-500 hover:text-slate-800'
                   }`}
               >
                 <Bell className="size-4" />

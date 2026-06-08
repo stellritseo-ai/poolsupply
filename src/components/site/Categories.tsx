@@ -62,9 +62,7 @@ export function Categories() {
               transition={{ duration: 0.6, delay: i * 0.05 }}
             >
               <Link
-                // @ts-expect-error - Route is generated dynamically
                 to="/shop/$category"
-                // @ts-expect-error - Dynamic param
                 params={{ category: c.slug }}
                 className="group relative overflow-hidden rounded-[2rem] bg-white border border-border/80 p-5 hover:shadow-[0_30px_60px_-15px_oklch(0.50_0.14_232/0.12)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full block"
               >
