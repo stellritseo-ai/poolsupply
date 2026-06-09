@@ -92,7 +92,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-white/55">
           <p>© {new Date().getFullYear()} Pool Supply Wholesalers. All Rights Reserved.</p>
-          <p>Design By StellR IT LLC</p>
+          <p>Design By Lambton Labs</p>
         </div>
       </div>
     </footer>
