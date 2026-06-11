@@ -4,7 +4,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useProducts, Product } from "@/lib/products";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { Star, ShoppingBag, Eye, Filter, ArrowUpDown } from "lucide-react";
+import { Star, ShoppingBag, Eye, Filter, ArrowUpDown, Search } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/shop/$category")({
@@ -41,29 +41,51 @@ function CategoryPage() {
   const [sortBy, setSortBy] = useState<"price-asc" | "price-desc" | "rating-desc">("rating-desc");
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Get products matching this category
   const filteredProducts = useMemo(() => {
     // Filter matching category
     let items = dbProducts.filter(p => p.category.toLowerCase() === categoryName.toLowerCase());
+    console.log("=== Category Page Filter Debug ===");
+    console.log("Total Category Products:", items.length);
+    console.log("Selected Brands:", selectedBrands);
+    console.log("In Stock Only:", inStockOnly);
+    console.log("Search Query:", searchQuery);
+
+    // Search query filter
+    if (searchQuery.trim() !== "") {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(p => 
+        p.name.toLowerCase().includes(q) || 
+        p.brand.toLowerCase().includes(q) || 
+        p.sku.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q)
+      );
+      console.log("After Search Filter:", items.length);
+    }
 
     // Brand filter
     if (selectedBrands.length > 0) {
       items = items.filter(p => selectedBrands.includes(p.brand.toLowerCase()));
+      console.log("After Brand Filter:", items.length);
     }
 
     // Availability filter
     if (inStockOnly) {
       items = items.filter(p => p.stock > 0);
+      console.log("After Stock Filter:", items.length);
     }
 
     // Sorting
-    return [...items].sort((a, b) => {
+    const sorted = [...items].sort((a, b) => {
       if (sortBy === "price-asc") return a.price - b.price;
       if (sortBy === "price-desc") return b.price - a.price;
       return b.rating - a.rating; // default or rating-desc
     });
-  }, [dbProducts, categoryName, sortBy, selectedBrands, inStockOnly]);
+    console.log("Final Filtered Count:", sorted.length);
+    return sorted;
+  }, [dbProducts, categoryName, sortBy, selectedBrands, inStockOnly, searchQuery]);
 
   // Extract all available brands in this category for filtering options
   const categoryBrands = useMemo(() => {
@@ -102,6 +124,21 @@ function CategoryPage() {
             <aside className="space-y-6 lg:sticky lg:top-28">
               <div className="flex items-center gap-2 pb-4 border-b border-border font-bold text-sm text-foreground">
                 <Filter className="size-4" /> Filters & Controls
+              </div>
+
+              {/* Search Filter */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">Search Products</h3>
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 size-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search in category..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 h-10 border border-slate-200 bg-slate-50 rounded-xl text-xs focus:outline-none focus:border-primary focus:bg-white transition-all"
+                  />
+                </div>
               </div>
 
               {/* Brand Filter */}

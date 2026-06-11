@@ -251,7 +251,15 @@ function ProductsManager() {
       {/* Header and Toolbar */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Products Catalog</h1>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+            Products Catalog
+            <span className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">
+              {searchTerm || selectedCategory !== "all" 
+                ? `${filteredProducts.length} / ${productsList.length} items` 
+                : `${productsList.length} items`
+              }
+            </span>
+          </h1>
           <p className="text-slate-500 text-sm mt-1">Manage wholesale products, inventories, and pricing metrics.</p>
         </div>
         <button

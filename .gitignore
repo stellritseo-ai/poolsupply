@@ -34,3 +34,8 @@ dist-ssr
 .env
 .env.*
 
+# Data imports
+products.csv
+scratch/
+
+

@@ -56,6 +56,10 @@ function ProductDetailPage() {
 
   useEffect(() => {
     if (!product) return;
+
+    // Scroll to top of the page when product/productId changes
+    window.scrollTo({ top: 0, behavior: "instant" });
+
     const key = `aquapro_reviews_${product.id}`;
     const stored = localStorage.getItem(key);
     if (stored) {
@@ -98,7 +102,7 @@ function ProductDetailPage() {
 
   const savings = product.msrp - product.price;
   const savingsPercent = Math.round((savings / product.msrp) * 100);
-  const related = getRelatedProducts(product);
+  const related = getRelatedProducts(product, 4, productsList);
 
   // Calculate average rating
   const avgRating = reviews.length > 0

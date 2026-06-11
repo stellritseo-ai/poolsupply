@@ -123,7 +123,7 @@ function AdminLayout() {
     <div className="min-h-screen bg-[#F7F7F8] text-slate-900 flex font-sans selection:bg-primary/20">
 
       {/* PREMIUM DESKTOP SIDEBAR */}
-      <aside className="hidden lg:flex flex-col w-[260px] bg-gradient-ocean text-white/80 shrink-0 border-r border-white/10 shadow-2xl z-40">
+      <aside className="hidden lg:flex flex-col w-[260px] bg-gradient-ocean text-white/80 shrink-0 border-r border-white/10 shadow-2xl z-40 sticky top-0 h-screen">
         <div className="h-16 px-6 flex items-center gap-3 border-b border-white/10">
           <Link to="/" className="flex items-center group">
             {/* Using CSS filter to make the logo white for the bright sidebar */}
