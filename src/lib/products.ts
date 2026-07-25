@@ -91,13 +91,13 @@ export function getProductById(id: string, customList?: Product[]): Product | un
   });
   if (found) return found;
 
-  // Stage 3: Partial SKU/ID inclusion match
+  // Stage 3: Partial SKU/ID inclusion match (only for IDs/SKUs with at least 4 characters to prevent false positives)
   found = combinedList.find((p) => {
     const pId = p.id ? p.id.toLowerCase() : "";
     const pSku = p.sku ? p.sku.toLowerCase() : "";
     return (
-      (pId && (cleanId.includes(pId) || pId.includes(cleanId))) ||
-      (pSku && (cleanId.includes(pSku) || pSku.includes(cleanId)))
+      (pId && pId.length >= 4 && (cleanId.includes(pId) || (cleanId.length >= 4 && pId.includes(cleanId)))) ||
+      (pSku && pSku.length >= 4 && (cleanId.includes(pSku) || (cleanId.length >= 4 && pSku.includes(cleanId))))
     );
   });
   

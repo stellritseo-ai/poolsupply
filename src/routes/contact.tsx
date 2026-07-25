@@ -204,13 +204,13 @@ function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <Header alwaysDark />
 
       <main className="flex-1">
         {/* ─── HERO ─── */}
         <section
-          className="relative pt-32 pb-20 overflow-hidden"
+          className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 overflow-hidden"
           style={{ background: "linear-gradient(160deg, #001a3a 0%, #003a7a 55%, #0055aa 100%)" }}
         >
           {/* Glow orbs */}
@@ -226,21 +226,18 @@ function ContactPage() {
             ))}
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-6">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                 <span
-                  className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] border border-white/20 text-white/80"
+                  className="inline-flex items-center gap-2 mb-4 sm:mb-5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] border border-white/20 text-white/80"
                   style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(12px)" }}
                 >
                   <Zap className="size-3.5 text-cyan-400" />
                   Response within 2 Business Hours
                 </span>
 
-                <h1
-                  className="text-white tracking-tight leading-tight mb-5"
-                  style={{ fontSize: "50px", fontWeight: 800 }}
-                >
+                <h1 className="text-white tracking-tight leading-tight mb-4 sm:mb-5 text-3xl sm:text-4xl lg:text-[50px] font-extrabold">
                   Talk to a{" "}
                   <span
                     className="text-transparent"
@@ -311,8 +308,8 @@ function ContactPage() {
         </section>
 
         {/* ─── CONTACT CHANNELS ─── */}
-        <section className="max-w-7xl mx-auto px-6 -mt-2 mb-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-2 mb-10 sm:mb-14">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {CONTACT_CHANNELS.map((ch, i) => {
               const Icon = ch.icon;
               const content = (
@@ -321,18 +318,18 @@ function ContactPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className="group bg-white rounded-[1.75rem] p-6 border border-border hover:shadow-[var(--shadow-float)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3"
+                  className="group bg-white rounded-2xl sm:rounded-[1.75rem] p-4 sm:p-6 border border-border hover:shadow-[var(--shadow-float)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-2.5 sm:gap-3"
                 >
-                  <div className={`size-11 rounded-2xl bg-gradient-to-br ${ch.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
-                    <Icon className="size-5 text-white" />
+                  <div className={`size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-gradient-to-br ${ch.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
+                    <Icon className="size-4 sm:size-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">{ch.title}</div>
-                    <div className="font-extrabold text-sm text-foreground leading-snug">{ch.value}</div>
-                    <div className="text-[11px] text-muted-foreground mt-1">{ch.sub}</div>
+                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5 sm:mb-1">{ch.title}</div>
+                    <div className="font-extrabold text-xs sm:text-sm text-foreground leading-snug truncate">{ch.value}</div>
+                    <div className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 truncate">{ch.sub}</div>
                   </div>
                   {ch.href && (
-                    <div className="flex items-center gap-1 text-[11px] font-bold mt-auto" style={{ color: "oklch(0.50 0.14 232)" }}>
+                    <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold mt-auto" style={{ color: "oklch(0.50 0.14 232)" }}>
                       Contact <ChevronRight className="size-3" />
                     </div>
                   )}
@@ -350,16 +347,16 @@ function ContactPage() {
         </section>
 
         {/* ─── MAIN FORM + SIDEBAR ─── */}
-        <section className="max-w-7xl mx-auto px-6 mb-24">
-          <div className="grid lg:grid-cols-[1fr_380px] gap-10 items-start">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 mb-16 sm:mb-24">
+          <div className="grid lg:grid-cols-[1fr_380px] gap-8 lg:gap-10 items-start">
             {/* ── FORM ── */}
-            <div className="bg-white rounded-[2rem] border border-border shadow-[var(--shadow-soft)] overflow-hidden">
+            <div className="bg-white rounded-2xl sm:rounded-[2rem] border border-border shadow-[var(--shadow-soft)] overflow-hidden">
               {/* Form header */}
               <div
-                className="px-8 py-6 border-b border-border"
+                className="px-5 sm:px-8 py-5 sm:py-6 border-b border-border"
                 style={{ background: "linear-gradient(to right, oklch(0.97 0.02 220), oklch(0.95 0.04 215))" }}
               >
-                <h2 className="text-xl font-extrabold tracking-tight text-foreground">Send Us a Message</h2>
+                <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-foreground">Send Us a Message</h2>
                 <p className="text-xs text-muted-foreground mt-1">Fill in the form below — our team responds within 2 business hours.</p>
               </div>
 
@@ -371,14 +368,14 @@ function ContactPage() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onSubmit={handleSubmit}
-                    className="p-8 space-y-6"
+                    className="p-5 sm:p-8 space-y-5 sm:space-y-6"
                   >
                     {/* Department selector */}
                     <div>
-                      <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-3">
+                      <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-2.5">
                         What can we help with?
                       </span>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5">
                         {DEPARTMENTS.map((d) => {
                           const Icon = d.icon;
                           const active = subject === d.val;

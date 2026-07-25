@@ -166,49 +166,17 @@ function ProductDetailPage() {
     setWriteOpen(false);
   }, [productId, product]);
 
-  if (isLoading && !product) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col font-sans">
-        <Header alwaysDark />
-        <main className="flex-1 grid place-items-center px-6 pt-32 pb-20">
-          <div className="flex flex-col items-center gap-3">
-            <div className="size-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin" />
-            <p className="text-sm font-semibold text-slate-500">Loading product details...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header alwaysDark />
-        <main className="flex-1 grid place-items-center px-6 pt-32 pb-20">
-          <div className="text-center max-w-md">
-            <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Product Not Found</h1>
-            <p className="mt-3 text-muted-foreground">The product you are looking for does not exist or has been removed.</p>
-            <Link to="/shop/$category" params={{ category: "all" }} search={{ q: "" }} className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg hover:bg-slate-800 transition">
-              <ArrowLeft className="size-4" /> Return to Shop
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  const savings = product.msrp - product.price;
-  const savingsPercent = Math.round((savings / product.msrp) * 100);
-  const related = getRelatedProducts(product, 4, productsList);
+  const savings = product ? product.msrp - product.price : 0;
+  const savingsPercent = product && product.msrp ? Math.round((savings / product.msrp) * 100) : 0;
+  const related = product ? getRelatedProducts(product, 4, productsList) : [];
 
   // Calculate average rating
   const avgRating = reviews.length > 0
     ? +(reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
-    : product.rating;
+    : (product?.rating || 5);
 
   const handleAddReview = async (e: React.FormEvent) => {
+    if (!product) return;
     e.preventDefault();
     if (!newAuthor.trim() || !newTitle.trim() || !newContent.trim()) return;
 
@@ -262,7 +230,6 @@ function ProductDetailPage() {
     setWriteOpen(false);
     setSuccessMsg("Review submitted successfully! Thank you for your feedback.");
     setTimeout(() => setSuccessMsg(""), 4000);
-
   };
 
   const scrollToReviews = () => {
@@ -274,6 +241,7 @@ function ProductDetailPage() {
 
   // Stock status styling helper
   const getStockBadge = () => {
+    if (!product) return null;
     if (product.stock > 15) {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700">
@@ -299,10 +267,28 @@ function ProductDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col font-sans">
       <Header alwaysDark />
 
       <main className="flex-1 pt-24 sm:pt-28 pb-16 sm:pb-20">
+        {isLoading && !product ? (
+          <div className="grid place-items-center px-6 py-28">
+            <div className="flex flex-col items-center gap-3">
+              <div className="size-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin" />
+              <p className="text-sm font-semibold text-slate-500">Loading product details...</p>
+            </div>
+          </div>
+        ) : !product ? (
+          <div className="grid place-items-center px-6 py-28">
+            <div className="text-center max-w-md">
+              <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Product Not Found</h1>
+              <p className="mt-3 text-muted-foreground">The product you are looking for does not exist or has been removed.</p>
+              <Link to="/shop/$category" params={{ category: "all" }} search={{ q: "" }} className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg hover:bg-slate-800 transition">
+                <ArrowLeft className="size-4" /> Return to Shop
+              </Link>
+            </div>
+          </div>
+        ) : (
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 mt-4 sm:mt-8 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap scrollbar-none">
@@ -682,6 +668,7 @@ function ProductDetailPage() {
             </section>
           )}
         </div>
+        )}
       </main>
 
       <Footer />

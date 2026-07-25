@@ -126,13 +126,21 @@ function CategoryPage() {
   const allProductsQuery = useProductsQuery();
 
   const dbProducts = useMemo(() => {
-    if (categoryQuery.data && categoryQuery.data.length > 0) {
-      return categoryQuery.data;
-    }
-    if (allProductsQuery.data && allProductsQuery.data.length > 0) {
-      return allProductsQuery.data;
-    }
-    return defaultProducts;
+    // Combine default products catalog with any DB fetched products so all items are accessible
+    const fetched = categoryQuery.data || allProductsQuery.data || [];
+    const map = new Map<string, Product>();
+
+    // 1. Add static default products first
+    defaultProducts.forEach(p => {
+      if (p.id) map.set(p.id.toLowerCase(), p);
+    });
+
+    // 2. Add or override with DB fetched products
+    fetched.forEach(p => {
+      if (p.id) map.set(p.id.toLowerCase(), p);
+    });
+
+    return Array.from(map.values());
   }, [categoryQuery.data, allProductsQuery.data]);
 
   // Filters & Sorting State
@@ -152,26 +160,31 @@ function CategoryPage() {
     // Filter matching category
     let items = dbProducts.filter(p => {
       if (category.toLowerCase() === "all") return true;
-      const pCat = (p.category || "").toLowerCase();
-      const pParent = (p.parentCategory || "").toLowerCase();
-      const pSub = (p.subCategory || "").toLowerCase();
-      const cName = categoryName.toLowerCase();
+      const pCat = (p.category || "").toLowerCase().trim();
+      const pParent = (p.parentCategory || "").toLowerCase().trim();
+      const pSub = (p.subCategory || "").toLowerCase().trim();
+      const cName = categoryName.toLowerCase().trim();
+      
       // Build slug variants: "ladders-and-rails" → "ladders and rails" and "ladders & rails"
       const slug = category.toLowerCase();
       const slugSpaced = slug.replace(/-/g, " ");                           // "ladders and rails"
       const slugAmp   = slug.replace(/-and-/g, " & ").replace(/-/g, " ");  // "ladders & rails"
       const slugSlash = slug.replace(/-or-/g, " / ").replace(/-/g, " ");   // slash variant
 
-      const matchesAny = (field: string) =>
-        field === cName ||
-        field === slugSpaced ||
-        field === slugAmp ||
-        field === slugSlash ||
-        field === slug ||
-        field.includes(cName) ||
-        field.includes(slugAmp) ||
-        cName.includes(field) ||
-        slugAmp.includes(field);
+      const matchesAny = (field: string) => {
+        if (!field || field.length === 0) return false;
+        return (
+          field === cName ||
+          field === slugSpaced ||
+          field === slugAmp ||
+          field === slugSlash ||
+          field === slug ||
+          field.includes(cName) ||
+          field.includes(slugAmp) ||
+          (cName.length > 3 && cName.includes(field)) ||
+          (slugAmp.length > 3 && slugAmp.includes(field))
+        );
+      };
 
       return matchesAny(pCat) || matchesAny(pParent) || matchesAny(pSub);
     });

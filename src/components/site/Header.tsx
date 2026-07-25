@@ -162,12 +162,9 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          isDarkText ? "glass py-3" : "bg-transparent py-4 sm:py-5"
+      <header
+        className={`fixed top-0 inset-x-0 z-50 transition-colors duration-200 py-2.5 sm:py-3.5 ${
+          isDarkText ? "glass" : "bg-transparent"
         }`}
       >
         <div className="mx-auto max-w-[1536px] px-4 sm:px-8 xl:px-12 flex items-center justify-between gap-3 xl:gap-8">
@@ -176,7 +173,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             <img
               src={logo}
               alt="Pool Supply Wholesalers Logo"
-              className={`h-10 sm:h-12 xl:h-16 w-auto object-contain transition-all duration-300 group-hover:scale-[1.02] ${
+              className={`h-10 sm:h-12 xl:h-16 w-auto object-contain group-hover:scale-[1.02] transition-transform duration-200 ${
                 isDarkText ? "" : "brightness-0 invert"
               }`}
             />
@@ -504,7 +501,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.header>
+      </header>
 
       {/* FULLY RESPONSIVE MOBILE NAVIGATION DRAWER (< lg) */}
       <AnimatePresence>
