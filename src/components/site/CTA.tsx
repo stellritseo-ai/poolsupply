@@ -10,7 +10,7 @@ export function CTA() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-slate-800 p-8 sm:p-14 lg:p-20 text-white shadow-2xl"
+        className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-slate-800 p-6 sm:p-14 lg:p-20 text-white shadow-2xl"
       >
         {/* Top Accent Gradient Line */}
         <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent" />
@@ -20,15 +20,12 @@ export function CTA() {
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-8 space-y-6 text-center lg:text-left">
+          <div className="lg:col-span-8 space-y-5 sm:space-y-6 text-center lg:text-left">
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-bold uppercase tracking-widest shadow-xl">
               <Sparkles className="size-3.5" /> Instant Trade Access
             </span>
 
-            <h2
-              className="text-white tracking-tight leading-tight"
-              style={{ fontSize: "40px", fontWeight: 800, marginTop: "-12px", marginBottom: "13px" }}
-            >
+            <h2 className="text-white tracking-tight leading-tight text-2xl sm:text-3xl lg:text-[40px] font-extrabold">
               Ready to Upgrade Your Commercial{" "}
               <span className="block sm:inline text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
                 Pool Equipment?
@@ -40,12 +37,12 @@ export function CTA() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3.5 pt-2">
               <Link
                 to="/shop/$category"
                 params={{ category: "all" }}
                 search={{ q: "" }}
-                className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs sm:text-sm shadow-[0_10px_30px_rgba(6,182,212,0.35)] hover:shadow-cyan-500/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+                className="group inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs sm:text-sm shadow-[0_10px_30px_rgba(6,182,212,0.35)] hover:shadow-cyan-500/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
               >
                 Browse Full Catalog
                 <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
@@ -53,7 +50,7 @@ export function CTA() {
 
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-xs sm:text-sm backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-xs sm:text-sm backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
               >
                 <PhoneCall className="size-4 text-cyan-400" />
                 Talk to a Specialist

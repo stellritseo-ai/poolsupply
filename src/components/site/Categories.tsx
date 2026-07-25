@@ -33,10 +33,10 @@ export function Categories() {
   return (
     <section id="categories" className="py-[60px] bg-surface">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
+        <div className="flex items-end justify-between flex-wrap gap-4 mb-10 sm:mb-14">
           <div>
             <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Shop by Category</span>
-            <h2 className="mt-3 text-3xl md:text-[35px] font-extrabold tracking-tight">
+            <h2 className="mt-2 text-2xl sm:text-3xl lg:text-[35px] font-extrabold tracking-tight">
               Everything your pool needs, <span className="text-gradient">expertly curated.</span>
             </h2>
           </div>
@@ -45,7 +45,7 @@ export function Categories() {
           </a>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
           {baseCats.map((c, i) => (
             <motion.div
               key={c.name}
@@ -58,9 +58,9 @@ export function Categories() {
                 to="/shop/$category"
                 params={{ category: c.slug }}
                 search={{ q: "" }}
-                className="group relative overflow-hidden rounded-[2rem] bg-white border border-border/80 p-5 hover:shadow-[0_30px_60px_-15px_oklch(0.50_0.14_232/0.12)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full block"
+                className="group relative overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] bg-white border border-border/80 p-3 sm:p-5 hover:shadow-[0_30px_60px_-15px_oklch(0.50_0.14_232/0.12)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full block"
               >
-              <div className="relative aspect-[4/3] w-full mb-5 grid place-items-center overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-surface to-muted/40 border border-border/40">
+              <div className="relative aspect-[4/3] w-full mb-3 sm:mb-5 grid place-items-center overflow-hidden rounded-[1.2rem] sm:rounded-[1.5rem] bg-gradient-to-b from-surface to-muted/40 border border-border/40">
                 {/* Subtle overlay reflection */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

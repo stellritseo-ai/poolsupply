@@ -52,14 +52,14 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              style={{ marginTop: "130px" }}
+              className="mt-6 sm:mt-16 lg:mt-24"
             >
-              <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-widest shadow-xl">
-                <span className="relative flex h-2 w-2">
+              <span className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-xl">
+                <span className="relative flex h-2 w-2 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
                 </span>
-                Trusted by 5,000+ Certified Pool Professionals
+                <span className="truncate">Trusted by 5,000+ Certified Pool Professionals</span>
               </span>
             </motion.div>
 
@@ -68,22 +68,16 @@ export function Hero() {
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="space-y-4"
+              className="space-y-3 sm:space-y-4"
             >
-              <h1
-                className="text-white tracking-tight leading-tight"
-                style={{ fontSize: "42px", fontWeight: 800, marginTop: "-15px", marginBottom: "0px" }}
-              >
+              <h1 className="text-white tracking-tight leading-tight font-extrabold text-3xl sm:text-4xl lg:text-[42px]">
                 Premium Pool Equipment. Wholesale{" "}
                 <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
                   Direct Pricing.
                 </span>
               </h1>
 
-              <p
-                className="max-w-2xl leading-relaxed font-medium pt-2"
-                style={{ fontSize: "18px", color: "#fff", marginBottom: "-26px" }}
-              >
+              <p className="max-w-2xl leading-relaxed font-medium text-sm sm:text-base lg:text-lg text-white/90">
                 America's leading wholesale catalog for commercial pumps, heaters, filters, salt systems, and smart automation — engineered for trade pros and pool owners alike.
               </p>
             </motion.div>
@@ -93,23 +87,23 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="flex flex-wrap items-center gap-3 pt-2"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2"
             >
               <Link
                 to="/shop/$category"
                 params={{ category: "all" }}
                 search={{ q: "" }}
-                className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-[0_8px_20px_rgba(6,182,212,0.3)] hover:shadow-cyan-500/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs sm:text-sm shadow-[0_8px_20px_rgba(6,182,212,0.3)] hover:shadow-cyan-500/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
               >
                 Shop Equipment Catalog
-                <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link
                 to="/finder"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 backdrop-blur-xl text-white font-bold text-xs transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 backdrop-blur-xl text-white font-bold text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
               >
-                <Sparkles className="size-3.5 text-cyan-400" />
+                <Sparkles className="size-4 text-cyan-400" />
                 Sizing Wizard
               </Link>
             </motion.div>
@@ -119,15 +113,14 @@ export function Hero() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="flex flex-wrap gap-2.5 pt-4"
-              style={{ marginTop: "-15px" }}
+              className="flex flex-wrap gap-2 pt-2"
             >
               {features.map((f) => (
                 <li
                   key={f.label}
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-xs font-bold text-white shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-[11px] sm:text-xs font-bold text-white shadow-sm"
                 >
-                  <Check className="size-3.5 text-cyan-400" />
+                  <Check className="size-3 text-cyan-400 shrink-0" />
                   {f.label}
                 </li>
               ))}

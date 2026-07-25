@@ -22,23 +22,20 @@ export function Finder() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-200/90 p-8 lg:p-14 shadow-xl"
+          className="relative overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] bg-white border border-slate-200/90 p-5 sm:p-8 lg:p-14 shadow-xl"
         >
           {/* Subtle Light Ambient Glow */}
           <div className="absolute -top-32 -right-32 size-96 rounded-full bg-cyan-400/10 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-32 -left-32 size-96 rounded-full bg-blue-400/10 blur-3xl pointer-events-none" />
 
-          <div className="relative grid lg:grid-cols-12 gap-12 items-center">
+          <div className="relative grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Controls Column */}
-            <div className="lg:col-span-7 space-y-6">
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200/60 text-cyan-700 text-xs font-bold uppercase tracking-widest shadow-2xs">
                 <Calculator className="size-4 text-cyan-600" /> Equipment Sizing Calculator
               </span>
 
-              <h2
-                className="text-slate-900 tracking-tight leading-tight"
-                style={{ fontSize: "32px", fontWeight: 800, marginTop: "-10px", marginBottom: "15px" }}
-              >
+              <h2 className="text-slate-900 tracking-tight leading-tight text-2xl sm:text-3xl font-extrabold">
                 Find Perfectly Sized Pool Equipment
               </h2>
               

@@ -302,28 +302,28 @@ function ProductDetailPage() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header alwaysDark />
 
-      <main className="flex-1 pt-28 pb-20">
-        <div className="mx-auto max-w-7xl px-6">
+      <main className="flex-1 pt-24 sm:pt-28 pb-16 sm:pb-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 mt-[35px] mb-8 overflow-x-auto whitespace-nowrap">
+          <nav className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 mt-4 sm:mt-8 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap scrollbar-none">
             <Link to="/" className="hover:text-foreground transition">Home</Link>
             <span className="text-muted-foreground/45 font-normal">&gt;</span>
             <span className="text-muted-foreground/50">Shop</span>
             <span className="text-muted-foreground/45 font-normal">&gt;</span>
             <span className="text-muted-foreground/50">{product.category}</span>
             <span className="text-muted-foreground/45 font-normal">&gt;</span>
-            <span className="text-foreground font-bold truncate max-w-[200px] sm:max-w-none capitalize">{product.name}</span>
+            <span className="text-foreground font-bold truncate max-w-[150px] sm:max-w-none capitalize">{product.name}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             {/* Left Column: Image Gallery */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
             >
-              <div className="relative aspect-square rounded-[2rem] bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] border border-border/70 overflow-hidden flex items-center justify-center p-10 shadow-[var(--shadow-soft)]">
+              <div className="relative aspect-square rounded-[1.5rem] sm:rounded-[2rem] bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] border border-border/70 overflow-hidden flex items-center justify-center p-4 sm:p-10 shadow-[var(--shadow-soft)]">
                 <img
                   src={getProductImage(product.img)}
                   alt={product.name}
@@ -337,27 +337,27 @@ function ProductDetailPage() {
                 />
 
                 {/* Floating stock pill */}
-                <div className="absolute top-5 left-5">
+                <div className="absolute top-3.5 left-3.5 sm:top-5 sm:left-5">
                   {getStockBadge()}
                 </div>
               </div>
 
               {/* Wholesaler Badges */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-surface border border-border/40">
-                  <Truck className="size-5 text-[oklch(0.50_0.14_232)] mb-1.5" />
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-foreground">Free Shipping</span>
-                  <span className="text-[9px] text-muted-foreground mt-0.5">Orders over $500</span>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
+                  <Truck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Free Shipping</span>
+                  <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">Orders over $500</span>
                 </div>
-                <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-surface border border-border/40">
-                  <ShieldCheck className="size-5 text-[oklch(0.50_0.14_232)] mb-1.5" />
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-foreground">Genuine Brand</span>
-                  <span className="text-[9px] text-muted-foreground mt-0.5">100% Authorized Dealer</span>
+                <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
+                  <ShieldCheck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Genuine Brand</span>
+                  <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">100% Authorized</span>
                 </div>
-                <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-surface border border-border/40">
-                  <Wrench className="size-5 text-[oklch(0.50_0.14_232)] mb-1.5" />
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-foreground">Warranty</span>
-                  <span className="text-[9px] text-muted-foreground mt-0.5">{product.specs["Warranty"] || "Full Warranty"}</span>
+                <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
+                  <Wrench className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Warranty</span>
+                  <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">{product.specs["Warranty"] || "Full Warranty"}</span>
                 </div>
               </div>
             </motion.div>
@@ -367,22 +367,22 @@ function ProductDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="space-y-6"
+              className="space-y-5 sm:space-y-6"
             >
               <div>
                 <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">{product.brand}</span>
-                <h1 className="mt-1.5 text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug capitalize">{product.name}</h1>
+                <h1 className="mt-1.5 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-snug capitalize">{product.name}</h1>
 
                 {/* Rating & Reviews anchor */}
                 <button
                   onClick={scrollToReviews}
-                  className="mt-3 flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition group"
+                  className="mt-2.5 flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition group"
                 >
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`size-4 ${i < Math.round(avgRating) ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
+                        className={`size-3.5 ${i < Math.round(avgRating) ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
                       />
                     ))}
                   </div>
@@ -391,10 +391,10 @@ function ProductDetailPage() {
               </div>
 
               {/* Pricing card */}
-              <div className="p-6 rounded-3xl bg-surface border border-border/50 space-y-4">
+              <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-surface border border-border/50 space-y-3.5 sm:space-y-4">
                 <div className="flex items-baseline gap-3 flex-wrap">
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Price</div>
-                  <div className="text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(product.price)}</div>
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Wholesale Price</div>
+                  <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(product.price)}</div>
                 </div>
 
                 <div className="h-px bg-border/40" />
@@ -402,7 +402,7 @@ function ProductDetailPage() {
                 <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
                   <div>
                     <span className="text-muted-foreground uppercase tracking-wider text-[10px]">SKU</span>
-                    <p className="text-foreground mt-0.5">{product.sku}</p>
+                    <p className="text-foreground mt-0.5 font-mono">{product.sku}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground uppercase tracking-wider text-[10px]">Category</span>
@@ -414,9 +414,9 @@ function ProductDetailPage() {
               {/* Purchase interactions */}
               <div className="space-y-4">
                 {product.stock > 0 ? (
-                  <div className="flex gap-4">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     {/* Qty Selector */}
-                    <div className="flex items-center bg-muted/70 rounded-full p-1 border border-border/55">
+                    <div className="flex items-center justify-between sm:justify-start bg-muted/70 rounded-full p-1 border border-border/55">
                       <button
                         type="button"
                         onClick={() => setQty(Math.max(1, qty - 1))}
@@ -439,7 +439,7 @@ function ProductDetailPage() {
                     {/* Add Button */}
                     <button
                       onClick={() => add(product, qty)}
-                      className="flex-1 py-4 px-6 rounded-full bg-gradient-ocean text-white font-semibold flex items-center justify-center gap-2 hover:shadow-[var(--shadow-float)] transition-all duration-300 hover:-translate-y-0.5 active:scale-99"
+                      className="flex-1 py-3.5 px-6 rounded-full bg-gradient-ocean text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:shadow-[var(--shadow-float)] transition-all duration-300 hover:-translate-y-0.5 active:scale-98"
                     >
                       <ShoppingBag className="size-4" />
                       Add to Cart · {formatUSD(product.price * qty)}
@@ -448,7 +448,7 @@ function ProductDetailPage() {
                 ) : (
                   <button
                     disabled
-                    className="w-full py-4 px-6 rounded-full bg-muted text-muted-foreground font-semibold flex items-center justify-center gap-2"
+                    className="w-full py-3.5 px-6 rounded-full bg-muted text-muted-foreground font-semibold text-xs sm:text-sm flex items-center justify-center gap-2"
                   >
                     Out of Stock
                   </button>
@@ -483,11 +483,11 @@ function ProductDetailPage() {
 
               <div className="pt-2 text-sm leading-relaxed text-muted-foreground min-h-[140px]">
                 {activeTab === "description" ? (
-                  <p className="whitespace-pre-line">{product.description}</p>
+                  <p className="whitespace-pre-line text-xs sm:text-sm">{product.description}</p>
                 ) : (
                   <div className="grid gap-2 border border-border/50 rounded-2xl overflow-hidden bg-surface">
                     {Object.entries(product.specs).map(([key, value]) => (
-                      <div key={key} className="grid grid-cols-[160px_1fr] border-b border-border/30 last:border-b-0 p-3 hover:bg-white transition-colors">
+                      <div key={key} className="grid grid-cols-1 sm:grid-cols-[160px_1fr] border-b border-border/30 last:border-b-0 p-3 hover:bg-white transition-colors gap-1 sm:gap-0">
                         <span className="font-bold text-foreground/80 text-xs">{key}</span>
                         <span className="text-muted-foreground text-xs">{value}</span>
                       </div>
@@ -496,7 +496,7 @@ function ProductDetailPage() {
                 )}
               </div>
 
-              {/* SEO Keywords & Search Topics (Visually hidden for clean UI, preserved in DOM for Search Engine indexing & SEO ranking) */}
+              {/* SEO Keywords & Search Topics */}
               {product.seoKeywords && (
                 <div className="sr-only" aria-label="SEO Keywords and Search Topics">
                   <h2>SEO Keywords & Search Topics</h2>
@@ -512,14 +512,14 @@ function ProductDetailPage() {
           </div>
 
           {/* Reviews Section */}
-          <section ref={reviewsEndRef} className="mt-20 pt-12 border-t border-border">
-            <div className="grid lg:grid-cols-[260px_1fr] gap-10">
+          <section ref={reviewsEndRef} className="mt-14 sm:mt-20 pt-8 sm:pt-12 border-t border-border">
+            <div className="grid lg:grid-cols-[260px_1fr] gap-8 lg:gap-10">
               {/* Ratings Summary */}
               <div>
-                <h2 className="text-2xl font-extrabold tracking-tight">Customer Reviews</h2>
+                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">Customer Reviews</h2>
 
-                <div className="mt-4 flex items-center gap-3">
-                  <div className="text-5xl font-black text-foreground">{avgRating}</div>
+                <div className="mt-3 sm:mt-4 flex items-center gap-3">
+                  <div className="text-4xl sm:text-5xl font-black text-foreground">{avgRating}</div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-0.5">
                       {[...Array(5)].map((_, i) => (
@@ -535,16 +535,16 @@ function ProductDetailPage() {
 
                 <button
                   onClick={() => setWriteOpen(!writeOpen)}
-                  className="mt-6 w-full py-2.5 rounded-full border border-border hover:border-foreground/20 hover:bg-surface font-semibold text-xs text-foreground transition-all active:scale-97"
+                  className="mt-5 sm:mt-6 w-full py-2.5 rounded-full border border-border hover:border-foreground/20 hover:bg-surface font-semibold text-xs text-foreground transition-all active:scale-97"
                 >
                   Write a Review
                 </button>
               </div>
 
               {/* Review List & Form */}
-              <div className="space-y-6">
+              <div className="space-y-5 sm:space-y-6">
                 {successMsg && (
-                  <div className="p-4 bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-2xl text-sm font-semibold">
+                  <div className="p-4 bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-2xl text-xs sm:text-sm font-semibold">
                     {successMsg}
                   </div>
                 )}
@@ -555,11 +555,11 @@ function ProductDetailPage() {
                     initial={{ opacity: 0, y: -15 }}
                     animate={{ opacity: 1, y: 0 }}
                     onSubmit={handleAddReview}
-                    className="p-6 rounded-3xl bg-surface border border-border/80 space-y-4 overflow-hidden"
+                    className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-surface border border-border/80 space-y-4 overflow-hidden"
                   >
-                    <h3 className="font-bold text-base text-foreground">Write a Customer Review</h3>
+                    <h3 className="font-bold text-sm sm:text-base text-foreground">Write a Customer Review</h3>
 
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <label className="block">
                         <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Your Name</span>
                         <input
@@ -583,7 +583,7 @@ function ProductDetailPage() {
                               className="size-7 grid place-items-center hover:scale-110 transition"
                             >
                               <Star
-                                className={`size-6 ${star <= newRating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
+                                className={`size-5 sm:size-6 ${star <= newRating ? "fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" : "text-border"}`}
                               />
                             </button>
                           ))}
@@ -635,9 +635,9 @@ function ProductDetailPage() {
 
                 {/* Review Items */}
                 {reviews.length > 0 ? (
-                  <div className="divide-y divide-border/50 space-y-5">
+                  <div className="divide-y divide-border/50 space-y-4 sm:space-y-5">
                     {reviews.map((rev) => (
-                      <div key={rev.id} className="pt-5 first:pt-0 space-y-2">
+                      <div key={rev.id} className="pt-4 sm:pt-5 first:pt-0 space-y-1.5">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="flex gap-0.5">
@@ -650,15 +650,15 @@ function ProductDetailPage() {
                             </div>
                             <span className="text-xs font-bold text-foreground">{rev.author}</span>
                           </div>
-                          <span className="text-xs text-muted-foreground">{rev.date}</span>
+                          <span className="text-[11px] text-muted-foreground">{rev.date}</span>
                         </div>
-                        <h4 className="text-sm font-bold text-foreground">{rev.title}</h4>
+                        <h4 className="text-xs sm:text-sm font-bold text-foreground">{rev.title}</h4>
                         <p className="text-xs text-muted-foreground leading-relaxed">{rev.content}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-10 bg-surface rounded-3xl border border-dashed border-border p-6">
+                  <div className="text-center py-8 sm:py-10 bg-surface rounded-2xl sm:rounded-3xl border border-dashed border-border p-5 sm:p-6">
                     <MessageSquare className="size-8 text-muted-foreground/45 mx-auto mb-3" />
                     <p className="text-sm font-semibold text-muted-foreground">No reviews yet</p>
                     <p className="text-xs text-muted-foreground/75 mt-1">Be the first to review this product!</p>
@@ -670,11 +670,11 @@ function ProductDetailPage() {
 
           {/* Related Products */}
           {related.length > 0 && (
-            <section className="mt-24 pt-12 border-t border-border">
+            <section className="mt-16 sm:mt-24 pt-8 sm:pt-12 border-t border-border">
               <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Recommendations</span>
-              <h2 className="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">Related Products</h2>
+              <h2 className="mt-2 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight">Related Products</h2>
 
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="mt-6 sm:mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
                 {related.map((p, i) => (
                   <ProductCard key={p.id} product={p} index={i} />
                 ))}

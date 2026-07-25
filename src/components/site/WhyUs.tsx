@@ -14,7 +14,7 @@ export function WhyUs() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-4xl mb-14">
           <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Why Us</span>
-          <h2 className="mt-3 text-3xl md:text-[35px] font-extrabold tracking-tight">
+          <h2 className="mt-2 text-2xl sm:text-3xl lg:text-[35px] font-extrabold tracking-tight">
             A wholesale supplier you can build a business on.
           </h2>
         </div>

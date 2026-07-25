@@ -74,10 +74,7 @@ export function Testimonials() {
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200/60 text-cyan-700 text-xs font-bold uppercase tracking-widest shadow-2xs">
               <Sparkles className="size-3.5 text-cyan-600" /> Loved By Pool Professionals
             </span>
-            <h2
-              className="text-slate-900 tracking-tight leading-tight"
-              style={{ fontSize: "29px", fontWeight: 900 }}
-            >
+            <h2 className="text-slate-900 tracking-tight leading-tight text-xl sm:text-2xl lg:text-[29px] font-black">
               Trusted by 5,000+ Pool Contractors Nationwide
             </h2>
           </div>

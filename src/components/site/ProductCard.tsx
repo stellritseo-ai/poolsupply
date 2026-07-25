@@ -18,12 +18,12 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: index * 0.06 }}
-      className="group bg-white rounded-[2.2rem] p-5 border border-slate-200/80 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+      className="group bg-white rounded-[1.5rem] sm:rounded-[2.2rem] p-3 sm:p-5 border border-slate-200/80 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
     >
       <div>
         <Link to="/products/$productId" params={{ productId: p.id }} className="block">
           {/* Light Soft Blue Backdrop Image Container */}
-          <div className="relative aspect-square rounded-[1.6rem] bg-[#e6f4f8] overflow-hidden grid place-items-center mb-4">
+          <div className="relative aspect-square rounded-[1.2rem] sm:rounded-[1.6rem] bg-[#e6f4f8] overflow-hidden grid place-items-center mb-3 sm:mb-4">
             <img
               src={getProductImage(p.img)}
               alt={p.name}
@@ -53,22 +53,22 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
           </div>
 
           {/* Product Title */}
-          <h3 className="font-extrabold text-slate-900 text-[15px] leading-snug min-h-[2.6rem] group-hover:text-primary transition-colors line-clamp-2 capitalize">
+          <h3 className="font-extrabold text-slate-900 text-xs sm:text-[15px] leading-snug min-h-[2.4rem] sm:min-h-[2.6rem] group-hover:text-primary transition-colors line-clamp-2 capitalize">
             {p.name}
           </h3>
         </Link>
       </div>
 
       {/* Divider & Price / Action Row */}
-      <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between">
-        <div className="text-lg font-extrabold tracking-tight text-[#0089C9]">
+      <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3.5 border-t border-slate-100 flex items-center justify-between gap-1">
+        <div className="text-sm sm:text-lg font-extrabold tracking-tight text-[#0089C9] truncate">
           {formatUSD(p.price)}
         </div>
         <button
           onClick={() => add(p, 1)}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-xs active:scale-95 cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-[11px] sm:text-xs font-bold transition shadow-xs active:scale-95 cursor-pointer shrink-0"
         >
-          <ShoppingBag className="size-3.5" /> Add
+          <ShoppingBag className="size-3 sm:size-3.5" /> Add
         </button>
       </div>
     </motion.article>
