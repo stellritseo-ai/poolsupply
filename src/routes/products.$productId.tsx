@@ -346,8 +346,8 @@ function ProductDetailPage() {
               <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                   <Truck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Free Shipping</span>
-                  <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">Orders over $500</span>
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Flat Shipping</span>
+                  <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">15% Shipping Charge</span>
                 </div>
                 <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                   <ShieldCheck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
@@ -455,7 +455,7 @@ function ProductDetailPage() {
                 )}
 
                 <p className="text-xs text-muted-foreground text-center">
-                  🚚 Free standard delivery on orders over $500. Same day shipping for orders placed before 2 PM.
+                  🚚 Standard 15% freight & shipping charge applied at checkout. Same day dispatch for orders before 2 PM.
                 </p>
               </div>
 
