@@ -7,8 +7,7 @@ import filter from "@/assets/cat-filter.jpg";
 import cleaner from "@/assets/cat-cleaner.jpg";
 import automation from "@/assets/cat-automation.jpg";
 import { Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { getProductsDb } from "@/lib/api/products.functions";
+import { useProductsQuery } from "@/lib/products";
 
 const baseCats = [
   { name: "Pool Pumps", slug: "pool-pumps", img: pump },
@@ -20,13 +19,7 @@ const baseCats = [
 ];
 
 export function Categories() {
-  const { data: products, isLoading } = useQuery({
-    queryKey: ["all_products"],
-    queryFn: async () => {
-      const res = await getProductsDb();
-      return res.success && res.products ? res.products : [];
-    }
-  });
+  const { data: products, isLoading } = useProductsQuery();
 
   const getCount = (catName: string) => {
     if (!products) return "0 products";
@@ -64,6 +57,7 @@ export function Categories() {
               <Link
                 to="/shop/$category"
                 params={{ category: c.slug }}
+                search={{ q: "" }}
                 className="group relative overflow-hidden rounded-[2rem] bg-white border border-border/80 p-5 hover:shadow-[0_30px_60px_-15px_oklch(0.50_0.14_232/0.12)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full block"
               >
               <div className="relative aspect-[4/3] w-full mb-5 grid place-items-center overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-surface to-muted/40 border border-border/40">

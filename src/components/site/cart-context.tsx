@@ -75,12 +75,11 @@ export function useCart() {
 }
 
 // Pricing helpers (placeholders)
-export const SHIPPING_FLAT = 19.99;
-export const SHIPPING_FREE_OVER = 500;
-export const TAX_RATE = 0.0875;
+export const SHIPPING_RATE = 0.15; // 15% of subtotal
+export const TAX_RATE = 0.0925;   // 9.25% fixed sales tax
 
 export function computeTotals(subtotal: number) {
-  const shipping = subtotal === 0 ? 0 : subtotal >= SHIPPING_FREE_OVER ? 0 : SHIPPING_FLAT;
+  const shipping = subtotal === 0 ? 0 : +(subtotal * SHIPPING_RATE).toFixed(2);
   const tax = +(subtotal * TAX_RATE).toFixed(2);
   const total = +(subtotal + shipping + tax).toFixed(2);
   return { shipping, tax, total };

@@ -3,7 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { getProductById, getRelatedProducts, syncLocalProducts, useProducts, Review, Product } from "@/lib/products";
+import { ProductCard } from "@/components/site/ProductCard";
+import { getProductById, getRelatedProducts, syncLocalProducts, useProducts, getProductImage, Review, Product } from "@/lib/products";
 import { addReviewDb } from "@/lib/api/products.functions";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -24,11 +25,74 @@ import { motion } from "framer-motion";
 export const Route = createFileRoute("/products/$productId")({
   head: ({ params }) => {
     const product = getProductById(params.productId);
+    const title = product
+      ? `${product.name} Wholesale Pricing | ${product.brand || "Pool Supply Wholesalers"}`
+      : "Pool Equipment Product Details — Pool Supply Wholesalers";
+    const description = product
+      ? `Buy ${product.name} at wholesale price $${product.price}. ${product.description.slice(0, 140)}... Fast same-day dispatch from Pool Supply Wholesalers.`
+      : "Buy commercial pool equipment at wholesale pricing with fast nationwide shipping.";
+    const imageUrl = product?.image || "https://poolsupplywholesalers.com/about-hero.png";
+    const productUrl = `https://poolsupplywholesalers.com/products/${params.productId}`;
+
+    const jsonLd = product
+      ? {
+          "@context": "https://schema.org/",
+          "@type": "Product",
+          "name": product.name,
+          "image": [imageUrl],
+          "description": product.description,
+          "sku": product.id,
+          "mpn": product.id,
+          "brand": {
+            "@type": "Brand",
+            "name": product.brand || "Pool Supply Wholesalers"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": productUrl,
+            "priceCurrency": "USD",
+            "price": product.price,
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": product.inStock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+            "seller": {
+              "@type": "Organization",
+              "name": "Pool Supply Wholesalers"
+            }
+          },
+          "aggregateRating": product.reviews && product.reviews.length > 0 ? {
+            "@type": "AggregateRating",
+            "ratingValue": (product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length).toFixed(1),
+            "reviewCount": product.reviews.length
+          } : undefined
+        }
+      : null;
+
     return {
       meta: [
-        { title: product ? `${product.name} — Pool Supply Wholesalers` : "Product Details" },
-        { name: "description", content: product ? product.description : "View premium pool equipment wholesale details." }
+        { title },
+        { name: "description", content: description },
+        { name: "keywords", content: `${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale, buy ${product?.category || "pool supply"}, commercial pool equipment, wholesale pool supply Nashville TN` },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:image", content: imageUrl },
+        { property: "og:url", content: productUrl },
+        { property: "og:type", content: "product" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: imageUrl },
       ],
+      links: [
+        { rel: "canonical", href: productUrl }
+      ],
+      scripts: jsonLd ? [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(jsonLd)
+        }
+      ] : []
     };
   },
   component: ProductDetailPage,
@@ -36,8 +100,13 @@ export const Route = createFileRoute("/products/$productId")({
 
 function ProductDetailPage() {
   const { productId } = useParams({ from: "/products/$productId" });
-  const { products: productsList } = useProducts();
-  const product = productsList.find(p => p.id === productId);
+  const { products: productsList, isLoading } = useProducts();
+  
+  // Robust product lookup checking fetched DB products, default products, SKU, and slugified IDs
+  const product = 
+    (productsList.length > 0 ? getProductById(productId, productsList) : undefined) || 
+    getProductById(productId);
+
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs">("description");
@@ -82,6 +151,21 @@ function ProductDetailPage() {
     setWriteOpen(false);
   }, [productId, product]);
 
+  if (isLoading && !product) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col font-sans">
+        <Header alwaysDark />
+        <main className="flex-1 grid place-items-center px-6 pt-32 pb-20">
+          <div className="flex flex-col items-center gap-3">
+            <div className="size-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin" />
+            <p className="text-sm font-semibold text-slate-500">Loading product details...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   if (!product) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
@@ -90,7 +174,7 @@ function ProductDetailPage() {
           <div className="text-center max-w-md">
             <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Product Not Found</h1>
             <p className="mt-3 text-muted-foreground">The product you are looking for does not exist or has been removed.</p>
-            <Link to="/" className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-ocean text-white font-semibold">
+            <Link to="/shop/$category" params={{ category: "all" }} search={{ q: "" }} className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg hover:bg-slate-800 transition">
               <ArrowLeft className="size-4" /> Return to Shop
             </Link>
           </div>
@@ -213,7 +297,7 @@ function ProductDetailPage() {
             <span className="text-muted-foreground/45 font-normal">&gt;</span>
             <span className="text-muted-foreground/50">{product.category}</span>
             <span className="text-muted-foreground/45 font-normal">&gt;</span>
-            <span className="text-foreground font-bold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
+            <span className="text-foreground font-bold truncate max-w-[200px] sm:max-w-none capitalize">{product.name}</span>
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -226,10 +310,15 @@ function ProductDetailPage() {
             >
               <div className="relative aspect-square rounded-[2rem] bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] border border-border/70 overflow-hidden flex items-center justify-center p-10 shadow-[var(--shadow-soft)]">
                 <img
-                  src={product.img || "https://placehold.co/400x400/png?text=Image+N/A"}
+                  src={getProductImage(product.img)}
                   alt={product.name}
-                  className="max-h-[90%] max-w-[90%] object-contain mix-blend-multiply hover:scale-105 transition-transform duration-700 ease-out"
-                  onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400/png?text=Image+N/A"; }}
+                  referrerPolicy="no-referrer"
+                  className="max-h-[90%] max-w-[90%] object-contain hover:scale-105 transition-transform duration-700 ease-out"
+                  onError={(e) => {
+                    if (!e.currentTarget.src.endsWith("/assets/commingsoon.png")) {
+                      e.currentTarget.src = "/assets/commingsoon.png";
+                    }
+                  }}
                 />
 
                 {/* Floating stock pill */}
@@ -267,7 +356,7 @@ function ProductDetailPage() {
             >
               <div>
                 <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">{product.brand}</span>
-                <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">{product.name}</h1>
+                <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight capitalize">{product.name}</h1>
 
                 {/* Rating & Reviews anchor */}
                 <button
@@ -289,12 +378,8 @@ function ProductDetailPage() {
               {/* Pricing card */}
               <div className="p-6 rounded-3xl bg-surface border border-border/50 space-y-4">
                 <div className="flex items-baseline gap-3 flex-wrap">
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Wholesale Price</div>
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Price</div>
                   <div className="text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(product.price)}</div>
-                  <div className="text-xs text-muted-foreground line-through decoration-muted-foreground/60">MSRP {formatUSD(product.msrp)}</div>
-                </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                  <Sparkles className="size-3" /> Save {formatUSD(savings)} ({savingsPercent}% Off MSRP)
                 </div>
 
                 <div className="h-px bg-border/40" />
@@ -383,18 +468,31 @@ function ProductDetailPage() {
 
               <div className="pt-2 text-sm leading-relaxed text-muted-foreground min-h-[140px]">
                 {activeTab === "description" ? (
-                  <p>{product.description}</p>
+                  <p className="whitespace-pre-line">{product.description}</p>
                 ) : (
                   <div className="grid gap-2 border border-border/50 rounded-2xl overflow-hidden bg-surface">
                     {Object.entries(product.specs).map(([key, value]) => (
-                      <div key={key} className="grid grid-cols-[150px_1fr] border-b border-border/30 last:border-b-0 p-3 hover:bg-white transition-colors">
-                        <span className="font-bold text-foreground/80">{key}</span>
-                        <span className="text-muted-foreground">{value}</span>
+                      <div key={key} className="grid grid-cols-[160px_1fr] border-b border-border/30 last:border-b-0 p-3 hover:bg-white transition-colors">
+                        <span className="font-bold text-foreground/80 text-xs">{key}</span>
+                        <span className="text-muted-foreground text-xs">{value}</span>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
+
+              {/* SEO Keywords & Search Topics (Visually hidden for clean UI, preserved in DOM for Search Engine indexing & SEO ranking) */}
+              {product.seoKeywords && (
+                <div className="sr-only" aria-label="SEO Keywords and Search Topics">
+                  <h2>SEO Keywords & Search Topics</h2>
+                  <p>{product.seoKeywords}</p>
+                  <div>
+                    {product.seoKeywords.split(",").map((tag, idx) => (
+                      <span key={idx}>#{tag.trim()} </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </motion.div>
           </div>
 
@@ -561,44 +659,9 @@ function ProductDetailPage() {
               <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Recommendations</span>
               <h2 className="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">Related Products</h2>
 
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {related.map((p) => (
-                  <article
-                    key={p.id}
-                    className="group bg-white rounded-3xl p-5 border border-border hover:shadow-[var(--shadow-float)] hover:-translate-y-1 transition-all"
-                  >
-                    <Link to="/products/$productId" params={{ productId: p.id }} className="block">
-                      <div className="relative aspect-square rounded-2xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] overflow-hidden grid place-items-center">
-                        <img
-                          src={p.img || "https://placehold.co/400x400/png?text=Image+N/A"}
-                          alt={p.name}
-                          loading="lazy"
-                          width={300}
-                          height={300}
-                          className="size-[80%] object-contain p-4 group-hover:scale-110 transition-transform duration-700 mix-blend-multiply"
-                          onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400/png?text=Image+N/A"; }}
-                        />
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{p.brand}</span>
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold">
-                          <Star className="size-3 fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" />
-                          {p.rating}
-                        </span>
-                      </div>
-                      <h3 className="mt-1.5 font-bold text-sm text-foreground leading-snug line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">{p.name}</h3>
-                    </Link>
-
-                    <div className="mt-3 flex items-center justify-between">
-                      <div className="text-lg font-black tracking-tight">${p.price.toLocaleString()}</div>
-                      <button
-                        onClick={() => add(p, 1)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-foreground text-background text-[10px] font-semibold hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition"
-                      >
-                        <ShoppingBag className="size-3" /> Add
-                      </button>
-                    </div>
-                  </article>
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {related.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
                 ))}
               </div>
             </section>

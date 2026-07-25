@@ -2,10 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
 
-export const getDatabaseStats = createServerFn({ method: "GET" })
+export const getDatabaseStats = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) {
+        return {
+          success: true,
+          stats: { products: 0, orders: 0, reviews: 0 }
+        };
+      }
       
       const productsCol = db.collection("products");
       const ordersCol = db.collection("orders");
@@ -38,15 +44,14 @@ export const migrateData = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const { products, orders, reviews } = data;
 
       // 1. Sync Products
       if (products.length > 0) {
         const productsCol = db.collection("products");
-        // We can upsert products using their unique IDs to prevent data loss or duplicates
         for (const item of products) {
           const doc = { ...item, _id: item.id };
-          // delete doc.id; // Keep _id as the primary key reference
           await productsCol.replaceOne({ _id: item.id }, doc, { upsert: true });
         }
       }

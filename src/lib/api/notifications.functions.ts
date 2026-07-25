@@ -26,10 +26,11 @@ const DEFAULT_NOTIFICATIONS = [
   }
 ];
 
-export const getNotifications = createServerFn({ method: "GET" })
+export const getNotifications = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, notifications: [] };
       const notifsCol = db.collection("notifications");
       
       let count = await notifsCol.countDocuments();
@@ -60,6 +61,7 @@ export const markNotificationAsRead = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database not connected." };
       const notifsCol = db.collection("notifications");
       const { ObjectId } = await import("mongodb");
       
@@ -78,6 +80,7 @@ export const markAllNotificationsAsRead = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database not connected." };
       const notifsCol = db.collection("notifications");
       
       await notifsCol.updateMany(
@@ -96,6 +99,7 @@ export const deleteNotification = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database not connected." };
       const notifsCol = db.collection("notifications");
       const { ObjectId } = await import("mongodb");
       

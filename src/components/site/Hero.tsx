@@ -1,101 +1,174 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Truck, Award, Tag, Headphones } from "lucide-react";
+import { ArrowRight, Check, Truck, Award, Tag, Headphones, Sparkles, Clock, PackageCheck, Users } from "lucide-react";
 import heroVideo from "@/assets/video/herovideo.mp4";
+import { Link } from "@tanstack/react-router";
 
 const features = [
-  { icon: Truck, label: "Fast Shipping" },
-  { icon: Award, label: "Top Manufacturers" },
-  { icon: Tag, label: "Wholesale Pricing" },
-  { icon: Headphones, label: "Expert Support" },
+  { icon: Truck, label: "Same Day Shipping" },
+  { icon: Award, label: "100% Genuine Brands" },
+  { icon: Tag, label: "Wholesale Trade Pricing" },
+  { icon: Headphones, label: "Pro Tech Support" },
 ];
 
 const stats = [
-  { value: "20+", label: "Years Experience" },
-  { value: "5,000+", label: "Products" },
-  { value: "50+", label: "Top Brands" },
-  { value: "USA", label: "Nationwide Shipping" },
+  { value: "20+", label: "Years Industry Leadership", icon: Clock, color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30" },
+  { value: "8,000+", label: "Commercial Products", icon: PackageCheck, color: "text-blue-400 bg-blue-500/10 border-blue-500/30" },
+  { value: "50+", label: "Authorized Brands", icon: Award, color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
+  { value: "5,000+", label: "Verified Trade Buyers", icon: Users, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
 ];
+
+const duplicatedStats = [...stats, ...stats, ...stats, ...stats];
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-end pt-28 pb-16 overflow-hidden isolate">
-      {/* Background */}
-      <div className="absolute inset-0 -z-10">
+    <section className="relative min-h-[92vh] lg:min-h-screen flex items-center pt-32 pb-20 overflow-hidden isolate bg-slate-950 font-sans">
+      {/* Background Video & Overlays */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover scale-105 animate-float"
+          className="w-full h-full object-cover scale-105 filter brightness-100 contrast-105"
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.50_0.14_232/0.55)] via-[oklch(0.50_0.14_232/0.25)] to-background" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.18_0.02_256/0.45)] to-transparent" />
+        {/* Slightly Lighter Layered Background Overlays */}
+        <div className="absolute inset-0 bg-slate-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-slate-950/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/50 via-transparent to-transparent" />
+
+        {/* Radial Ambient Glows */}
+        <div className="absolute top-1/4 left-10 w-[600px] h-[600px] bg-cyan-500/12 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-blue-600/12 rounded-full blur-[120px] pointer-events-none" />
       </div>
 
-      {/* Ripple decorations */}
-      <div className="pointer-events-none absolute top-1/3 right-10 size-40 rounded-full border border-white/30 animate-ripple" />
-      <div className="pointer-events-none absolute top-1/2 right-32 size-60 rounded-full border border-white/20 animate-ripple [animation-delay:1s]" />
-
-      <div className="relative mx-auto max-w-7xl px-6 w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-5xl"
-        >
-          <span className="mt-[100px] md:mt-[150px] inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-white text-xs font-medium tracking-wide uppercase">
-            <span className="size-1.5 rounded-full bg-[oklch(0.82_0.10_215)]" /> Trusted by 5,000+ pool professionals
-          </span>
-
-          <h1 className="mt-6 text-white font-extrabold tracking-tight text-[30px] sm:text-[45px] lg:text-[55px] leading-tight lg:leading-[1.05]">
-            Premium Pool Equipment.
-            <span className="block mt-2 bg-gradient-to-r from-white via-[oklch(0.92_0.06_215)] to-[oklch(0.82_0.10_215)] bg-clip-text text-transparent">
-              Wholesale Pricing.
-            </span>
-          </h1>
-
-          <p className="mt-6 text-lg sm:text-xl text-white/85 leading-relaxed">
-            Trusted supplier of pumps, heaters, filters, cleaners, automation systems and pool accessories <br className="hidden sm:block" /> from the industry's leading brands — built for professionals and homeowners alike.
-          </p>
-
-          <div className="mt-9 flex flex-wrap gap-3">
-            <a href="#categories" className="group inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full bg-white text-[oklch(0.50_0.14_232)] font-semibold shadow-[var(--shadow-float)] hover:shadow-[0_40px_80px_-30px_oklch(0.50_0.14_232/0.55)] transition-all hover:-translate-y-0.5">
-              Shop Equipment
-              <ArrowRight className="size-4 group-hover:translate-x-1 transition" />
-            </a>
-            <a href="#brands" className="inline-flex items-center gap-2 px-6 py-3 text-sm rounded-full glass text-white font-semibold hover:bg-white/20 transition">
-              View Brands
-            </a>
-          </div>
-
-          <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
-            {features.map((f) => (
-              <li key={f.label} className="flex items-center gap-2 text-white/90 text-sm">
-                <span className="grid place-items-center size-6 rounded-full bg-white/15 backdrop-blur">
-                  <Check className="size-3.5" />
+      <div className="relative z-10 w-full">
+        {/* Hero Top Text Content Container */}
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="max-w-4xl space-y-8">
+            {/* Trust Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              style={{ marginTop: "130px" }}
+            >
+              <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-widest shadow-xl">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
                 </span>
-                {f.label}
-              </li>
-            ))}
-          </ul>
-        </motion.div>
+                Trusted by 5,000+ Certified Pool Professionals
+              </span>
+            </motion.div>
 
-        {/* Floating stats */}
+            {/* Main Headline */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="space-y-4"
+            >
+              <h1
+                className="text-white tracking-tight leading-tight"
+                style={{ fontSize: "42px", fontWeight: 800, marginTop: "-15px", marginBottom: "0px" }}
+              >
+                Premium Pool Equipment. Wholesale{" "}
+                <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
+                  Direct Pricing.
+                </span>
+              </h1>
+
+              <p
+                className="max-w-2xl leading-relaxed font-medium pt-2"
+                style={{ fontSize: "18px", color: "#fff", marginBottom: "-26px" }}
+              >
+                America's leading wholesale catalog for commercial pumps, heaters, filters, salt systems, and smart automation — engineered for trade pros and pool owners alike.
+              </p>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="flex flex-wrap items-center gap-3 pt-2"
+            >
+              <Link
+                to="/shop/$category"
+                params={{ category: "all" }}
+                search={{ q: "" }}
+                className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-[0_8px_20px_rgba(6,182,212,0.3)] hover:shadow-cyan-500/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+              >
+                Shop Equipment Catalog
+                <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <Link
+                to="/finder"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 backdrop-blur-xl text-white font-bold text-xs transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+              >
+                <Sparkles className="size-3.5 text-cyan-400" />
+                Sizing Wizard
+              </Link>
+            </motion.div>
+
+            {/* Features Pills */}
+            <motion.ul
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="flex flex-wrap gap-2.5 pt-4"
+              style={{ marginTop: "-15px" }}
+            >
+              {features.map((f) => (
+                <li
+                  key={f.label}
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-xs font-bold text-white shadow-sm"
+                >
+                  <Check className="size-3.5 text-cyan-400" />
+                  {f.label}
+                </li>
+              ))}
+            </motion.ul>
+          </div>
+        </div>
+
+        {/* Infinite Sliding Stats Marquee Track (Width 100% No Side Gaps) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-14 relative w-full overflow-hidden py-3"
         >
-          {stats.map((s) => (
-            <div key={s.label} className="rounded-2xl p-5 text-white bg-black/40 backdrop-blur-md border border-white/10 shadow-[var(--shadow-float)]">
-              <div className="text-3xl lg:text-4xl font-extrabold tracking-tight">{s.value}</div>
-              <div className="text-xs uppercase tracking-widest text-white/75 mt-1">{s.label}</div>
-            </div>
-          ))}
+          <div className="flex w-max animate-marquee gap-4">
+            {duplicatedStats.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={`${s.label}-${i}`}
+                  className="w-[220px] sm:w-[240px] shrink-0 group rounded-[1.6rem] p-4 sm:p-5 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-2xl shadow-xl hover:border-cyan-300 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between"
+                >
+                  {/* Top Glowing Line on Hover */}
+                  <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="text-2xl sm:text-3xl font-black tracking-tight text-white group-hover:text-cyan-400 transition-colors">
+                      {s.value}
+                    </div>
+                    <div className={`size-8 rounded-xl ${s.color} border grid place-items-center shrink-0 group-hover:scale-105 transition-transform duration-300`}>
+                      <Icon className="size-4" />
+                    </div>
+                  </div>
+
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 group-hover:text-white transition-colors truncate">
+                    {s.label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </motion.div>
       </div>
     </section>

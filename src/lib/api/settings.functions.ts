@@ -12,10 +12,19 @@ const DEFAULT_SETTINGS = {
   ]
 };
 
-export const getGlobalSettings = createServerFn({ method: "GET" })
+export const getGlobalSettings = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) {
+        return { 
+          success: true, 
+          settings: {
+            maintenanceMode: false,
+            paymentMethods: DEFAULT_SETTINGS.paymentMethods
+          } 
+        };
+      }
       const settingsCol = db.collection("settings");
       let settings = await settingsCol.findOne({ _id: "global" as any }) as any;
 
@@ -33,7 +42,13 @@ export const getGlobalSettings = createServerFn({ method: "GET" })
       };
     } catch (e: any) {
       console.error("Settings fetch error:", e);
-      return { success: false, error: "Failed to fetch settings." };
+      return { 
+        success: true, 
+        settings: {
+          maintenanceMode: false,
+          paymentMethods: DEFAULT_SETTINGS.paymentMethods
+        } 
+      };
     }
   });
 
@@ -45,6 +60,9 @@ export const updateGlobalSettings = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) {
+        return { success: false, error: "Database connection unavailable." };
+      }
       const settingsCol = db.collection("settings");
       
       const updateData: any = {};

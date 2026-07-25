@@ -8,6 +8,7 @@ export const subscribeEmail = createServerFn({ method: "POST" })
     try {
       const email = data.email.trim().toLowerCase();
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const subscribersCol = db.collection("subscribers");
 
       // Check if already subscribed
@@ -29,10 +30,11 @@ export const subscribeEmail = createServerFn({ method: "POST" })
     }
   });
 
-export const getSubscribers = createServerFn({ method: "GET" })
+export const getSubscribers = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, subscribers: [] };
       const subscribersCol = db.collection("subscribers");
 
       const subscribers = await subscribersCol.find().sort({ createdAt: -1 }).toArray();
@@ -55,6 +57,7 @@ export const deleteSubscriber = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const subscribersCol = db.collection("subscribers");
       const { ObjectId } = await import("mongodb");
 

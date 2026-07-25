@@ -2,10 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
 
-export const getUsers = createServerFn({ method: "GET" })
+export const getUsers = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, users: [] };
       const usersCol = db.collection("users");
       const users = await usersCol.find({}, { projection: { password: 0 } }).toArray();
       
@@ -32,6 +33,7 @@ export const createUser = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const usersCol = db.collection("users");
       
       // Check if user exists
@@ -64,6 +66,7 @@ export const deleteUser = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const usersCol = db.collection("users");
       const { ObjectId } = await import("mongodb");
       
@@ -90,6 +93,7 @@ export const updateSuperAdmin = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const usersCol = db.collection("users");
       
       const user = await usersCol.findOne({ username: data.currentUsername });

@@ -11,8 +11,15 @@ import {
   X,
   User,
   Users,
+  Mail,
   Bell,
-  Settings
+  Settings,
+  LogOut,
+  ShieldCheck,
+  ChevronDown,
+  Search,
+  Sparkles,
+  CheckCircle2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
@@ -51,8 +58,9 @@ function AdminLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  // Notifications State
+  // Notifications & Profile State
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
@@ -98,6 +106,7 @@ function AdminLayout() {
     { label: "Products", to: "/admin/products", icon: Package },
     { label: "Orders", to: "/admin/orders", icon: ShoppingBag },
     { label: "Customers", to: "/admin/customers", icon: User },
+    { label: "Web Email", to: "/admin/emails", icon: Mail },
     { label: "Reviews", to: "/admin/reviews", icon: MessageSquare },
     { label: "Live Chat", to: "/admin/chat", icon: MessageCircle },
     { label: "Subscribers", to: "/admin/subscribers", icon: Users },
@@ -158,10 +167,35 @@ function AdminLayout() {
           })}
         </nav>
 
-        <div className="p-4 mt-auto">
+        <div className="p-4 mt-auto space-y-3 border-t border-white/10">
+          {/* User Profile Card */}
+          <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="relative size-10 rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 text-white font-black text-xs grid place-items-center shadow-md shrink-0">
+                SA
+                <span className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full bg-emerald-400 border-2 border-[#003A7A]" />
+              </div>
+              <div className="text-left overflow-hidden">
+                <div className="text-xs font-black text-white truncate flex items-center gap-1">
+                  pools
+                  <ShieldCheck className="size-3.5 text-cyan-300 shrink-0" />
+                </div>
+                <div className="text-[10px] font-bold text-cyan-200/80 uppercase tracking-wider">Super Admin</div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              title="Sign Out"
+              className="p-2 rounded-xl bg-white/10 hover:bg-rose-500/30 text-white/70 hover:text-white transition cursor-pointer shrink-0"
+            >
+              <LogOut className="size-4" />
+            </button>
+          </div>
+
           <Link
             to="/"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 border border-transparent hover:border-white/10"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200"
           >
             <ArrowLeft className="size-4" />
             Back to Storefront
@@ -239,28 +273,63 @@ function AdminLayout() {
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col overflow-x-hidden relative">
 
-        {/* PREMIUM HEADER */}
-        <header className="h-16 bg-[#F7F7F8]/80 backdrop-blur-xl border-b border-black/[0.04] px-6 md:px-8 flex items-center justify-between lg:justify-end gap-4 shrink-0 z-30 sticky top-0">
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="lg:hidden size-9 grid place-items-center rounded-lg bg-white border border-black/[0.08] shadow-sm text-slate-600 hover:bg-slate-50 transition active:scale-95"
-          >
-            <Menu className="size-4" />
-          </button>
+        {/* ULTRA-PREMIUM ENTERPRISE TOP NAVBAR */}
+        <header className="h-20 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 px-6 md:px-8 flex items-center justify-between gap-4 shrink-0 z-30 sticky top-0 shadow-xs">
+          {/* Left: Mobile Toggle & Page Breadcrumb */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden size-10 grid place-items-center rounded-2xl bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition active:scale-95 cursor-pointer"
+            >
+              <Menu className="size-5" />
+            </button>
 
-          <div className="flex items-center gap-3 md:gap-5">
+            <div className="hidden sm:flex items-center gap-2">
+              <div className="size-2 rounded-full bg-cyan-500 animate-pulse" />
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Poolsby Control Panel</span>
+              <span className="text-slate-300">/</span>
+              <span className="text-xs font-black text-slate-900 capitalize">
+                {location.pathname.replace("/admin/", "").replace("/admin", "Dashboard") || "Dashboard"}
+              </span>
+            </div>
+          </div>
+
+          {/* Center: Quick Command Search Bar */}
+          <div className="hidden md:flex items-center max-w-md w-full relative">
+            <Search className="absolute left-3.5 size-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Quick search products, orders, or customers..."
+              className="w-full h-10 pl-10 pr-12 rounded-2xl bg-slate-100/80 border border-slate-200 text-xs font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 transition shadow-inner"
+            />
+            <kbd className="absolute right-3 text-[10px] font-extrabold text-slate-400 bg-white px-1.5 py-0.5 rounded-md border border-slate-200 shadow-2xs pointer-events-none">
+              ⌘K
+            </kbd>
+          </div>
+
+          {/* Right: Telemetry Actions & Enterprise Profile */}
+          <div className="flex items-center gap-3.5">
+            {/* Server Online Status Pill */}
+            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-extrabold">
+              <span className="size-2 rounded-full bg-emerald-500 animate-ping" />
+              System Active
+            </div>
+
             {/* Refined Notification Widget */}
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className={`relative size-9 grid place-items-center rounded-full transition-all duration-200 active:scale-95 ${notificationsOpen
-                  ? 'bg-primary/10 text-primary'
-                  : 'bg-transparent hover:bg-black/5 text-slate-500 hover:text-slate-800'
-                  }`}
+                className={`relative size-10 grid place-items-center rounded-2xl transition-all duration-200 active:scale-95 border cursor-pointer ${
+                  notificationsOpen
+                    ? "bg-indigo-50 text-indigo-600 border-indigo-200 shadow-md"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-600 border-slate-200"
+                }`}
               >
-                <Bell className="size-4" />
+                <Bell className="size-4.5" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-[#E03131] shadow-[0_0_0_2px_#F7F7F8]" />
+                  <span className="absolute -top-1 -right-1 size-5 rounded-full bg-rose-500 text-white font-black text-[10px] grid place-items-center border-2 border-white shadow-sm animate-pulse">
+                    {unreadCount}
+                  </span>
                 )}
               </button>
 
@@ -336,15 +405,88 @@ function AdminLayout() {
 
             <div className="w-[1px] h-4 bg-black/10 mx-1" />
 
-            {/* Premium Profile Widget */}
-            <div className="flex items-center gap-2.5 group cursor-pointer" onClick={handleLogout}>
-              <div className="size-8 rounded-full bg-gradient-to-tr from-slate-800 to-slate-900 text-white font-semibold text-[11px] grid place-items-center shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
-                A
-              </div>
-              <div className="hidden sm:block text-left">
-                <div className="text-[13px] font-semibold text-slate-900 leading-none mb-0.5 group-hover:text-primary transition-colors">Super Admin</div>
-                <div className="text-[10px] font-medium text-slate-500 leading-none">Sign out</div>
-              </div>
+            {/* Enterprise Profile Dropdown Widget */}
+            <div className="relative">
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex items-center gap-2.5 p-1.5 pr-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs transition active:scale-98 cursor-pointer"
+              >
+                <div className="relative size-8 rounded-xl bg-gradient-to-tr from-slate-900 to-indigo-950 text-white font-black text-xs grid place-items-center shadow-sm">
+                  SA
+                  <span className="absolute -bottom-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 border-2 border-white" />
+                </div>
+
+                <div className="hidden sm:block text-left">
+                  <div className="text-xs font-black text-slate-900 leading-none flex items-center gap-1">
+                    pools
+                    <ShieldCheck className="size-3 text-cyan-600" />
+                  </div>
+                  <div className="text-[10px] font-extrabold text-slate-500 leading-none mt-0.5 uppercase tracking-wider">
+                    Super Admin
+                  </div>
+                </div>
+
+                <ChevronDown className={`size-3.5 text-slate-400 transition-transform ${profileOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {/* Profile Dropdown Menu */}
+              <AnimatePresence>
+                {profileOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-200/90 shadow-2xl rounded-2xl p-4 z-50 space-y-4"
+                    >
+                      {/* User Info Header */}
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                        <div className="size-11 rounded-2xl bg-slate-900 text-white font-black text-sm grid place-items-center shrink-0 shadow-sm">
+                          SA
+                        </div>
+                        <div>
+                          <div className="text-xs font-black text-slate-900 flex items-center gap-1">
+                            pools
+                            <span className="text-[9px] font-extrabold bg-cyan-100 text-cyan-800 px-1.5 py-0.5 rounded-md">
+                              Online
+                            </span>
+                          </div>
+                          <div className="text-[11px] font-bold text-slate-500">Super Administrator</div>
+                          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-1 mt-0.5">
+                            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" /> Full System Access
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Dropdown Links */}
+                      <div className="space-y-1">
+                        <Link
+                          to="/admin/settings"
+                          onClick={() => setProfileOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
+                        >
+                          <Settings className="size-4 text-slate-500" /> System Settings
+                        </Link>
+                      </div>
+
+                      {/* Sign Out Button */}
+                      <div className="pt-2 border-t border-slate-100">
+                        <button
+                          onClick={() => {
+                            setProfileOpen(false);
+                            handleLogout();
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black transition cursor-pointer border border-rose-200"
+                        >
+                          <LogOut className="size-4 text-rose-600" /> Sign Out
+                        </button>
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </header>
@@ -364,6 +506,21 @@ function AdminLayout() {
             </motion.div>
           </AnimatePresence>
         </main>
+
+        {/* STICKY ULTRA-PREMIUM DASHBOARD FOOTER */}
+        <footer className="sticky bottom-0 z-20 bg-white/90 backdrop-blur-xl border-t border-slate-200/80 px-6 md:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-semibold text-slate-500 shadow-xs">
+          <div className="flex items-center gap-2 text-[11px] font-bold text-slate-600">
+            <span>© 2026 Pool Supply Wholesalers. All Rights Reserved.</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-700">
+            <span className="text-slate-400 font-semibold">Design By</span>
+            <span className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent font-black tracking-wide">
+              StellR IT LLC
+            </span>
+            <Sparkles className="size-3 text-cyan-500 animate-pulse" />
+          </div>
+        </footer>
       </div>
     </div>
   );

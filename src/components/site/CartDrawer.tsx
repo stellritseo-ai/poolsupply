@@ -113,8 +113,8 @@ export function CartDrawer() {
             {items.length > 0 && (
               <footer className="border-t border-border px-6 py-5 space-y-3 bg-surface">
                 <Row label="Subtotal" value={formatUSD(subtotal)} />
-                <Row label="Shipping" value={shipping === 0 ? "Free" : formatUSD(shipping)} muted />
-                <Row label={`Estimated tax (${(0.0875 * 100).toFixed(2)}%)`} value={formatUSD(tax)} muted />
+                <Row label="Shipping (15% of subtotal)" value={formatUSD(shipping)} muted />
+                <Row label="Sales Tax (9.25%)" value={formatUSD(tax)} muted />
                 <div className="h-px bg-border my-1" />
                 <Row label="Total" value={formatUSD(total)} bold />
                 <Link

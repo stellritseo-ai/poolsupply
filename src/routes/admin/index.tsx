@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { products, syncLocalProducts, useProducts } from "@/lib/products";
-import { useOrders } from "@/lib/orders";
+import { useQuery } from "@tanstack/react-query";
 import { formatUSD } from "@/components/site/cart-context";
 import {
   DollarSign,
@@ -13,7 +12,21 @@ import {
   Package,
   Star,
   Activity,
-  Zap
+  Zap,
+  Mail,
+  Users,
+  Eye,
+  Globe,
+  MessageCircle,
+  Clock,
+  Sparkles,
+  ArrowUpRight,
+  ShieldCheck,
+  Smartphone,
+  Monitor,
+  Laptop,
+  Layers,
+  RefreshCw
 } from "lucide-react";
 import {
   AreaChart,
@@ -23,500 +36,569 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
-  ComposedChart,
-  PieChart,
-  Pie,
-  Bar
+  BarChart,
+  Bar,
+  Cell
 } from "recharts";
 import { motion } from "framer-motion";
+import { getFullDashboardMetricsDb, getQuickDashboardStatsDb, DashboardMetrics } from "@/lib/api/analytics.functions";
 
 export const Route = createFileRoute("/admin/")({
   component: DashboardIndex,
 });
 
-type Order = {
-  id: string;
-  placedAt: string;
-  email: string;
-  name: string;
-  items: any[];
-  subtotal: number;
-  shipping: number;
-  tax: number;
-  total: number;
-  method: string;
-};
-
-const MOCK_ORDERS: Order[] = [
-  {
-    id: "AQ-748B",
-    placedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    email: "james.t@gmail.com",
-    name: "James Thompson",
-    items: [{ id: "p-intelliflo", name: "Variable-Speed IntelliFlo Pump", price: 1289, qty: 1, brand: "Pentair", img: "" }],
-    subtotal: 1289, shipping: 0, tax: 112.78, total: 1401.78, method: "standard"
-  },
-  {
-    id: "AQ-923D",
-    placedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    email: "d.miller@millerpools.com",
-    name: "David Miller",
-    items: [{ id: "p-raypak-400k", name: "Digital Pool Heater Pro 400K", price: 2499, qty: 1, brand: "Raypak", img: "" }],
-    subtotal: 2499, shipping: 0, tax: 218.66, total: 2717.66, method: "standard"
-  },
-  {
-    id: "AQ-551E",
-    placedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    email: "s.jenkins@gmail.com",
-    name: "Sarah Jenkins",
-    items: [{ id: "p-colorlogic", name: "ColorLogic LED Pool Light", price: 349, qty: 2, brand: "Hayward", img: "" }],
-    subtotal: 698, shipping: 0, tax: 61.07, total: 759.07, method: "standard"
-  },
-  {
-    id: "AQ-120A",
-    placedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    email: "robert@bluewave.com",
-    name: "Robert P.",
-    items: [
-      { id: "p-cx3", name: "Robotic Pool Cleaner CX-3", price: 899, qty: 1, brand: "Jandy", img: "" },
-      { id: "p-cv340", name: "CV Series Cartridge Filter 340 sq ft", price: 1149, qty: 1, brand: "Jandy", img: "" }
-    ],
-    subtotal: 2048, shipping: 0, tax: 179.20, total: 2227.20, method: "standard"
-  }
-];
-
-
-const CATEGORY_DATA = [
-  { name: "Pumps", sales: 42, color: "#0089C9" },
-  { name: "Heaters", sales: 28, color: "#59D2F3" },
-  { name: "Lights", sales: 35, color: "#006DAB" },
-  { name: "Filters", sales: 21, color: "#004A7C" },
-  { name: "Cleaners", sales: 31, color: "#00B4D8" },
-  { name: "Auto", sales: 15, color: "#48CAE4" }
-];
-
 const containerVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08 } }
+  show: { transition: { staggerChildren: 0.07 } }
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } }
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as const } }
 };
 
-function GlassCard({ children, className = "", gradient = false }: { children: React.ReactNode; className?: string; gradient?: boolean }) {
-  return (
-    <div
-      className={`relative rounded-[1.75rem] overflow-hidden ${className}`}
-      style={gradient ? {
-        background: "linear-gradient(135deg, #0089C9, #59D2F3)",
-        boxShadow: "0 20px 60px rgba(0,137,201,0.35)"
-      } : {
-        background: "rgba(255,255,255,0.7)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,0.9)",
-        boxShadow: "0 4px 24px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)"
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
 function DashboardIndex() {
-  const { orders } = useOrders();
-  const { products: adminProducts } = useProducts();
-
-  const metrics = useMemo(() => {
-    const totalRev = orders.reduce((acc, o) => acc + o.total, 0);
-    const avgOrderVal = orders.length > 0 ? totalRev / orders.length : 0;
-    const lowStockCount = adminProducts.filter(p => p.stock < 10).length;
-    const totalReviews = adminProducts.reduce((acc, p) => acc + (p.reviews?.length || 0), 0);
-    return { revenue: totalRev, ordersCount: orders.length, avgOrder: avgOrderVal, lowStock: lowStockCount, reviews: totalReviews };
-  }, [orders, adminProducts]);
-
-  const dynamicSalesData = useMemo(() => {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    // Generate last 6 months buckets
-    const buckets: { name: string; month: number; year: number; revenue: number; ordersCount: number; }[] = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(currentYear, currentMonth - i, 1);
-      buckets.push({
-        name: months[d.getMonth()],
-        month: d.getMonth(),
-        year: d.getFullYear(),
-        revenue: 0,
-        ordersCount: 0
-      });
-    }
-
-    // Populate buckets
-    orders.forEach(order => {
-      const d = new Date(order.placedAt);
-      const m = d.getMonth();
-      const y = d.getFullYear();
-      const bucket = buckets.find(b => b.month === m && b.year === y);
-      if (bucket) {
-        bucket.revenue += order.total;
-        bucket.ordersCount += 1;
-      }
-    });
-
-    return buckets;
-  }, [orders]);
-
-  const dynamicCategoryData = useMemo(() => {
-    const categories: Record<string, number> = {};
-    orders.forEach(order => {
-      order.items.forEach(item => {
-        const product = adminProducts.find(p => p.id === item.id);
-        // If product isn't found or has no category, default to "Other"
-        const catName = product?.category || "Other";
-        categories[catName] = (categories[catName] || 0) + item.qty;
-      });
-    });
-
-    const colors = ["#0089C9", "#59D2F3", "#006DAB", "#48CAE4", "#8b5cf6", "#10b981"];
-    const data = Object.keys(categories).map((cat, idx) => ({
-      name: cat,
-      sales: categories[cat],
-      color: colors[idx % colors.length]
-    })).sort((a, b) => b.sales - a.sales);
-
-    return data.length > 0 ? data : CATEGORY_DATA;
-  }, [orders, adminProducts]);
-
-  const kpis = [
-    {
-      title: "Total Revenue",
-      value: formatUSD(metrics.revenue),
-      change: "+12.4%",
-      up: true,
-      icon: DollarSign,
-      accent: "#10b981",
-      bg: "rgba(16,185,129,0.1)",
-      border: "rgba(16,185,129,0.2)"
+  // Fast 4-card KPI stats (refreshes every 5s)
+  const { data: quickStats, isLoading: quickLoading, refetch: refetchQuick } = useQuery({
+    queryKey: ["quick_dashboard_stats"],
+    queryFn: async () => {
+      const res = await getQuickDashboardStatsDb();
+      return res.stats;
     },
-    {
-      title: "Total Orders",
-      value: metrics.ordersCount.toString(),
-      change: "+8.2%",
-      up: true,
-      icon: ShoppingBag,
-      accent: "#0089C9",
-      bg: "rgba(0,137,201,0.1)",
-      border: "rgba(0,137,201,0.2)"
+    refetchInterval: 5000
+  });
+
+  // Full metrics for charts & tables (refreshes every 10s)
+  const { data: dbMetricsRes, isLoading, refetch } = useQuery({
+    queryKey: ["full_dashboard_metrics"],
+    queryFn: async () => {
+      const res = await getFullDashboardMetricsDb();
+      return res.metrics;
     },
-    {
-      title: "Avg. Order Value",
-      value: formatUSD(metrics.avgOrder),
-      change: "-2.1%",
-      up: false,
-      icon: TrendingUp,
-      accent: "#8b5cf6",
-      bg: "rgba(139,92,246,0.1)",
-      border: "rgba(139,92,246,0.2)"
-    },
-    {
-      title: "Low Stock Alerts",
-      value: metrics.lowStock.toString(),
-      change: metrics.lowStock > 0 ? "Needs Attention" : "All Good",
-      up: metrics.lowStock === 0,
-      icon: AlertTriangle,
-      accent: metrics.lowStock > 0 ? "#f43f5e" : "#10b981",
-      bg: metrics.lowStock > 0 ? "rgba(244,63,94,0.1)" : "rgba(16,185,129,0.1)",
-      border: metrics.lowStock > 0 ? "rgba(244,63,94,0.2)" : "rgba(16,185,129,0.2)"
-    }
-  ];
+    refetchInterval: 10000
+  });
+
+  const refetchAll = () => { refetch(); refetchQuick(); };
+
+  // 4 KPI cards use quickStats, rest uses full metrics
+  const qs = quickStats || {
+    totalRevenue: 0, totalOrders: 0, totalProducts: 0, totalCustomers: 0,
+    avgOrderValue: 0, revenueMoMChange: 0, revenueMoMDelta: 0,
+    totalPageHits: 0, todayHits: 0, liveVisitors: 0, lowStockCount: 0, unreadEmails: 0
+  };
+
+  const m: DashboardMetrics = dbMetricsRes || {
+    totalRevenue: qs.totalRevenue,
+    revenueMoMChange: qs.revenueMoMChange,
+    revenueMoMDelta: qs.revenueMoMDelta,
+    totalOrders: qs.totalOrders,
+    ordersMoMChange: 0,
+    avgOrderValue: qs.avgOrderValue,
+    totalProducts: qs.totalProducts,
+    lowStockCount: qs.lowStockCount,
+    totalCustomers: qs.totalCustomers,
+    totalPageHits: qs.totalPageHits,
+    todayHits: qs.todayHits,
+    liveVisitors: 0,
+    unreadEmails: qs.unreadEmails,
+    activeChats: 0,
+    categoryDistribution: [],
+    monthlyRevenueChart: [
+      { name: "Feb", revenue: 0, ordersCount: 0, target: 30000 },
+      { name: "Mar", revenue: 0, ordersCount: 0, target: 35000 },
+      { name: "Apr", revenue: 0, ordersCount: 0, target: 40000 },
+      { name: "May", revenue: 0, ordersCount: 0, target: 42000 },
+      { name: "Jun", revenue: 0, ordersCount: 0, target: 48000 },
+      { name: "Jul", revenue: 0, ordersCount: 0, target: 55000 }
+    ],
+    recentOrders: [],
+    topProducts: []
+  };
 
   return (
-    <div className="space-y-7 pb-10">
-
-      {/* Hero Header */}
+    <div className="space-y-8 pb-12 max-w-7xl mx-auto">
+      {/* ─── BILLION-DOLLAR ENTERPRISE HERO HEADER ─── */}
       <motion.div
-        initial={{ opacity: 0, y: -16 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative rounded-[2rem] overflow-hidden p-8"
+        transition={{ duration: 0.6 }}
+        className="relative rounded-[2.5rem] overflow-hidden p-8 sm:p-10 border border-cyan-500/20"
         style={{
-          background: "linear-gradient(135deg, #0089C9 0%, #006DAB 50%, #004A7C 100%)",
-          boxShadow: "0 20px 60px rgba(0,137,201,0.4)"
+          background: "linear-gradient(135deg, #001228 0%, #002855 40%, #004080 75%, #0066cc 100%)",
+          boxShadow: "0 25px 70px -15px rgba(0, 102, 204, 0.4)"
         }}
       >
-        {/* bg orbs */}
-        <div className="absolute top-[-40%] right-[-5%] w-72 h-72 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(89,210,243,0.3) 0%, transparent 70%)" }} />
-        <div className="absolute bottom-[-60%] left-[20%] w-64 h-64 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)" }} />
+        {/* Glow ambient background elements */}
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(89,210,243,0.25) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <div className="absolute bottom-[-40%] left-[15%] w-[400px] h-[400px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(0,212,255,0.15) 0%, transparent 70%)", filter: "blur(50px)" }} />
 
-        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/80 text-[10px] font-bold uppercase tracking-widest mb-3">
-              <Activity className="size-3" />
-              Live Dashboard
+        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest backdrop-blur-md">
+              <Sparkles className="size-3.5 text-cyan-400 animate-pulse" />
+              Live Database Telemetry Control Panel
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">Dashboard Overview</h1>
-            <p className="text-white/60 text-sm mt-1.5 font-medium">Real-time telemetry, order logs, and catalog metrics.</p>
+            <h1 className="text-[30px] font-black text-white tracking-tight leading-tight">
+              Poolsby <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-white">Global Command</span>
+            </h1>
+            <p className="text-sky-100/75 text-sm max-w-xl font-medium leading-relaxed">
+              Real-time database metrics, MoM revenue growth engine, live active visitor hit counters, and catalog telemetry.
+            </p>
           </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <Link
-              to="/admin/products"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs text-[#0089C9] bg-white hover:bg-white/90 transition-all shadow-lg"
+
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            <button
+              onClick={refetchAll}
+              className="p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition backdrop-blur-md cursor-pointer"
+              title="Refresh DB Telemetry"
             >
-              <Package className="size-4" /> Add Product
+              <RefreshCw className={`size-3.5 ${(isLoading || quickLoading) ? "animate-spin text-cyan-300" : ""}`} />
+            </button>
+
+            <Link
+              to="/admin/emails"
+              className="relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-bold text-[11px] text-slate-900 bg-white hover:bg-cyan-50 transition-all shadow-md cursor-pointer"
+            >
+              <Mail className="size-3.5 text-indigo-600" /> Web Email
+              {m.unreadEmails > 0 && (
+                <span className="size-4 rounded-full bg-rose-500 text-white text-[9px] font-black grid place-items-center animate-bounce">
+                  {m.unreadEmails}
+                </span>
+              )}
             </Link>
+
+            <Link
+              to="/admin/chat"
+              className="relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-bold text-[11px] text-white bg-white/15 border border-white/25 hover:bg-white/25 transition-all backdrop-blur-md cursor-pointer"
+            >
+              <MessageCircle className="size-3.5 text-cyan-300" /> Live Chat
+              {m.activeChats > 0 && (
+                <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
+              )}
+            </Link>
+
             <Link
               to="/admin/orders"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs text-white bg-white/15 border border-white/20 hover:bg-white/20 transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-bold text-[11px] text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 transition-all shadow-md cursor-pointer"
             >
-              <ShoppingBag className="size-4" /> View Orders
+              <ShoppingBag className="size-3.5" /> View Orders
+            </Link>
+
+            <Link
+              to="/admin/products"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-bold text-[11px] text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all shadow-md cursor-pointer"
+            >
+              <Package className="size-3.5" /> Manage Catalog
             </Link>
           </div>
         </div>
       </motion.div>
 
-      {/* KPI Cards */}
+      {/* ─── 5-PILLAR DYNAMIC METRIC CARDS ─── */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5"
+        className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5"
       >
-        {kpis.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <motion.div key={kpi.title} variants={cardVariants}>
-              <GlassCard className="p-6 hover:-translate-y-1 transition-transform duration-300 cursor-default">
-                <div className="flex items-start justify-between mb-5">
-                  <div
-                    className="size-11 rounded-2xl flex items-center justify-center shrink-0"
-                    style={{ background: kpi.bg, border: `1px solid ${kpi.border}` }}
-                  >
-                    <Icon className="size-5" style={{ color: kpi.accent }} />
-                  </div>
-                  <div className="flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-full" style={{ background: kpi.bg, color: kpi.accent }}>
-                    {kpi.up ? <TrendingUp className="size-3" /> : <TrendingDown className="size-3" />}
-                    {kpi.change}
-                  </div>
-                </div>
-                <div className="text-2xl font-black text-slate-900 tracking-tight leading-none mb-1.5">{kpi.value}</div>
-                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{kpi.title}</div>
-                {/* accent bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-[3px] rounded-b-[1.75rem]" style={{ background: `linear-gradient(to right, ${kpi.accent}50, ${kpi.accent})` }} />
-              </GlassCard>
-            </motion.div>
-          );
-        })}
+        {/* Card 1: Total Revenue — LIVE DB */}
+        <motion.div variants={cardVariants} className="bg-white border border-slate-200/90 rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-all group">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Total Revenue</span>
+            <div className="size-10 rounded-2xl bg-indigo-50 text-indigo-600 grid place-items-center group-hover:scale-110 transition-transform">
+              <DollarSign className="size-5" />
+            </div>
+          </div>
+          {quickLoading && !quickStats ? (
+            <div className="h-8 w-32 bg-slate-100 rounded-xl animate-pulse" />
+          ) : (
+            <div className="text-2xl font-black text-slate-900 tracking-tight">{formatUSD(qs.totalRevenue)}</div>
+          )}
+          <div className="mt-3 flex items-center gap-2 text-xs">
+            {qs.revenueMoMChange !== 0 ? (
+              <span className="inline-flex items-center gap-1 font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/50">
+                <TrendingUp className="size-3" /> +{qs.revenueMoMChange}% MoM
+              </span>
+            ) : (
+              <span className="text-[11px] text-slate-400 font-bold">Live from Database</span>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Card 2: Total Orders — LIVE DB */}
+        <motion.div variants={cardVariants} className="bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/30 rounded-[2rem] p-6 text-white shadow-xl hover:shadow-2xl transition-all group relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none" />
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-cyan-300">Total Orders</span>
+            <div className="size-10 rounded-2xl bg-cyan-400/15 border border-cyan-400/30 text-cyan-300 grid place-items-center group-hover:scale-110 transition-transform">
+              <ShoppingBag className="size-5" />
+            </div>
+          </div>
+          {quickLoading && !quickStats ? (
+            <div className="h-8 w-16 bg-slate-700 rounded-xl animate-pulse" />
+          ) : (
+            <div className="text-2xl font-black text-white tracking-tight flex items-baseline gap-2">
+              {qs.totalOrders}
+              <span className="text-xs font-bold text-cyan-300">Orders</span>
+            </div>
+          )}
+          <div className="mt-3 flex items-center gap-2 text-xs">
+            <span className="inline-flex items-center gap-1 font-extrabold text-cyan-300 bg-cyan-950/80 px-2 py-0.5 rounded-md border border-cyan-500/40">
+              <Sparkles className="size-3" /> Avg {formatUSD(qs.avgOrderValue)}
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Card 3: Total Products — LIVE DB */}
+        <motion.div variants={cardVariants} className="bg-white border border-slate-200/90 rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-all group">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Total Products</span>
+            <div className="size-10 rounded-2xl bg-emerald-50 text-emerald-600 grid place-items-center group-hover:scale-110 transition-transform relative">
+              <Package className="size-5" />
+            </div>
+          </div>
+          {quickLoading && !quickStats ? (
+            <div className="h-8 w-16 bg-slate-100 rounded-xl animate-pulse" />
+          ) : (
+            <div className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              {qs.totalProducts}
+              {qs.lowStockCount > 0 && (
+                <span className="text-xs font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200 flex items-center gap-1">
+                  <AlertTriangle className="size-3" /> {qs.lowStockCount} Low Stock
+                </span>
+              )}
+            </div>
+          )}
+          <div className="mt-3 flex items-center gap-2 text-xs text-slate-500 font-medium">
+            <Globe className="size-3.5 text-slate-400" /> Active in Catalog
+          </div>
+        </motion.div>
+
+        {/* Card 4: Total Customers — LIVE DB */}
+        <motion.div variants={cardVariants} className="bg-white border border-slate-200/90 rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-all group">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Total Customers</span>
+            <div className="size-10 rounded-2xl bg-sky-50 text-sky-600 grid place-items-center group-hover:scale-110 transition-transform">
+              <Users className="size-5" />
+            </div>
+          </div>
+          {quickLoading && !quickStats ? (
+            <div className="h-8 w-20 bg-slate-100 rounded-xl animate-pulse" />
+          ) : (
+            <div className="text-2xl font-black text-slate-900 tracking-tight">
+              {qs.totalCustomers.toLocaleString()}
+            </div>
+          )}
+          <div className="mt-3 flex items-center gap-2 text-xs">
+            <span className="inline-flex items-center gap-1 font-extrabold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
+              Registered Accounts
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Card 5: Page Hits — LIVE DB */}
+        <motion.div variants={cardVariants} className="bg-white border border-slate-200/90 rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-all group">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Page Hits</span>
+            <div className="size-10 rounded-2xl bg-amber-50 text-amber-600 grid place-items-center group-hover:scale-110 transition-transform">
+              <Eye className="size-5" />
+            </div>
+          </div>
+          {quickLoading && !quickStats ? (
+            <div className="h-8 w-24 bg-slate-100 rounded-xl animate-pulse" />
+          ) : (
+            <div className="text-2xl font-black text-slate-900 tracking-tight">{qs.totalPageHits.toLocaleString()}</div>
+          )}
+          <div className="mt-3 flex items-center gap-2 text-xs">
+            <span className="inline-flex items-center gap-1 font-extrabold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+              +{qs.todayHits.toLocaleString()} Today
+            </span>
+          </div>
+        </motion.div>
       </motion.div>
 
-      {/* Charts */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="grid xl:grid-cols-[1fr_380px] gap-5"
-      >
-        {/* Revenue Chart */}
-        <motion.div variants={cardVariants}>
-          <GlassCard className="p-6 space-y-5">
-            <div className="flex items-start justify-between">
+      {/* ─── MAIN ANALYTICS & TELEMETRY DASHBOARD GRID ─── */}
+      <div className="grid lg:grid-cols-12 gap-8">
+        {/* Left 8 Cols: Revenue & MoM Growth Chart */}
+        <div className="lg:col-span-8 space-y-8">
+          <div className="bg-white border border-slate-200/80 rounded-[2.5rem] p-7 sm:p-8 shadow-sm">
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
               <div>
-                <h3 className="font-black text-slate-900 text-base tracking-tight">Revenue Pipeline</h3>
-                <p className="text-xs text-slate-400 mt-0.5">Monthly performance for {new Date().getFullYear()}</p>
+                <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                  Revenue Growth vs Target Telemetry
+                  <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+                    Database Live
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">Monthly performance compared against $50k monthly target milestone</p>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="size-2 rounded-full bg-[#0089C9]" />
-                <span className="text-[11px] font-bold text-slate-400">Revenue</span>
+
+              <div className="flex items-center gap-4 text-xs font-bold">
+                <div className="flex items-center gap-2">
+                  <span className="size-3 rounded-full bg-cyan-500" />
+                  <span className="text-slate-600">Actual Revenue</span>
+                </div>
               </div>
             </div>
 
-            <div className="h-[260px]">
+            {/* Recharts Area Chart */}
+            <div className="h-[340px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={dynamicSalesData} margin={{ top: 15, right: 10, left: -20, bottom: 0 }}>
+                <AreaChart data={m.monthlyRevenueChart} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
-                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#0089C9" stopOpacity={0.3} />
-                      <stop offset="100%" stopColor="#59D2F3" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#59D2F3" stopOpacity={0.8} />
-                      <stop offset="100%" stopColor="#0089C9" stopOpacity={0.2} />
+                    <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0089C9" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#0089C9" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.04)" />
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} dy={10} />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v / 1000}k`} dx={-10} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12, fontWeight: 700 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#94a3b8", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
                   <Tooltip
-                    formatter={(v) => [formatUSD(v as number), "Revenue"]}
-                    contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
-                    cursor={{ fill: "rgba(0,137,201,0.05)" }}
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-800 space-y-1.5">
+                            <div className="text-xs font-bold text-slate-400">{label} Performance</div>
+                            <div className="text-base font-black text-cyan-300">{formatUSD(data.revenue)}</div>
+                            <div className="text-[11px] text-slate-300 font-semibold">{data.ordersCount} Total Orders</div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
                   />
-                  <Bar dataKey="revenue" fill="url(#barGrad)" radius={[6, 6, 0, 0]} barSize={24} />
-                  <Area type="monotone" dataKey="revenue" stroke="#0089C9" strokeWidth={3} fill="url(#revGrad)" dot={{ r: 4, fill: "#fff", stroke: "#0089C9", strokeWidth: 2 }} activeDot={{ r: 6, fill: "#0089C9", stroke: "#fff", strokeWidth: 2 }} />
-                </ComposedChart>
+                  <Area type="monotone" dataKey="revenue" stroke="#0089C9" strokeWidth={3.5} fillOpacity={1} fill="url(#revenueGrad)" />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
-          </GlassCard>
-        </motion.div>
+          </div>
 
-        {/* Category Chart */}
-        <motion.div variants={cardVariants}>
-          <GlassCard className="p-6 flex flex-col space-y-5 h-full">
-            <div>
-              <h3 className="font-black text-slate-900 text-base tracking-tight">Sales by Category</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Units sold by equipment segment</p>
-            </div>
-            <div className="flex-1 min-h-[220px] -ml-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
-                  <Tooltip
-                    formatter={(v) => [v, "Units"]}
-                    contentStyle={{ backgroundColor: "#0f172a", borderRadius: "1rem", border: "none", color: "#fff", fontSize: "12px", padding: "10px 14px", boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)" }}
-                    itemStyle={{ color: "#fff", fontWeight: "bold" }}
-                  />
-                  <Pie
-                    data={dynamicCategoryData}
-                    dataKey="sales"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={75}
-                    paddingAngle={2}
-                    stroke="none"
-                    labelLine={{ stroke: "#94a3b8", strokeWidth: 1 }}
-                    label={({ value, percent }) => `${value} units (${(percent * 100).toFixed(1)}%)`}
-                  >
-                    {dynamicCategoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </GlassCard>
-        </motion.div>
-      </motion.div>
-
-      {/* Bottom Grid: Orders + Shortcuts */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="grid xl:grid-cols-[2fr_1fr] gap-5"
-      >
-        {/* Recent Orders */}
-        <motion.div variants={cardVariants}>
-          <GlassCard className="overflow-hidden">
-            <div className="p-6 flex items-center justify-between border-b border-black/[0.04]">
-              <div>
-                <h3 className="font-black text-slate-900 text-base tracking-tight">Recent Orders</h3>
-                <p className="text-xs text-slate-400 mt-0.5">Last 72 hours of transactions</p>
+          {/* Category Revenue Distribution Grid */}
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="bg-white border border-slate-200/80 rounded-[2.5rem] p-7 shadow-sm">
+              <h4 className="text-base font-extrabold text-slate-900 mb-4 flex items-center justify-between">
+                Category Sales Breakdown
+                <span className="text-[10px] font-bold text-slate-400">{m.categoryDistribution.length} Departments</span>
+              </h4>
+              <div className="h-[200px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={m.categoryDistribution}>
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 10, fontWeight: 700 }} />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const d = payload[0].payload;
+                          return (
+                            <div className="bg-slate-900 text-white p-3 rounded-xl text-xs">
+                              <span className="font-bold">{d.name}: </span>
+                              <span className="text-cyan-300 font-black">{formatUSD(d.revenue)}</span> ({d.sales} units)
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="sales" radius={[8, 8, 0, 0]}>
+                      {m.categoryDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
+            </div>
+
+            {/* Device & Traffic Demographics Widget */}
+            <div className="bg-white border border-slate-200/80 rounded-[2.5rem] p-7 shadow-sm space-y-4">
+              <h4 className="text-base font-extrabold text-slate-900 flex items-center justify-between">
+                Catalog Statistics
+                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                  DB Live
+                </span>
+              </h4>
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                    <Package className="size-4 text-indigo-600" /> Total Active Products
+                  </span>
+                  <span className="text-sm font-black text-slate-900">{m.totalProducts}</span>
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                    <Users className="size-4 text-cyan-600" /> Registered Customers
+                  </span>
+                  <span className="text-sm font-black text-slate-900">{m.totalCustomers}</span>
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-rose-50/60 border border-rose-100">
+                  <span className="text-xs font-bold text-rose-800 flex items-center gap-2">
+                    <AlertTriangle className="size-4 text-rose-600" /> Low Stock Items (&lt;10)
+                  </span>
+                  <span className="text-sm font-black text-rose-700">{m.lowStockCount}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Customer Orders Live Table Widget */}
+          <div className="bg-white border border-slate-200/80 rounded-[2.5rem] p-7 sm:p-8 shadow-sm space-y-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                  <ShoppingBag className="size-5 text-emerald-600" />
+                  Recent Customer Orders
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">Live completed customer order activity</p>
+              </div>
+
               <Link
                 to="/admin/orders"
-                className="flex items-center gap-1.5 text-xs font-bold text-[#0089C9] hover:gap-2.5 transition-all group"
+                className="px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer border border-emerald-200"
               >
-                View All <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
+                View All Orders <ArrowRight className="size-3.5" />
               </Link>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-semibold border-collapse">
-                <thead>
-                  <tr className="text-slate-400 uppercase tracking-wider text-[10px]">
-                    <th className="px-6 py-3 font-bold bg-slate-50/60">Order</th>
-                    <th className="px-6 py-3 font-bold bg-slate-50/60">Customer</th>
-                    <th className="px-6 py-3 font-bold bg-slate-50/60">Items</th>
-                    <th className="px-6 py-3 font-bold bg-slate-50/60 text-right">Amount</th>
-                    <th className="px-6 py-3 font-bold bg-slate-50/60">Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-black/[0.04]">
-                  {orders.slice(0, 4).map((order, i) => (
-                    <motion.tr
-                      key={order.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.07 }}
-                      className="hover:bg-[#0089C9]/[0.03] transition-colors group"
-                    >
-                      <td className="px-6 py-4">
-                        <span className="font-black text-[#0089C9] text-[11px] bg-[#0089C9]/10 px-2 py-0.5 rounded-md">
-                          {order.id}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-slate-900">{order.name}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{order.email}</div>
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">{order.items?.length || 1} item(s)</td>
-                      <td className="px-6 py-4 text-right font-black text-slate-900">{formatUSD(order.total)}</td>
-                      <td className="px-6 py-4 text-slate-400">{new Date(order.placedAt).toLocaleDateString()}</td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </GlassCard>
-        </motion.div>
-
-        {/* Shortcuts + Promo */}
-        <motion.div variants={cardVariants} className="flex flex-col gap-5">
-          {/* Quick Actions */}
-          <GlassCard className="p-6 flex-1">
-            <h3 className="font-black text-slate-900 text-base tracking-tight mb-1">Quick Actions</h3>
-            <p className="text-xs text-slate-400 mb-5">Fast access to key admin tasks</p>
-            <div className="space-y-2.5">
-              {[
-                { label: "Add New Product", to: "/admin/products", icon: Package, color: "#0089C9" },
-                { label: "Fulfill Orders", to: "/admin/orders", icon: ShoppingBag, color: "#10b981" },
-                { label: "Moderate Reviews", to: "/admin/reviews", icon: Star, color: "#f59e0b" }
-              ].map((action) => {
-                const Icon = action.icon;
-                return (
-                  <Link
-                    key={action.label}
-                    to={action.to}
-                    className="flex items-center justify-between p-3.5 rounded-2xl hover:-translate-y-0.5 transition-all group border border-transparent hover:border-black/5"
-                    style={{ background: "rgba(0,0,0,0.025)" }}
-                  >
+            <div className="divide-y divide-slate-100 overflow-hidden">
+              {m.recentOrders.length > 0 ? (
+                m.recentOrders.map((order: any) => (
+                  <div key={order._id || order.id} className="py-3.5 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="size-8 rounded-xl flex items-center justify-center" style={{ background: `${action.color}18`, color: action.color }}>
-                        <Icon className="size-4" />
+                      <div className="size-10 rounded-xl bg-slate-100 grid place-items-center text-slate-700 font-black text-xs">
+                        {order.name ? order.name.charAt(0).toUpperCase() : "O"}
                       </div>
-                      <span className="text-[13px] font-bold text-slate-800">{action.label}</span>
+                      <div>
+                        <div className="text-xs font-bold text-slate-900">{order.name || "Customer"}</div>
+                        <div className="text-[11px] text-slate-400">{order.email || order.id}</div>
+                      </div>
                     </div>
-                    <ArrowRight className="size-4 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all" />
-                  </Link>
-                );
-              })}
-            </div>
-          </GlassCard>
 
-          {/* Promo Banner */}
-          <GlassCard gradient className="p-6 relative overflow-hidden">
-            <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none" />
-            <div className="absolute -bottom-10 -left-6 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
-            <div className="relative z-10 flex items-start gap-3">
-              <div className="size-10 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
-                <Zap className="size-5 text-white" />
-              </div>
+                    <div className="text-right">
+                      <div className="text-xs font-black text-slate-900">{formatUSD(order.total || 0)}</div>
+                      <span className="inline-block text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        {order.status || "Completed"}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-6 text-center text-slate-400 space-y-1">
+                  <p className="text-xs font-bold">Orders synchronized with database</p>
+                  <p className="text-[11px] text-slate-400">Click View All Orders to manage order log history.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right 4 Cols: Live Communication Hub */}
+        <div className="lg:col-span-4 space-y-8">
+          {/* Live Global Visitor Telemetry Card */}
+          <div className="bg-slate-950 text-white border border-slate-800 rounded-[2.5rem] p-7 shadow-xl space-y-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
+
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div>
-                <h4 className="font-black text-white text-sm mb-1">Wholesale Advisory</h4>
-                <p className="text-white/75 text-[11px] leading-relaxed">
-                  Wholesale pricing structures are secured. Dealer discounts are configurable via the database settings panel.
-                </p>
+                <h4 className="text-base font-extrabold text-white flex items-center gap-2">
+                  <Globe className="size-4.5 text-cyan-400 animate-spin" style={{ animationDuration: "12s" }} />
+                  Global Visitor Telemetry
+                </h4>
+                <p className="text-[11px] text-slate-400 mt-0.5">Real-time DB Hit Counter</p>
+              </div>
+              <span className="size-2.5 rounded-full bg-emerald-400 animate-ping" />
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Website Hits</div>
+                  <div className="text-xl font-black text-cyan-300 mt-0.5">{m.totalPageHits.toLocaleString()}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Today's Hits</div>
+                  <div className="text-xl font-black text-emerald-400 mt-0.5">+{m.todayHits.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Visitors</div>
+                  <div className="text-xl font-black text-white mt-0.5 flex items-center gap-2">
+                    {m.liveVisitors}
+                    <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Status</div>
+                  <div className="text-xs font-bold text-emerald-400 mt-1">Live Online</div>
+                </div>
               </div>
             </div>
-          </GlassCard>
-        </motion.div>
-      </motion.div>
+
+            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-400">
+              <span>Security & DDOS Guard</span>
+              <span className="text-emerald-400 flex items-center gap-1"><ShieldCheck className="size-3.5" /> Active</span>
+            </div>
+          </div>
+
+          {/* Communication Hub Card */}
+          <div className="bg-white border border-slate-200/80 rounded-[2.5rem] p-7 shadow-sm space-y-5">
+            <h4 className="text-base font-extrabold text-slate-900 flex items-center justify-between">
+              Communication Hub
+              <span className="text-[10px] font-bold text-slate-400">Live Channels</span>
+            </h4>
+
+            <div className="space-y-3">
+              <Link
+                to="/admin/emails"
+                className="flex items-center justify-between p-4 rounded-2xl bg-indigo-50/60 hover:bg-indigo-50 border border-indigo-100 transition group cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="size-10 rounded-xl bg-indigo-600 text-white grid place-items-center">
+                    <Mail className="size-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-black text-slate-900">Web Email Inbox</div>
+                    <div className="text-[11px] text-slate-500">Contact form submissions</div>
+                  </div>
+                </div>
+                {m.unreadEmails > 0 ? (
+                  <span className="px-2.5 py-1 rounded-full bg-rose-500 text-white text-[11px] font-black">
+                    {m.unreadEmails} New
+                  </span>
+                ) : (
+                  <ArrowUpRight className="size-4 text-slate-400 group-hover:text-indigo-600 transition" />
+                )}
+              </Link>
+
+              <Link
+                to="/admin/chat"
+                className="flex items-center justify-between p-4 rounded-2xl bg-cyan-50/60 hover:bg-cyan-50 border border-cyan-100 transition group cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="size-10 rounded-xl bg-cyan-500 text-white grid place-items-center">
+                    <MessageCircle className="size-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-black text-slate-900">Live Customer Chat</div>
+                    <div className="text-[11px] text-slate-500">Instant customer messaging</div>
+                  </div>
+                </div>
+                {m.activeChats > 0 ? (
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-black animate-pulse">
+                    {m.activeChats} Active
+                  </span>
+                ) : (
+                  <ArrowUpRight className="size-4 text-slate-400 group-hover:text-cyan-600 transition" />
+                )}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

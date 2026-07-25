@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getAdminChatSessionsDb,
@@ -18,7 +18,18 @@ import {
   Loader2,
   MessageCircle,
   User,
+  Bell,
+  Sparkles,
+  Phone,
+  Mail,
+  Zap,
+  Tag,
+  ShieldCheck,
+  RefreshCw,
+  Check,
+  AlertCircle
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/admin/chat")({
@@ -43,14 +54,22 @@ function timeAgo(dateString: string) {
   return `${Math.floor(h / 24)}d ago`;
 }
 
+const CHAT_QUICK_TEMPLATES = [
+  "Hello! How can I assist you with your pool equipment today?",
+  "Thank you for contacting Poolsby support! One moment while I check your details.",
+  "Your order status has been updated and is preparing for warehouse dispatch.",
+  "Would you like me to send you the technical spec sheet for this model?"
+];
+
 function AdminChat() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "resolved" | "unread">("all");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-  // Notification states
+  // Notification permissions
   const [notificationPermission, setNotificationPermission] = useState<string>(
     typeof window !== "undefined" && "Notification" in window ? Notification.permission : "default"
   );
@@ -63,20 +82,40 @@ function AdminChat() {
     }
   };
 
-  // Poll every 5 seconds
-  const { data, isLoading } = useQuery({
+  // Poll live sessions every 5 seconds
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["adminChatSessions"],
     queryFn: () => getAdminChatSessionsDb(),
     refetchInterval: 5000,
   });
 
   const sessions: ChatSession[] = data?.sessions ?? [];
-  const filteredSessions = sessions.filter((s) =>
-    search === "" ||
-    (s.userName || `Guest-${s.sessionId.substring(0, 4)}`).toLowerCase().includes(search.toLowerCase())
-  );
 
-  const selectedSession = sessions.find((s) => s.sessionId === selectedSessionId) ?? null;
+  const filteredSessions = useMemo(() => {
+    return sessions.filter((s) => {
+      if (statusFilter === "active" && s.status !== "active") return false;
+      if (statusFilter === "resolved" && s.status !== "resolved") return false;
+      if (statusFilter === "unread" && (s.unreadAdmin ?? 0) === 0) return false;
+
+      if (!search.trim()) return true;
+      const q = search.toLowerCase();
+      const name = (s.userName || `Guest-${s.sessionId.substring(0, 4)}`).toLowerCase();
+      const email = (s.userEmail || "").toLowerCase();
+      return name.includes(q) || email.includes(q);
+    });
+  }, [sessions, statusFilter, search]);
+
+  const selectedSession = useMemo(() => {
+    if (!selectedSessionId) return filteredSessions[0] || null;
+    return sessions.find((s) => s.sessionId === selectedSessionId) ?? null;
+  }, [selectedSessionId, filteredSessions, sessions]);
+
+  // Auto select first session
+  useEffect(() => {
+    if (!selectedSessionId && filteredSessions.length > 0) {
+      setSelectedSessionId(filteredSessions[0].sessionId);
+    }
+  }, [filteredSessions, selectedSessionId]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -95,50 +134,7 @@ function AdminChat() {
     }
   }, [selectedSessionId, selectedSession?.unreadAdmin]);
 
-  // Browser Notifications Logic on incoming messages
-  const prevUserMessageCount = useRef<Record<string, number>>({});
-  const isInitialLoad = useRef(true);
-
-  useEffect(() => {
-    if (!sessions || sessions.length === 0) return;
-
-    if (isInitialLoad.current) {
-      sessions.forEach((s) => {
-        const userMessages = s.messages.filter((m) => m.sender === "user");
-        prevUserMessageCount.current[s.sessionId] = userMessages.length;
-      });
-      isInitialLoad.current = false;
-      return;
-    }
-
-    let shouldNotify = false;
-    let notifyMessage = "";
-    let notifySessionId = "";
-
-    sessions.forEach((s) => {
-      const userMessages = s.messages.filter((m) => m.sender === "user");
-      const currentCount = userMessages.length;
-      const prevCount = prevUserMessageCount.current[s.sessionId];
-
-      if ((prevCount === undefined && currentCount > 0) || (prevCount !== undefined && currentCount > prevCount)) {
-        shouldNotify = true;
-        const lastUserMsg = userMessages[userMessages.length - 1];
-        notifyMessage = lastUserMsg ? lastUserMsg.text : "New message received";
-        notifySessionId = s.sessionId;
-      }
-
-      prevUserMessageCount.current[s.sessionId] = currentCount;
-    });
-
-    if (shouldNotify && typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
-      const activeSession = sessions.find((s) => s.sessionId === notifySessionId);
-      const displayName = activeSession?.userName || `Guest-${notifySessionId.substring(0, 4).toUpperCase()}`;
-      new Notification(`New Message from ${displayName}`, {
-        body: notifyMessage,
-      });
-    }
-  }, [sessions]);
-
+  // Send Reply Mutation
   const sendReplyMutation = useMutation({
     mutationFn: async (text: string) => {
       if (!selectedSessionId) return;
@@ -156,6 +152,7 @@ function AdminChat() {
     },
   });
 
+  // Resolve Session Mutation
   const resolveMutation = useMutation({
     mutationFn: async () => {
       if (!selectedSessionId) return;
@@ -176,218 +173,281 @@ function AdminChat() {
     }
   };
 
-  const totalUnread = sessions.reduce((acc, s) => acc + (s.unreadAdmin ?? 0), 0);
+  const totalUnread = useMemo(() => sessions.reduce((acc, s) => acc + (s.unreadAdmin ?? 0), 0), [sessions]);
+  const activeCount = useMemo(() => sessions.filter(s => s.status === "active").length, [sessions]);
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Page Header */}
-      <div className="mb-6 flex justify-between items-start">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-2xl font-bold text-slate-900">Live Chat</h1>
-            {totalUnread > 0 && (
-              <span className="bg-primary text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {totalUnread} new
-              </span>
-            )}
-          </div>
-          <p className="text-sm text-slate-500">Manage customer conversations in real-time.</p>
-        </div>
-
-        {/* Browser Notification Controls */}
-        {typeof window !== "undefined" && "Notification" in window && (
-          <div className="flex items-center">
-            {notificationPermission === "granted" ? (
-              <span className="text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-100 flex items-center gap-1.5 font-medium shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Browser Notifications Enabled
-              </span>
-            ) : notificationPermission === "denied" ? (
-              <span 
-                className="text-xs bg-rose-50 text-rose-700 px-3 py-1.5 rounded-xl border border-rose-100 flex items-center gap-1.5 font-medium shadow-sm cursor-help"
-                title="Notifications are blocked in your browser settings. Please reset permissions in your browser's address bar to enable notifications."
-              >
-                ❌ Notifications Blocked
-              </span>
-            ) : (
-              <button
-                onClick={requestNotificationPermission}
-                className="text-xs bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
-              >
-                🔔 Enable Browser Notifications
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Main Chat UI */}
-      <div
-        className="flex flex-1 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
-        style={{ minHeight: 0, height: "calc(100vh - 210px)" }}
+    <div className="space-y-6 w-full pb-12">
+      {/* ─── HERO COMMAND HEADER ─── */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative rounded-[2.5rem] overflow-hidden p-8 sm:p-10 border border-cyan-500/20"
+        style={{
+          background: "linear-gradient(135deg, #001024 0%, #00244d 45%, #004d99 80%, #0066cc 100%)",
+          boxShadow: "0 25px 70px -15px rgba(0, 102, 204, 0.35)"
+        }}
       >
-        {/* ── LEFT SIDEBAR ── */}
-        <div className="w-[300px] shrink-0 border-r border-slate-200 flex flex-col bg-slate-50/60">
-          {/* Search */}
-          <div className="p-4 border-b border-slate-200 bg-white">
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(89,210,243,0.25) 0%, transparent 70%)", filter: "blur(60px)" }} />
+
+        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest backdrop-blur-md">
+              <Sparkles className="size-3.5 text-cyan-400 animate-pulse" />
+              Live Real-Time Messaging Hub
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none flex items-center gap-3">
+              Customer Live Chat
+              {activeCount > 0 ? (
+                <span className="text-xs font-black bg-emerald-500 text-white px-3 py-1 rounded-full animate-pulse border border-emerald-400">
+                  {activeCount} Active
+                </span>
+              ) : (
+                <span className="text-xs font-bold bg-white/10 text-white/80 px-3 py-1 rounded-full border border-white/20">
+                  All Quiet
+                </span>
+              )}
+            </h1>
+            <p className="text-cyan-100/75 text-sm max-w-xl font-medium leading-relaxed">
+              Instant customer conversations from the storefront widget. Engage, resolve inquiries, and support customers live.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 flex-wrap">
+            {typeof window !== "undefined" && "Notification" in window && (
+              <div>
+                {notificationPermission === "granted" ? (
+                  <span className="text-xs bg-emerald-500/20 text-emerald-300 px-4 py-2.5 rounded-2xl border border-emerald-400/40 flex items-center gap-2 font-bold shadow-lg backdrop-blur-md">
+                    <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
+                    Notifications Active
+                  </span>
+                ) : (
+                  <button
+                    onClick={requestNotificationPermission}
+                    className="text-xs bg-white text-slate-900 hover:bg-cyan-50 px-4 py-2.5 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-xl cursor-pointer"
+                  >
+                    <Bell className="size-4 text-cyan-600" /> Enable Alerts
+                  </button>
+                )}
+              </div>
+            )}
+
+            <button
+              onClick={() => refetch()}
+              className="p-3 rounded-2xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition backdrop-blur-md cursor-pointer"
+              title="Sync Chat Sessions"
+            >
+              <RefreshCw className={`size-4 ${isLoading ? "animate-spin text-cyan-300" : ""}`} />
+            </button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ─── MAIN CHAT WORKSPACE CONTAINER ─── */}
+      <div
+        className="grid lg:grid-cols-12 gap-0 bg-white border border-slate-200/80 rounded-[2.5rem] shadow-sm overflow-hidden min-h-[700px] w-full"
+      >
+        {/* Left 4 Cols: Conversations Sidebar */}
+        <div className="lg:col-span-4 border-r border-slate-100 flex flex-col bg-slate-50/50">
+          {/* Search & Filter Toolbar */}
+          <div className="p-4 sm:p-5 border-b border-slate-200/80 space-y-3 bg-white">
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-3.5 top-3.5 size-4 text-slate-400" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search conversations..."
-                className="w-full pl-9 pr-4 py-2 bg-slate-100 rounded-xl text-sm border-0 focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
+                placeholder="Search conversations by name..."
+                className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold focus:outline-none focus:border-cyan-500 focus:bg-white transition"
               />
+            </div>
+
+            <div className="flex items-center justify-between gap-1 bg-slate-100 p-1 rounded-xl">
+              {[
+                { id: "all", label: "All", count: sessions.length },
+                { id: "active", label: "Active", count: activeCount },
+                { id: "unread", label: "Unread", count: totalUnread },
+                { id: "resolved", label: "Resolved", count: sessions.length - activeCount },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setStatusFilter(tab.id as any)}
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    statusFilter === tab.id
+                      ? "bg-white text-slate-900 shadow-xs"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  {tab.label} <span className="opacity-60 text-[10px]">({tab.count})</span>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Session List */}
-          <div className="flex-1 overflow-y-auto">
+          {/* Conversations List Items */}
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 max-h-[600px] scrollbar-thin">
             {isLoading ? (
-              <div className="flex items-center justify-center h-full">
-                <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+              <div className="flex items-center justify-center p-12 text-slate-400">
+                <Loader2 className="size-6 animate-spin text-cyan-600" />
               </div>
             ) : filteredSessions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full gap-2 p-6 text-center">
-                <MessageSquare className="w-10 h-10 text-slate-200" />
-                <p className="text-sm text-slate-400 font-medium">No chat sessions yet</p>
-                <p className="text-xs text-slate-400">Messages from the storefront chat widget will appear here.</p>
+              <div className="p-12 text-center text-slate-400 space-y-3">
+                <MessageSquare className="size-12 mx-auto text-slate-300" />
+                <p className="text-xs font-bold text-slate-600">No Chat Sessions Found</p>
+                <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
+                  Visitor live chat conversations from the storefront widget will appear here live.
+                </p>
               </div>
             ) : (
               filteredSessions.map((session) => {
                 const lastMsg = session.messages[session.messages.length - 1];
                 const isSelected = session.sessionId === selectedSessionId;
                 const hasUnread = (session.unreadAdmin ?? 0) > 0;
+                const displayName = session.userName || `Guest-${session.sessionId.substring(0, 4).toUpperCase()}`;
 
                 return (
-                  <button
+                  <div
                     key={session.sessionId}
                     onClick={() => setSelectedSessionId(session.sessionId)}
-                    className={`w-full p-4 text-left border-b border-slate-100 transition-all duration-150 flex flex-col gap-1 relative border-l-4 ${
+                    className={`p-4 sm:p-5 transition cursor-pointer relative ${
                       isSelected
-                        ? "bg-primary/5 border-l-primary"
-                        : "hover:bg-white/80 border-l-transparent"
+                        ? "bg-cyan-50/80 border-l-4 border-cyan-600"
+                        : hasUnread
+                        ? "bg-emerald-50/30 hover:bg-emerald-50/60 font-bold"
+                        : "bg-white hover:bg-slate-50"
                     }`}
                   >
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center shrink-0">
-                          <User className="w-3.5 h-3.5 text-white" />
+                    {hasUnread && (
+                      <span className="absolute top-5 right-4 size-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                    )}
+
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <div className="flex items-center gap-2.5">
+                        <div className="size-9 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 text-white font-black text-xs grid place-items-center shrink-0 shadow-sm">
+                          {displayName.charAt(0).toUpperCase()}
                         </div>
-                        <span className="font-semibold text-slate-800 text-sm truncate max-w-[150px]">
-                          {session.userName || `Guest-${session.sessionId.substring(0, 4).toUpperCase()}`}
-                        </span>
+                        <div>
+                          <div className={`text-xs ${hasUnread ? "font-black text-slate-900" : "font-bold text-slate-800"}`}>
+                            {displayName}
+                          </div>
+                          <div className="text-[10px] text-slate-400 font-medium">
+                            {timeAgo(session.updatedAt)}
+                          </div>
+                        </div>
                       </div>
+
                       {session.status === "resolved" ? (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      ) : hasUnread ? (
-                        <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                          {session.unreadAdmin}
+                        <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                          Resolved
                         </span>
-                      ) : null}
+                      ) : (
+                        <span className="text-[10px] font-extrabold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-md border border-cyan-200">
+                          Active
+                        </span>
+                      )}
                     </div>
-                    <div className="pl-9">
-                      <p className="text-xs text-slate-500 truncate">
-                        {lastMsg?.sender === "admin" ? "You: " : ""}
-                        {lastMsg?.text ?? "Started a chat"}
-                      </p>
-                      <p className="text-[10px] text-slate-400 mt-0.5">{timeAgo(session.updatedAt)}</p>
-                    </div>
-                  </button>
+
+                    <p className="text-[11px] text-slate-500 truncate pl-11">
+                      {lastMsg?.sender === "admin" ? <strong className="text-cyan-700">You: </strong> : ""}
+                      {lastMsg?.text ?? "Started a conversation"}
+                    </p>
+                  </div>
                 );
               })
             )}
           </div>
         </div>
 
-        {/* ── RIGHT CHAT PANE ── */}
-        <div className="flex-1 flex flex-col min-w-0 bg-white">
+        {/* Right 8 Cols: Live Chat Conversation & Reply Workspace */}
+        <div className="lg:col-span-8 flex flex-col bg-white">
           {selectedSession ? (
-            <>
-              {/* Chat Header */}
-              <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between shrink-0 bg-white shadow-sm z-10">
+            <div className="flex-1 flex flex-col justify-between">
+              {/* Active Conversation Top Header */}
+              <div className="p-5 border-b border-slate-100 flex items-center justify-between gap-4 bg-white shadow-xs shrink-0">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center">
-                    <User className="w-4 h-4 text-white" />
+                  <div className="size-11 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white font-black text-base grid place-items-center shadow-md shrink-0">
+                    {(selectedSession.userName || `G`).charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900 text-sm">
+                    <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
                       {selectedSession.userName || `Guest-${selectedSession.sessionId.substring(0, 4).toUpperCase()}`}
+                      {selectedSession.status === "active" ? (
+                        <span className="size-2 rounded-full bg-emerald-500 animate-ping" />
+                      ) : (
+                        <span className="text-[10px] font-bold text-slate-400">Archived</span>
+                      )}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5">
-                      <p className="text-[11px] text-slate-400 flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        Started {formatDate(selectedSession.createdAt)} at{" "}
-                        {formatTime(selectedSession.createdAt)} ·{" "}
-                        {selectedSession.messages.length} messages
-                      </p>
-                      {(selectedSession.userEmail || selectedSession.userPhone) && (
-                        <div className="text-[11px] text-slate-500 flex items-center gap-2">
-                          <span className="text-slate-300">|</span>
-                          {selectedSession.userEmail && (
-                            <span className="bg-slate-100 px-2 py-0.5 rounded-md font-medium" title="Email Address">
-                              ✉️ {selectedSession.userEmail}
-                            </span>
-                          )}
-                          {selectedSession.userPhone && (
-                            <span className="bg-slate-100 px-2 py-0.5 rounded-md font-medium" title="Phone Number">
-                              📞 {selectedSession.userPhone}
-                            </span>
-                          )}
-                        </div>
+
+                    <div className="flex items-center gap-3 mt-1 text-[11px] text-slate-500 flex-wrap">
+                      <span className="flex items-center gap-1 font-semibold text-slate-600">
+                        <Clock className="size-3 text-slate-400" />
+                        Started {formatDate(selectedSession.createdAt)} at {formatTime(selectedSession.createdAt)}
+                      </span>
+                      {selectedSession.userEmail && (
+                        <span className="bg-slate-100 px-2 py-0.5 rounded-md font-semibold text-slate-700">
+                          ✉️ {selectedSession.userEmail}
+                        </span>
+                      )}
+                      {selectedSession.userPhone && (
+                        <span className="bg-slate-100 px-2 py-0.5 rounded-md font-semibold text-slate-700">
+                          📞 {selectedSession.userPhone}
+                        </span>
                       )}
                     </div>
                   </div>
                 </div>
-                {selectedSession.status !== "resolved" ? (
-                  <button
-                    onClick={() => resolveMutation.mutate()}
-                    disabled={resolveMutation.isPending}
-                    className="flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 active:scale-95 transition-all px-3 py-1.5 rounded-lg border border-emerald-200 disabled:opacity-50"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Mark Resolved
-                  </button>
-                ) : (
-                  <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Resolved
-                  </span>
-                )}
+
+                <div>
+                  {selectedSession.status !== "resolved" ? (
+                    <button
+                      onClick={() => resolveMutation.mutate()}
+                      disabled={resolveMutation.isPending}
+                      className="px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold text-xs flex items-center gap-1.5 border border-emerald-200 transition cursor-pointer"
+                    >
+                      <CheckCircle2 className="size-3.5" /> Mark Resolved
+                    </button>
+                  ) : (
+                    <span className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 font-extrabold text-xs flex items-center gap-1.5 border border-emerald-200">
+                      <CheckCircle2 className="size-3.5" /> Resolved
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-6 bg-[#f6f7fb] flex flex-col gap-3">
+              {/* Chat Messages Log Body */}
+              <div className="flex-1 overflow-y-auto p-6 bg-slate-50/60 flex flex-col gap-4 max-h-[480px]">
                 {selectedSession.messages.length === 0 ? (
-                  <div className="flex items-center justify-center h-full text-slate-400 text-sm">
-                    No messages yet.
+                  <div className="flex items-center justify-center h-full text-slate-400 text-xs font-bold">
+                    No messages in conversation.
                   </div>
                 ) : (
                   selectedSession.messages.map((msg) => {
                     const isAdmin = msg.sender === "admin";
                     return (
-                      <div key={msg.id} className={`flex ${isAdmin ? "justify-end" : "justify-start"}`}>
+                      <div key={msg.id} className={`flex items-end gap-2.5 ${isAdmin ? "justify-end" : "justify-start"}`}>
                         {!isAdmin && (
-                          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center shrink-0 mr-2 mt-auto">
-                            <User className="w-3.5 h-3.5 text-white" />
+                          <div className="size-8 rounded-xl bg-slate-900 text-white font-black text-xs grid place-items-center shrink-0 shadow-xs">
+                            {(selectedSession.userName || "G").charAt(0).toUpperCase()}
                           </div>
                         )}
+
                         <div
-                          className={`max-w-[65%] rounded-2xl px-4 py-2.5 shadow-sm ${
+                          className={`max-w-[70%] rounded-2xl p-4 shadow-sm text-xs leading-relaxed ${
                             isAdmin
-                              ? "bg-primary text-primary-foreground rounded-tr-sm"
-                              : "bg-white text-slate-800 border border-slate-100 rounded-tl-sm"
+                              ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-xs font-medium"
+                              : "bg-white text-slate-800 border border-slate-200/80 rounded-bl-xs font-medium"
                           }`}
                         >
-                          <p className="text-sm leading-relaxed">{msg.text}</p>
-                          <p className={`text-[10px] mt-1 ${isAdmin ? "text-primary-foreground/60 text-right" : "text-slate-400"}`}>
+                          <p className="whitespace-pre-wrap">{msg.text}</p>
+                          <div className={`text-[10px] mt-1.5 font-bold ${isAdmin ? "text-cyan-100 text-right" : "text-slate-400"}`}>
                             {formatTime(msg.timestamp)}
-                          </p>
+                          </div>
                         </div>
+
                         {isAdmin && (
-                          <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200/50 flex items-center justify-center shrink-0 ml-2 mt-auto overflow-hidden">
-                            <img src={logo} alt="PSW" className="w-4 h-4 object-contain" />
+                          <div className="size-8 rounded-xl bg-indigo-600 text-white p-1.5 shrink-0 grid place-items-center shadow-xs">
+                            <img src={logo} alt="Poolsby" className="w-full h-full object-contain brightness-0 invert" />
                           </div>
                         )}
                       </div>
@@ -397,51 +457,65 @@ function AdminChat() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input Area */}
+              {/* Quick Reply & Input Area Footer */}
               {selectedSession.status !== "resolved" ? (
-                <div className="px-5 py-4 border-t border-slate-200 bg-white shrink-0">
-                  <div className="flex gap-2 items-end">
+                <div className="p-5 border-t border-slate-100 bg-white space-y-3 shrink-0">
+                  {/* Quick Response Template Chips */}
+                  <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                    {CHAT_QUICK_TEMPLATES.map((tmpl, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setReplyText(tmpl)}
+                        className="shrink-0 text-[11px] font-semibold text-slate-600 bg-slate-100 hover:bg-cyan-50 hover:text-cyan-700 px-3 py-1 rounded-xl border border-slate-200 transition cursor-pointer"
+                      >
+                        + Template {idx + 1}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-3">
                     <textarea
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder="Type your reply..."
-                      rows={1}
-                      className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 resize-none bg-slate-50 transition-all"
-                      style={{ maxHeight: "120px" }}
+                      placeholder="Type your reply message..."
+                      rows={2}
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs font-semibold focus:outline-none focus:border-cyan-500 focus:bg-white transition resize-none"
                     />
+
                     <button
                       onClick={handleSend}
                       disabled={!replyText.trim() || sendReplyMutation.isPending}
-                      className="bg-primary hover:bg-primary/90 active:scale-95 disabled:opacity-40 transition-all text-white w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
+                      className="px-6 py-4 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-lg disabled:opacity-40 shrink-0"
                     >
                       {sendReplyMutation.isPending ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="size-4 animate-spin" />
                       ) : (
-                        <Send className="w-4 h-4 ml-0.5" />
+                        <>
+                          <span>Send</span>
+                          <Send className="size-4" />
+                        </>
                       )}
                     </button>
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-2 text-center">
-                    Press <kbd className="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-500">Enter</kbd> to send · <kbd className="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-500">Shift+Enter</kbd> for new line
-                  </p>
+                  <div className="text-[10px] text-slate-400 font-medium text-center">
+                    Press <kbd className="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-500">Enter</kbd> to send message · <kbd className="font-mono bg-slate-100 px-1 py-0.5 rounded text-slate-500">Shift+Enter</kbd> for line break
+                  </div>
                 </div>
               ) : (
-                <div className="px-5 py-4 border-t border-slate-200 bg-slate-50 shrink-0 flex items-center justify-center gap-2 text-sm text-slate-500">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  This conversation has been resolved and is read-only.
+                <div className="p-5 border-t border-slate-100 bg-slate-50 text-center text-xs font-bold text-slate-500 flex items-center justify-center gap-2">
+                  <CheckCircle2 className="size-4 text-emerald-500" /> This conversation has been marked resolved.
                 </div>
               )}
-            </>
+            </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-slate-400 bg-slate-50/50">
-              <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center">
-                <MessageSquare className="w-8 h-8 text-slate-300" />
-              </div>
-              <div className="text-center">
-                <p className="font-medium text-slate-500">Select a conversation</p>
-                <p className="text-sm text-slate-400">Choose a chat session from the left to view messages.</p>
-              </div>
+            <div className="flex-1 flex flex-col items-center justify-center p-12 text-center text-slate-400 space-y-3">
+              <MessageSquare className="size-14 text-slate-200" />
+              <h3 className="text-base font-bold text-slate-600">Select a conversation to reply</h3>
+              <p className="text-xs text-slate-400 max-w-sm">
+                Choose any active or past chat session from the list on the left to read and send replies live.
+              </p>
             </div>
           )}
         </div>

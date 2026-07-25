@@ -48,6 +48,7 @@ export const getChatSessionDb = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<{ success: boolean; session: ChatSession | null; error?: string }> => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, session: null };
       const chatsCol = db.collection("chats");
 
       const doc = await chatsCol.findOne({ sessionId: data.sessionId });
@@ -88,6 +89,7 @@ export const addChatMessageDb = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<{ success: boolean; error?: string }> => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database error" };
       const chatsCol = db.collection("chats");
 
       const existingDoc = await chatsCol.findOne({ sessionId: data.sessionId });
@@ -141,6 +143,7 @@ export const getAdminChatSessionsDb = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; sessions: ChatSession[]; error?: string }> => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, sessions: [] };
       const chatsCol = db.collection("chats");
 
       const docs = await chatsCol.find().sort({ updatedAt: -1 }).toArray();
@@ -158,6 +161,7 @@ export const resolveChatSessionDb = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<{ success: boolean; error?: string }> => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database error" };
       await db.collection("chats").updateOne(
         { sessionId: data.sessionId },
         { $set: { status: "resolved", updatedAt: new Date().toISOString(), unreadAdmin: 0 } }
@@ -173,6 +177,7 @@ export const markAdminChatReadDb = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<{ success: boolean }> => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false };
       await db.collection("chats").updateOne(
         { sessionId: data.sessionId },
         { $set: { unreadAdmin: 0 } }

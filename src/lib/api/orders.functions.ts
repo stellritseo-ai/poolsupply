@@ -51,6 +51,7 @@ export const getOrdersDb = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, orders: [] };
       const ordersCol = db.collection("orders");
       
       const orders = await ordersCol.find().toArray();
@@ -76,6 +77,7 @@ export const updateOrderStatusDb = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const ordersCol = db.collection("orders");
       
       const result = await ordersCol.updateOne(
@@ -95,6 +97,7 @@ export const deleteOrderDb = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const ordersCol = db.collection("orders");
       
       await ordersCol.deleteOne({ $or: [{ _id: toQueryId(data.id) }, { id: data.id }] });
@@ -111,6 +114,7 @@ export const createOrderDb = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const ordersCol = db.collection("orders");
       
       const toInsert = { ...data };
@@ -139,6 +143,7 @@ export const seedMockOrdersDb = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const ordersCol = db.collection("orders");
       
       const count = await ordersCol.countDocuments();

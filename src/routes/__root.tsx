@@ -89,21 +89,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Pool Supply Wholesalers — Premium Pool Equipment at Wholesale Prices" },
-      { name: "description", content: "Trusted wholesale supplier of premium pool pumps, heaters, filters, cleaners, lights and automation from Pentair, Hayward, Jandy and more." },
+      { title: "Pool Supply Wholesalers — Wholesale to Retail Pool Equipment Supplier" },
+      { name: "description", content: "America's top wholesale to retail distributor of commercial pool pumps, gas heaters, cartridge filters, salt chlorinators, and automation. Buy wholesale pool supplies directly at retail prices from hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL." },
+      { name: "keywords", content: "wholesale to retail pool supplies, wholesale to retail pool equipment, buy wholesale pool equipment at retail, wholesale pool supply distributor, retail pool supplies wholesale prices, commercial pool pumps, variable speed pool pumps, gas pool heaters, pool cartridge filters, salt chlorinators, pentair intelliflo, hayward tristar, jandy pro series, raypak pool heaters, pool automation systems, pool contractor trade pricing, pool supply Nashville TN, pool equipment distributor Los Angeles CA, wholesale pool supplies Dallas TX, commercial pool equipment Orlando FL" },
       { name: "author", content: "Pool Supply Wholesalers" },
-      { property: "og:title", content: "Pool Supply Wholesalers — Premium Pool Equipment Wholesale" },
-      { property: "og:description", content: "Pool pumps, heaters, filters, cleaners and automation systems from the industry's leading brands at wholesale pricing." },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      
+      { property: "og:site_name", content: "Pool Supply Wholesalers" },
+      { property: "og:title", content: "Pool Supply Wholesalers — Direct Wholesale to Retail Pool Equipment" },
+      { property: "og:description", content: "Direct wholesale to retail access to Pentair, Hayward, Jandy & Raypak commercial pool pumps, heaters, filters & automation. Same-day shipping nationwide." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://poolsupplywholesalers.com/" },
+      { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Pool Supply Wholesalers — Wholesale to Retail Pool Supplies" },
+      { name: "twitter:description", content: "Wholesale to retail distributor for pool builders, service pros, and homeowners. Fast shipping from TN, CA, TX, and FL hubs." },
+      { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" },
+      { rel: "canonical", href: "https://poolsupplywholesalers.com/" },
     ],
-
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -112,10 +122,55 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": ["WholesaleStore", "Store"],
+      "name": "Pool Supply Wholesalers",
+      "url": "https://poolsupplywholesalers.com",
+      "logo": "https://poolsupplywholesalers.com/assets/logo.png",
+      "image": "https://poolsupplywholesalers.com/about-hero.png",
+      "telephone": "+1-615-477-0407",
+      "email": "sales@poolsupplywholesalers.com",
+      "priceRange": "$$",
+      "description": "America's premier wholesale to retail distributor of commercial pool equipment, variable speed pumps, gas heaters, cartridge filters, and automation systems.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "410 Scott Pike",
+        "addressLocality": "Nashville",
+        "addressRegion": "TN",
+        "postalCode": "37207",
+        "addressCountry": "US"
+      },
+      "areaServed": [
+        { "@type": "State", "name": "Tennessee" },
+        { "@type": "State", "name": "California" },
+        { "@type": "State", "name": "Texas" },
+        { "@type": "State", "name": "Florida" },
+        { "@type": "Country", "name": "United States" }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Wholesale to Retail Commercial Pool Equipment Catalog",
+        "itemListElement": [
+          { "@type": "OfferCatalog", "name": "Wholesale & Retail Variable Speed Pool Pumps" },
+          { "@type": "OfferCatalog", "name": "Commercial & Residential Gas Pool Heaters" },
+          { "@type": "OfferCatalog", "name": "Cartridge & Sand Pool Filters Wholesale to Retail" },
+          { "@type": "OfferCatalog", "name": "Salt Water Chlorinators at Wholesale Pricing" },
+          { "@type": "OfferCatalog", "name": "Smart Commercial & Retail Pool Automation" }
+        ]
+      }
+    }
+  ];
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body>
         {children}
@@ -132,28 +187,33 @@ function RootComponent() {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     async function checkMaintenance() {
       // Never block the admin dashboard
-      if (router.state.location.pathname.startsWith("/admin")) {
-        setIsChecking(false);
+      if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
+        if (isMounted) setIsChecking(false);
         return;
       }
       
       try {
         const res = await getGlobalSettings();
-        if (res.success && res.settings?.maintenanceMode) {
-          setIsMaintenance(true);
-        } else {
-          setIsMaintenance(false);
+        if (isMounted) {
+          if (res.success && res.settings?.maintenanceMode) {
+            setIsMaintenance(true);
+          } else {
+            setIsMaintenance(false);
+          }
         }
       } catch (e) {
         console.error(e);
+      } finally {
+        if (isMounted) setIsChecking(false);
       }
-      setIsChecking(false);
     }
     
     checkMaintenance();
-  }, [router.state.location.pathname]);
+    return () => { isMounted = false; };
+  }, []);
 
 
   if (isChecking && !router.state.location.pathname.startsWith("/admin")) {

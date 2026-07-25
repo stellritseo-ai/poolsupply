@@ -2,67 +2,198 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { useProducts, Product } from "@/lib/products";
+import { useProductsByCategory, useProductsQuery, products as defaultProducts, getProductImage, Product } from "@/lib/products";
 import { useCart, formatUSD } from "@/components/site/cart-context";
 import { Star, ShoppingBag, Eye, Filter, ArrowUpDown, Search } from "lucide-react";
 import { motion } from "framer-motion";
+import { ProductCard } from "@/components/site/ProductCard";
 
 export const Route = createFileRoute("/shop/$category")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      q: (search.q as string) || "",
+    };
+  },
   head: ({ params }) => {
     const name = getCategoryName(params.category);
+    const title = `${name} Wholesale to Retail | Commercial Pool Supplies`;
+    const description = `Shop wholesale to retail commercial-grade ${name} at direct trade pricing. Buy ${name} from Pentair, Hayward, Jandy & Raypak with fast shipping from Nashville TN, LA, Dallas & Orlando.`;
+    const categoryUrl = `https://poolsupplywholesalers.com/shop/${params.category}`;
+
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://poolsupplywholesalers.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Shop",
+          "item": "https://poolsupplywholesalers.com/shop/all"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": name,
+          "item": categoryUrl
+        }
+      ]
+    };
+
     return {
       meta: [
-        { title: `${name} — Premium Pool Equipment Wholesale` },
-        { name: "description", content: `Browse wholesale pricing on professional grade ${name} from top brands like Pentair, Hayward, and Jandy.` }
+        { title },
+        { name: "description", content: description },
+        { name: "keywords", content: `wholesale to retail ${name}, buy wholesale ${name} at retail, ${name} wholesale supplier, ${name} Nashville TN, pentair ${name}, hayward ${name}, trade price pool equipment` },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: categoryUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
       ],
+      links: [
+        { rel: "canonical", href: categoryUrl }
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbLd)
+        }
+      ]
     };
   },
   component: CategoryPage,
 });
 
 function getCategoryName(slug: string): string {
-  switch (slug) {
+  switch (slug.toLowerCase()) {
+    case "all": return "All Products";
+    case "pool-and-spa":
+    case "pool-spa": return "Pool & Spa";
+    case "parts-and-hardware":
+    case "parts-hardware": return "Parts & Hardware";
+    case "chemicals": return "Chemicals";
+    case "maintenance-and-cleaning":
+    case "maintenance-cleaning": return "Maintenance & Cleaning";
+    case "safety-and-accessibility":
+    case "safety-accessibility": return "Safety & Accessibility";
     case "pool-pumps": return "Pool Pumps";
     case "pool-lights": return "Pool Lights";
     case "pool-cleaners": return "Pool Cleaners";
     case "pool-heaters": return "Pool Heaters";
     case "electric-heat-pumps": return "Electric Heat Pumps";
+    case "automation": return "Automation";
+    case "blowers": return "Blowers";
+    case "chlorine-feeders": return "Chlorine Feeders";
+    case "cleaners": return "Cleaners";
+    case "filters": return "Filters";
+    case "heaters": return "Heaters";
+    case "lights": return "Lights";
+    case "pumps": return "Pumps";
+    case "salt-systems": return "Salt Systems";
+    case "skid-systems": return "Skid Systems";
+    case "bulk": return "Bulk";
+    case "motors": return "Motors";
+    case "plumbing": return "Plumbing";
+    case "pool-kits": return "Pool Kits";
+    case "algaecides": return "Algaecides";
+    case "balancers": return "Balancers";
+    case "cal-hypo": return "Cal-Hypo";
+    case "dichlor": return "Dichlor";
+    case "deck-products": return "Deck Products";
+    case "maintenance": return "Maintenance";
+    case "plaster": return "Plaster";
+    case "ladders-and-rails": return "Ladders & Rails";
     default: return slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
   }
 }
 
 function CategoryPage() {
   const { category } = useParams({ from: "/shop/$category" });
+  const { q: urlSearch } = Route.useSearch();
   const categoryName = getCategoryName(category);
   const { add } = useCart();
-  const { products: dbProducts } = useProducts();
+
+  const categoryQuery = useProductsByCategory(category);
+  const allProductsQuery = useProductsQuery();
+
+  const dbProducts = useMemo(() => {
+    if (categoryQuery.data && categoryQuery.data.length > 0) {
+      return categoryQuery.data;
+    }
+    if (allProductsQuery.data && allProductsQuery.data.length > 0) {
+      return allProductsQuery.data;
+    }
+    return defaultProducts;
+  }, [categoryQuery.data, allProductsQuery.data]);
 
   // Filters & Sorting State
   const [sortBy, setSortBy] = useState<"price-asc" | "price-desc" | "rating-desc">("rating-desc");
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(urlSearch || "");
+
+  useEffect(() => {
+    if (urlSearch !== undefined) {
+      setSearchQuery(urlSearch);
+    }
+  }, [urlSearch]);
 
   // Get products matching this category
   const filteredProducts = useMemo(() => {
     // Filter matching category
-    let items = dbProducts.filter(p => p.category.toLowerCase() === categoryName.toLowerCase());
-    console.log("=== Category Page Filter Debug ===");
-    console.log("Total Category Products:", items.length);
-    console.log("Selected Brands:", selectedBrands);
-    console.log("In Stock Only:", inStockOnly);
-    console.log("Search Query:", searchQuery);
+    let items = dbProducts.filter(p => {
+      if (category.toLowerCase() === "all") return true;
+      const pCat = (p.category || "").toLowerCase();
+      const pParent = (p.parentCategory || "").toLowerCase();
+      const pSub = (p.subCategory || "").toLowerCase();
+      const cName = categoryName.toLowerCase();
+      // Build slug variants: "ladders-and-rails" → "ladders and rails" and "ladders & rails"
+      const slug = category.toLowerCase();
+      const slugSpaced = slug.replace(/-/g, " ");                           // "ladders and rails"
+      const slugAmp   = slug.replace(/-and-/g, " & ").replace(/-/g, " ");  // "ladders & rails"
+      const slugSlash = slug.replace(/-or-/g, " / ").replace(/-/g, " ");   // slash variant
 
-    // Search query filter
+      const matchesAny = (field: string) =>
+        field === cName ||
+        field === slugSpaced ||
+        field === slugAmp ||
+        field === slugSlash ||
+        field === slug ||
+        field.includes(cName) ||
+        field.includes(slugAmp) ||
+        cName.includes(field) ||
+        slugAmp.includes(field);
+
+      return matchesAny(pCat) || matchesAny(pParent) || matchesAny(pSub);
+    });
+
+    // Multi-field Search query filter (Name, SKU, Brand, Category, Description, Details, Specs)
     if (searchQuery.trim() !== "") {
-      const q = searchQuery.toLowerCase();
-      items = items.filter(p => 
-        p.name.toLowerCase().includes(q) || 
-        p.brand.toLowerCase().includes(q) || 
-        p.sku.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
-      );
-      console.log("After Search Filter:", items.length);
+      const terms = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      items = items.filter(p => {
+        const name = (p.name || "").toLowerCase();
+        const brand = (p.brand || "").toLowerCase();
+        const sku = (p.sku || "").toLowerCase();
+        const category = (p.category || "").toLowerCase();
+        const parentCategory = (p.parentCategory || "").toLowerCase();
+        const description = (p.description || "").toLowerCase();
+        const details = (p.details || "").toLowerCase();
+        const seoKeywords = (p.seoKeywords || "").toLowerCase();
+        const specsStr = p.specs ? Object.values(p.specs).filter(Boolean).join(" ").toLowerCase() : "";
+
+        const fullText = `${name} ${brand} ${sku} ${category} ${parentCategory} ${description} ${details} ${seoKeywords} ${specsStr}`;
+
+        return terms.every(term => fullText.includes(term));
+      });
     }
 
     // Brand filter
@@ -90,10 +221,10 @@ function CategoryPage() {
   // Extract all available brands in this category for filtering options
   const categoryBrands = useMemo(() => {
     const all = dbProducts
-      .filter(p => p.category.toLowerCase() === categoryName.toLowerCase())
-      .map(p => p.brand);
+      .map(p => p.brand)
+      .filter(Boolean);
     return Array.from(new Set(all));
-  }, [dbProducts, categoryName]);
+  }, [dbProducts]);
 
   const toggleBrand = (brand: string) => {
     const lower = brand.toLowerCase();
@@ -102,26 +233,46 @@ function CategoryPage() {
     );
   };
 
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header alwaysDark />
 
       <main className="flex-1 pt-28 pb-20">
         {/* Category Hero */}
-        <section className="bg-gradient-to-b from-surface to-background border-b border-border/50 py-12 mb-10">
-          <div className="mx-auto max-w-7xl px-6">
-            <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Wholesale Catalog</span>
-            <h1 className="mt-2 text-4xl md:text-5xl font-black tracking-tight">{categoryName}</h1>
-            <p className="mt-4 text-muted-foreground max-w-2xl leading-relaxed">
+        <section className="bg-gradient-to-b from-surface to-background border-b border-border/50 py-8 md:py-12 mb-6 md:mb-10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">Wholesale Catalog</span>
+            <h1 className="mt-2 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">{categoryName}</h1>
+            <p className="mt-3 text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
               Premium commercial-grade {categoryName.toLowerCase()} engineered for high reliability, performance, and efficiency. Enjoy exclusive bulk wholesale rates.
             </p>
           </div>
         </section>
 
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          {/* Mobile Filter Toggle Button (< lg) */}
+          <div className="lg:hidden mb-6 flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+            <button
+              type="button"
+              onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+              className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer"
+            >
+              <Filter className="size-4 text-cyan-600" />
+              {mobileFiltersOpen ? "Hide Filters" : "Filter Products"}
+              {(selectedBrands.length > 0 || inStockOnly) && (
+                <span className="size-5 rounded-full bg-cyan-600 text-white text-[10px] grid place-items-center font-bold">
+                  {selectedBrands.length + (inStockOnly ? 1 : 0)}
+                </span>
+              )}
+            </button>
+            <span className="text-xs font-bold text-slate-500">{filteredProducts.length} items</span>
+          </div>
+
           <div className="grid lg:grid-cols-[240px_1fr] gap-8 items-start">
             {/* Sidebar Filters */}
-            <aside className="space-y-6 lg:sticky lg:top-28">
+            <aside className={`space-y-6 lg:sticky lg:top-28 p-5 lg:p-0 rounded-2xl lg:rounded-none bg-white lg:bg-transparent border lg:border-none border-slate-200 shadow-sm lg:shadow-none ${mobileFiltersOpen ? "block mb-6 lg:mb-0" : "hidden lg:block"}`}>
               <div className="flex items-center gap-2 pb-4 border-b border-border font-bold text-sm text-foreground">
                 <Filter className="size-4" /> Filters & Controls
               </div>
@@ -181,7 +332,7 @@ function CategoryPage() {
               {/* Toolbar */}
               <div className="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-border/50">
                 <div className="text-xs font-semibold text-muted-foreground">
-                  Showing {filteredProducts.length} of {dbProducts.filter(p => p.category.toLowerCase() === categoryName.toLowerCase()).length} products
+                  Showing {filteredProducts.length} of {dbProducts.length} products
                 </div>
 
                 {/* Sort selector */}
@@ -202,58 +353,9 @@ function CategoryPage() {
               {/* Grid */}
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredProducts.map((p, i) => {
-                    const savings = p.msrp - p.price;
-                    return (
-                      <motion.article
-                        key={p.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: i * 0.05 }}
-                        className="group bg-white rounded-3xl p-5 border border-border hover:shadow-[var(--shadow-float)] hover:-translate-y-1 transition-all flex flex-col justify-between"
-                      >
-                        <div>
-                          <Link to="/products/$productId" params={{ productId: p.id }} className="block">
-                            <div className="relative aspect-square rounded-2xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] overflow-hidden grid place-items-center">
-                              <img 
-                                src={p.img || "https://placehold.co/400x400/png?text=Image+N/A"} 
-                                alt={p.name} 
-                                loading="lazy" 
-                                className="size-[80%] object-contain p-4 group-hover:scale-105 transition-transform duration-700 mix-blend-multiply" 
-                                onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400/png?text=Image+N/A"; }}
-                              />
-                              <span aria-label="Quick view" className="absolute top-3 right-3 size-10 grid place-items-center rounded-full bg-white/80 backdrop-blur opacity-0 group-hover:opacity-100 transition shadow-[var(--shadow-soft)]">
-                                <Eye className="size-4" />
-                              </span>
-                            </div>
-                            <div className="mt-4 flex items-center justify-between">
-                              <span className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">{p.brand}</span>
-                              <span className="inline-flex items-center gap-1 text-xs font-semibold">
-                                <Star className="size-3.5 fill-[oklch(0.82_0.15_85)] text-[oklch(0.82_0.15_85)]" />
-                                {p.rating}
-                              </span>
-                            </div>
-                            <h3 className="mt-1.5 font-bold text-foreground leading-snug min-h-[3rem] group-hover:text-primary transition-colors">{p.name}</h3>
-                          </Link>
-                        </div>
-
-                        <div className="mt-4 pt-4 border-t border-border/40 flex items-center justify-between">
-                          <div>
-                            <div className="text-xs text-muted-foreground/80 line-through">MSRP {formatUSD(p.msrp)}</div>
-                            <div className="text-xl font-black tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(p.price)}</div>
-                            <div className="text-[9px] font-bold text-emerald-600 mt-0.5">Save {formatUSD(savings)}</div>
-                          </div>
-
-                          <button
-                            onClick={() => add(p, 1)}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-foreground text-background text-xs font-semibold hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition"
-                          >
-                            <ShoppingBag className="size-3.5" /> Add
-                          </button>
-                        </div>
-                      </motion.article>
-                    );
-                  })}
+                  {filteredProducts.map((p, i) => (
+                    <ProductCard key={p.id} product={p} index={i} />
+                  ))}
                 </div>
               ) : (
                 <div className="text-center py-20 bg-surface rounded-3xl border border-dashed border-border p-6">

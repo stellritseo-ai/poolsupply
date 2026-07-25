@@ -13,6 +13,7 @@ export const registerCustomer = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const customersCol = db.collection("customers");
 
       const isEmail = data.identifier.includes('@');
@@ -60,6 +61,7 @@ export const loginCustomer = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable." };
       const customersCol = db.collection("customers");
 
       const isEmail = data.identifier.includes('@');
@@ -90,11 +92,12 @@ export const loginCustomer = createServerFn({ method: "POST" })
   });
 
 // Get Customer Orders
-export const getCustomerOrders = createServerFn({ method: "GET" })
+export const getCustomerOrders = createServerFn({ method: "POST" })
   .inputValidator(z.object({ identifier: z.string() }))
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, orders: [] };
       const ordersCol = db.collection("orders");
 
       const isEmail = data.identifier.includes('@');
@@ -124,10 +127,11 @@ export const getCustomerOrders = createServerFn({ method: "GET" })
   });
 
 // Get Admin Customers with order stats
-export const getAdminCustomers = createServerFn({ method: "GET" })
+export const getAdminCustomers = createServerFn({ method: "POST" })
   .handler(async () => {
     try {
       const db = await connectDB();
+      if (!db) return { success: true, customers: [] };
       const customersCol = db.collection("customers");
       const ordersCol = db.collection("orders");
 
