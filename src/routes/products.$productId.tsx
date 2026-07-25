@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
@@ -101,18 +101,33 @@ export const Route = createFileRoute("/products/$productId")({
 function ProductDetailPage() {
   const { productId } = useParams({ from: "/products/$productId" });
   const { products: productsList, isLoading } = useProducts();
+  const queryClient = useQueryClient();
   
-  // Robust product lookup checking fetched DB products, default products, SKU, and slugified IDs
-  const product = 
-    (productsList.length > 0 ? getProductById(productId, productsList) : undefined) || 
-    getProductById(productId);
+  // Robust product lookup checking DB products, cached category queries, and full catalog fallback
+  const product = useMemo(() => {
+    // 1. Check fetched main products list
+    if (productsList.length > 0) {
+      const p = getProductById(productId, productsList);
+      if (p) return p;
+    }
+
+    // 2. Check all cached category queries in React Query cache
+    const cacheEntries = queryClient.getQueriesData<Product[]>({ queryKey: ["products"] });
+    for (const [_, data] of cacheEntries) {
+      if (Array.isArray(data) && data.length > 0) {
+        const found = getProductById(productId, data);
+        if (found) return found;
+      }
+    }
+
+    // 3. Fallback to full catalog
+    return getProductById(productId);
+  }, [productId, productsList, queryClient]);
 
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs">("description");
   const reviewsEndRef = useRef<HTMLDivElement>(null);
-
-  const queryClient = useQueryClient();
 
   // Custom reviews logic with localStorage persistence
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -356,7 +371,7 @@ function ProductDetailPage() {
             >
               <div>
                 <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">{product.brand}</span>
-                <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight capitalize">{product.name}</h1>
+                <h1 className="mt-1.5 text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug capitalize">{product.name}</h1>
 
                 {/* Rating & Reviews anchor */}
                 <button

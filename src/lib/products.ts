@@ -63,13 +63,45 @@ export function getProductsList(): Product[] {
 }
 
 export function getProductById(id: string, customList?: Product[]): Product | undefined {
-  const list = customList || products;
-  const cleanId = id.toLowerCase();
-  return list.find((p) => 
-    p.id.toLowerCase() === cleanId || 
-    p.sku.toLowerCase() === cleanId ||
-    `p-${p.sku.toLowerCase().replace(/[^a-z0-9]/g, "-")}` === cleanId
+  if (!id) return undefined;
+  
+  // Combine customList and default products for full coverage
+  const primaryList = customList && customList.length > 0 ? customList : products;
+  const combinedList = Array.from(new Set([...primaryList, ...products]));
+  
+  let cleanId = "";
+  try {
+    cleanId = decodeURIComponent(id).toLowerCase().trim();
+  } catch (e) {
+    cleanId = id.toLowerCase().trim();
+  }
+
+  // Stage 1: Exact ID or SKU match
+  let found = combinedList.find((p) => 
+    (p.id && p.id.toLowerCase() === cleanId) || 
+    (p.sku && p.sku.toLowerCase() === cleanId)
   );
+  if (found) return found;
+
+  // Stage 2: Slugified SKU match (e.g. p-eco629t-1784934096946-1262)
+  found = combinedList.find((p) => {
+    if (!p.sku) return false;
+    const slugSku = `p-${p.sku.toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
+    return slugSku === cleanId;
+  });
+  if (found) return found;
+
+  // Stage 3: Partial SKU/ID inclusion match
+  found = combinedList.find((p) => {
+    const pId = p.id ? p.id.toLowerCase() : "";
+    const pSku = p.sku ? p.sku.toLowerCase() : "";
+    return (
+      (pId && (cleanId.includes(pId) || pId.includes(cleanId))) ||
+      (pSku && (cleanId.includes(pSku) || pSku.includes(cleanId)))
+    );
+  });
+  
+  return found;
 }
 
 export function getRelatedProducts(product: Product, limit = 4, productList?: Product[]): Product[] {
