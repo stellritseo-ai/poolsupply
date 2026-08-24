@@ -97,7 +97,7 @@ export const getQuickDashboardStatsDb = createServerFn({ method: "POST" }).handl
         if (!o.placedAt) return;
         const d = new Date(o.placedAt);
         if (d >= firstThisMonth) thisMonthRev += Number(o.total) || 0;
-        else if (d >= firstLastMonth && d <= lastMonthRev) lastMonthRev += Number(o.total) || 0;
+        else if (d >= firstLastMonth && d <= lastLastMonth) lastMonthRev += Number(o.total) || 0;
       });
       const revenueMoMChange =
         lastMonthRev > 0
