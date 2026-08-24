@@ -4,9 +4,9 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
 import { ProductCard } from "@/components/site/ProductCard";
-import { getProductById, getRelatedProducts, syncLocalProducts, useProducts, getProductImage, Review, Product } from "@/lib/products";
-import { addReviewDb } from "@/lib/api/products.functions";
-import { useQueryClient } from "@tanstack/react-query";
+import { getProductById, getRelatedProducts, syncLocalProducts, getProductImage, Review, Product } from "@/lib/products";
+import { addReviewDb, getProductByIdDb, getProductsDb } from "@/lib/api/products.functions";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Star,
   ShoppingBag,
@@ -23,8 +23,20 @@ import {
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/products/$productId")({
-  head: ({ params }) => {
-    const product = getProductById(params.productId);
+  loader: async ({ params }) => {
+    try {
+      const res = await getProductByIdDb({ data: { id: params.productId } });
+      if (res.success && res.product) {
+        return { product: res.product as Product };
+      }
+    } catch (e) {
+      console.error("Route loader error fetching product:", e);
+    }
+    const fallback = getProductById(params.productId);
+    return { product: fallback || null };
+  },
+  head: ({ loaderData, params }) => {
+    const product = loaderData?.product || getProductById(params.productId);
     const title = product?.name
       ? `${product.name} Wholesale Pricing | ${product.brand || "Pool Supply Wholesalers"}`
       : "Pool Equipment Product Details — Pool Supply Wholesalers";
@@ -104,29 +116,37 @@ export const Route = createFileRoute("/products/$productId")({
 
 function ProductDetailPage() {
   const { productId } = useParams({ from: "/products/$productId" });
-  const { products: productsList, isLoading } = useProducts();
+  const loaderData = Route.useLoaderData();
   const queryClient = useQueryClient();
 
-  // Robust product lookup checking DB products, cached category queries, and full catalog fallback
-  const product = useMemo(() => {
-    // 1. Check fetched main products list
-    if (productsList.length > 0) {
-      const p = getProductById(productId, productsList);
-      if (p) return p;
-    }
-
-    // 2. Check all cached category queries in React Query cache
-    const cacheEntries = queryClient.getQueriesData<Product[]>({ queryKey: ["products"] });
-    for (const [_, data] of cacheEntries) {
-      if (Array.isArray(data) && data.length > 0) {
-        const found = getProductById(productId, data);
-        if (found) return found;
+  // Query product directly by ID from database
+  const { data: dbProduct, isLoading: isQueryLoading } = useQuery({
+    queryKey: ["product-detail", productId],
+    queryFn: async () => {
+      const res = await getProductByIdDb({ data: { id: productId } });
+      if (res.success && res.product) {
+        return res.product as Product;
       }
-    }
+      return getProductById(productId) || null;
+    },
+    initialData: loaderData?.product || undefined,
+    staleTime: 5 * 60 * 1000,
+  });
 
-    // 3. Fallback to full catalog
-    return getProductById(productId);
-  }, [productId, productsList, queryClient]);
+  const product = dbProduct || loaderData?.product || getProductById(productId);
+  const isLoading = isQueryLoading && !product;
+
+  // Category related products query
+  const { data: categoryProducts } = useQuery({
+    queryKey: ["shop-products-related", product?.category],
+    queryFn: async () => {
+      if (!product?.category) return [];
+      const res = await getProductsDb({ data: { category: product.category, limit: 16 } });
+      return res.success && res.products ? (res.products as Product[]) : [];
+    },
+    enabled: !!product?.category,
+    staleTime: 10 * 60 * 1000,
+  });
 
   const { add } = useCart();
   const [qty, setQty] = useState(1);
@@ -168,11 +188,11 @@ function ProductDetailPage() {
     setQty(1); // Reset quantity on product change
     setSuccessMsg("");
     setWriteOpen(false);
-  }, [productId, product]);
+  }, [productId, product?.id]);
 
   const savings = product ? product.msrp - product.price : 0;
   const savingsPercent = product && product.msrp ? Math.round((savings / product.msrp) * 100) : 0;
-  const related = product ? getRelatedProducts(product, 4, productsList) : [];
+  const related = product ? getRelatedProducts(product, 4, categoryProducts && categoryProducts.length > 0 ? categoryProducts : undefined) : [];
 
   // Calculate average rating
   const avgRating = reviews.length > 0
@@ -222,6 +242,8 @@ function ProductDetailPage() {
     try {
       await addReviewDb({ data: { productId: product.id, review } });
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product-detail", product.id] });
+      queryClient.invalidateQueries({ queryKey: ["shop-products-related"] });
     } catch (err) {
       console.error("Failed to sync new review to DB:", err);
     }

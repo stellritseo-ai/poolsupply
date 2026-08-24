@@ -72,6 +72,98 @@ export const getProductsDb = createServerFn({ method: "POST" })
     }
   });
 
+// ── Get Single Product by ID or SKU ──────────────────────────────────────
+export const getProductByIdDb = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ id: z.string() }))
+  .handler(async ({ data }) => {
+    try {
+      const rawId = data.id?.trim();
+      if (!rawId) return { success: false, product: null };
+
+      let cleanId = "";
+      try {
+        cleanId = decodeURIComponent(rawId).trim();
+      } catch {
+        cleanId = rawId;
+      }
+
+      try {
+        const db = await connectDB();
+        if (db) {
+          const productsCol = db.collection("products");
+
+          const orConditions: any[] = [
+            { id: cleanId },
+            { _id: cleanId as any },
+            { sku: cleanId },
+          ];
+
+          if (ObjectId.isValid(cleanId) && String(new ObjectId(cleanId)) === cleanId) {
+            orConditions.push({ _id: new ObjectId(cleanId) });
+          }
+
+          const escaped = cleanId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          orConditions.push({ id: { $regex: new RegExp(`^${escaped}$`, "i") } });
+          orConditions.push({ sku: { $regex: new RegExp(`^${escaped}$`, "i") } });
+
+          // If cleanId starts with "p-", also match without prefix or extracted SKU
+          if (cleanId.startsWith("p-")) {
+            const stripped = cleanId.replace(/^p-/, "");
+            orConditions.push({ id: stripped });
+            orConditions.push({ sku: stripped });
+            const parts = cleanId.split("-");
+            if (parts.length >= 2) {
+              const skuPart = parts.slice(1, parts.length - 1).join("-");
+              if (skuPart) {
+                const escSku = skuPart.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                orConditions.push({ sku: skuPart });
+                orConditions.push({ sku: { $regex: new RegExp(`^${escSku}$`, "i") } });
+              }
+            }
+          }
+
+          const raw = await productsCol.findOne({ $or: orConditions });
+          if (raw) {
+            const item = { ...raw, id: raw.id || raw._id.toString() };
+            delete item._id;
+            if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
+              item.img = "/assets/commingsoon.png";
+            }
+            return { success: true, product: item as Product };
+          }
+        }
+      } catch (dbErr) {
+        console.error("DB error in getProductByIdDb:", dbErr);
+      }
+
+      // Check defaultProducts static catalog fallback
+      const lower = cleanId.toLowerCase();
+      const defaultFound = defaultProducts.find((p) => {
+        if (!p) return false;
+        const pId = (p.id || "").toLowerCase();
+        const pSku = (p.sku || "").toLowerCase();
+        if (pId === lower || pSku === lower) return true;
+        if (pSku && `p-${pSku.replace(/[^a-z0-9]/g, "-")}` === lower) return true;
+        if (pId && pId.length >= 4 && (lower.includes(pId) || lower === pId)) return true;
+        if (pSku && pSku.length >= 4 && (lower.includes(pSku) || lower === pSku)) return true;
+        return false;
+      });
+
+      if (defaultFound) {
+        const item = { ...defaultFound };
+        if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
+          item.img = "/assets/commingsoon.png";
+        }
+        return { success: true, product: item as Product };
+      }
+
+      return { success: false, product: null };
+    } catch (e: any) {
+      console.error("Failed to fetch product by ID:", e);
+      return { success: false, product: null };
+    }
+  });
+
 // ── Get Category Brands for Filter Sidebar ───────────────────────────────
 export const getShopCategoryBrandsDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({

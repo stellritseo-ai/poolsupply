@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, QueryClient } from "@tanstack/react-query";
-import { getProductsDb } from "@/lib/api/products.functions";
+import { getProductsDb, getProductByIdDb } from "@/lib/api/products.functions";
 import { products as defaultProducts } from "./default-products";
 import comingSoonImg from "@/assets/commingsoon.png";
 
@@ -65,8 +65,8 @@ export function getProductsList(): Product[] {
 export function getProductById(id: string, customList?: Product[]): Product | undefined {
   if (!id) return undefined;
   
-  // Combine customList and default products for full coverage
-  const primaryList = customList && customList.length > 0 ? customList : products;
+  // Combine customList, localStorage cached products, and default products for full coverage
+  const primaryList = customList && customList.length > 0 ? customList : getProductsList();
   const combinedList = Array.from(new Set([...primaryList, ...products]));
   
   let cleanId = "";
@@ -83,15 +83,15 @@ export function getProductById(id: string, customList?: Product[]): Product | un
   );
   if (found) return found;
 
-  // Stage 2: Slugified SKU match (e.g. p-eco629t-1784934096946-1262)
+  // Stage 2: Slugified SKU match (e.g. p-eco629t-1784934096946-1262 or p-000000-1787600530365)
   found = combinedList.find((p) => {
     if (!p.sku) return false;
     const slugSku = `p-${p.sku.toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
-    return slugSku === cleanId;
+    return slugSku === cleanId || cleanId.startsWith(slugSku);
   });
   if (found) return found;
 
-  // Stage 3: Partial SKU/ID inclusion match (only for IDs/SKUs with at least 4 characters to prevent false positives)
+  // Stage 3: Partial SKU/ID inclusion match
   found = combinedList.find((p) => {
     const pId = p.id ? p.id.toLowerCase() : "";
     const pSku = p.sku ? p.sku.toLowerCase() : "";
@@ -135,13 +135,30 @@ export function getRelatedProducts(product: Product, limit = 4, productList?: Pr
 
 export function invalidateProductsCache(queryClient: QueryClient) {
   queryClient.invalidateQueries({ queryKey: ["products"] });
+  queryClient.invalidateQueries({ queryKey: ["product-detail"] });
+}
+
+export function useProductByIdQuery(id: string) {
+  return useQuery({
+    queryKey: ["product-detail", id],
+    queryFn: async () => {
+      if (!id) return null;
+      const res = await getProductByIdDb({ data: { id } });
+      if (res.success && res.product) {
+        return res.product as Product;
+      }
+      return getProductById(id) || null;
+    },
+    staleTime: 5 * 60 * 1000,
+    enabled: !!id,
+  });
 }
 
 export function useProductsQuery() {
   return useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const res = await getProductsDb();
+      const res = await getProductsDb({ data: { limit: 500 } });
       if (res.success && res.products && res.products.length > 0) {
         return res.products as Product[];
       }
@@ -184,3 +201,4 @@ export function syncLocalProducts(updatedProducts: Product[]) {
     }
   }
 }
+
