@@ -24,22 +24,55 @@ import {
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About Us — Pool Supply Wholesalers | Commercial Pool Equipment Distributor" },
-      {
-        name: "description",
-        content:
-          "Since 2008, Pool Supply Wholesalers has been America's trusted B2B distributor of commercial pool equipment. Serving 5,000+ pool builders and technicians with authorized Pentair, Hayward, Jandy & Raypak systems.",
-      },
-      { property: "og:title", content: "About Pool Supply Wholesalers" },
-      {
-        property: "og:description",
-        content:
-          "The trusted wholesale partner for 5,000+ pool builders and service professionals nationwide. Fast shipping from Nashville, LA, Dallas, and Orlando.",
-      },
-    ],
-  }),
+  head: () => {
+    const pageUrl = "https://poolsupplywholesalers.com/about";
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
+        { "@type": "ListItem", "position": 2, "name": "About Us", "item": pageUrl }
+      ]
+    };
+
+    const aboutLd = {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": "About Pool Supply Wholesalers",
+      "url": pageUrl,
+      "description": "America's trusted distributor of commercial pool equipment, variable speed pumps, heaters, filters, and automation systems."
+    };
+
+    return {
+      meta: [
+        { title: "About Us — Pool Supply Wholesalers | Commercial Pool Equipment Distributor" },
+        {
+          name: "description",
+          content:
+            "Since 2008, Pool Supply Wholesalers has been America's trusted B2B distributor of commercial pool equipment. Serving 5,000+ pool builders and technicians with authorized Pentair, Hayward, Jandy & Raypak systems.",
+        },
+        { name: "keywords", content: "about pool supply wholesalers, commercial pool distributor, pool equipment distributor Nashville TN, wholesale pool supplies history" },
+        { property: "og:title", content: "About Pool Supply Wholesalers — Commercial Pool Distributor" },
+        {
+          property: "og:description",
+          content:
+            "The trusted wholesale partner for 5,000+ pool builders and service professionals nationwide. Fast shipping from Nashville, LA, Dallas, and Orlando.",
+        },
+        { property: "og:url", content: pageUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "About Pool Supply Wholesalers" },
+        { name: "twitter:description", content: "America's leading commercial pool equipment distributor." },
+        { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(aboutLd) }
+      ]
+    };
+  },
   component: AboutPage,
 });
 

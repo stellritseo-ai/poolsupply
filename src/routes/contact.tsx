@@ -28,22 +28,68 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact Us — Pool Supply Wholesalers | Wholesale Pool Equipment Distributor" },
-      {
-        name: "description",
-        content:
-          "Contact our wholesale desk for commercial pricing, dealer account activation, same-day freight, or certified technical support. Response guaranteed within 2 business hours.",
-      },
-      { property: "og:title", content: "Contact Pool Supply Wholesalers Desk" },
-      {
-        property: "og:description",
-        content:
-          "Direct support for pool contractors, builders, and service companies. Call (615) 477-0407 or email sales@poolsupplywholesalers.com.",
-      },
-    ],
-  }),
+  head: () => {
+    const pageUrl = "https://poolsupplywholesalers.com/contact";
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
+        { "@type": "ListItem", "position": 2, "name": "Contact Us", "item": pageUrl }
+      ]
+    };
+
+    const contactLd = {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "name": "Contact Pool Supply Wholesalers",
+      "url": pageUrl,
+      "mainEntity": {
+        "@type": "WholesaleStore",
+        "name": "Pool Supply Wholesalers",
+        "telephone": "+1-615-477-0407",
+        "email": "sales@poolsupplywholesalers.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "410 Scott Pike",
+          "addressLocality": "Nashville",
+          "addressRegion": "TN",
+          "postalCode": "37207",
+          "addressCountry": "US"
+        }
+      }
+    };
+
+    return {
+      meta: [
+        { title: "Contact Us — Pool Supply Wholesalers | Wholesale Pool Equipment Distributor" },
+        {
+          name: "description",
+          content:
+            "Contact our wholesale desk for commercial pricing, dealer account activation, same-day freight, or certified technical support. Response guaranteed within 2 business hours.",
+        },
+        { name: "keywords", content: "contact pool supply wholesalers, commercial pool customer service, pool equipment wholesale quote, pool parts contractor desk" },
+        { property: "og:title", content: "Contact Pool Supply Wholesalers Desk" },
+        {
+          property: "og:description",
+          content:
+            "Direct support for pool contractors, builders, and service companies. Call (615) 477-0407 or email sales@poolsupplywholesalers.com.",
+        },
+        { property: "og:url", content: pageUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Contact Pool Supply Wholesalers" },
+        { name: "twitter:description", content: "Wholesale desk response guaranteed within 2 business hours." },
+        { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(contactLd) }
+      ]
+    };
+  },
   component: ContactPage,
 });
 

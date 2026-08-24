@@ -5,7 +5,6 @@ import hayward from "@/assets/logos/hayward.jpg";
 import jandy from "@/assets/logos/jandy_logo.png";
 import waterway from "@/assets/logos/w1.png";
 import raypak from "@/assets/logos/logo_dark.png";
-import brandVideo from "@/assets/video/pools.mp4";
 
 const brands = [
   { name: "Pentair", slug: "pentair", logo: pentair, specialty: "Pumps & Automation" },
@@ -30,7 +29,7 @@ export function Brands() {
           playsInline
           className="w-full h-full object-cover scale-105 filter brightness-105 contrast-110"
         >
-          <source src={brandVideo} type="video/mp4" />
+          <source src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/pools_phemjp.mp4" type="video/mp4" />
         </video>
         {/* Layered Cinematic Overlays */}
         <div className="absolute inset-0 bg-slate-950/50" />

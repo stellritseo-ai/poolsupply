@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Truck, Award, Tag, Headphones, Sparkles, Clock, PackageCheck, Users } from "lucide-react";
-import heroVideo from "@/assets/video/herovideo.mp4";
 import { Link } from "@tanstack/react-router";
 
 const features = [
@@ -31,7 +30,7 @@ export function Hero() {
           playsInline
           className="w-full h-full object-cover scale-105 filter brightness-100 contrast-105"
         >
-          <source src={heroVideo} type="video/mp4" />
+          <source src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/herovideo_nubwi4.mov" type="video/mp4" />
         </video>
         {/* Slightly Lighter Layered Background Overlays */}
         <div className="absolute inset-0 bg-slate-950/20" />

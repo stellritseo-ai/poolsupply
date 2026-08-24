@@ -30,7 +30,7 @@ export const Route = createFileRoute("/checkout")({
     meta: [
       { title: "Secure Checkout — Pool Supply Wholesalers" },
       { name: "description", content: "Complete your Pool Supply Wholesalers wholesale order with 100% Free Shipping and Stripe 256-bit encrypted checkout." },
-      { name: "robots", content: "noindex" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: CheckoutPage,

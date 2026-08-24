@@ -36,22 +36,62 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/finder")({
-  head: () => ({
-    meta: [
-      { title: "Equipment Sizing & Package Builder — Pool Supply Wholesalers" },
-      {
-        name: "description",
-        content:
-          "Calculate hydraulic flow rates (GPM), pump horsepower, heater BTUs, and filter surface area for your pool. Get instant OEM bundle recommendations with wholesale pricing.",
-      },
-      { property: "og:title", content: "Pool Equipment Sizing Wizard & Bundle Builder" },
-      {
-        property: "og:description",
-        content:
-          "Precision equipment matching for residential and commercial pools. Match Pentair, Hayward, Jandy, and Raypak equipment instantly.",
-      },
-    ],
-  }),
+  head: () => {
+    const pageUrl = "https://poolsupplywholesalers.com/finder";
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
+        { "@type": "ListItem", "position": 2, "name": "Equipment Sizing Wizard", "item": pageUrl }
+      ]
+    };
+
+    const toolLd = {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Pool Equipment Sizing Wizard & Bundle Builder",
+      "url": pageUrl,
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    };
+
+    return {
+      meta: [
+        { title: "Equipment Sizing & Package Builder — Pool Supply Wholesalers" },
+        {
+          name: "description",
+          content:
+            "Calculate hydraulic flow rates (GPM), pump horsepower, heater BTUs, and filter surface area for your pool. Get instant OEM bundle recommendations with wholesale pricing.",
+        },
+        { name: "keywords", content: "pool equipment sizing calculator, pool pump sizing calculator, pool heater BTU calculator, commercial pool package builder, pentair bundle builder" },
+        { property: "og:title", content: "Pool Equipment Sizing Wizard & Bundle Builder" },
+        {
+          property: "og:description",
+          content:
+            "Precision equipment matching for residential and commercial pools. Match Pentair, Hayward, Jandy, and Raypak equipment instantly.",
+        },
+        { property: "og:url", content: pageUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Pool Equipment Sizing Wizard" },
+        { name: "twitter:description", content: "Calculate flow rates, pump HP, heater BTUs and filter sizing instantly." },
+        { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(toolLd) }
+      ]
+    };
+  },
   component: FinderPage,
 });
 

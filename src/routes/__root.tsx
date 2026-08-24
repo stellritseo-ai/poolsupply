@@ -145,6 +145,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Pool Supply Wholesalers" },
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
 
+      { name: "theme-color", content: "#020617" },
       { property: "og:site_name", content: "Pool Supply Wholesalers" },
       { property: "og:title", content: "Pool Supply Wholesalers — Direct Wholesale to Retail Pool Equipment" },
       { property: "og:description", content: "Direct wholesale to retail access to Pentair, Hayward, Jandy & Raypak commercial pool pumps, heaters, filters & automation. Same-day shipping nationwide." },
@@ -160,6 +161,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "manifest", href: "/manifest.json" },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -175,6 +177,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Pool Supply Wholesalers",
+      "url": "https://poolsupplywholesalers.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://poolsupplywholesalers.com/shop/all?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
     {
       "@context": "https://schema.org",
       "@type": ["WholesaleStore", "Store"],

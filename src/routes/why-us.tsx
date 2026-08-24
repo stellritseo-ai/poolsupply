@@ -30,22 +30,46 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const Route = createFileRoute("/why-us")({
-  head: () => ({
-    meta: [
-      { title: "Why Choose Us — Pool Supply Wholesalers | Wholesale Pool Equipment Distributor" },
-      {
-        name: "description",
-        content:
-          "Discover why 5,000+ pool contractors and service companies trust Pool Supply Wholesalers for genuine OEM equipment, factory warranties, same-day shipping, and certified technical support.",
-      },
-      { property: "og:title", content: "Why Pool Professionals Choose Pool Supply Wholesalers" },
-      {
-        property: "og:description",
-        content:
-          "Authorized distributor for Pentair, Hayward, Jandy & Raypak. Up to 40% off retail MSRP. 4 US logistics hubs.",
-      },
-    ],
-  }),
+  head: () => {
+    const pageUrl = "https://poolsupplywholesalers.com/why-us";
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
+        { "@type": "ListItem", "position": 2, "name": "Why Choose Us", "item": pageUrl }
+      ]
+    };
+
+    return {
+      meta: [
+        { title: "Why Choose Us — Pool Supply Wholesalers | Wholesale Pool Equipment Distributor" },
+        {
+          name: "description",
+          content:
+            "Discover why 5,000+ pool contractors and service companies trust Pool Supply Wholesalers for genuine OEM equipment, factory warranties, same-day shipping, and certified technical support.",
+        },
+        { name: "keywords", content: "why choose pool supply wholesalers, commercial pool supplier advantages, wholesale pool equipment trade pricing, genuine OEM pool parts" },
+        { property: "og:title", content: "Why Pool Professionals Choose Pool Supply Wholesalers" },
+        {
+          property: "og:description",
+          content:
+            "Authorized distributor for Pentair, Hayward, Jandy & Raypak. Up to 40% off retail MSRP. 4 US logistics hubs.",
+        },
+        { property: "og:url", content: pageUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Why Choose Pool Supply Wholesalers" },
+        { name: "twitter:description", content: "Authorized distributor for Pentair, Hayward, Jandy & Raypak with 4 US fulfillment hubs." },
+        { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) }
+      ]
+    };
+  },
   component: WhyUsPage,
 });
 

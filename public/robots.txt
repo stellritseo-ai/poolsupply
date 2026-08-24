@@ -1,10 +1,14 @@
-# Allow all search engine crawlers
+# Allow search engine crawlers
 User-agent: *
 Allow: /
 
-# Exclude private admin dashboard routes
+# Exclude private checkout, account, and admin routes
 Disallow: /admin/
 Disallow: /admin/*
+Disallow: /account/
+Disallow: /account/*
+Disallow: /checkout
+Disallow: /order-confirmation
 
 # Sitemap Location
 Sitemap: https://poolsupplywholesalers.com/sitemap.xml

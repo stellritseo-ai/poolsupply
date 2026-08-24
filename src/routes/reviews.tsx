@@ -24,22 +24,61 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/reviews")({
-  head: () => ({
-    meta: [
-      { title: "Google Verified Reviews — Pool Supply Wholesalers" },
-      {
-        name: "description",
-        content:
-          "Read verified reviews from 5,000+ pool contractors and service companies. 4.9/5 star aggregate rating on wholesale pricing, same-day freight, and OEM equipment.",
-      },
-      { property: "og:title", content: "Google Verified Reviews — Pool Supply Wholesalers" },
-      {
-        property: "og:description",
-        content:
-          "Rated 4.9/5.0 by 5,000+ pool contractors nationwide. Direct authorized distributor for Pentair, Hayward, Jandy, and Raypak.",
-      },
-    ],
-  }),
+  head: () => {
+    const pageUrl = "https://poolsupplywholesalers.com/reviews";
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
+        { "@type": "ListItem", "position": 2, "name": "Customer Reviews", "item": pageUrl }
+      ]
+    };
+
+    const reviewsLd = {
+      "@context": "https://schema.org",
+      "@type": "WholesaleStore",
+      "name": "Pool Supply Wholesalers",
+      "url": "https://poolsupplywholesalers.com",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "5420",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    };
+
+    return {
+      meta: [
+        { title: "Google Verified Reviews — Pool Supply Wholesalers" },
+        {
+          name: "description",
+          content:
+            "Read verified reviews from 5,000+ pool contractors and service companies. 4.9/5 star aggregate rating on wholesale pricing, same-day freight, and OEM equipment.",
+        },
+        { name: "keywords", content: "pool supply wholesalers reviews, pool equipment contractor reviews, verified pool distributor ratings, pentair wholesale reviews" },
+        { property: "og:title", content: "Google Verified Reviews — Pool Supply Wholesalers" },
+        {
+          property: "og:description",
+          content:
+            "Rated 4.9/5.0 by 5,000+ pool contractors nationwide. Direct authorized distributor for Pentair, Hayward, Jandy, and Raypak.",
+        },
+        { property: "og:url", content: pageUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Customer Reviews — Pool Supply Wholesalers" },
+        { name: "twitter:description", content: "Rated 4.9/5.0 by verified pool builders and trade contractors nationwide." },
+        { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(reviewsLd) }
+      ]
+    };
+  },
   component: ReviewsPage,
 });
 

@@ -55,12 +55,20 @@ function ClientOnly({ children, fallback }: { children: React.ReactNode; fallbac
 export const Route = createFileRoute("/")(({
   head: () => ({
     meta: [
-      { title: "Pool Supply Wholesalers — Premium Pool Equipment at Wholesale Prices" },
-      { name: "description", content: "Wholesale pool pumps, heaters, filters, cleaners, lights and automation from Pentair, Hayward, Jandy, Raypak and more. Trusted by 5,000+ pool professionals." },
-      { property: "og:title", content: "Pool Supply Wholesalers — Premium Pool Equipment Wholesale" },
-      { property: "og:description", content: "Wholesale pool equipment from the industry's leading brands. Fast shipping, expert support, professional pricing." },
+      { title: "Pool Supply Wholesalers — Direct Wholesale Pool Equipment & Commercial Supplies" },
+      { name: "description", content: "Direct wholesale-to-retail distributor of Pentair, Hayward, Jandy, and Raypak pool pumps, gas heaters, cartridge filters, and automation. Fast shipping from 4 US hubs." },
+      { name: "keywords", content: "wholesale pool equipment, buy pool pumps wholesale, pentair intelliflo wholesale, hayward gas heaters, pool supplies distributor, commercial pool pumps, commercial pool filters" },
+      { property: "og:title", content: "Pool Supply Wholesalers — Direct Wholesale Pool Equipment" },
+      { property: "og:description", content: "Buy commercial pool equipment at wholesale trade pricing. Authorized distributor for Pentair, Hayward, Jandy & Raypak." },
+      { property: "og:url", content: "https://poolsupplywholesalers.com/" },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Pool Supply Wholesalers — Wholesale Pool Supplies" },
+      { name: "twitter:description", content: "Authorized distributor of commercial-grade pool equipment at direct wholesale pricing." },
+      { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://poolsupplywholesalers.com/" }],
   }),
   component: Index,
 } as any));

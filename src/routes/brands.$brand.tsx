@@ -10,11 +10,47 @@ import { ProductCard } from "@/components/site/ProductCard";
 export const Route = createFileRoute("/brands/$brand")({
   head: ({ params }) => {
     const brandName = getBrandName(params.brand);
+    const title = `${brandName} Pool Equipment Wholesale | Authorized Distributor`;
+    const description = `Shop authentic ${brandName} pool pumps, gas heaters, cartridge filters, and automation systems at direct contractor wholesale pricing. Fast shipping nationwide from Pool Supply Wholesalers.`;
+    const brandUrl = `https://poolsupplywholesalers.com/brands/${params.brand}`;
+
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
+        { "@type": "ListItem", "position": 2, "name": "Brands", "item": "https://poolsupplywholesalers.com/#brands" },
+        { "@type": "ListItem", "position": 3, "name": brandName, "item": brandUrl }
+      ]
+    };
+
+    const brandLd = {
+      "@context": "https://schema.org",
+      "@type": "Brand",
+      "name": brandName,
+      "url": brandUrl,
+      "description": `Authorized commercial distributor of genuine ${brandName} pool equipment and replacement parts.`
+    };
+
     return {
       meta: [
-        { title: `${brandName} Pool Equipment Wholesale` },
-        { name: "description", content: `Browse wholesale pricing on authorized ${brandName} pool pumps, heaters, filters, automation, and lights.` }
+        { title },
+        { name: "description", content: description },
+        { name: "keywords", content: `${brandName} pool equipment, buy ${brandName} wholesale, ${brandName} pool pumps, ${brandName} pool heaters, authorized ${brandName} distributor, commercial pool supplies` },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: brandUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
       ],
+      links: [{ rel: "canonical", href: brandUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(brandLd) }
+      ]
     };
   },
   component: BrandPage,

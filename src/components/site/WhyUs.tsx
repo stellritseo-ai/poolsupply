@@ -39,7 +39,20 @@ const features = [
 
 export function WhyUs() {
   return (
-    <section id="why" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-white via-surface/60 to-white relative overflow-hidden">
+    <section id="why" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-white via-surface/60 to-white relative overflow-hidden isolate">
+      {/* Background Ambient Video */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover scale-105 filter brightness-105 contrast-110 opacity-15"
+        >
+          <source src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/pools_phemjp.mp4" type="video/mp4" />
+        </video>
+      </div>
+
       {/* Background Ambient Glows */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
