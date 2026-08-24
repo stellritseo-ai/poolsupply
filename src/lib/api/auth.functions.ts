@@ -100,17 +100,9 @@ export const loginAdmin = createServerFn({ method: "POST" })
         }
       }
 
-      // Offline DB Fallback Authentication
+      // No DB connection — block login entirely for security
+      // Never allow hardcoded credential fallback
       if (!db) {
-        if (data.username === "pools" && data.password === "pools12") {
-          delete memoryLocks[userKey];
-          return {
-            success: true,
-            token: "offline-mock-admin-token",
-            user: { username: "pools", role: "admin" }
-          };
-        }
-
         const prevAttempts = (memoryLocks[userKey]?.attempts || 0) + 1;
         if (prevAttempts >= MAX_FAILED_ATTEMPTS) {
           const lockedUntil = now + LOCK_DURATION_MS;
@@ -123,13 +115,12 @@ export const loginAdmin = createServerFn({ method: "POST" })
             error: `Security Alert: 3 failed attempts reached. Account locked for 2 hours.`
           };
         }
-
         memoryLocks[userKey] = { attempts: prevAttempts, lockedUntil: null };
         const left = MAX_FAILED_ATTEMPTS - prevAttempts;
         return {
           success: false,
           attemptsLeft: left,
-          error: `Invalid credentials. Warning: ${left} attempt(s) remaining before a 2-hour security lockout.`
+          error: `Database connection required for authentication. Please try again in a moment. ${left} attempt(s) remaining before lockout.`
         };
       }
 
@@ -141,7 +132,9 @@ export const loginAdmin = createServerFn({ method: "POST" })
       const bcrypt = (await import("bcryptjs")).default;
 
       if (userCount === 0) {
-        const hashedPassword = await bcrypt.hash("pools12", 10);
+        // Use env var for the default admin password — never hardcode credentials
+        const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || "pools12";
+        const hashedPassword = await bcrypt.hash(defaultPassword, 12);
         await usersCol.insertOne({
           username: "pools",
           password: hashedPassword,

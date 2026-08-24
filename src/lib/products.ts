@@ -106,9 +106,31 @@ export function getProductById(id: string, customList?: Product[]): Product | un
 
 export function getRelatedProducts(product: Product, limit = 4, productList?: Product[]): Product[] {
   const list = productList || products;
-  return list
-    .filter((p) => p.id !== product.id && (p.category === product.category || p.brand === product.brand || p.parentCategory === product.parentCategory))
-    .slice(0, limit);
+  const targetCat = (product.category || "").toLowerCase().trim();
+  const targetSub = (product.subCategory || "").toLowerCase().trim();
+
+  const sameCategoryProducts = list.filter((p) => {
+    if (!p.id || p.id === product.id) return false;
+    const pCat = (p.category || "").toLowerCase().trim();
+    const pSub = (p.subCategory || "").toLowerCase().trim();
+
+    return (
+      (targetCat && pCat === targetCat) ||
+      (targetSub && pSub === targetSub) ||
+      (targetCat && pSub === targetCat) ||
+      (targetSub && pCat === targetSub)
+    );
+  });
+
+  const sorted = sameCategoryProducts.sort((a, b) => {
+    const aBrandMatch = a.brand && product.brand && a.brand.toLowerCase() === product.brand.toLowerCase();
+    const bBrandMatch = b.brand && product.brand && b.brand.toLowerCase() === product.brand.toLowerCase();
+    if (aBrandMatch && !bBrandMatch) return -1;
+    if (!aBrandMatch && bBrandMatch) return 1;
+    return (b.rating || 5) - (a.rating || 5);
+  });
+
+  return sorted.slice(0, limit);
 }
 
 export function invalidateProductsCache(queryClient: QueryClient) {
@@ -154,6 +176,11 @@ export function useProducts() {
 
 export function syncLocalProducts(updatedProducts: Product[]) {
   if (typeof window !== "undefined") {
-    localStorage.setItem("aquapro_products", JSON.stringify(updatedProducts));
+    try {
+      localStorage.setItem("aquapro_products", JSON.stringify(updatedProducts));
+      localStorage.setItem("aquapro_db_products", JSON.stringify(updatedProducts));
+    } catch (e) {
+      console.warn("Could not write products to localStorage:", e);
+    }
   }
 }

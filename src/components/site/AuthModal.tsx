@@ -40,8 +40,9 @@ export function AuthModal() {
           toast.error(res.error || "Registration failed.");
         }
       }
-    } catch (e) {
-      toast.error("An unexpected error occurred.");
+    } catch (e: any) {
+      console.error("Auth submit error:", e);
+      toast.error(e?.message || "An unexpected error occurred. Please check your credentials and try again.");
     } finally {
       setLoading(false);
     }

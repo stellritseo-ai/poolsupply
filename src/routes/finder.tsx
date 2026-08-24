@@ -1,797 +1,847 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { searchProductsDb } from "@/lib/api/products.functions";
-import { Product } from "@/lib/products";
+import { useProductsQuery, getProductImage, products as defaultProducts, Product } from "@/lib/products";
 import {
   Calculator,
   Sparkles,
-  Star,
-  ShoppingBag,
-  Eye,
-  RefreshCw,
-  ArrowRight,
-  ArrowLeft,
-  CheckCircle2,
   Waves,
-  Thermometer,
-  Filter,
+  Flame,
+  Filter as FilterIcon,
+  ArrowRight,
+  CheckCircle2,
   Zap,
-  Droplets,
+  ShoppingBag,
   Sun,
+  CloudSun,
   Snowflake,
-  Wind,
-  ChevronRight,
-  Package,
   ShieldCheck,
-  Loader2,
+  Check,
+  Building2,
+  Home,
+  Clock,
+  DollarSign,
+  Gauge,
+  Layers,
+  Ruler,
+  Droplets,
+  RotateCcw,
+  Star,
+  Eye,
+  Sliders,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/finder")({
   head: () => ({
     meta: [
-      { title: "Product Finder — Pool Supply Wholesalers" },
+      { title: "Equipment Sizing & Package Builder — Pool Supply Wholesalers" },
       {
         name: "description",
         content:
-          "Use our intelligent pool equipment wizard to find the perfectly sized pumps, heaters, filters, and automation systems for your pool — sized to your exact specifications.",
+          "Calculate hydraulic flow rates (GPM), pump horsepower, heater BTUs, and filter surface area for your pool. Get instant OEM bundle recommendations with wholesale pricing.",
+      },
+      { property: "og:title", content: "Pool Equipment Sizing Wizard & Bundle Builder" },
+      {
+        property: "og:description",
+        content:
+          "Precision equipment matching for residential and commercial pools. Match Pentair, Hayward, Jandy, and Raypak equipment instantly.",
       },
     ],
   }),
   component: FinderPage,
 });
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-type PoolType = "residential" | "commercial" | "spa" | "indoor";
-type ClimateZone = "tropical" | "warm" | "moderate" | "cold" | "arctic";
-type PoolShape = "rectangular" | "freeform" | "lap" | "infinity";
-type UsageFreq = "daily" | "weekly" | "occasional";
-
-interface PoolConfig {
-  type: PoolType;
-  shape: PoolShape;
-  gallons: number;
-  climate: ClimateZone;
-  usage: UsageFreq;
-  features: string[];
-}
-
-// ─── Sizing engine ────────────────────────────────────────────────────────────
-function computeRecommendations(cfg: PoolConfig) {
-  const { gallons, climate, usage, features } = cfg;
-
-  // Pump HP sizing
-  const turnoverHours = usage === "daily" ? 6 : 8;
-  const gpm = gallons / (turnoverHours * 60);
-  let hp = gpm < 40 ? "1.0 HP" : gpm < 60 ? "1.5 HP" : gpm < 90 ? "2.0 HP" : "3.0 HP";
-
-  // Heater BTU
-  const btuMap: Record<ClimateZone, string> = {
-    tropical: "100,000 BTU",
-    warm: "150,000 BTU",
-    moderate: "300,000 BTU",
-    cold: "400,000 BTU",
-    arctic: "500,000 BTU",
-  };
-  const heaterBtu = btuMap[climate];
-
-  // Filter area
-  const filterArea = gallons < 15000 ? "200 Sq. Ft." : gallons < 25000 ? "320 Sq. Ft." : gallons < 40000 ? "420 Sq. Ft." : "520 Sq. Ft.";
-
-  // Salt system
-  const saltCapacity = gallons < 20000 ? "20,000 gal" : gallons < 40000 ? "40,000 gal" : "60,000 gal";
-
-  // Energy savings estimate
-  const savingsPerYear = Math.round((gallons / 1000) * 28);
-
-  return { hp, heaterBtu, filterArea, saltCapacity, savingsPerYear };
-}
-
-// ─── Step config ─────────────────────────────────────────────────────────────
-const STEPS = [
-  { id: 1, label: "Pool Type", icon: Waves },
-  { id: 2, label: "Pool Size", icon: Calculator },
-  { id: 3, label: "Climate", icon: Thermometer },
-  { id: 4, label: "Features", icon: Sparkles },
-  { id: 5, label: "Results", icon: CheckCircle2 },
-];
-
-const POOL_TYPES: { value: PoolType; label: string; emoji: string; desc: string }[] = [
-  { value: "residential", label: "Residential", emoji: "🏡", desc: "In-ground or above-ground home pool" },
-  { value: "commercial", label: "Commercial", emoji: "🏊", desc: "Hotel, resort, or community pool" },
-  { value: "spa", label: "Spa / Hot Tub", emoji: "♨️", desc: "Standalone or attached spa unit" },
-  { value: "indoor", label: "Indoor Pool", emoji: "🏛️", desc: "Enclosed natatorium or facility" },
-];
-
-const POOL_SHAPES: { value: PoolShape; label: string; emoji: string }[] = [
-  { value: "rectangular", label: "Rectangular", emoji: "⬜" },
-  { value: "freeform", label: "Freeform", emoji: "🫧" },
-  { value: "lap", label: "Lap Pool", emoji: "📏" },
-  { value: "infinity", label: "Infinity Edge", emoji: "🌊" },
-];
-
-const CLIMATE_ZONES: { value: ClimateZone; label: string; icon: any; desc: string; color: string }[] = [
-  { value: "tropical", label: "Tropical", icon: Sun, desc: "Florida, Hawaii, Puerto Rico (avg 80°F+)", color: "from-orange-400 to-yellow-400" },
-  { value: "warm", label: "Warm", icon: Sun, desc: "California, Texas, Arizona (avg 70–80°F)", color: "from-yellow-400 to-amber-400" },
-  { value: "moderate", label: "Moderate", icon: Wind, desc: "Mid-Atlantic, Midwest (avg 55–70°F)", color: "from-cyan-400 to-blue-400" },
-  { value: "cold", label: "Cold", icon: Snowflake, desc: "Northeast, Pacific NW (avg 40–55°F)", color: "from-blue-400 to-indigo-500" },
-  { value: "arctic", label: "Arctic", icon: Snowflake, desc: "Alaska, Canada (avg below 40°F)", color: "from-indigo-500 to-violet-600" },
-];
-
-const FEATURE_OPTIONS = [
-  { id: "saltwater", label: "Salt Chlorination", icon: Droplets, desc: "Automated salt-to-chlorine system" },
-  { id: "automation", label: "Smart Automation", icon: Zap, desc: "Remote control & scheduling" },
-  { id: "lighting", label: "LED Lighting", icon: Sparkles, desc: "Color-changing underwater lighting" },
-  { id: "cleaner", label: "Robotic Cleaner", icon: RefreshCw, desc: "Automated pool floor & wall cleaning" },
-  { id: "heatpump", label: "Heat Pump", icon: Thermometer, desc: "Energy-efficient electric heating" },
-];
-
-const fadeUp: any = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.25 } },
-};
-
-// ─── Component ───────────────────────────────────────────────────────────────
 function FinderPage() {
-  const [step, setStep] = useState(1);
-  const [cfg, setCfg] = useState<PoolConfig>({
-    type: "residential",
-    shape: "rectangular",
-    gallons: 20000,
-    climate: "moderate",
-    usage: "daily",
-    features: [],
-  });
-  const [searchResults, setSearchResults] = useState<Product[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [activeTab, setActiveTab] = useState<"instant" | "dimension">("instant");
+  const [gallons, setGallons] = useState(20000);
+  const [poolType, setPoolType] = useState<"residential" | "commercial" | "spa">("residential");
+  const [climate, setClimate] = useState<"warm" | "moderate" | "cold">("moderate");
+  const [bundleAdded, setBundleAdded] = useState(false);
+
+  // Dimension calculator state
+  const [length, setLength] = useState(32);
+  const [width, setWidth] = useState(16);
+  const [shallowDepth, setShallowDepth] = useState(3.5);
+  const [deepDepth, setDeepDepth] = useState(8);
+  const [poolShape, setPoolShape] = useState<"rectangle" | "oval" | "freeform" | "circle">("rectangle");
+
+  // Calculate Gallons from Dimensions
+  const calculatedGallons = useMemo(() => {
+    const avgDepth = (shallowDepth + deepDepth) / 2;
+    let multiplier = 7.5; // Gallons per cu. ft. for rectangle
+    if (poolShape === "oval") multiplier = 5.9;
+    if (poolShape === "freeform") multiplier = 6.5;
+    if (poolShape === "circle") multiplier = 5.9;
+
+    const cuFt = length * width * avgDepth;
+    return Math.round((cuFt * multiplier) / 500) * 500;
+  }, [length, width, shallowDepth, deepDepth, poolShape]);
+
+  const { data: allProducts = [] } = useProductsQuery();
+  const productsList = allProducts.length > 0 ? allProducts : defaultProducts;
   const { add } = useCart();
 
-  const rec = useMemo(() => computeRecommendations(cfg), [cfg]);
+  // Dynamic Hydraulic Calculations
+  const turnoverHours = poolType === "commercial" ? 6 : poolType === "spa" ? 2 : 8;
+  const gpm = Math.max(15, Math.round(gallons / (turnoverHours * 60)));
+  const hpSpec = gpm < 45 ? "1.5 HP Variable-Speed" : gpm < 75 ? "2.0 HP Variable-Speed" : "3.0 HP Commercial VS";
+  const btuSpec =
+    climate === "cold"
+      ? "400,000 BTU High-Output Gas"
+      : climate === "moderate"
+        ? "250,000 - 300,000 BTU Hybrid"
+        : "140,000 - 200,000 BTU Heat Pump";
+  const filterSpec =
+    gallons < 18000
+      ? "150 - 200 Sq. Ft. Cartridge"
+      : gallons < 32000
+        ? "320 - 420 Sq. Ft. Quad-Cartridge"
+        : "520 Sq. Ft. Commercial Grid";
+  const annualSavings = Math.round((gallons / 1000) * 32 + 350);
 
-  const toggleFeature = (id: string) => {
-    setCfg((prev) => ({
-      ...prev,
-      features: prev.features.includes(id)
-        ? prev.features.filter((f) => f !== id)
-        : [...prev.features, id],
-    }));
+  // Match real products from catalog
+  const matchedPump = useMemo(() => {
+    const pumps = productsList.filter((p) => {
+      const cat = (p.category || "").toLowerCase();
+      const name = (p.name || "").toLowerCase();
+      return (cat.includes("pump") || name.includes("pump")) && p.img && !p.img.includes("commingsoon");
+    });
+    if (pumps.length === 0) return null;
+    if (gallons < 15000) {
+      return pumps.find((p) => p.name.toLowerCase().includes("1.5") || p.name.toLowerCase().includes("super")) || pumps[0];
+    } else if (gallons < 32000) {
+      return (
+        pumps.find(
+          (p) =>
+            p.name.toLowerCase().includes("intelliflo") ||
+            p.name.toLowerCase().includes("vsf") ||
+            p.name.toLowerCase().includes("tristar")
+        ) ||
+        pumps[1] ||
+        pumps[0]
+      );
+    } else {
+      return (
+        pumps.find(
+          (p) =>
+            p.name.toLowerCase().includes("3.0") ||
+            p.name.toLowerCase().includes("intelliflo3") ||
+            p.name.toLowerCase().includes("commercial")
+        ) ||
+        pumps[2] ||
+        pumps[0]
+      );
+    }
+  }, [productsList, gallons]);
+
+  const matchedHeater = useMemo(() => {
+    const heaters = productsList.filter((p) => {
+      const cat = (p.category || "").toLowerCase();
+      const name = (p.name || "").toLowerCase();
+      return (
+        (cat.includes("heater") || name.includes("heater") || name.includes("heat pump")) &&
+        p.img &&
+        !p.img.includes("commingsoon")
+      );
+    });
+    if (heaters.length === 0) return null;
+    if (climate === "cold") {
+      return (
+        heaters.find(
+          (p) =>
+            p.name.toLowerCase().includes("400") ||
+            p.name.toLowerCase().includes("mastertemp") ||
+            p.name.toLowerCase().includes("gas")
+        ) || heaters[0]
+      );
+    } else if (climate === "moderate") {
+      return (
+        heaters.find(
+          (p) =>
+            p.name.toLowerCase().includes("250") ||
+            p.name.toLowerCase().includes("300") ||
+            p.name.toLowerCase().includes("raypak") ||
+            p.name.toLowerCase().includes("universal")
+        ) ||
+        heaters[1] ||
+        heaters[0]
+      );
+    } else {
+      return (
+        heaters.find(
+          (p) =>
+            p.name.toLowerCase().includes("heat pump") ||
+            p.name.toLowerCase().includes("electric") ||
+            p.name.toLowerCase().includes("140")
+        ) ||
+        heaters[2] ||
+        heaters[0]
+      );
+    }
+  }, [productsList, climate]);
+
+  const matchedFilter = useMemo(() => {
+    const filters = productsList.filter((p) => {
+      const cat = (p.category || "").toLowerCase();
+      const name = (p.name || "").toLowerCase();
+      return (cat.includes("filter") || name.includes("filter")) && p.img && !p.img.includes("commingsoon");
+    });
+    if (filters.length === 0) return null;
+    if (gallons < 18000) {
+      return (
+        filters.find((p) => p.name.toLowerCase().includes("200") || p.name.toLowerCase().includes("clean & clear")) ||
+        filters[0]
+      );
+    } else if (gallons < 32000) {
+      return (
+        filters.find(
+          (p) =>
+            p.name.toLowerCase().includes("420") ||
+            p.name.toLowerCase().includes("swimclear") ||
+            p.name.toLowerCase().includes("quad")
+        ) ||
+        filters[1] ||
+        filters[0]
+      );
+    } else {
+      return (
+        filters.find(
+          (p) =>
+            p.name.toLowerCase().includes("520") ||
+            p.name.toLowerCase().includes("commercial") ||
+            p.name.toLowerCase().includes("grid")
+        ) ||
+        filters[2] ||
+        filters[0]
+      );
+    }
+  }, [productsList, gallons]);
+
+  const bundleProducts = useMemo(() => {
+    return [matchedPump, matchedHeater, matchedFilter].filter(Boolean) as Product[];
+  }, [matchedPump, matchedHeater, matchedFilter]);
+
+  const bundleTotal = bundleProducts.reduce((acc, p) => acc + p.price, 0);
+  const bundleMsrpTotal = bundleProducts.reduce((acc, p) => acc + (p.msrp || p.price * 1.25), 0);
+  const bundleSavings = Math.max(0, Math.round(bundleMsrpTotal - bundleTotal));
+
+  const handleAddBundle = () => {
+    bundleProducts.forEach((p) => add(p, 1));
+    setBundleAdded(true);
+    toast.success("Complete 3-Piece OEM Package added to your cart!");
+    setTimeout(() => setBundleAdded(false), 3000);
   };
 
-  // Fetch products when reaching results step
-  useEffect(() => {
-    if (step !== 5) return;
-    setIsSearching(true);
-
-    const queries = ["pool pump", "pool heater", "pool filter"];
-    Promise.all(
-      queries.map((q) => searchProductsDb({ data: { query: q } }).then((r) => (r.success ? r.products || [] : [])))
-    )
-      .then((results) => {
-        // Take 1 of each category
-        const flat = results.map((arr) => arr[0]).filter(Boolean) as Product[];
-        setSearchResults(flat);
-      })
-      .catch(() => setSearchResults([]))
-      .finally(() => setIsSearching(false));
-  }, [step]);
-
-  const reset = () => {
-    setStep(1);
-    setCfg({ type: "residential", shape: "rectangular", gallons: 20000, climate: "moderate", usage: "daily", features: [] });
-    setSearchResults([]);
+  const applyDimensions = () => {
+    setGallons(calculatedGallons);
+    setActiveTab("instant");
+    toast.success(`Applied ${calculatedGallons.toLocaleString()} Gallons to the sizing engine!`);
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
       <Header alwaysDark />
 
-      <main className="flex-1 pt-24 pb-20">
-        {/* ─── HERO HEADER ─── */}
-        <section
-          className="relative py-16 mb-12 overflow-hidden"
-          style={{
-            background: "linear-gradient(160deg, #001a3a 0%, #003a7a 55%, #0055aa 100%)",
-          }}
-        >
-          {/* Glow orbs */}
-          <div className="absolute top-0 right-1/4 w-80 h-80 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(89,210,243,0.18) 0%, transparent 70%)", filter: "blur(50px)" }} />
-          <div className="absolute bottom-0 left-1/3 w-56 h-56 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(0,137,201,0.2) 0%, transparent 70%)", filter: "blur(40px)" }} />
-          {/* Animated rings */}
-          <div className="absolute right-16 top-1/2 -translate-y-1/2 hidden lg:block pointer-events-none opacity-20">
-            {[160, 120, 80].map((size, i) => (
-              <div key={size} className="absolute rounded-full border border-cyan-400/60"
-                style={{ width: size, height: size, top: "50%", left: "50%", transform: "translate(-50%,-50%)", animationDelay: `${i * 0.3}s` }} />
-            ))}
-          </div>
+      <main className="flex-1">
+        {/* ─── LUXURY HERO SECTION ─── */}
+        <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-[#040d1a] text-white border-b border-cyan-500/10">
+          {/* Background Hero Image */}
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-65"
+            style={{ backgroundImage: "url('/about-hero.png')" }}
+          />
 
-          <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <span
-                className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] border border-white/20 text-white/80"
-                style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(12px)" }}
+          {/* Deep Gradient Overlays for High Legibility */}
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#040d1a]/80 via-[#040d1a]/60 to-background" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#040d1a]/80 via-transparent to-[#040d1a]/80" />
+
+          {/* Ambient Glows */}
+          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/15 rounded-full blur-3xl pointer-events-none z-[1]" />
+          <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none z-[1]" />
+
+          <div className="relative z-10 mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto text-center space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg"
               >
                 <Calculator className="size-3.5" />
-                Intelligent Equipment Sizing Wizard
-              </span>
-              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight mb-4">
-                Find Your Perfect{" "}
-                <span
-                  className="text-transparent"
-                  style={{
-                    backgroundImage: "linear-gradient(90deg, #59D2F3 0%, #00B4D8 60%, #48CAE4 100%)",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                  }}
-                >
-                  Pool Equipment
+                Intelligent Hydraulic & Equipment Sizing Engine
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white"
+              >
+                Precision Pool Equipment{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
+                  Sizing & Package Builder
                 </span>
-              </h1>
-              <p className="text-white/65 max-w-xl mx-auto text-sm leading-relaxed">
-                Answer 4 quick questions about your pool. Our sizing engine — built by certified pool technicians — will calculate the exact equipment specifications you need.
-              </p>
-            </motion.div>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-medium"
+              >
+                Calculate flow dynamics (GPM), pump horsepower, heater BTUs, and filter square footage calibrated to ANSI/APSP/ICC-15 commercial turnover standards.
+              </motion.p>
+            </div>
           </div>
         </section>
 
-        <div className="max-w-5xl mx-auto px-6">
-          {/* ─── STEP PROGRESS BAR ─── */}
-          <div className="mb-10">
-            <div className="flex items-center justify-between relative">
-              {/* Connecting line */}
-              <div className="absolute left-0 right-0 top-5 h-px bg-border mx-8 z-0" />
-              <div
-                className="absolute left-8 top-5 h-px z-0 transition-all duration-700"
-                style={{
-                  width: `calc(${((step - 1) / (STEPS.length - 1)) * 100}% - 4rem + ${step === STEPS.length ? "4rem" : "0px"})`,
-                  background: "linear-gradient(to right, #0089C9, #59D2F3)",
-                }}
-              />
-
-              {STEPS.map((s) => {
-                const Icon = s.icon;
-                const done = step > s.id;
-                const active = step === s.id;
-                return (
-                  <div key={s.id} className="flex flex-col items-center gap-2 z-10">
-                    <button
-                      onClick={() => done && setStep(s.id)}
-                      className={`size-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 font-black text-xs
-                        ${active ? "border-transparent text-white scale-110 shadow-lg" : ""}
-                        ${done ? "border-transparent text-white cursor-pointer" : ""}
-                        ${!active && !done ? "border-border bg-background text-muted-foreground" : ""}
-                      `}
-                      style={
-                        active
-                          ? { background: "linear-gradient(135deg, #0089C9, #59D2F3)", boxShadow: "0 0 0 4px rgba(0,137,201,0.2), 0 4px 16px rgba(0,137,201,0.3)" }
-                          : done
-                          ? { background: "linear-gradient(135deg, #0089C9, #59D2F3)" }
-                          : {}
-                      }
-                    >
-                      {done ? <CheckCircle2 className="size-4" /> : <Icon className="size-4" />}
-                    </button>
-                    <span className={`text-[10px] font-bold uppercase tracking-wider hidden sm:block ${active ? "text-foreground" : "text-muted-foreground"}`}>
-                      {s.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ─── STEP CONTENT ─── */}
-          <AnimatePresence mode="wait">
-            {/* STEP 1: Pool Type */}
-            {step === 1 && (
-              <motion.div key="step1" variants={fadeUp} initial="hidden" animate="visible" exit="exit">
-                <StepCard
-                  title="What type of pool do you have?"
-                  subtitle="This helps us select the right equipment grade and capacity range."
+        {/* ─── MAIN FINDER CONSOLE ─── */}
+        <section className="py-[50px] bg-background">
+          <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            {/* Mode Switcher Tabs */}
+            <div className="flex items-center justify-center mb-8">
+              <div className="p-1 rounded-2xl bg-slate-100 border border-slate-200/90 shadow-2xs flex items-center gap-1">
+                <button
+                  onClick={() => setActiveTab("instant")}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${activeTab === "instant"
+                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
+                    : "text-slate-600 hover:text-slate-900"
+                    }`}
                 >
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {POOL_TYPES.map((t) => (
-                      <button
-                        key={t.value}
-                        id={`pool-type-${t.value}`}
-                        onClick={() => setCfg((p) => ({ ...p, type: t.value }))}
-                        className={`group p-5 rounded-2xl border-2 text-left transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
-                          cfg.type === t.value
-                            ? "border-transparent text-foreground shadow-lg"
-                            : "border-border hover:border-muted-foreground/30 bg-white"
-                        }`}
-                        style={
-                          cfg.type === t.value
-                            ? { background: "linear-gradient(135deg, rgba(0,137,201,0.08), rgba(89,210,243,0.05))", borderColor: "oklch(0.50 0.14 232)" }
-                            : {}
-                        }
-                      >
-                        <div className="text-3xl mb-3">{t.emoji}</div>
-                        <div className="font-extrabold text-sm text-foreground">{t.label}</div>
-                        <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{t.desc}</div>
-                        {cfg.type === t.value && (
-                          <div className="mt-2">
-                            <CheckCircle2 className="size-4" style={{ color: "oklch(0.50 0.14 232)" }} />
-                          </div>
-                        )}
-                      </button>
-                    ))}
+                  <Sliders className="size-4 text-cyan-600" />
+                  <span>Live Sizing Console</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("dimension")}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${activeTab === "dimension"
+                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
+                    : "text-slate-600 hover:text-slate-900"
+                    }`}
+                >
+                  <Ruler className="size-4 text-cyan-600" />
+                  <span>Dimension Volume Calculator</span>
+                </button>
+              </div>
+            </div>
+
+            {/* TAB 1: INSTANT SIZING ENGINE */}
+            {activeTab === "instant" ? (
+              <div className="grid lg:grid-cols-12 gap-8 items-start">
+                {/* Left Parameter Controls Panel */}
+                <div className="lg:col-span-5 space-y-5 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm">
+                  {/* Parameter Header */}
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div className="flex items-center gap-2 text-slate-900 font-black text-sm uppercase tracking-wider">
+                      <Gauge className="size-4 text-cyan-600" /> Hydraulic Parameters
+                    </div>
+                    <button
+                      onClick={() => {
+                        setGallons(20000);
+                        setPoolType("residential");
+                        setClimate("moderate");
+                      }}
+                      className="text-[11px] font-bold text-slate-400 hover:text-cyan-700 flex items-center gap-1 cursor-pointer transition-colors"
+                    >
+                      <RotateCcw className="size-3" /> Reset
+                    </button>
                   </div>
 
-                  {/* Pool Shape */}
-                  <div className="mt-6 pt-6 border-t border-border">
-                    <div className="text-sm font-bold text-foreground mb-4">Pool Shape</div>
-                    <div className="grid grid-cols-4 gap-3">
-                      {POOL_SHAPES.map((s) => (
+                  {/* 1. Pool Water Volume Slider */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                        Pool Capacity (Gallons)
+                      </label>
+                      <div className="text-right">
+                        <span className="text-xl font-black text-slate-950 tracking-tight">
+                          {gallons.toLocaleString()}
+                        </span>
+                        <span className="text-[10.5px] text-cyan-700 font-extrabold ml-1">GAL</span>
+                      </div>
+                    </div>
+
+                    <input
+                      type="range"
+                      min={3000}
+                      max={80000}
+                      step={1000}
+                      value={gallons}
+                      onChange={(e) => setGallons(Number(e.target.value))}
+                      className="w-full accent-cyan-600 cursor-pointer h-2 bg-slate-100 rounded-lg appearance-none"
+                    />
+
+                    {/* Quick Preset Buttons */}
+                    <div className="grid grid-cols-4 gap-1.5 pt-1">
+                      {[10000, 20000, 35000, 50000].map((preset) => (
                         <button
-                          key={s.value}
-                          id={`pool-shape-${s.value}`}
-                          onClick={() => setCfg((p) => ({ ...p, shape: s.value }))}
-                          className={`py-3.5 rounded-xl border text-xs font-bold transition-all ${
-                            cfg.shape === s.value
-                              ? "text-white border-transparent"
-                              : "border-border bg-white hover:bg-surface text-foreground/80"
-                          }`}
-                          style={cfg.shape === s.value ? { background: "linear-gradient(135deg, #0089C9, #59D2F3)" } : {}}
+                          key={preset}
+                          onClick={() => setGallons(preset)}
+                          className={`py-1.5 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${gallons === preset
+                            ? "bg-cyan-600 text-white shadow-2xs"
+                            : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/80"
+                            }`}
                         >
-                          <div className="text-lg mb-1">{s.emoji}</div>
-                          {s.label}
+                          {preset / 1000}k Gal
                         </button>
                       ))}
                     </div>
                   </div>
 
-                  <StepNav step={step} setStep={setStep} />
-                </StepCard>
-              </motion.div>
-            )}
+                  {/* 2. Duty Cycle / Pool Type */}
+                  <div className="space-y-2.5 pt-3 border-t border-slate-100">
+                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                      Duty Cycle & Application
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { id: "residential", label: "Residential", icon: Home, turnover: "8-hr cycle" },
+                        { id: "commercial", label: "Commercial", icon: Building2, turnover: "6-hr cycle" },
+                        { id: "spa", label: "Spa / Hydro", icon: Waves, turnover: "2-hr cycle" },
+                      ].map((item) => {
+                        const Icon = item.icon;
+                        const active = poolType === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => setPoolType(item.id as any)}
+                            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${active
+                              ? "bg-cyan-50/70 border-cyan-500 text-cyan-950 shadow-2xs"
+                              : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
+                              }`}
+                          >
+                            <Icon className={`size-4 mb-2 ${active ? "text-cyan-600" : "text-slate-400"}`} />
+                            <div>
+                              <div className="text-xs font-extrabold leading-tight">{item.label}</div>
+                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">{item.turnover}</div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-            {/* STEP 2: Pool Size */}
-            {step === 2 && (
-              <motion.div key="step2" variants={fadeUp} initial="hidden" animate="visible" exit="exit">
-                <StepCard
-                  title="How large is your pool?"
-                  subtitle="Pool volume drives pump flow rate, filtration sizing, and chemical demand."
-                >
-                  <div className="space-y-8">
-                    {/* Volume slider */}
+                  {/* 3. Regional Climate Zone */}
+                  <div className="space-y-2.5 pt-3 border-t border-slate-100">
+                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                      Climate & Ambient Zone
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { id: "warm", label: "Warm Sunbelt", icon: Sun, btu: "140k BTU" },
+                        { id: "moderate", label: "Moderate", icon: CloudSun, btu: "250k BTU" },
+                        { id: "cold", label: "Cold North", icon: Snowflake, btu: "400k BTU" },
+                      ].map((item) => {
+                        const Icon = item.icon;
+                        const active = climate === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => setClimate(item.id as any)}
+                            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${active
+                              ? "bg-cyan-50/70 border-cyan-500 text-cyan-950 shadow-2xs"
+                              : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
+                              }`}
+                          >
+                            <Icon className={`size-4 mb-2 ${active ? "text-cyan-600" : "text-slate-400"}`} />
+                            <div>
+                              <div className="text-xs font-extrabold leading-tight">{item.label}</div>
+                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">{item.btu}</div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Real-time Engineering HUD Summary Box */}
+                  <div className="mt-4 p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white border border-slate-800 shadow-md">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+                      <span className="text-[11px] font-extrabold uppercase tracking-widest text-cyan-400">
+                        Calculated Engineering Specs
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
+                        ANSI Compliant
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">Required Flow Rate</div>
+                        <div className="font-black text-cyan-300 text-sm">{gpm} GPM</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">Turnover Cycle</div>
+                        <div className="font-black text-white text-sm">{turnoverHours} Hours</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">Hydraulic Pump Spec</div>
+                        <div className="font-extrabold text-white text-[11px] truncate">{hpSpec}</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">Thermal Output</div>
+                        <div className="font-extrabold text-white text-[11px] truncate">{btuSpec.split(" ")[0]} BTU</div>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between">
+                      <span className="text-[11px] text-slate-300 font-bold">Estimated Annual Energy Savings:</span>
+                      <span className="text-xs font-black text-emerald-400">~${annualSavings}/yr</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Matched Equipment Bundle Showcase */}
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
                     <div>
-                      <div className="flex items-end justify-between mb-4">
-                        <label className="text-sm font-bold text-foreground">Pool Volume</label>
-                        <div className="text-right">
-                          <div className="text-3xl font-black" style={{ color: "oklch(0.50 0.14 232)" }}>
-                            {cfg.gallons.toLocaleString()}
+                      <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                        Matched 3-Piece OEM Equipment Package
+                      </h2>
+                      <p className="text-xs text-slate-500">
+                        Factory authorized Pentair, Hayward, Jandy, and Raypak components matching your hydraulic specs.
+                      </p>
+                    </div>
+
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-[11px] font-extrabold">
+                      <ShieldCheck className="size-3.5" /> Full Factory Warranty
+                    </span>
+                  </div>
+
+                  {/* 3 Matched Product Cards */}
+                  <div className="grid gap-3">
+                    {/* Pump Card */}
+                    {matchedPump && (
+                      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs hover:border-cyan-500/40 transition-all flex flex-col sm:flex-row items-center gap-4">
+                        <div className="size-20 rounded-xl bg-slate-50 border border-slate-100 p-1 shrink-0 grid place-items-center">
+                          <img
+                            src={getProductImage(matchedPump.img)}
+                            alt={matchedPump.name}
+                            className="size-full object-contain"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0 text-center sm:text-left">
+                          <div className="flex items-center justify-center sm:justify-start gap-2 mb-0.5">
+                            <span className="px-2 py-0.5 rounded-md bg-cyan-100/70 text-cyan-800 font-extrabold text-[10px] uppercase tracking-wider">
+                              Pump · {hpSpec.split(" ")[0]} HP
+                            </span>
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                              {matchedPump.brand}
+                            </span>
                           </div>
-                          <div className="text-xs text-muted-foreground font-semibold">US Gallons</div>
+                          <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 truncate">
+                            {matchedPump.name}
+                          </h3>
+                          <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                            Variable speed hydraulics calibrated for {gpm} GPM peak flow.
+                          </div>
+                        </div>
+                        <div className="text-center sm:text-right shrink-0">
+                          <div className="text-base font-black text-slate-900">{formatUSD(matchedPump.price)}</div>
+                          <button
+                            onClick={() => {
+                              add(matchedPump, 1);
+                              toast.success(`Added ${matchedPump.name} to cart!`);
+                            }}
+                            className="mt-1.5 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
+                          >
+                            <ShoppingBag className="size-3" /> Add
+                          </button>
                         </div>
                       </div>
-                      <input
-                        id="pool-volume-slider"
-                        type="range"
-                        min={3000}
-                        max={100000}
-                        step={1000}
-                        value={cfg.gallons}
-                        onChange={(e) => setCfg((p) => ({ ...p, gallons: Number(e.target.value) }))}
-                        className="w-full"
-                      />
-                      <div className="flex justify-between text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-3">
-                        <span>3,000 gal<br /><span className="normal-case font-normal">Small Spa</span></span>
-                        <span className="text-center">20,000 gal<br /><span className="normal-case font-normal">Standard Residential</span></span>
-                        <span className="text-right">100,000 gal<br /><span className="normal-case font-normal">Large Commercial</span></span>
-                      </div>
-                    </div>
+                    )}
 
-                    {/* Quick select presets */}
-                    <div>
-                      <div className="text-sm font-bold text-foreground mb-3">Quick Presets</div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        {[
-                          { label: "Spa / Hot Tub", gal: 500 },
-                          { label: "Small Pool", gal: 10000 },
-                          { label: "Standard Pool", gal: 20000 },
-                          { label: "Large Pool", gal: 40000 },
-                        ].map((preset) => (
+                    {/* Heater Card */}
+                    {matchedHeater && (
+                      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs hover:border-cyan-500/40 transition-all flex flex-col sm:flex-row items-center gap-4">
+                        <div className="size-20 rounded-xl bg-slate-50 border border-slate-100 p-1 shrink-0 grid place-items-center">
+                          <img
+                            src={getProductImage(matchedHeater.img)}
+                            alt={matchedHeater.name}
+                            className="size-full object-contain"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0 text-center sm:text-left">
+                          <div className="flex items-center justify-center sm:justify-start gap-2 mb-0.5">
+                            <span className="px-2 py-0.5 rounded-md bg-amber-100/70 text-amber-900 font-extrabold text-[10px] uppercase tracking-wider">
+                              Thermal · {btuSpec.split(" ")[0]} BTU
+                            </span>
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                              {matchedHeater.brand}
+                            </span>
+                          </div>
+                          <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 truncate">
+                            {matchedHeater.name}
+                          </h3>
+                          <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                            Engineered for {climate} climate temperature rise.
+                          </div>
+                        </div>
+                        <div className="text-center sm:text-right shrink-0">
+                          <div className="text-base font-black text-slate-900">{formatUSD(matchedHeater.price)}</div>
                           <button
-                            key={preset.label}
-                            onClick={() => setCfg((p) => ({ ...p, gallons: preset.gal }))}
-                            className={`py-3 px-4 rounded-xl border text-xs font-bold transition-all ${
-                              cfg.gallons === preset.gal
-                                ? "text-white border-transparent"
-                                : "border-border bg-white hover:bg-surface text-foreground/80"
-                            }`}
-                            style={cfg.gallons === preset.gal ? { background: "linear-gradient(135deg, #0089C9, #59D2F3)" } : {}}
+                            onClick={() => {
+                              add(matchedHeater, 1);
+                              toast.success(`Added ${matchedHeater.name} to cart!`);
+                            }}
+                            className="mt-1.5 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
                           >
-                            <div className="font-black text-sm mb-0.5">{preset.gal >= 1000 ? `${preset.gal / 1000}K` : preset.gal}</div>
-                            {preset.label}
+                            <ShoppingBag className="size-3" /> Add
                           </button>
-                        ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    {/* Usage frequency */}
-                    <div className="pt-4 border-t border-border">
-                      <div className="text-sm font-bold text-foreground mb-3">How often is the pool used?</div>
-                      <div className="grid grid-cols-3 gap-3">
-                        {[
-                          { value: "daily" as UsageFreq, label: "Daily", desc: "6-hr turnover target" },
-                          { value: "weekly" as UsageFreq, label: "Weekly", desc: "8-hr turnover target" },
-                          { value: "occasional" as UsageFreq, label: "Occasional", desc: "10-hr turnover target" },
-                        ].map((u) => (
+                    {/* Filter Card */}
+                    {matchedFilter && (
+                      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs hover:border-cyan-500/40 transition-all flex flex-col sm:flex-row items-center gap-4">
+                        <div className="size-20 rounded-xl bg-slate-50 border border-slate-100 p-1 shrink-0 grid place-items-center">
+                          <img
+                            src={getProductImage(matchedFilter.img)}
+                            alt={matchedFilter.name}
+                            className="size-full object-contain"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0 text-center sm:text-left">
+                          <div className="flex items-center justify-center sm:justify-start gap-2 mb-0.5">
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-100/70 text-emerald-900 font-extrabold text-[10px] uppercase tracking-wider">
+                              Filter · {filterSpec.split(" ")[0]} Sq Ft
+                            </span>
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                              {matchedFilter.brand}
+                            </span>
+                          </div>
+                          <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 truncate">
+                            {matchedFilter.name}
+                          </h3>
+                          <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                            Multi-element media for crystal clear water purity.
+                          </div>
+                        </div>
+                        <div className="text-center sm:text-right shrink-0">
+                          <div className="text-base font-black text-slate-900">{formatUSD(matchedFilter.price)}</div>
                           <button
-                            key={u.value}
-                            onClick={() => setCfg((p) => ({ ...p, usage: u.value }))}
-                            className={`py-4 rounded-xl border text-xs font-bold transition-all ${
-                              cfg.usage === u.value
-                                ? "text-white border-transparent"
-                                : "border-border bg-white hover:bg-surface text-foreground/80"
-                            }`}
-                            style={cfg.usage === u.value ? { background: "linear-gradient(135deg, #0089C9, #59D2F3)" } : {}}
+                            onClick={() => {
+                              add(matchedFilter, 1);
+                              toast.success(`Added ${matchedFilter.name} to cart!`);
+                            }}
+                            className="mt-1.5 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white font-extrabold text-xs transition-all cursor-pointer shadow-2xs"
                           >
-                            <div className="font-black text-sm mb-1">{u.label}</div>
-                            <div className="opacity-80 text-[10px]">{u.desc}</div>
+                            <ShoppingBag className="size-3" /> Add
                           </button>
-                        ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 1-Click Complete Bundle Checkout Card */}
+                  <div className="mt-4 p-5 rounded-2xl bg-gradient-to-r from-[#061220] via-[#091f38] to-[#040d1a] text-white border border-cyan-500/30 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-cyan-400">
+                        Complete OEM 3-Piece Package
+                      </span>
+                      <div className="flex items-baseline gap-2 mt-0.5">
+                        <span className="text-2xl font-black text-white">{formatUSD(bundleTotal)}</span>
+                        {bundleSavings > 0 && (
+                          <span className="text-xs text-slate-400 line-through font-medium">
+                            {formatUSD(bundleMsrpTotal)}
+                          </span>
+                        )}
+                        {bundleSavings > 0 && (
+                          <span className="text-xs font-black text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-800/60">
+                            Save {formatUSD(bundleSavings)}
+                          </span>
+                        )}
                       </div>
                     </div>
-                  </div>
 
-                  <StepNav step={step} setStep={setStep} />
-                </StepCard>
-              </motion.div>
-            )}
-
-            {/* STEP 3: Climate */}
-            {step === 3 && (
-              <motion.div key="step3" variants={fadeUp} initial="hidden" animate="visible" exit="exit">
-                <StepCard
-                  title="What's your climate zone?"
-                  subtitle="Ambient temperature directly determines the heater BTU capacity required to maintain comfortable pool temperatures year-round."
-                >
-                  <div className="space-y-3">
-                    {CLIMATE_ZONES.map((c) => {
-                      const Icon = c.icon;
-                      const active = cfg.climate === c.value;
-                      return (
-                        <button
-                          key={c.value}
-                          id={`climate-${c.value}`}
-                          onClick={() => setCfg((p) => ({ ...p, climate: c.value }))}
-                          className={`w-full flex items-center gap-5 p-5 rounded-2xl border-2 text-left transition-all duration-200 hover:scale-[1.005] ${
-                            active ? "border-transparent shadow-lg" : "border-border bg-white hover:border-muted-foreground/30"
-                          }`}
-                          style={active ? { background: "linear-gradient(135deg, rgba(0,137,201,0.08), rgba(89,210,243,0.05))", borderColor: "oklch(0.50 0.14 232)" } : {}}
-                        >
-                          <div className={`size-12 rounded-2xl bg-gradient-to-br ${c.color} flex items-center justify-center shrink-0 shadow-md`}>
-                            <Icon className="size-6 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-extrabold text-foreground">{c.label}</div>
-                            <div className="text-xs text-muted-foreground mt-0.5">{c.desc}</div>
-                          </div>
-                          {active && <CheckCircle2 className="size-5 shrink-0" style={{ color: "oklch(0.50 0.14 232)" }} />}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <StepNav step={step} setStep={setStep} />
-                </StepCard>
-              </motion.div>
-            )}
-
-            {/* STEP 4: Features */}
-            {step === 4 && (
-              <motion.div key="step4" variants={fadeUp} initial="hidden" animate="visible" exit="exit">
-                <StepCard
-                  title="Which features do you need?"
-                  subtitle="Select all that apply. We'll include the right add-on equipment in your recommended bundle."
-                >
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {FEATURE_OPTIONS.map((f) => {
-                      const Icon = f.icon;
-                      const active = cfg.features.includes(f.id);
-                      return (
-                        <button
-                          key={f.id}
-                          id={`feature-${f.id}`}
-                          onClick={() => toggleFeature(f.id)}
-                          className={`flex items-center gap-4 p-5 rounded-2xl border-2 text-left transition-all duration-200 hover:scale-[1.01] ${
-                            active ? "border-transparent shadow-md" : "border-border bg-white hover:border-muted-foreground/30"
-                          }`}
-                          style={active ? { background: "linear-gradient(135deg, rgba(0,137,201,0.08), rgba(89,210,243,0.05))", borderColor: "oklch(0.50 0.14 232)" } : {}}
-                        >
-                          <div
-                            className="size-11 rounded-xl flex items-center justify-center shrink-0 transition-all"
-                            style={active ? { background: "linear-gradient(135deg, #0089C9, #59D2F3)" } : { background: "oklch(0.96 0.02 220)" }}
-                          >
-                            <Icon className={`size-5 ${active ? "text-white" : "text-foreground/60"}`} />
-                          </div>
-                          <div>
-                            <div className="font-extrabold text-sm text-foreground">{f.label}</div>
-                            <div className="text-[11px] text-muted-foreground mt-0.5">{f.desc}</div>
-                          </div>
-                          <div className="ml-auto shrink-0">
-                            <div className={`size-5 rounded-full border-2 flex items-center justify-center transition-all ${active ? "border-transparent" : "border-border"}`}
-                              style={active ? { background: "linear-gradient(135deg, #0089C9, #59D2F3)" } : {}}>
-                              {active && <CheckCircle2 className="size-3 text-white" />}
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-5 p-4 rounded-2xl bg-surface border border-border flex items-start gap-3">
-                    <ShieldCheck className="size-5 shrink-0 mt-0.5" style={{ color: "oklch(0.50 0.14 232)" }} />
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      <strong className="text-foreground">Not sure?</strong> No problem — you can skip optional features and add them later. Our advisors can also help you spec a complete system bundle.
-                    </p>
-                  </div>
-
-                  <StepNav step={step} setStep={setStep} isLast />
-                </StepCard>
-              </motion.div>
-            )}
-
-            {/* STEP 5: Results */}
-            {step === 5 && (
-              <motion.div key="step5" variants={fadeUp} initial="hidden" animate="visible" exit="exit" className="space-y-8">
-                {/* Summary ribbon */}
-                <div
-                  className="rounded-[2rem] p-6 text-white"
-                  style={{ background: "linear-gradient(135deg, #001a3a 0%, #003a7a 100%)" }}
-                >
-                  <div className="flex items-center justify-between flex-wrap gap-4 mb-5">
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">Sizing Complete</span>
-                      <h2 className="text-2xl font-black mt-1">Your Pool Profile</h2>
-                    </div>
                     <button
-                      onClick={reset}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 text-white/80 text-xs font-bold hover:bg-white/10 transition"
+                      onClick={handleAddBundle}
+                      disabled={bundleProducts.length === 0}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 text-white font-black text-xs sm:text-sm shadow-[0_8px_25px_rgba(6,182,212,0.35)] transition-all cursor-pointer"
                     >
-                      <RefreshCw className="size-3.5" /> Start Over
+                      <ShoppingBag className="size-4" />
+                      <span>{bundleAdded ? "Bundle Added to Cart!" : "Add Complete Package to Cart"}</span>
                     </button>
                   </div>
+                </div>
+              </div>
+            ) : (
+              /* TAB 2: DIMENSION-BASED VOLUME CALCULATOR */
+              <div className="max-w-3xl mx-auto bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-md space-y-6">
+                <div className="text-center space-y-1.5 border-b border-slate-100 pb-5">
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                    Pool Dimension & Volume Calculator
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                    Input your pool's physical dimensions to determine accurate water volume in US Gallons.
+                  </p>
+                </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {/* Pool Shape Selection */}
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                    Select Pool Geometry
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     {[
-                      { label: "Pool Type", value: POOL_TYPES.find((t) => t.value === cfg.type)?.label || cfg.type },
-                      { label: "Volume", value: `${cfg.gallons.toLocaleString()} gal` },
-                      { label: "Climate", value: CLIMATE_ZONES.find((c) => c.value === cfg.climate)?.label || cfg.climate },
-                      { label: "Features", value: cfg.features.length ? `${cfg.features.length} selected` : "None" },
-                    ].map((item) => (
-                      <div key={item.label} className="rounded-xl p-3 border border-white/15" style={{ background: "rgba(255,255,255,0.07)" }}>
-                        <div className="text-[10px] text-white/50 font-bold uppercase tracking-wider">{item.label}</div>
-                        <div className="font-extrabold text-white mt-0.5">{item.value}</div>
-                      </div>
+                      { id: "rectangle", label: "Rectangular", desc: "Standard 7.5x" },
+                      { id: "oval", label: "Oval Shape", desc: "Curved 5.9x" },
+                      { id: "freeform", label: "Freeform / Kidney", desc: "Contoured 6.5x" },
+                      { id: "circle", label: "Round / Circular", desc: "Radial 5.9x" },
+                    ].map((shape) => (
+                      <button
+                        key={shape.id}
+                        onClick={() => setPoolShape(shape.id as any)}
+                        className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${poolShape === shape.id
+                          ? "bg-cyan-50/80 border-cyan-500 text-cyan-950 shadow-2xs font-bold"
+                          : "bg-slate-50/70 border-slate-200/80 text-slate-600 hover:bg-slate-100"
+                          }`}
+                      >
+                        <div className="text-xs font-extrabold">{shape.label}</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">{shape.desc}</div>
+                      </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Sizing specs */}
-                <div>
-                  <h3 className="text-xl font-black tracking-tight mb-5 flex items-center gap-2">
-                    <Sparkles className="size-5" style={{ color: "oklch(0.50 0.14 232)" }} />
-                    Calculated Specifications
-                  </h3>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {[
-                      { icon: Waves, label: "Pump Power", value: rec.hp, desc: "Variable speed recommended", gradient: "from-blue-600 to-cyan-500" },
-                      { icon: Thermometer, label: "Heater Capacity", value: rec.heaterBtu, desc: `${cfg.climate} climate zone`, gradient: "from-orange-500 to-amber-400" },
-                      { icon: Filter, label: "Filter Area", value: rec.filterArea, desc: "Cartridge filtration", gradient: "from-emerald-500 to-teal-400" },
-                      { icon: Zap, label: "Annual Savings", value: `~$${rec.savingsPerYear}`, desc: "vs. single-speed pump", gradient: "from-violet-600 to-indigo-500" },
-                    ].map((spec) => {
-                      const Icon = spec.icon;
-                      return (
-                        <motion.div
-                          key={spec.label}
-                          initial={{ opacity: 0, y: 16 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.1 }}
-                          className="bg-white rounded-2xl p-5 border border-border hover:shadow-[var(--shadow-soft)] transition-all"
-                        >
-                          <div className={`size-10 rounded-xl bg-gradient-to-br ${spec.gradient} flex items-center justify-center mb-3`}>
-                            <Icon className="size-5 text-white" />
-                          </div>
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{spec.label}</div>
-                          <div className="text-xl font-black text-foreground mt-0.5">{spec.value}</div>
-                          <div className="text-[10px] text-muted-foreground/80 mt-1">{spec.desc}</div>
-                        </motion.div>
-                      );
-                    })}
+                {/* Dimensions Grid Inputs */}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                      Length (Feet)
+                    </label>
+                    <input
+                      type="number"
+                      min={10}
+                      max={120}
+                      value={length}
+                      onChange={(e) => setLength(Number(e.target.value))}
+                      className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 bg-slate-50/50"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                      Width (Feet)
+                    </label>
+                    <input
+                      type="number"
+                      min={6}
+                      max={60}
+                      value={width}
+                      onChange={(e) => setWidth(Number(e.target.value))}
+                      className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 bg-slate-50/50"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                      Shallow End Depth (Feet)
+                    </label>
+                    <input
+                      type="number"
+                      step={0.5}
+                      min={2}
+                      max={6}
+                      value={shallowDepth}
+                      onChange={(e) => setShallowDepth(Number(e.target.value))}
+                      className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 bg-slate-50/50"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                      Deep End Depth (Feet)
+                    </label>
+                    <input
+                      type="number"
+                      step={0.5}
+                      min={4}
+                      max={16}
+                      value={deepDepth}
+                      onChange={(e) => setDeepDepth(Number(e.target.value))}
+                      className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 bg-slate-50/50"
+                    />
                   </div>
                 </div>
 
-                {/* Matched Products */}
-                <div>
-                  <div className="flex items-center justify-between flex-wrap gap-4 mb-5">
-                    <h3 className="text-xl font-black tracking-tight flex items-center gap-2">
-                      <Package className="size-5" style={{ color: "oklch(0.50 0.14 232)" }} />
-                      Recommended Equipment Bundle
-                    </h3>
-                    <Link
-                      to="/shop/$category"
-                      params={{ category: "all" }}
-                      search={{ q: "" }}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold transition hover:underline"
-                      style={{ color: "oklch(0.50 0.14 232)" }}
-                    >
-                      Browse Full Catalog <ChevronRight className="size-3.5" />
-                    </Link>
-                  </div>
-
-                  {isSearching ? (
-                    <div className="flex items-center justify-center py-20 gap-3 text-muted-foreground">
-                      <Loader2 className="size-6 animate-spin" style={{ color: "oklch(0.50 0.14 232)" }} />
-                      <span className="text-sm font-semibold">Finding your best matches...</span>
-                    </div>
-                  ) : searchResults.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {searchResults.map((p, i) => {
-                        const savings = (p.msrp || p.price + 50) - p.price;
-                        const categoryLabels = ["Recommended Pump", "Recommended Heater", "Recommended Filter"];
-                        return (
-                          <motion.article
-                            key={p.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.45, delay: i * 0.08 }}
-                            className="group bg-white rounded-3xl p-5 border border-border hover:shadow-[var(--shadow-float)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
-                          >
-                            {/* Category badge */}
-                            <div className="mb-3">
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold text-white"
-                                style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)" }}>
-                                <Sparkles className="size-2.5" />
-                                {categoryLabels[i] || "Recommended"}
-                              </span>
-                            </div>
-
-                            <Link to="/products/$productId" params={{ productId: p.id }} className="block flex-1">
-                              <div className="relative aspect-square rounded-2xl overflow-hidden grid place-items-center mb-4"
-                                style={{ background: "linear-gradient(to bottom, oklch(0.97 0.01 240), oklch(0.92 0.04 220))" }}>
-                                <img
-                                  src={p.img}
-                                  alt={p.name}
-                                  loading="lazy"
-                                  className="size-[75%] object-contain group-hover:scale-105 transition-transform duration-700 mix-blend-multiply"
-                                  onError={(e) => { if (!e.currentTarget.src.includes("commingsoon")) e.currentTarget.src = "/assets/commingsoon.png"; }}
-                                />
-                                <span className="absolute top-3 right-3 size-9 grid place-items-center rounded-full bg-white/80 backdrop-blur opacity-0 group-hover:opacity-100 transition shadow-md">
-                                  <Eye className="size-4" />
-                                </span>
-                              </div>
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{p.brand}</span>
-                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold">
-                                  <Star className="size-3 fill-amber-400 text-amber-400" />
-                                  {p.rating || "5.0"}
-                                </span>
-                              </div>
-                              <h4 className="font-bold text-sm text-foreground leading-snug group-hover:text-primary transition-colors line-clamp-2 capitalize">
-                                {p.name}
-                              </h4>
-                            </Link>
-
-                            <div className="mt-4 pt-4 border-t border-border/40 flex items-center justify-between">
-                              <div>
-                                <div className="text-lg font-black" style={{ color: "oklch(0.50 0.14 232)" }}>{formatUSD(p.price)}</div>
-                              </div>
-                              <button
-                                onClick={() => add(p, 1)}
-                                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-white text-xs font-bold hover:opacity-90 transition shadow-md"
-                                style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)" }}
-                              >
-                                <ShoppingBag className="size-3.5" /> Add
-                              </button>
-                            </div>
-                          </motion.article>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    /* Empty state when DB has no products */
-                    <div className="rounded-[2rem] border border-dashed border-border p-12 text-center space-y-4">
-                      <Package className="size-12 mx-auto text-muted-foreground/40" />
-                      <div>
-                        <p className="font-bold text-foreground">No products in catalog yet</p>
-                        <p className="text-sm text-muted-foreground mt-1">Import your product catalog from the admin dashboard to see matching equipment here.</p>
-                      </div>
-                      <Link
-                        to="/admin/products"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white"
-                        style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)" }}
-                      >
-                        Import Products <ArrowRight className="size-3.5" />
-                      </Link>
-                    </div>
-                  )}
-                </div>
-
-                {/* CTA Strip */}
-                <div
-                  className="rounded-[2rem] p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
-                  style={{ background: "linear-gradient(135deg, oklch(0.97 0.02 220), oklch(0.95 0.04 215))", border: "1px solid oklch(0.90 0.04 220)" }}
-                >
+                {/* Calculation Result Callout */}
+                <div className="p-5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800 shadow-md">
                   <div>
-                    <h3 className="font-extrabold text-lg text-foreground">Need expert advice?</h3>
-                    <p className="text-sm text-muted-foreground mt-1">Our certified pool technicians can review your configuration and confirm exact specifications.</p>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-cyan-400">
+                      Calculated Volume
+                    </span>
+                    <div className="text-3xl font-black text-white mt-0.5">
+                      {calculatedGallons.toLocaleString()}{" "}
+                      <span className="text-sm font-extrabold text-cyan-400">Gallons</span>
+                    </div>
                   </div>
-                  <Link
-                    to="/contact"
-                    className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-white text-sm font-bold shadow-lg hover:opacity-95 transition"
-                    style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)" }}
+
+                  <button
+                    onClick={applyDimensions}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 text-white font-extrabold text-xs shadow-md transition-all cursor-pointer"
                   >
-                    Talk to an Advisor <ArrowRight className="size-4" />
-                  </Link>
+                    <span>Apply to Equipment Sizer</span>
+                    <ArrowRight className="size-4" />
+                  </button>
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
-        </div>
+          </div>
+        </section>
+
+        {/* ─── ENGINEERING FORMULA & SPEC STANDARDS ─── */}
+        <section className="py-[50px] bg-slate-50/80 border-t border-slate-200/80">
+          <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+                Hydraulic Standards
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Engineering Calibrations & Sizing Formulas
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-4">
+              <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-2">
+                <div className="size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center font-black text-xs">
+                  GPM
+                </div>
+                <h3 className="font-extrabold text-sm text-slate-900">Flow Rate Formula</h3>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                  <strong>GPM = Gallons ÷ (Turnover Hours × 60)</strong>. Sized to maintain minimum velocity without exceeding maximum pipe friction head loss.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-2">
+                <div className="size-9 rounded-xl bg-amber-50 text-amber-700 grid place-items-center font-black text-xs">
+                  BTU
+                </div>
+                <h3 className="font-extrabold text-sm text-slate-900">Thermal Output Calcs</h3>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                  <strong>BTU/hr = Gallons × 8.33 × Desired Temp Rise ÷ Hours</strong>. Ensures rapid recovery during cold nighttime ambient temperature drops.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-2">
+                <div className="size-9 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center font-black text-xs">
+                  SQ FT
+                </div>
+                <h3 className="font-extrabold text-sm text-slate-900">Filtration Surface Area</h3>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                  Calculated at 0.375 GPM/sq. ft. commercial design rate to minimize operating PSI, extend cartridge lifespan, and reduce backwashing.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
-    </div>
-  );
-}
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-function StepCard({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
-  return (
-    <div className="bg-white rounded-[2rem] border border-border p-8 shadow-[var(--shadow-soft)] space-y-6">
-      <div>
-        <h2 className="text-2xl font-black tracking-tight text-foreground">{title}</h2>
-        <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{subtitle}</p>
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function StepNav({
-  step,
-  setStep,
-  isLast = false,
-}: {
-  step: number;
-  setStep: (s: number) => void;
-  isLast?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between pt-4 mt-2 border-t border-border">
-      {step > 1 ? (
-        <button
-          onClick={() => setStep(step - 1)}
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-border text-sm font-bold hover:bg-surface transition"
-        >
-          <ArrowLeft className="size-4" /> Back
-        </button>
-      ) : (
-        <div />
-      )}
-      <button
-        onClick={() => setStep(step + 1)}
-        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white text-sm font-bold shadow-lg hover:opacity-95 transition hover:scale-[1.02] active:scale-[0.98]"
-        style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)", boxShadow: "0 8px 24px rgba(0,137,201,0.3)" }}
-      >
-        {isLast ? (
-          <>
-            See My Results <Sparkles className="size-4" />
-          </>
-        ) : (
-          <>
-            Continue <ArrowRight className="size-4" />
-          </>
-        )}
-      </button>
     </div>
   );
 }

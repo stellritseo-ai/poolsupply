@@ -295,7 +295,7 @@ export function parseJSONRows(rows: any[]): Product[] {
     const pSubCat = getVal(["sub category", "subcategory", "sub-category"]) || "Pool Pumps";
     const pBrand = getVal(["manufacturer", "brand", "make", "mfr"]) || "Pentair";
     const pSku = getVal(["sku", "code", "part number"]) || `SKU-${timestamp}-${i + 1}`;
-    
+
     const priceRaw = getVal(["price", "wholesale", "cost"]);
     const pPrice = priceRaw ? Math.max(0.01, parseFloat(priceRaw.replace(/[^0-9.]/g, "")) || 199.99) : 199.99;
 
@@ -415,7 +415,7 @@ export async function parseExcelOrCSV(file: File): Promise<Product[]> {
     const sheetName = workbook.SheetNames[0];
     if (!sheetName) return [];
     const worksheet = workbook.Sheets[sheetName];
-    
+
     // Parse directly from SheetJS JSON rows
     const jsonRows: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
     if (Array.isArray(jsonRows) && jsonRows.length > 0) {
@@ -435,35 +435,45 @@ function ProductsManager() {
   const queryClient = useQueryClient();
   const { products: defaultProductsList } = useProducts();
 
-  // Query ALL products from database for admin dashboard
-  const { data: dbAdminProducts } = useQuery({
-    queryKey: ["admin_all_products"],
-    queryFn: async () => {
-      try {
-        const res = await getAllProductsAdminDb();
-        if (res.success && Array.isArray(res.products)) {
-          return res.products;
-        }
-      } catch (e) {
-        console.error("Failed to query admin products:", e);
-      }
-      return defaultProductsList;
-    },
-    staleTime: 0,
-  });
-
-  const productsList = dbAdminProducts || defaultProductsList;
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   // Table Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 50;
+  const pageSize = 100;
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory]);
+
+  // Query paginated products from database
+  const { data: dbProductsResult, isLoading: dbLoading } = useQuery({
+    queryKey: ["admin_all_products", currentPage, searchTerm, selectedCategory],
+    queryFn: async () => {
+      try {
+        const res = await getAllProductsAdminDb({
+          data: {
+            page: currentPage,
+            limit: pageSize,
+            search: searchTerm || undefined,
+            category: selectedCategory !== "all" ? selectedCategory : undefined,
+          }
+        });
+        if (res.success && Array.isArray(res.products)) {
+          return res;
+        }
+      } catch (e) {
+        console.error("Failed to query admin products:", e);
+      }
+      return { success: false, products: defaultProductsList, total: defaultProductsList.length, page: 1, pages: 1 };
+    },
+    staleTime: 0,
+    keepPreviousData: true,
+  } as any);
+
+  const productsList: Product[] = dbProductsResult?.products || defaultProductsList;
+  const totalProducts: number = dbProductsResult?.total || productsList.length;
+  const totalPages: number = dbProductsResult?.pages || Math.ceil(totalProducts / pageSize);
 
   // Selection & Bulk Delete State
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -554,8 +564,8 @@ function ProductsManager() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
 
       const desc = adjustMode === "percent_increase" ? `+${adjustValue}%` :
-                   adjustMode === "percent_decrease" ? `-${adjustValue}%` :
-                   adjustMode === "fixed_increase" ? `+$${adjustValue}` : `-$${adjustValue}`;
+        adjustMode === "percent_decrease" ? `-${adjustValue}%` :
+          adjustMode === "fixed_increase" ? `+$${adjustValue}` : `-$${adjustValue}`;
 
       triggerToast(`🎉 Price adjustment (${desc}) applied to ${modifiedItems.length} products!`);
       setPriceAdjustModalOpen(false);
@@ -600,6 +610,7 @@ function ProductsManager() {
   const [review1, setReview1] = useState("");
   const [review2, setReview2] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isSavingProduct, setIsSavingProduct] = useState(false);
 
   const triggerToast = (msg: string) => {
     setToast(msg);
@@ -618,26 +629,10 @@ function ProductsManager() {
     return Array.from(cats).sort();
   }, [productsList]);
 
-  // Filtered products
-  const filteredProducts = useMemo(() => {
-    return productsList.filter(p => {
-      const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.brand.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchCat = selectedCategory === "all" || [
-        (p.category || "").toLowerCase(),
-        (p.parentCategory || "").toLowerCase(),
-        (p.subCategory || "").toLowerCase(),
-      ].includes(selectedCategory.toLowerCase());
-      return matchSearch && matchCat;
-    });
-  }, [productsList, searchTerm, selectedCategory]);
+  // Since filtering and pagination are now server-side, productsList is already the correct page
+  const filteredProducts = productsList;
 
-  const totalPages = Math.ceil(filteredProducts.length / pageSize) || 1;
-  const paginatedProducts = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return filteredProducts.slice(start, start + pageSize);
-  }, [filteredProducts, currentPage, pageSize]);
+  const paginatedProducts = productsList;
 
   // Selection handlers
   const handleSelectAll = (checked: boolean) => {
@@ -870,12 +865,12 @@ function ProductsManager() {
       syncLocalProducts(combined);
       queryClient.setQueryData(["admin_all_products"], combined);
       queryClient.setQueryData(["products"], combined);
-      
+
       invalidateProductsCache(queryClient);
       queryClient.invalidateQueries({ queryKey: ["admin_all_products"] });
       queryClient.invalidateQueries({ queryKey: ["all_products"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      
+
       triggerToast(`🎉 Successfully imported ${total} products to catalog & database!`);
       setImportModalOpen(false);
       setParsedProducts([]);
@@ -925,8 +920,8 @@ function ProductsManager() {
 
     const specStr = p.specs
       ? Object.entries(p.specs)
-          .map(([k, v]) => `${k}: ${v}`)
-          .join("; ")
+        .map(([k, v]) => `${k}: ${v}`)
+        .join("; ")
       : "";
     setSpecifications(specStr);
 
@@ -943,124 +938,136 @@ function ProductsManager() {
       return;
     }
 
-    // Parse specifications string into key-value map
-    const specsMap: Record<string, string> = { Warranty: "2 Years Limited Warranty" };
-    if (specifications.trim()) {
-      const parts = specifications.split(/;|\||\n/);
-      parts.forEach((part) => {
-        const colon = part.indexOf(":");
-        if (colon !== -1) {
-          const k = part.substring(0, colon).trim();
-          const v = part.substring(colon + 1).trim();
-          if (k && v) specsMap[k] = v;
-        } else if (part.trim()) {
-          specsMap[`Spec ${Object.keys(specsMap).length + 1}`] = part.trim();
+    setIsSavingProduct(true);
+
+    try {
+      // Parse specifications string into key-value map
+      const specsMap: Record<string, string> = { Warranty: "2 Years Limited Warranty" };
+      if (specifications.trim()) {
+        const parts = specifications.split(/;|\||\n/);
+        parts.forEach((part) => {
+          const colon = part.indexOf(":");
+          if (colon !== -1) {
+            const k = part.substring(0, colon).trim();
+            const v = part.substring(colon + 1).trim();
+            if (k && v) specsMap[k] = v;
+          } else if (part.trim()) {
+            specsMap[`Spec ${Object.keys(specsMap).length + 1}`] = part.trim();
+          }
+        });
+      }
+
+      // Construct 5-star customer reviews
+      const reviewsArr: Review[] = [];
+      if (review1.trim()) {
+        reviewsArr.push({
+          id: `rev-${Date.now()}-1`,
+          author: "Verified Commercial Buyer",
+          rating: 5,
+          date: "Recently Verified",
+          title: "Top Quality Equipment",
+          content: review1.trim(),
+        });
+      }
+      if (review2.trim()) {
+        reviewsArr.push({
+          id: `rev-${Date.now()}-2`,
+          author: "Verified Trade Pro",
+          rating: 5,
+          date: "Recently Verified",
+          title: "Highly Recommended",
+          content: review2.trim(),
+        });
+      }
+
+      const finalImg = img.trim() !== "" ? img.trim() : commingSoonImg;
+      const finalName = displayName.trim() || name.trim();
+      const finalCat = subCategory.trim() || parentCategory.trim() || "Pool Pumps";
+      const finalDesc = description.trim() || `Commercial grade ${brand.trim()} ${finalName} engineered for heavy-duty pool filtration, heating, and wholesale commercial applications.`;
+
+      if (editingProduct) {
+        const updatedProduct: Product = {
+          ...editingProduct,
+          name: finalName,
+          displayName: displayName.trim() || name.trim(),
+          brand: brand.trim(),
+          category: finalCat,
+          parentCategory: parentCategory.trim(),
+          subCategory: subCategory.trim(),
+          price: Number(price) || 0,
+          msrp: Number(price) || 0,
+          sku: sku.trim(),
+          stock: Number(stock) || 0,
+          details: details.trim() || `${brand.trim()} commercial grade equipment`,
+          description: finalDesc,
+          seoKeywords: seoKeywords.trim() || `${brand.trim()}, pool supplies, commercial wholesale`,
+          img: finalImg,
+          specs: specsMap,
+          reviews: reviewsArr.length > 0 ? reviewsArr : editingProduct.reviews || [],
+        };
+
+        const updated = productsList.map((p) => (p.id === editingProduct.id ? updatedProduct : p));
+        syncLocalProducts(updated);
+        queryClient.setQueryData(["admin_all_products"], updated);
+        queryClient.setQueryData(["products"], updated);
+
+        const res = await saveProductDb({ data: { product: updatedProduct } });
+        if (res.success) {
+          triggerToast(`Product '${finalName}' updated successfully.`);
+        } else {
+          triggerToast(`Product saved locally (DB notice: ${res.error || "offline"})`);
         }
-      });
-    }
 
-    // Construct 5-star customer reviews
-    const reviewsArr: Review[] = [];
-    if (review1.trim()) {
-      reviewsArr.push({
-        id: `rev-${Date.now()}-1`,
-        author: "Verified Commercial Buyer",
-        rating: 5,
-        date: "Recently Verified",
-        title: "Top Quality Equipment",
-        content: review1.trim(),
-      });
-    }
-    if (review2.trim()) {
-      reviewsArr.push({
-        id: `rev-${Date.now()}-2`,
-        author: "Verified Trade Pro",
-        rating: 5,
-        date: "Recently Verified",
-        title: "Highly Recommended",
-        content: review2.trim(),
-      });
-    }
-
-    const finalImg = img.trim() !== "" ? img.trim() : commingSoonImg;
-    const finalName = displayName.trim() || name.trim();
-    const finalCat = subCategory.trim() || parentCategory.trim() || "Pool Pumps";
-
-    if (editingProduct) {
-      const updatedProduct: Product = {
-        ...editingProduct,
-        name: finalName,
-        displayName: displayName.trim() || name.trim(),
-        brand: brand.trim(),
-        category: finalCat,
-        parentCategory: parentCategory.trim(),
-        subCategory: subCategory.trim(),
-        price: Number(price),
-        msrp: Number(price),
-        sku: sku.trim(),
-        stock: Number(stock),
-        details: details.trim(),
-        description: description.trim(),
-        seoKeywords: seoKeywords.trim(),
-        img: finalImg,
-        specs: specsMap,
-        reviews: reviewsArr.length > 0 ? reviewsArr : editingProduct.reviews || [],
-      };
-
-      const updated = productsList.map((p) => (p.id === editingProduct.id ? updatedProduct : p));
-      syncLocalProducts(updated);
-      queryClient.setQueryData(["admin_all_products"], updated);
-      queryClient.setQueryData(["products"], updated);
-      triggerToast(`Product '${finalName}' updated successfully.`);
-
-      try {
-        await saveProductDb({ data: { product: updatedProduct } });
         invalidateProductsCache(queryClient);
         queryClient.invalidateQueries({ queryKey: ["admin_all_products"] });
         queryClient.invalidateQueries({ queryKey: ["all_products"] });
-      } catch (err) {
-        console.error("Failed to sync updated product to DB:", err);
-      }
-    } else {
-      const newId = `p-${sku.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now()}`;
-      const newProduct: Product = {
-        id: newId,
-        name: finalName,
-        displayName: displayName.trim() || name.trim(),
-        brand: brand.trim(),
-        category: finalCat,
-        parentCategory: parentCategory.trim(),
-        subCategory: subCategory.trim(),
-        price: Number(price),
-        msrp: Number(price),
-        rating: 5.0,
-        img: finalImg,
-        sku: sku.trim(),
-        stock: Number(stock),
-        details: details.trim(),
-        description: description.trim(),
-        seoKeywords: seoKeywords.trim(),
-        specs: specsMap,
-        reviews: reviewsArr,
-      };
+      } else {
+        const newId = `p-${sku.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now()}`;
+        const newProduct: Product = {
+          id: newId,
+          name: finalName,
+          displayName: displayName.trim() || name.trim(),
+          brand: brand.trim(),
+          category: finalCat,
+          parentCategory: parentCategory.trim(),
+          subCategory: subCategory.trim(),
+          price: Number(price) || 0,
+          msrp: Number(price) || 0,
+          rating: 5.0,
+          img: finalImg,
+          sku: sku.trim(),
+          stock: Number(stock) || 0,
+          details: details.trim() || `${brand.trim()} commercial grade equipment`,
+          description: finalDesc,
+          seoKeywords: seoKeywords.trim() || `${brand.trim()}, pool supplies, commercial wholesale`,
+          specs: specsMap,
+          reviews: reviewsArr,
+        };
 
-      const updated = [...productsList, newProduct];
-      syncLocalProducts(updated);
-      queryClient.setQueryData(["admin_all_products"], updated);
-      queryClient.setQueryData(["products"], updated);
-      triggerToast(`Product '${finalName}' added to catalog.`);
+        const updated = [newProduct, ...productsList];
+        syncLocalProducts(updated);
+        queryClient.setQueryData(["admin_all_products"], updated);
+        queryClient.setQueryData(["products"], updated);
 
-      try {
-        await saveProductDb({ data: { product: newProduct } });
+        const res = await saveProductDb({ data: { product: newProduct } });
+        if (res.success) {
+          triggerToast(`🎉 Product '${finalName}' added to catalog successfully!`);
+        } else {
+          triggerToast(`Product added locally (DB notice: ${res.error || "offline"})`);
+        }
+
         invalidateProductsCache(queryClient);
         queryClient.invalidateQueries({ queryKey: ["admin_all_products"] });
         queryClient.invalidateQueries({ queryKey: ["all_products"] });
-      } catch (err) {
-        console.error("Failed to sync new product to DB:", err);
       }
-    }
 
-    setFormOpen(false);
+      setFormOpen(false);
+    } catch (err: any) {
+      console.error("Failed to save product:", err);
+      triggerToast("Error saving product: " + (err.message || "Unknown error"));
+    } finally {
+      setIsSavingProduct(false);
+    }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1123,9 +1130,10 @@ function ProductsManager() {
           <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
             Products Catalog
             <span className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">
-              {searchTerm || selectedCategory !== "all" 
-                ? `${filteredProducts.length} / ${productsList.length} items` 
-                : `${productsList.length} items`
+              {dbLoading ? "Loading..." :
+                searchTerm || selectedCategory !== "all"
+                  ? `${totalProducts.toLocaleString()} items (filtered)`
+                  : `${totalProducts.toLocaleString()} items`
               }
             </span>
           </h1>
@@ -1336,7 +1344,7 @@ function ProductsManager() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between border-t border-slate-100 px-5 py-3 bg-slate-50/50">
             <span className="text-[11px] text-slate-400 font-semibold">
-              Showing {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, filteredProducts.length)} of {filteredProducts.length} products
+              Showing {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, totalProducts)} of {totalProducts.toLocaleString()} products
             </span>
             <div className="flex items-center gap-1.5">
               <button
@@ -1487,7 +1495,7 @@ function ProductsManager() {
                     <span>{importProgress.current} / {importProgress.total}</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                    <div 
+                    <div
                       className="bg-emerald-500 h-2.5 rounded-full transition-all duration-300"
                       style={{ width: `${(importProgress.current / importProgress.total) * 100}%` }}
                     />
@@ -1624,7 +1632,7 @@ function ProductsManager() {
                   <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Wholesale Price ($)</span>
                     <input
-                      type="number" required min={0.01} step="0.01" value={price} onChange={(e) => setPrice(Number(e.target.value))}
+                      type="number" required min={0.01} step="0.01" value={price === 0 ? "" : price} onChange={(e) => setPrice(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-extrabold focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
@@ -1632,7 +1640,7 @@ function ProductsManager() {
                   <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Qty Available (Stock)</span>
                     <input
-                      type="number" required min={0} value={stock} onChange={(e) => setStock(Number(e.target.value))}
+                      type="number" required min={0} value={stock === 0 ? "" : stock} onChange={(e) => setStock(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-extrabold focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
@@ -1650,11 +1658,11 @@ function ProductsManager() {
                   </label>
 
                   <div className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Image Link (URL)</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Image Link (URL or Upload)</span>
                     <div className="flex gap-2">
                       <input
-                        type="url" value={img} onChange={(e) => setImg(e.target.value)}
-                        placeholder="https://... or upload image"
+                        type="text" value={img} onChange={(e) => setImg(e.target.value)}
+                        placeholder="https://... or click upload"
                         className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition"
                       />
                       <label className="h-9 px-3 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 transition">
@@ -1691,8 +1699,8 @@ function ProductsManager() {
                 <label className="block">
                   <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Product Description</span>
                   <textarea
-                    required rows={3} value={description} onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Enter full commercial product description, features, and specs..."
+                    rows={3} value={description} onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Enter full commercial product description, features, and specs (optional)..."
                     className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition resize-none"
                   />
                 </label>
@@ -1733,10 +1741,11 @@ function ProductsManager() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isUploading}
-                    className="px-6 py-2.5 rounded-full bg-gradient-ocean text-white font-semibold text-xs hover:opacity-95 transition-all shadow disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    disabled={isUploading || isSavingProduct}
+                    className="px-6 py-2.5 rounded-full bg-gradient-ocean text-white font-semibold text-xs hover:opacity-95 transition-all shadow disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
                   >
-                    {editingProduct ? "Save Changes" : "Create Product"}
+                    {isSavingProduct && <Loader2 className="size-3.5 animate-spin" />}
+                    <span>{editingProduct ? "Save Changes" : "Create Product"}</span>
                   </button>
                 </div>
               </form>
@@ -1900,13 +1909,12 @@ function ProductsManager() {
                         type="button"
                         disabled={disabled}
                         onClick={() => setAdjustScope(s.id as any)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          active
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${active
                             ? "border-indigo-600 bg-indigo-50 text-indigo-900 font-bold shadow-xs"
                             : disabled
-                            ? "opacity-40 cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400"
-                            : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium"
-                        }`}
+                              ? "opacity-40 cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400"
+                              : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium"
+                          }`}
                       >
                         <div className="text-xs font-bold">{s.label}</div>
                         <div className="text-[10px] text-slate-400 mt-0.5">{s.count} items</div>
@@ -1953,11 +1961,10 @@ function ProductsManager() {
                         key={m.id}
                         type="button"
                         onClick={() => setAdjustMode(m.id as any)}
-                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
-                          active
+                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${active
                             ? "border-indigo-600 bg-indigo-600 text-white font-bold shadow-xs"
                             : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold"
-                        }`}
+                          }`}
                       >
                         <div className="text-xs">{m.label}</div>
                         <div className={`text-[10px] ${active ? "text-indigo-100" : "text-slate-400"}`}>{m.sub}</div>
@@ -1994,9 +2001,8 @@ function ProductsManager() {
                         key={val}
                         type="button"
                         onClick={() => setAdjustValue(val)}
-                        className={`px-2.5 py-2 rounded-lg border text-xs font-extrabold transition cursor-pointer ${
-                          adjustValue === val ? "bg-indigo-600 text-white border-indigo-600" : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200"
-                        }`}
+                        className={`px-2.5 py-2 rounded-lg border text-xs font-extrabold transition cursor-pointer ${adjustValue === val ? "bg-indigo-600 text-white border-indigo-600" : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200"
+                          }`}
                       >
                         {adjustMode.includes("decrease") ? "-" : "+"}
                         {adjustMode.startsWith("percent") ? `${val}%` : `$${val}`}

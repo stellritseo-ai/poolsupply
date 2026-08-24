@@ -187,3 +187,18 @@ export const markAdminChatReadDb = createServerFn({ method: "POST" })
       return { success: false };
     }
   });
+
+export const deleteChatSessionDb = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ sessionId: z.string() }))
+  .handler(async ({ data }): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const db = await connectDB();
+      if (!db) return { success: false, error: "Database error" };
+      await db.collection("chats").deleteOne({ sessionId: data.sessionId });
+      return { success: true };
+    } catch (e: any) {
+      console.error("Failed to delete chat session:", e);
+      return { success: false, error: "Database error" };
+    }
+  });
+

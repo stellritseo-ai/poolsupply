@@ -6,9 +6,15 @@ const DEFAULT_SETTINGS = {
   _id: "global",
   maintenanceMode: false,
   paymentMethods: [
-    { id: "stripe", name: "Stripe", active: true, publicKey: "pk_test_mock_123", secretKey: "sk_test_mock_456" },
-    { id: "paypal", name: "PayPal Checkout", active: false, clientId: "client_mock_789", secret: "secret_mock_abc" },
-    { id: "authorize", name: "Authorize.net", active: false, loginId: "login_mock_xyz", transactionKey: "trans_mock_000" }
+    {
+      id: "stripe",
+      name: "Stripe Live Payments",
+      active: true,
+      publicKey: "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2",
+      mode: "Live Production (256-bit SSL)"
+    },
+    { id: "paypal", name: "PayPal Wholesale", active: false, mode: "Standard" },
+    { id: "authorize", name: "Authorize.net", active: false, mode: "Commercial B2B" }
   ]
 };
 

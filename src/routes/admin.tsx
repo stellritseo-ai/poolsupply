@@ -19,7 +19,12 @@ import {
   ChevronDown,
   Search,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  ExternalLink,
+  Activity,
+  Globe,
+  RotateCcw,
+  FileText,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
@@ -28,7 +33,7 @@ import {
   getNotifications,
   markNotificationAsRead,
   markAllNotificationsAsRead,
-  deleteNotification
+  deleteNotification,
 } from "@/lib/api/notifications.functions";
 
 function timeAgo(date: Date | string) {
@@ -45,8 +50,8 @@ function timeAgo(date: Date | string) {
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Control Panel — Admin Dashboard" },
-      { name: "robots", content: "noindex, nofollow" }
+      { title: "Control Panel — Admin Dashboard | Pool Supply Wholesalers" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: AdminLayout,
@@ -69,30 +74,29 @@ function AdminLayout() {
       setIsAuthenticated(true);
 
       // Fetch notifications
-      getNotifications().then(res => {
+      getNotifications().then((res) => {
         if (res.success && res.notifications) {
           setNotifications(res.notifications);
         }
       });
     }
-    // Small timeout ensures no hydration mismatch flash
     setTimeout(() => setIsCheckingAuth(false), 50);
   }, []);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const handleMarkAsRead = async (id: string) => {
-    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+    setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)));
     await markNotificationAsRead({ data: { id } });
   };
 
   const handleMarkAllRead = async () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
+    setNotifications(notifications.map((n) => ({ ...n, read: true })));
     await markAllNotificationsAsRead();
   };
 
   const handleDeleteNotification = async (id: string) => {
-    setNotifications(notifications.filter(n => n.id !== id));
+    setNotifications(notifications.filter((n) => n.id !== id));
     await deleteNotification({ data: { id } });
   };
 
@@ -103,13 +107,15 @@ function AdminLayout() {
 
   const menuItems = [
     { label: "Dashboard", to: "/admin", icon: LayoutDashboard },
-    { label: "Products", to: "/admin/products", icon: Package },
-    { label: "Orders", to: "/admin/orders", icon: ShoppingBag },
-    { label: "Customers", to: "/admin/customers", icon: User },
-    { label: "Web Email", to: "/admin/emails", icon: Mail },
-    { label: "Reviews", to: "/admin/reviews", icon: MessageSquare },
-    { label: "Live Chat", to: "/admin/chat", icon: MessageCircle },
-    { label: "Subscribers", to: "/admin/subscribers", icon: Users },
+    { label: "Products Catalog", to: "/admin/products", icon: Package },
+    { label: "Customer Orders", to: "/admin/orders", icon: ShoppingBag },
+    { label: "Returns & RMA", to: "/admin/returns", icon: RotateCcw },
+    { label: "Quotes & Bids", to: "/admin/quotes", icon: FileText },
+    { label: "Trade Customers", to: "/admin/customers", icon: User },
+    { label: "Web Email Inbox", to: "/admin/emails", icon: Mail },
+    { label: "Customer Reviews", to: "/admin/reviews", icon: MessageSquare },
+    { label: "Live Support Chat", to: "/admin/chat", icon: MessageCircle },
+    { label: "Newsletter Leads", to: "/admin/subscribers", icon: Users },
     { label: "System Settings", to: "/admin/settings", icon: Settings },
   ];
 
@@ -121,7 +127,7 @@ function AdminLayout() {
   };
 
   if (isCheckingAuth) {
-    return <div className="min-h-screen bg-[#fafafa]" />;
+    return <div className="min-h-screen bg-[#061220]" />;
   }
 
   if (!isAuthenticated) {
@@ -129,25 +135,29 @@ function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F7F8] text-slate-900 flex font-sans selection:bg-primary/20">
-
-      {/* PREMIUM DESKTOP SIDEBAR */}
-      <aside className="hidden lg:flex flex-col w-[260px] bg-gradient-ocean text-white/80 shrink-0 border-r border-white/10 shadow-2xl z-40 sticky top-0 h-screen">
-        <div className="h-16 px-6 flex items-center gap-3 border-b border-white/10">
-          <Link to="/" className="flex items-center group">
-            {/* Using CSS filter to make the logo white for the bright sidebar */}
-            <img src={logo} alt="Pool Supply Wholesalers" className="h-7 w-auto object-contain brightness-0 invert opacity-100 transition-opacity" />
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex font-sans selection:bg-cyan-500/20">
+      {/* ─── ULTRA-LUXURY DESKTOP SIDEBAR ─── */}
+      <aside className="hidden lg:flex flex-col w-[270px] bg-gradient-to-b from-[#061220] via-[#08182c] to-[#040d1a] text-white shrink-0 border-r border-cyan-500/15 shadow-2xl z-40 sticky top-0 h-screen">
+        {/* Brand Header */}
+        <div className="h-20 px-6 flex items-center justify-between border-b border-cyan-500/10">
+          <Link to="/admin" className="flex items-center gap-2.5">
+            <img
+              src={logo}
+              alt="Pool Supply Wholesalers"
+              className="h-8 w-auto object-contain brightness-0 invert opacity-95"
+            />
           </Link>
-          <span className="text-[9px] font-bold uppercase tracking-[0.2em] bg-white/20 text-white px-1.5 py-0.5 rounded-[4px]">
-            Admin
+          <span className="text-[10px] font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md border border-cyan-400/30">
+            Console
           </span>
         </div>
 
-        <div className="px-4 py-4 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/70">
-          Menu
+        <div className="px-5 pt-4 pb-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+          Management
         </div>
 
-        <nav className="flex-1 px-3 space-y-1">
+        {/* Nav Links */}
+        <nav className="flex-1 px-3.5 space-y-1 overflow-y-auto">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.to);
@@ -155,55 +165,55 @@ function AdminLayout() {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${active
-                  ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${active
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-900/30"
+                    : "text-slate-300 hover:bg-white/5 hover:text-white"
                   }`}
               >
-                <Icon className={`size-4 ${active ? 'text-white' : 'text-white/70'}`} />
-                {item.label}
+                <Icon className={`size-4 ${active ? "text-white" : "text-slate-400"}`} />
+                <span>{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 mt-auto space-y-3 border-t border-white/10">
-          {/* User Profile Card */}
-          <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 overflow-hidden">
-              <div className="relative size-10 rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 text-white font-black text-xs grid place-items-center shadow-md shrink-0">
+        {/* Sidebar Footer & User Profile */}
+        <div className="p-4 mt-auto space-y-3 border-t border-cyan-500/10">
+          <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="relative size-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 text-white font-black text-xs grid place-items-center shadow-md shrink-0">
                 SA
-                <span className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full bg-emerald-400 border-2 border-[#003A7A]" />
+                <span className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full bg-emerald-400 border-2 border-[#061220]" />
               </div>
               <div className="text-left overflow-hidden">
                 <div className="text-xs font-black text-white truncate flex items-center gap-1">
-                  pools
+                  Master Admin
                   <ShieldCheck className="size-3.5 text-cyan-300 shrink-0" />
                 </div>
-                <div className="text-[10px] font-bold text-cyan-200/80 uppercase tracking-wider">Super Admin</div>
+                <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">Superuser</div>
               </div>
             </div>
 
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="p-2 rounded-xl bg-white/10 hover:bg-rose-500/30 text-white/70 hover:text-white transition cursor-pointer shrink-0"
+              className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/30 text-slate-300 hover:text-white transition cursor-pointer shrink-0"
             >
-              <LogOut className="size-4" />
+              <LogOut className="size-3.5" />
             </button>
           </div>
 
           <Link
             to="/"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200"
+            className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-300 hover:bg-white/10 hover:text-white transition-all duration-200 border border-white/10"
           >
-            <ArrowLeft className="size-4" />
-            Back to Storefront
+            <ArrowLeft className="size-3.5" />
+            <span>Return to Storefront</span>
           </Link>
         </div>
       </aside>
 
-      {/* MOBILE DRAWER */}
+      {/* ─── MOBILE DRAWER ─── */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -212,29 +222,26 @@ function AdminLayout() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-40 bg-[#0A0A0B]/80 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm lg:hidden"
             />
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 bottom-0 left-0 z-50 w-[260px] bg-gradient-ocean text-white/80 flex flex-col lg:hidden border-r border-white/10 shadow-2xl"
+              className="fixed top-0 bottom-0 left-0 z-50 w-[270px] bg-gradient-to-b from-[#061220] via-[#08182c] to-[#040d1a] text-white flex flex-col lg:hidden border-r border-cyan-500/15 shadow-2xl"
             >
-              <div className="h-16 px-6 flex items-center justify-between border-b border-white/10">
-                <div className="flex items-center gap-2">
-                  <img src={logo} alt="Logo" className="h-6 w-auto brightness-0 invert opacity-100" />
-                </div>
-                <button onClick={() => setMobileOpen(false)} className="size-8 rounded-full bg-white/10 hover:bg-white/20 grid place-items-center text-white/80 hover:text-white transition">
+              <div className="h-20 px-6 flex items-center justify-between border-b border-cyan-500/10">
+                <img src={logo} alt="Logo" className="h-7 w-auto brightness-0 invert opacity-95" />
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="size-8 rounded-xl bg-white/10 hover:bg-white/20 grid place-items-center text-white transition"
+                >
                   <X className="size-4" />
                 </button>
               </div>
 
-              <div className="px-4 py-4 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/70">
-                Menu
-              </div>
-
-              <nav className="flex-1 px-3 space-y-1">
+              <nav className="flex-1 px-3.5 py-4 space-y-1 overflow-y-auto">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   const active = isActive(item.to);
@@ -243,26 +250,26 @@ function AdminLayout() {
                       key={item.label}
                       to={item.to}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${active
-                        ? "bg-white/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-                        : "text-white/80 hover:bg-white/10 hover:text-white"
+                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${active
+                          ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
+                          : "text-slate-300 hover:bg-white/5 hover:text-white"
                         }`}
                     >
-                      <Icon className={`size-4 ${active ? 'text-white' : 'text-white/70'}`} />
-                      {item.label}
+                      <Icon className="size-4" />
+                      <span>{item.label}</span>
                     </Link>
                   );
                 })}
               </nav>
 
-              <div className="p-4">
+              <div className="p-4 border-t border-cyan-500/10">
                 <Link
                   to="/"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 border border-transparent hover:border-white/10"
+                  className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-300 hover:bg-white/10 hover:text-white transition-all border border-white/10"
                 >
-                  <ArrowLeft className="size-4" />
-                  Back to Storefront
+                  <ArrowLeft className="size-3.5" />
+                  <span>Back to Storefront</span>
                 </Link>
               </div>
             </motion.aside>
@@ -270,257 +277,112 @@ function AdminLayout() {
         )}
       </AnimatePresence>
 
-      {/* MAIN CONTENT AREA */}
+      {/* ─── MAIN CONTENT AREA ─── */}
       <div className="flex-1 flex flex-col overflow-x-hidden relative">
-
-        {/* ULTRA-PREMIUM ENTERPRISE TOP NAVBAR */}
-        <header className="h-20 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 px-6 md:px-8 flex items-center justify-between gap-4 shrink-0 z-30 sticky top-0 shadow-xs">
-          {/* Left: Mobile Toggle & Page Breadcrumb */}
+        {/* TOP NAVBAR */}
+        <header className="h-20 bg-white/95 backdrop-blur-xl border-b border-slate-200/80 px-6 md:px-8 flex items-center justify-between gap-4 shrink-0 z-30 sticky top-0 shadow-2xs">
+          {/* Left: Mobile Toggle & System Health */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden size-10 grid place-items-center rounded-2xl bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition active:scale-95 cursor-pointer"
+              className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
             >
               <Menu className="size-5" />
             </button>
 
-            <div className="hidden sm:flex items-center gap-2">
-              <div className="size-2 rounded-full bg-cyan-500 animate-pulse" />
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Poolsby Control Panel</span>
-              <span className="text-slate-300">/</span>
-              <span className="text-xs font-black text-slate-900 capitalize">
-                {location.pathname.replace("/admin/", "").replace("/admin", "Dashboard") || "Dashboard"}
-              </span>
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-800 text-[11px] font-bold">
+              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Production DB Active · 99.98% Uptime</span>
             </div>
           </div>
 
-          {/* Center: Quick Command Search Bar */}
-          <div className="hidden md:flex items-center max-w-md w-full relative">
-            <Search className="absolute left-3.5 size-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Quick search products, orders, or customers..."
-              className="w-full h-10 pl-10 pr-12 rounded-2xl bg-slate-100/80 border border-slate-200 text-xs font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 transition shadow-inner"
-            />
-            <kbd className="absolute right-3 text-[10px] font-extrabold text-slate-400 bg-white px-1.5 py-0.5 rounded-md border border-slate-200 shadow-2xs pointer-events-none">
-              ⌘K
-            </kbd>
-          </div>
+          {/* Right Action Icons & Direct Store Link */}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              target="_blank"
+              className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 transition-all shadow-2xs"
+            >
+              <span>Live Website</span>
+              <ExternalLink className="size-3 text-slate-400" />
+            </Link>
 
-          {/* Right: Telemetry Actions & Enterprise Profile */}
-          <div className="flex items-center gap-3.5">
-            {/* Server Online Status Pill */}
-            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-extrabold">
-              <span className="size-2 rounded-full bg-emerald-500 animate-ping" />
-              System Active
-            </div>
-
-            {/* Refined Notification Widget */}
+            {/* Notifications Popover Trigger */}
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className={`relative size-10 grid place-items-center rounded-2xl transition-all duration-200 active:scale-95 border cursor-pointer ${
-                  notificationsOpen
-                    ? "bg-indigo-50 text-indigo-600 border-indigo-200 shadow-md"
-                    : "bg-slate-100 hover:bg-slate-200 text-slate-600 border-slate-200"
-                }`}
+                className="relative size-10 rounded-xl bg-slate-100 hover:bg-slate-200 grid place-items-center text-slate-700 transition cursor-pointer"
               >
                 <Bell className="size-4.5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 size-5 rounded-full bg-rose-500 text-white font-black text-[10px] grid place-items-center border-2 border-white shadow-sm animate-pulse">
+                  <span className="absolute -top-1 -right-1 size-5 rounded-full bg-rose-500 text-white font-black text-[10px] grid place-items-center shadow-md">
                     {unreadCount}
                   </span>
                 )}
               </button>
 
+              {/* Notification Drawer Popover */}
               <AnimatePresence>
                 {notificationsOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setNotificationsOpen(false)} />
-                    <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white border border-black/[0.08] shadow-[0_12px_40px_-12px_rgba(0,0,0,0.15)] rounded-2xl overflow-hidden z-50 flex flex-col origin-top-right"
-                    >
-                      <div className="p-4 border-b border-black/[0.04] flex items-center justify-between bg-white">
-                        <div className="font-semibold text-slate-900 text-[13px] flex items-center gap-2">
-                          Notifications
-                          {unreadCount > 0 && (
-                            <span className="bg-primary/10 text-primary text-[10px] font-bold px-1.5 py-0.5 rounded-[4px]">{unreadCount}</span>
-                          )}
-                        </div>
-                        {unreadCount > 0 && (
-                          <button onClick={handleMarkAllRead} className="text-[11px] font-medium text-slate-500 hover:text-slate-900 transition-colors">
-                            Mark all read
-                          </button>
-                        )}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-3 w-80 sm:w-96 bg-white rounded-3xl border border-slate-200 shadow-2xl p-4 z-50 space-y-3"
+                  >
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Bell className="size-4 text-cyan-600" />
+                        <span className="font-extrabold text-sm text-slate-900">Notifications</span>
                       </div>
-
-                      <div className="max-h-[60vh] overflow-y-auto overscroll-contain bg-[#FAFAFA]">
-                        {notifications.length === 0 ? (
-                          <div className="p-8 text-center text-[13px] text-slate-500 font-medium">
-                            Inbox zero. You're all caught up!
-                          </div>
-                        ) : (
-                          <div className="divide-y divide-black/[0.04]">
-                            {notifications.map(n => (
-                              <div key={n.id} className={`p-4 transition-colors relative group ${!n.read ? 'bg-white' : 'hover:bg-white'}`}>
-                                {!n.read && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 bg-primary rounded-r-full group-hover:h-8 transition-all duration-300" />}
-                                {!n.read && <span className="absolute right-4 top-4 size-2 rounded-full bg-primary" />}
-
-                                <div className="flex gap-3">
-                                  <div className="flex-1 min-w-0 pr-4">
-                                    <p className={`text-[13px] leading-snug mb-1 ${!n.read ? 'font-semibold text-slate-900' : 'font-medium text-slate-600'}`}>
-                                      {n.title}
-                                    </p>
-                                    <p className="text-[12px] text-slate-500 line-clamp-2 leading-relaxed">{n.message}</p>
-                                    <div className="mt-2 flex items-center justify-between">
-                                      <span className="text-[11px] font-medium text-slate-400">{timeAgo(n.createdAt)}</span>
-
-                                      <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        {!n.read && (
-                                          <button onClick={() => handleMarkAsRead(n.id)} className="text-[11px] font-semibold text-primary hover:text-primary/80 transition-colors">
-                                            Mark read
-                                          </button>
-                                        )}
-                                        <button onClick={() => handleDeleteNotification(n.id)} className="text-[11px] font-semibold text-[#E03131] hover:text-rose-700 transition-colors">
-                                          Delete
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="w-[1px] h-4 bg-black/10 mx-1" />
-
-            {/* Enterprise Profile Dropdown Widget */}
-            <div className="relative">
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-2.5 p-1.5 pr-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs transition active:scale-98 cursor-pointer"
-              >
-                <div className="relative size-8 rounded-xl bg-gradient-to-tr from-slate-900 to-indigo-950 text-white font-black text-xs grid place-items-center shadow-sm">
-                  SA
-                  <span className="absolute -bottom-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 border-2 border-white" />
-                </div>
-
-                <div className="hidden sm:block text-left">
-                  <div className="text-xs font-black text-slate-900 leading-none flex items-center gap-1">
-                    pools
-                    <ShieldCheck className="size-3 text-cyan-600" />
-                  </div>
-                  <div className="text-[10px] font-extrabold text-slate-500 leading-none mt-0.5 uppercase tracking-wider">
-                    Super Admin
-                  </div>
-                </div>
-
-                <ChevronDown className={`size-3.5 text-slate-400 transition-transform ${profileOpen ? "rotate-180" : ""}`} />
-              </button>
-
-              {/* Profile Dropdown Menu */}
-              <AnimatePresence>
-                {profileOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                    <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-200/90 shadow-2xl rounded-2xl p-4 z-50 space-y-4"
-                    >
-                      {/* User Info Header */}
-                      <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
-                        <div className="size-11 rounded-2xl bg-slate-900 text-white font-black text-sm grid place-items-center shrink-0 shadow-sm">
-                          SA
-                        </div>
-                        <div>
-                          <div className="text-xs font-black text-slate-900 flex items-center gap-1">
-                            pools
-                            <span className="text-[9px] font-extrabold bg-cyan-100 text-cyan-800 px-1.5 py-0.5 rounded-md">
-                              Online
-                            </span>
-                          </div>
-                          <div className="text-[11px] font-bold text-slate-500">Super Administrator</div>
-                          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-1 mt-0.5">
-                            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" /> Full System Access
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Dropdown Links */}
-                      <div className="space-y-1">
-                        <Link
-                          to="/admin/settings"
-                          onClick={() => setProfileOpen(false)}
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
-                        >
-                          <Settings className="size-4 text-slate-500" /> System Settings
-                        </Link>
-                      </div>
-
-                      {/* Sign Out Button */}
-                      <div className="pt-2 border-t border-slate-100">
+                      {unreadCount > 0 && (
                         <button
-                          onClick={() => {
-                            setProfileOpen(false);
-                            handleLogout();
-                          }}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black transition cursor-pointer border border-rose-200"
+                          onClick={handleMarkAllRead}
+                          className="text-[11px] font-bold text-cyan-700 hover:underline cursor-pointer"
                         >
-                          <LogOut className="size-4 text-rose-600" /> Sign Out
+                          Mark all read
                         </button>
-                      </div>
-                    </motion.div>
-                  </>
+                      )}
+                    </div>
+
+                    <div className="max-h-72 overflow-y-auto space-y-2 divide-y divide-slate-50">
+                      {notifications.length > 0 ? (
+                        notifications.slice(0, 5).map((n) => (
+                          <div
+                            key={n.id}
+                            className={`p-2.5 rounded-xl text-xs transition flex items-start justify-between gap-2 ${n.read ? "bg-white" : "bg-cyan-50/60"
+                              }`}
+                          >
+                            <div>
+                              <div className="font-extrabold text-slate-900">{n.title}</div>
+                              <div className="text-[11px] text-slate-500 mt-0.5">{n.message}</div>
+                              <div className="text-[10px] text-slate-400 mt-1">{timeAgo(n.createdAt)}</div>
+                            </div>
+                            {!n.read && (
+                              <button
+                                onClick={() => handleMarkAsRead(n.id)}
+                                className="text-[10px] font-bold text-cyan-700 hover:underline shrink-0"
+                              >
+                                Read
+                              </button>
+                            )}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="py-6 text-center text-xs text-slate-400">No new notifications</div>
+                      )}
+                    </div>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
           </div>
         </header>
 
-        {/* PAGE CONTENT */}
-        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto flex flex-col">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
-              className="flex-1 flex flex-col"
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+        {/* Main Content Router View */}
+        <main className="flex-1 p-6 md:p-8">
+          <Outlet />
         </main>
-
-        {/* STICKY ULTRA-PREMIUM DASHBOARD FOOTER */}
-        <footer className="sticky bottom-0 z-20 bg-white/90 backdrop-blur-xl border-t border-slate-200/80 px-6 md:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-semibold text-slate-500 shadow-xs">
-          <div className="flex items-center gap-2 text-[11px] font-bold text-slate-600">
-            <span>© 2026 Pool Supply Wholesalers. All Rights Reserved.</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-700">
-            <span className="text-slate-400 font-semibold">Design By</span>
-            <span className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent font-black tracking-wide">
-              StellR IT LLC
-            </span>
-            <Sparkles className="size-3 text-cyan-500 animate-pulse" />
-          </div>
-        </footer>
       </div>
     </div>
   );

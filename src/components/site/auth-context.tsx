@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-type User = {
+export type User = {
   name: string;
   email?: string;
   phone?: string;
+  avatar?: string;
 };
 
 type AuthContextType = {
@@ -11,6 +12,7 @@ type AuthContextType = {
   token: string | null;
   login: (user: User, token: string) => void;
   logout: () => void;
+  updateUser: (partial: Partial<User>) => void;
   isAuthModalOpen: boolean;
   openAuthModal: (type?: "login" | "register") => void;
   closeAuthModal: () => void;
@@ -45,6 +47,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("aquapro_customer_user", JSON.stringify(newUser));
   };
 
+  const updateUser = (partial: Partial<User>) => {
+    setUser((prev) => {
+      if (!prev) return null;
+      const updated = { ...prev, ...partial };
+      localStorage.setItem("aquapro_customer_user", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -60,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const closeAuthModal = () => setIsAuthModalOpen(false);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthModalOpen, openAuthModal, closeAuthModal, authModalType }}>
+    <AuthContext.Provider value={{ user, token, login, logout, updateUser, isAuthModalOpen, openAuthModal, closeAuthModal, authModalType }}>
       {children}
     </AuthContext.Provider>
   );

@@ -21,146 +21,109 @@ import {
   ChevronRight,
   Building2,
   Star,
+  ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Us — Pool Supply Wholesalers" },
+      { title: "Contact Us — Pool Supply Wholesalers | Wholesale Pool Equipment Distributor" },
       {
         name: "description",
         content:
-          "Contact Pool Supply Wholesalers for technical support, dealer account setup, shipping inquiries, or RMA requests. Response within 2 business hours.",
+          "Contact our wholesale desk for commercial pricing, dealer account activation, same-day freight, or certified technical support. Response guaranteed within 2 business hours.",
       },
-      { property: "og:title", content: "Contact Pool Supply Wholesalers" },
+      { property: "og:title", content: "Contact Pool Supply Wholesalers Desk" },
       {
         property: "og:description",
         content:
-          "Reach our certified technical advisors, sales desk, or logistics team. Dedicated support for registered pool builders and service professionals.",
+          "Direct support for pool contractors, builders, and service companies. Call (615) 477-0407 or email sales@poolsupplywholesalers.com.",
       },
     ],
   }),
   component: ContactPage,
 });
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
 const DEPARTMENTS = [
   {
     val: "dealer",
-    label: "Open Dealer Account",
+    label: "Open Commercial Account",
     icon: Users,
-    desc: "Register for wholesale trade pricing",
-    gradientFrom: "#2563eb",
-    gradientTo: "#06b6d4",
+    desc: "Register for wholesale trade pricing & contractor terms",
   },
   {
     val: "support",
-    label: "Technical Support",
+    label: "Hydraulic Tech Support",
     icon: Wrench,
-    desc: "Equipment sizing & spec consulting",
-    gradientFrom: "#7c3aed",
-    gradientTo: "#6366f1",
+    desc: "Pump sizing, heater BTUs & total head calculations",
   },
   {
     val: "sales",
-    label: "Sales & Pricing",
+    label: "Volume Bids & Quotes",
     icon: ShoppingBag,
-    desc: "Quotes, volume pricing & product info",
-    gradientFrom: "#10b981",
-    gradientTo: "#2dd4bf",
+    desc: "Commercial job bids, package quotes & volume pricing",
   },
   {
     val: "logistics",
-    label: "Shipping & Logistics",
+    label: "Freight & Logistics",
     icon: Truck,
-    desc: "Order status, tracking & freight",
-    gradientFrom: "#f59e0b",
-    gradientTo: "#fb923c",
+    desc: "Live order tracking, freight routing & dispatch status",
   },
   {
     val: "rma",
-    label: "Returns & RMA",
+    label: "Warranty & Returns",
     icon: RotateCcw,
-    desc: "Initiate a product return or warranty claim",
-    gradientFrom: "#f43f5e",
-    gradientTo: "#ec4899",
+    desc: "Manufacturer warranty registrations and RMA labels",
   },
   {
     val: "general",
     label: "General Inquiry",
     icon: MessageSquare,
-    desc: "Any other questions or feedback",
-    gradientFrom: "#64748b",
-    gradientTo: "#94a3b8",
+    desc: "Account questions and general trade inquiries",
   },
 ];
 
 const CONTACT_CHANNELS = [
   {
     icon: Phone,
-    title: "Direct Support Hotline",
+    title: "Direct Trade Hotline",
     value: "(615) 477-0407",
-    sub: "Dealer direct line — trade accounts only",
+    sub: "Dedicated trade desk — instant pro routing",
     href: "tel:6154770407",
-    gradient: "from-blue-600 to-cyan-500",
   },
   {
     icon: Mail,
-    title: "Email Support",
+    title: "Wholesale Sales Desk",
     value: "sales@poolsupplywholesalers.com",
-    sub: "Attach specs, blueprints, or POs",
+    sub: "Send job specs, blueprints, or PO requests",
     href: "mailto:sales@poolsupplywholesalers.com",
-    gradient: "from-violet-600 to-indigo-500",
   },
   {
     icon: Clock,
-    title: "Business Hours",
+    title: "Support Desk Hours",
     value: "Mon – Fri, 8:00 AM – 6:00 PM EST",
-    sub: "Same-day ship cutoff at 2:00 PM EST",
+    sub: "Same-day freight cutoff at 2:00 PM EST",
     href: null,
-    gradient: "from-emerald-500 to-teal-400",
   },
   {
     icon: MapPin,
-    title: "Main Logistics Hub",
-    value: "410 Scott Pike, Nashville, TN",
-    sub: "Will-call pickup available upon request",
-    href: "https://maps.google.com/?q=410+Scott+Pike+Nashville+TN",
-    gradient: "from-amber-500 to-orange-400",
+    title: "Central Logistics Hub",
+    value: "412 Ezell Pike, Nashville, TN 37217",
+    sub: "Will-call dock pickup available upon request",
+    href: "https://maps.google.com/?q=412+Ezell+Pike+Nashville+TN+37217",
   },
 ];
 
 const RESPONSE_STATS = [
-  { value: "< 2 hrs", label: "Response Time" },
-  { value: "98%", label: "First-Call Resolution" },
-  { value: "Mon–Fri", label: "Availability" },
+  { value: "< 2 hrs", label: "Response SLA" },
+  { value: "99.2%", label: "First-Call Resolution" },
+  { value: "Mon–Fri", label: "Dedicated Desk" },
   { value: "4 Hubs", label: "Nationwide Support" },
 ];
 
-const TRUST_QUOTES = [
-  {
-    quote: "Called in with a heater sizing question at 10 AM — had a detailed answer by 10:45 AM. Nobody else does that.",
-    name: "James K.",
-    role: "Blue Horizon Pool Service",
-  },
-  {
-    quote: "The sales desk knew our account history immediately. It felt like calling a colleague, not a support line.",
-    name: "Sarah N.",
-    role: "Blue Horizons Commercial",
-  },
-];
-
-const fadeUp: any = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (d = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, delay: d, ease: "easeOut" },
-  }),
-};
-
-// ─── Component ────────────────────────────────────────────────────────────────
 function ContactPage() {
   const [subject, setSubject] = useState("dealer");
   const [name, setName] = useState("");
@@ -171,7 +134,7 @@ function ContactPage() {
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const activeDept = DEPARTMENTS.find((d) => d.val === subject)!;
+  const activeDept = DEPARTMENTS.find((d) => d.val === subject) || DEPARTMENTS[0];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,458 +148,465 @@ function ContactPage() {
           email: email.trim(),
           phone: phone.trim(),
           subject: activeDeptObj ? activeDeptObj.label : "Dealer Inquiry",
-          message: `${business ? `[Business: ${business.trim()}]\n` : ""}${msg.trim()}`
-        }
+          message: `${business ? `[Business: ${business.trim()}]\n` : ""}${msg.trim()}`,
+        },
       });
       if (res.success) {
         setSent(true);
+        toast.success("Your message has been dispatched to the wholesale desk!");
       }
     } catch (err) {
       console.error("Submit error:", err);
+      toast.error("There was an issue sending your message. Please try calling us directly.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const resetForm = () => {
-    setName(""); setEmail(""); setBusiness(""); setPhone(""); setMsg("");
-    setSubject("dealer"); setSent(false);
+    setName("");
+    setEmail("");
+    setBusiness("");
+    setPhone("");
+    setMsg("");
+    setSubject("dealer");
+    setSent(false);
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
       <Header alwaysDark />
 
       <main className="flex-1">
-        {/* ─── HERO ─── */}
-        <section
-          className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 overflow-hidden"
-          style={{ background: "linear-gradient(160deg, #001a3a 0%, #003a7a 55%, #0055aa 100%)" }}
-        >
-          {/* Glow orbs */}
-          <div className="absolute top-10 right-1/4 w-96 h-96 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(89,210,243,0.16) 0%, transparent 70%)", filter: "blur(60px)" }} />
-          <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(0,137,201,0.18) 0%, transparent 70%)", filter: "blur(50px)" }} />
-          {/* Decorative rings */}
-          <div className="absolute -right-16 top-1/2 -translate-y-1/2 hidden lg:block pointer-events-none">
-            {[280, 200, 130].map((s) => (
-              <div key={s} className="absolute rounded-full border border-cyan-400/12"
-                style={{ width: s, height: s, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-            ))}
-          </div>
+        {/* ─── LUXURY HERO SECTION ─── */}
+        <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-[#040d1a] text-white border-b border-cyan-500/10">
+          {/* Background Hero Image */}
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-65"
+            style={{ backgroundImage: "url('/about-hero.png')" }}
+          />
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                <span
-                  className="inline-flex items-center gap-2 mb-4 sm:mb-5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] border border-white/20 text-white/80"
-                  style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(12px)" }}
-                >
-                  <Zap className="size-3.5 text-cyan-400" />
-                  Response within 2 Business Hours
-                </span>
+          {/* Deep Gradient Overlays for High Legibility */}
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#040d1a]/80 via-[#040d1a]/60 to-background" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#040d1a]/80 via-transparent to-[#040d1a]/80" />
 
-                <h1 className="text-white tracking-tight leading-tight mb-4 sm:mb-5 text-3xl sm:text-4xl lg:text-[50px] font-extrabold">
-                  Talk to a{" "}
-                  <span
-                    className="text-transparent"
-                    style={{
-                      backgroundImage: "linear-gradient(90deg, #59D2F3 0%, #00B4D8 50%, #48CAE4 100%)",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    Pool Expert
-                  </span>
-                </h1>
+          {/* Ambient Glows */}
+          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/15 rounded-full blur-3xl pointer-events-none z-[1]" />
+          <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none z-[1]" />
 
-                <p className="text-white/65 text-base leading-relaxed mb-8 max-w-lg">
-                  Whether you're opening a dealer account, speccing equipment for a build, tracking a shipment, or processing a warranty claim — our team has you covered.
-                </p>
-
-                {/* Response stat chips */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {RESPONSE_STATS.map((s) => (
-                    <div
-                      key={s.label}
-                      className="rounded-2xl p-3 text-center"
-                      style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}
-                    >
-                      <div className="font-black text-white text-lg leading-none">{s.value}</div>
-                      <div className="text-white/50 text-[10px] font-bold uppercase tracking-wider mt-1">{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Hero trust quotes */}
+          <div className="relative z-10 mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto text-center space-y-4">
               <motion.div
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-                className="hidden lg:flex flex-col gap-4"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg"
               >
-                {TRUST_QUOTES.map((q) => (
-                  <div
-                    key={q.name}
-                    className="rounded-[1.75rem] p-6"
-                    style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.12)" }}
-                  >
-                    <div className="flex gap-0.5 mb-3">
-                      {[1,2,3,4,5].map((i) => <Star key={i} className="size-3.5 fill-amber-400 text-amber-400" />)}
-                    </div>
-                    <p className="text-white/80 text-sm italic leading-relaxed mb-3">"{q.quote}"</p>
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center font-black text-[10px] text-white"
-                        style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)" }}>
-                        {q.name.slice(0, 2)}
-                      </div>
-                      <div>
-                        <div className="text-white font-bold text-xs">{q.name}</div>
-                        <div className="text-white/50 text-[10px]">{q.role}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                <Zap className="size-3.5 text-cyan-400" />
+                Wholesale Trade Support Desk · 2-Hour Response SLA
               </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white"
+              >
+                Speak With a Certified{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
+                  Pool Equipment Specialist
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-medium"
+              >
+                Direct assistance for commercial pool builders, service companies, and municipality facilities. Connect directly with licensed CPO technicians and account managers.
+              </motion.p>
             </div>
           </div>
-
-          <div className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
-            style={{ background: "linear-gradient(to bottom, transparent, var(--background))" }} />
         </section>
 
-        {/* ─── CONTACT CHANNELS ─── */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-2 mb-10 sm:mb-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            {CONTACT_CHANNELS.map((ch, i) => {
-              const Icon = ch.icon;
-              const content = (
+        {/* ─── LIVE RESPONSE STATS ─── */}
+        <section className="py-[50px] bg-background">
+          <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+              {RESPONSE_STATS.map((stat, i) => (
                 <motion.div
+                  key={stat.label}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className="group bg-white rounded-2xl sm:rounded-[1.75rem] p-4 sm:p-6 border border-border hover:shadow-[var(--shadow-float)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-2.5 sm:gap-3"
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:border-cyan-500/30 hover:shadow-md transition-all text-center flex flex-col justify-center items-center group"
                 >
-                  <div className={`size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-gradient-to-br ${ch.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
-                    <Icon className="size-4 sm:size-5 text-white" />
+                  <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                    {stat.value}
                   </div>
-                  <div>
-                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5 sm:mb-1">{ch.title}</div>
-                    <div className="font-extrabold text-xs sm:text-sm text-foreground leading-snug truncate">{ch.value}</div>
-                    <div className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 truncate">{ch.sub}</div>
+                  <div className="text-[11px] font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
+                    {stat.label}
                   </div>
-                  {ch.href && (
-                    <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold mt-auto" style={{ color: "oklch(0.50 0.14 232)" }}>
-                      Contact <ChevronRight className="size-3" />
-                    </div>
-                  )}
                 </motion.div>
-              );
-              return ch.href ? (
-                <a key={ch.title} href={ch.href} target={ch.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
-                  {content}
-                </a>
-              ) : (
-                <div key={ch.title}>{content}</div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* ─── MAIN FORM + SIDEBAR ─── */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 mb-16 sm:mb-24">
-          <div className="grid lg:grid-cols-[1fr_380px] gap-8 lg:gap-10 items-start">
-            {/* ── FORM ── */}
-            <div className="bg-white rounded-2xl sm:rounded-[2rem] border border-border shadow-[var(--shadow-soft)] overflow-hidden">
-              {/* Form header */}
-              <div
-                className="px-5 sm:px-8 py-5 sm:py-6 border-b border-border"
-                style={{ background: "linear-gradient(to right, oklch(0.97 0.02 220), oklch(0.95 0.04 215))" }}
-              >
-                <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-foreground">Send Us a Message</h2>
-                <p className="text-xs text-muted-foreground mt-1">Fill in the form below — our team responds within 2 business hours.</p>
-              </div>
-
-              <AnimatePresence mode="wait">
-                {!sent ? (
-                  <motion.form
-                    key="form"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onSubmit={handleSubmit}
-                    className="p-5 sm:p-8 space-y-5 sm:space-y-6"
-                  >
-                    {/* Department selector */}
-                    <div>
-                      <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-2.5">
-                        What can we help with?
-                      </span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5">
-                        {DEPARTMENTS.map((d) => {
-                          const Icon = d.icon;
-                          const active = subject === d.val;
-                          return (
-                            <button
-                              key={d.val}
-                              type="button"
-                              id={`dept-${d.val}`}
-                              onClick={() => setSubject(d.val)}
-                              className={`group flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all duration-200 hover:scale-[1.01] ${
-                                active ? "border-transparent text-white shadow-md" : "border-border bg-white hover:bg-surface text-foreground/80"
-                              }`}
-                              style={active ? { background: `linear-gradient(135deg, ${d.gradientFrom}, ${d.gradientTo})` } : {}}
-                            >
-                              <div
-                                className={`size-7 rounded-lg flex items-center justify-center shrink-0 transition-all ${active ? "bg-white/20" : "bg-surface"}`}
-                              >
-                                <Icon className={`size-3.5 ${active ? "text-white" : "text-muted-foreground"}`} />
-                              </div>
-                              <span className={`text-[11px] font-bold leading-tight ${active ? "text-white" : "text-foreground"}`}>
-                                {d.label}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {/* Active dept description */}
-                      <AnimatePresence mode="wait">
-                        <motion.p
-                          key={subject}
-                          initial={{ opacity: 0, y: -4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="text-[11px] text-muted-foreground mt-2.5 flex items-center gap-1.5"
-                        >
-                          <span
-                            className="inline-block size-1.5 rounded-full"
-                            style={{ background: "oklch(0.50 0.14 232)" }}
-                          />
-                          {activeDept.desc}
-                        </motion.p>
-                      </AnimatePresence>
-                    </div>
-
-                    {/* Name + Business */}
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <label className="block">
-                        <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-1.5">
-                          Your Name <span className="text-rose-400">*</span>
-                        </span>
-                        <input
-                          type="text" required value={name} onChange={(e) => setName(e.target.value)}
-                          placeholder="First & Last Name"
-                          className="w-full h-11 px-4 rounded-xl border border-border bg-white text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-muted-foreground/40"
-                        />
-                      </label>
-                      <label className="block">
-                        <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-1.5">
-                          Business / Company
-                        </span>
-                        <input
-                          type="text" value={business} onChange={(e) => setBusiness(e.target.value)}
-                          placeholder="e.g. Apex Pool Builders"
-                          className="w-full h-11 px-4 rounded-xl border border-border bg-white text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-muted-foreground/40"
-                        />
-                      </label>
-                    </div>
-
-                    {/* Email + Phone */}
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <label className="block">
-                        <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-1.5">
-                          Email Address <span className="text-rose-400">*</span>
-                        </span>
-                        <input
-                          type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-                          placeholder="you@company.com"
-                          className="w-full h-11 px-4 rounded-xl border border-border bg-white text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-muted-foreground/40"
-                        />
-                      </label>
-                      <label className="block">
-                        <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-1.5">
-                          Phone Number
-                        </span>
-                        <input
-                          type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
-                          placeholder="(615) 000-0000"
-                          className="w-full h-11 px-4 rounded-xl border border-border bg-white text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-muted-foreground/40"
-                        />
-                      </label>
-                    </div>
-
-                    {/* Message */}
-                    <label className="block">
-                      <span className="block text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground mb-1.5">
-                        Message <span className="text-rose-400">*</span>
-                      </span>
-                      <textarea
-                        required rows={5} value={msg} onChange={(e) => setMsg(e.target.value)}
-                        placeholder={
-                          subject === "support"
-                            ? "Describe your pool specs, equipment question, or sizing request..."
-                            : subject === "dealer"
-                            ? "Tell us about your business, license type, and typical order volume..."
-                            : subject === "logistics"
-                            ? "Include your order number and tracking details..."
-                            : "Detail your request or question..."
-                        }
-                        className="w-full p-4 rounded-xl border border-border bg-white text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition resize-none placeholder:text-muted-foreground/40"
-                      />
-                      <div className="text-[10px] text-muted-foreground mt-1 text-right">{msg.length} characters</div>
-                    </label>
-
-                    {/* Submit */}
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full py-4 rounded-full text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:opacity-95 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed"
-                      style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)", boxShadow: "0 10px 30px rgba(0,137,201,0.35)" }}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <span className="size-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="size-4" /> Send Message
-                        </>
-                      )}
-                    </button>
-
-                    <p className="text-center text-[11px] text-muted-foreground">
-                      We respond within 2 business hours · Mon–Fri 8 AM–6 PM EST
-                    </p>
-                  </motion.form>
-                ) : (
+        {/* ─── 4 CONTACT CHANNELS ─── */}
+        <section className="py-[50px] bg-slate-50/70 border-t border-slate-200/80">
+          <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {CONTACT_CHANNELS.map((ch, i) => {
+                const Icon = ch.icon;
+                const card = (
                   <motion.div
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                    className="p-12 text-center space-y-5"
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.05 }}
+                    className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs hover:border-cyan-500/40 hover:shadow-md transition-all flex flex-col justify-between group h-full cursor-pointer"
                   >
-                    <div
-                      className="size-20 rounded-full flex items-center justify-center mx-auto shadow-2xl"
-                      style={{ background: "linear-gradient(135deg, #0089C9, #59D2F3)", boxShadow: "0 16px 40px rgba(0,137,201,0.35)" }}
-                    >
-                      <CheckCircle2 className="size-10 text-white" />
-                    </div>
                     <div>
-                      <h2 className="text-2xl font-black text-foreground tracking-tight">Message Sent!</h2>
-                      <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
-                        Thank you, <strong>{name}</strong>. One of our {activeDept.label.toLowerCase()} specialists will reach out to{" "}
+                      <div className="size-10 rounded-xl bg-cyan-500/10 text-cyan-700 border border-cyan-500/20 grid place-items-center mb-3 group-hover:bg-cyan-600 group-hover:text-white transition-colors">
+                        <Icon className="size-5" />
+                      </div>
+                      <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">
+                        {ch.title}
+                      </div>
+                      <div className="font-extrabold text-sm text-slate-900 leading-snug group-hover:text-cyan-700 transition-colors">
+                        {ch.value}
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1 font-medium">
+                        {ch.sub}
+                      </div>
+                    </div>
+
+                    {ch.href && (
+                      <div className="flex items-center gap-1 text-xs font-black text-cyan-700 mt-4 pt-3 border-t border-slate-100">
+                        <span>Direct Action</span>
+                        <ChevronRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    )}
+                  </motion.div>
+                );
+
+                return ch.href ? (
+                  <a
+                    key={ch.title}
+                    href={ch.href}
+                    target={ch.href.startsWith("http") ? "_blank" : undefined}
+                    rel="noreferrer"
+                  >
+                    {card}
+                  </a>
+                ) : (
+                  <div key={ch.title}>{card}</div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ─── MAIN CONTACT FORM + LOGISTICS SIDEBAR ─── */}
+        <section className="py-[50px] bg-background">
+          <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-12 gap-8 items-start">
+              {/* Left Contact Form Panel */}
+              <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                    Send a Message to the Wholesale Desk
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+                    Fill out the form below — all inquiries receive a direct response from a live trade specialist within 2 business hours.
+                  </p>
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {!sent ? (
+                    <motion.form
+                      key="form"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onSubmit={handleSubmit}
+                      className="space-y-4"
+                    >
+                      {/* Department Selector */}
+                      <div>
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-slate-700 mb-2">
+                          Select Topic or Department
+                        </label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {DEPARTMENTS.map((dept) => {
+                            const Icon = dept.icon;
+                            const active = subject === dept.val;
+                            return (
+                              <button
+                                key={dept.val}
+                                type="button"
+                                onClick={() => setSubject(dept.val)}
+                                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-2 ${active
+                                  ? "bg-cyan-50 border-cyan-500 text-cyan-950 font-extrabold shadow-2xs"
+                                  : "bg-slate-50/60 border-slate-200/80 text-slate-600 hover:bg-slate-100 font-bold"
+                                  }`}
+                              >
+                                <Icon className={`size-4 shrink-0 ${active ? "text-cyan-600" : "text-slate-400"}`} />
+                                <span className="text-[11px] truncate leading-tight">{dept.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p className="text-[11px] text-cyan-700 font-semibold mt-2">
+                          • {activeDept.desc}
+                        </p>
+                      </div>
+
+                      {/* Name & Company */}
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                            Your Full Name <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="e.g. Marcus Vance"
+                            className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                            Business / Contractor Name
+                          </label>
+                          <input
+                            type="text"
+                            value={business}
+                            onChange={(e) => setBusiness(e.target.value)}
+                            placeholder="e.g. Apex Pool Builders"
+                            className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Email & Phone */}
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                            Email Address <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="marcus@company.com"
+                            className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                            Direct Phone Number
+                          </label>
+                          <input
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="(615) 000-0000"
+                            className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Message */}
+                      <div>
+                        <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                          Message & Equipment Specifications <span className="text-rose-500">*</span>
+                        </label>
+                        <textarea
+                          required
+                          rows={4}
+                          value={msg}
+                          onChange={(e) => setMsg(e.target.value)}
+                          placeholder="Describe your equipment sizing question, requested SKU quantities, or project details..."
+                          className="w-full p-4 rounded-xl border border-slate-200 bg-slate-50/50 text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all resize-none"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 text-white font-black text-xs sm:text-sm shadow-[0_8px_25px_rgba(6,182,212,0.35)] transition-all cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <span className="size-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                            <span>Dispatching to Trade Desk...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="size-4" />
+                            <span>Dispatch Message to Wholesale Desk</span>
+                          </>
+                        )}
+                      </button>
+                    </motion.form>
+                  ) : (
+                    <motion.div
+                      key="sent"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="p-8 text-center space-y-4 bg-cyan-50/50 rounded-2xl border border-cyan-200"
+                    >
+                      <div className="size-16 rounded-full bg-cyan-600 text-white grid place-items-center mx-auto shadow-lg">
+                        <CheckCircle2 className="size-8" />
+                      </div>
+                      <h3 className="text-xl font-black text-slate-900">Message Successfully Dispatched</h3>
+                      <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium">
+                        Thank you, <strong>{name}</strong>. A wholesale specialist from our{" "}
+                        <strong>{activeDept.label}</strong> department will contact you at{" "}
                         <strong>{email}</strong> within 2 business hours.
                       </p>
-                    </div>
-
-                    <div className="flex flex-col items-center gap-3 pt-2">
-                      <div className="flex flex-wrap justify-center gap-2 text-[11px] text-muted-foreground">
-                        {["Response in 2 hrs", "Dealer support", "Expert advisors"].map((t) => (
-                          <span key={t} className="flex items-center gap-1">
-                            <CheckCircle2 className="size-3 text-emerald-500" /> {t}
-                          </span>
-                        ))}
-                      </div>
                       <button
                         onClick={resetForm}
-                        className="px-6 py-2.5 rounded-full border border-border hover:bg-surface text-xs font-bold transition"
+                        className="px-6 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 transition cursor-pointer"
                       >
-                        Send Another Message
+                        Send Another Inquiry
                       </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
-            {/* ── RIGHT SIDEBAR ── */}
-            <div className="space-y-5 lg:sticky lg:top-28">
-              {/* Quick links */}
-              <div className="bg-white rounded-[2rem] border border-border p-6 shadow-[var(--shadow-soft)] space-y-4">
-                <h3 className="font-extrabold text-base tracking-tight">Quick Access</h3>
-                <div className="space-y-2">
-                  {[
-                    { label: "Browse Our Catalog", desc: "8,000+ SKUs at wholesale pricing", to: "/shop/all", icon: ShoppingBag },
-                    { label: "Why Choose Us", desc: "Our 6 wholesale commitments", to: "/why-us", icon: Star },
-                    { label: "About Our Company", desc: "Our story, team & 4 hubs", to: "/about", icon: Building2 },
-                    { label: "Product Finder", desc: "Get equipment sized for your pool", to: "/finder", icon: Wrench },
-                  ].map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.label}
-                        to={item.to as any}
-                        className="group flex items-center gap-3 p-3.5 rounded-2xl hover:bg-surface border border-transparent hover:border-border transition-all"
+              {/* Right Hub & Map Showcase */}
+              <div className="lg:col-span-5 space-y-5">
+                {/* Embedded Map Card */}
+                <div className="bg-white rounded-3xl border border-slate-200/90 p-5 shadow-sm space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="size-4 text-cyan-600" />
+                      <span className="text-xs font-black uppercase tracking-wider text-slate-900">
+                        Nashville Central Hub
+                      </span>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold">
+                      Active Facility
+                    </span>
+                  </div>
+
+                  <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-inner h-[220px] sm:h-[260px] w-full">
+                    <iframe
+                      title="Pool Supply Wholesalers Nashville HQ"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3224.275811776918!2d-86.69176372346766!3d36.12328570560249!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88646f88998d3b87%3A0xc3b838c6d1d4d168!2s412%20Ezell%20Pike%2C%20Nashville%2C%20TN%2037217!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen={false}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="w-full h-full grayscale-[0.1] contrast-[1.05]"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 font-medium pt-1">
+                    <span>412 Ezell Pike, Nashville, TN 37217</span>
+                    <a
+                      href="https://maps.google.com/?q=412+Ezell+Pike+Nashville+TN+37217"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-extrabold text-cyan-700 hover:underline inline-flex items-center gap-0.5"
+                    >
+                      <span>Directions</span>
+                      <ChevronRight className="size-3" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* 4 Distribution Hubs List */}
+                <div className="bg-white rounded-3xl border border-slate-200/90 p-5 shadow-sm space-y-3">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-900">
+                    <Truck className="size-4 text-cyan-600" />
+                    <span>4 Regional Distribution Hubs</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {[
+                      { city: "Nashville, TN", role: "Central HQ Hub", lead: "1-Day Regional Lead" },
+                      { city: "Los Angeles, CA", role: "West Coast Hub", lead: "1-2 Day Transit" },
+                      { city: "Dallas, TX", role: "Southwest Hub", lead: "1-2 Day Transit" },
+                      { city: "Orlando, FL", role: "Southeast Hub", lead: "1-Day Transit" },
+                    ].map((hub) => (
+                      <div
+                        key={hub.city}
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/70 border border-slate-100 text-xs"
                       >
-                        <div className="size-9 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ background: "oklch(0.95 0.04 220)" }}>
-                          <Icon className="size-4" style={{ color: "oklch(0.50 0.14 232)" }} />
+                        <div>
+                          <div className="font-extrabold text-slate-900">{hub.city}</div>
+                          <div className="text-[10px] text-slate-400 font-medium">{hub.role}</div>
                         </div>
-                        <div className="flex-1">
-                          <div className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{item.label}</div>
-                          <div className="text-[11px] text-muted-foreground">{item.desc}</div>
-                        </div>
-                        <ChevronRight className="size-4 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors" />
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Distribution hubs */}
-              <div className="bg-white rounded-[2rem] border border-border p-6 shadow-[var(--shadow-soft)] space-y-4">
-                <h3 className="font-extrabold text-base tracking-tight flex items-center gap-2">
-                  <Truck className="size-4" style={{ color: "oklch(0.50 0.14 232)" }} />
-                  Distribution Hubs
-                </h3>
-                <div className="space-y-2.5">
-                  {[
-                    { city: "Nashville, TN", role: "HQ & Southeast Hub", flag: "🏠", tag: "Primary" },
-                    { city: "Los Angeles, CA", role: "West Coast Hub", flag: "🌊", tag: "" },
-                    { city: "Dallas, TX", role: "Southwest Hub", flag: "☀️", tag: "" },
-                    { city: "Orlando, FL", role: "Florida Hub", flag: "🌴", tag: "" },
-                  ].map((hub) => (
-                    <div key={hub.city} className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface transition">
-                      <span className="text-xl">{hub.flag}</span>
-                      <div className="flex-1">
-                        <div className="font-bold text-sm text-foreground">{hub.city}</div>
-                        <div className="text-[11px] text-muted-foreground">{hub.role}</div>
-                      </div>
-                      {hub.tag && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: "oklch(0.95 0.04 220)", color: "oklch(0.50 0.14 232)" }}>
-                          {hub.tag}
+                        <span className="text-[10px] font-black text-cyan-800 bg-cyan-100/60 px-2 py-0.5 rounded-md">
+                          {hub.lead}
                         </span>
-                      )}
-                    </div>
-                  ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-[11px] text-muted-foreground border-t border-border pt-3">
-                  Same-day dispatch before 2 PM EST · Free shipping on orders over $500
-                </p>
-              </div>
-
-              {/* Guarantee badge */}
-              <div
-                className="rounded-[2rem] p-6 text-center"
-                style={{ background: "linear-gradient(135deg, #001a3a, #003a7a)" }}
-              >
-                <div className="size-12 rounded-full mx-auto mb-3 flex items-center justify-center"
-                  style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)" }}>
-                  <Zap className="size-6 text-cyan-400" />
-                </div>
-                <h4 className="font-extrabold text-white text-sm mb-1">2-Hour Response Guarantee</h4>
-                <p className="text-white/55 text-[11px] leading-relaxed">
-                  All inquiries submitted during business hours receive a response from a real team member within 2 hours — not a bot, not a ticket queue.
-                </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ─── TRADE CTA BANNER ─── */}
+        <section className="py-[50px] bg-background">
+          <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] border border-cyan-500/20 p-6 sm:p-12 text-white shadow-[0_25px_70px_-20px_rgba(0,109,171,0.35)] text-center"
+            >
+              <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
+
+              <div className="relative z-10 max-w-2xl mx-auto space-y-4">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg">
+                  <Sparkles className="size-3.5" />
+                  Ready to Start?
+                </span>
+
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+                  Open a Commercial Dealer Account Today
+                </h2>
+
+                <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                  Instant trade registration with zero account setup fees. Unlock wholesale trade pricing on over 8,000+ factory SKUs.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                  <a
+                    href="tel:6154770407"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 text-white font-extrabold text-xs sm:text-sm shadow-[0_8px_25px_rgba(6,182,212,0.35)] hover:scale-105 transition-all duration-200 cursor-pointer"
+                  >
+                    <Phone className="size-4" />
+                    <span>Call (615) 477-0407</span>
+                  </a>
+
+                  <Link
+                    to="/shop/$category"
+                    params={{ category: "all" }}
+                    search={{ q: "" }}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-extrabold text-xs sm:text-sm backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+                  >
+                    <span>Browse 8,000+ SKUs</span>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
       </main>

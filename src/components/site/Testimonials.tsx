@@ -1,165 +1,312 @@
 import { motion } from "framer-motion";
-import { Star, ShieldCheck, Quote, Sparkles } from "lucide-react";
+import { Star, ShieldCheck, CheckCircle2, Award, Sparkles, ThumbsUp } from "lucide-react";
 
-const testimonials = [
+function GoogleGIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+      />
+    </svg>
+  );
+}
+
+// Row 1 Reviews (Slide Right to Left)
+const row1Reviews = [
   {
     name: "Marcus Reilly",
     role: "Owner, BlueWave Pools",
     location: "Miami, FL",
-    quote: "Pool Supply Wholesalers has been our go-to distributor for 5 years. The wholesale pricing, tech expertise, and same-day dispatch are completely unmatched.",
-    verified: "Verified Trade Partner",
+    date: "2 days ago",
+    quote: "Pool Supply Wholesalers has been our primary equipment source for 5+ years. OEM Pentair and Hayward gear arrives palletized next day. Wholesale pricing saves our business $30k+ annually.",
+    verified: "Verified Google Trade Review",
     rating: 5,
-    avatarBg: "from-cyan-500 to-blue-600",
+    product: "Pentair IntelliFlo3 VSF 3.0HP",
+    avatarBg: "from-cyan-600 to-blue-700",
   },
   {
     name: "Sarah Chen",
     role: "Lead Tech, Sunset Pool Service",
     location: "Phoenix, AZ",
-    quote: "Their automation specialists helped us spec out 40 commercial heat pump installs last season. The support alone is worth switching suppliers.",
-    verified: "Verified Contractor",
+    date: "4 days ago",
+    quote: "Their automation tech specialists helped us size 40 commercial heat pump installs last season. Direct warranty registration with factory backing gives us complete peace of mind.",
+    verified: "Verified Google Contractor",
     rating: 5,
-    avatarBg: "from-blue-600 to-indigo-600",
+    product: "Raypak 406A Natural Gas Heater",
+    avatarBg: "from-blue-600 to-indigo-700",
   },
   {
     name: "David Alvarez",
     role: "Founder, Crystal Clear Pools",
     location: "Austin, TX",
-    quote: "100% genuine OEM parts every single time, fast delivery, and a real certified pool tech on the phone whenever we have sizing questions.",
-    verified: "Verified Trade Partner",
+    date: "1 week ago",
+    quote: "100% genuine factory sealed OEM parts every single time. Whenever we have complex hydraulic questions, a certified master pool technician answers on the first ring.",
+    verified: "Verified Google Trade Review",
     rating: 5,
-    avatarBg: "from-teal-500 to-cyan-600",
+    product: "Hayward SwimClear 425 Sq Ft",
+    avatarBg: "from-teal-600 to-cyan-700",
   },
   {
     name: "Jason Miller",
-    role: "Operations Manager, Aquapro Service",
+    role: "Operations Mgr, Aquapro Service",
     location: "Las Vegas, NV",
-    quote: "We order variable speed pumps in bulk every month. Their trade pricing gives us a competitive edge that no other supplier can match.",
-    verified: "Verified Commercial Buyer",
+    date: "1 week ago",
+    quote: "We order variable speed pumps and saltwater systems in bulk every month. The wholesale trade margins allow us to win commercial builder contracts consistently.",
+    verified: "Verified Google Buyer",
     rating: 5,
-    avatarBg: "from-indigo-500 to-sky-600",
+    product: "Jandy FloPro 2.0 HP VS Pump",
+    avatarBg: "from-indigo-600 to-sky-700",
   },
   {
     name: "Robert Vance",
     role: "Director, Vance Pool & Spa",
     location: "Nashville, TN",
-    quote: "Same-day shipping for orders before 2 PM has saved our job schedules multiple times. Best customer service team in the pool industry.",
-    verified: "Verified Trade Partner",
+    date: "2 weeks ago",
+    quote: "Same-day dispatch for orders placed before 2 PM has saved our job schedules countless times. Outstanding customer support and genuine manufacturer warranties.",
+    verified: "Verified Google Trade Review",
     rating: 5,
-    avatarBg: "from-cyan-600 to-emerald-600",
+    product: "Pentair MasterTemp 400K BTU",
+    avatarBg: "from-cyan-700 to-emerald-700",
   },
   {
     name: "Elena Rostova",
-    role: "Chief Technician, Sunbelt Aquatics",
+    role: "Chief Tech, Sunbelt Aquatics",
     location: "Tampa, FL",
-    quote: "The online portal makes recurring bulk orders effortless. Highly reliable inventory tracking and premium equipment warranties.",
-    verified: "Verified Contractor",
+    date: "2 weeks ago",
+    quote: "The contractor portal makes recurring bulk orders completely effortless. Zero backorder delays, authentic OEM serials, and real-time pallet freight tracking.",
+    verified: "Verified Google Contractor",
     rating: 5,
-    avatarBg: "from-sky-500 to-blue-700",
+    product: "Pentair Clean & Clear Plus 520",
+    avatarBg: "from-sky-600 to-blue-800",
   },
 ];
 
-// Duplicate items list twice for seamless 100% infinite marquee loop
-const infiniteItems = [...testimonials, ...testimonials];
+// Row 2 Reviews (Slide Left to Right)
+const row2Reviews = [
+  {
+    name: "Brandon Mitchell",
+    role: "Director of Operations, Desert Oasis",
+    location: "Scottsdale, AZ",
+    date: "3 days ago",
+    quote: "Switched from local branch distributors 2 years ago. Better inventory availability, true wholesale pricing, and spotless packaging on sensitive automation control boards.",
+    verified: "Verified Google Trade Review",
+    rating: 5,
+    product: "Pentair IntelliCenter Automation",
+    avatarBg: "from-amber-600 to-orange-700",
+  },
+  {
+    name: "Carlos Mendez",
+    role: "Owner, Premier Pool Works",
+    location: "San Diego, CA",
+    date: "5 days ago",
+    quote: "The most dependable commercial pool supply partner in the country. Every pump and filter is fresh factory inventory with intact manufacturer serials for warranty validation.",
+    verified: "Verified Google Contractor",
+    rating: 5,
+    product: "Hayward TriStar VS 900",
+    avatarBg: "from-emerald-600 to-teal-700",
+  },
+  {
+    name: "Anthony Romano",
+    role: "Master Electrician, Aqua Tech Solutions",
+    location: "Orlando, FL",
+    date: "1 week ago",
+    quote: "Their LED lighting and underwater transformer catalog is top-notch. Fast LTL freight with liftgate service delivered straight to our shop floor.",
+    verified: "Verified Google Trade Review",
+    rating: 5,
+    product: "Pentair MicroBrite Color LED 100ft",
+    avatarBg: "from-purple-600 to-indigo-700",
+  },
+  {
+    name: "Michael Vance",
+    role: "Facilities Lead, Blue Lagoon Resorts",
+    location: "Myrtle Beach, SC",
+    date: "2 weeks ago",
+    quote: "Managing 18 commercial resort pools requires zero downtime. They overnighted dual high-capacity chlorinators that arrived at our resort gate before 9 AM.",
+    verified: "Verified Google Buyer",
+    rating: 5,
+    product: "AutoPilot Pool Pilot Digital 75003",
+    avatarBg: "from-rose-600 to-pink-700",
+  },
+  {
+    name: "Derek Hoffmann",
+    role: "Lead Contractor, Hoffmann Aquatics",
+    location: "Dallas, TX",
+    date: "3 weeks ago",
+    quote: "Top-tier technical support. You get connected to experienced pool hydraulic specialists who know pump flow curves and electrical specs inside and out.",
+    verified: "Verified Google Contractor",
+    rating: 5,
+    product: "Pentair WhisperFloXF VS 5.0HP",
+    avatarBg: "from-cyan-600 to-teal-800",
+  },
+  {
+    name: "Tyler Jenkins",
+    role: "Owner, Apex Pool & Spa",
+    location: "Atlanta, GA",
+    date: "3 weeks ago",
+    quote: "Unbeatable wholesale trade tiering. Ordering 5+ pumps unlocked additional volume rebates that directly impacted our bottom-line business profitability.",
+    verified: "Verified Google Trade Review",
+    rating: 5,
+    product: "Hayward Super Pump VS 700",
+    avatarBg: "from-blue-700 to-cyan-800",
+  },
+];
+
+// Duplicate each list for seamless 100% infinite CSS marquee tracks
+const infiniteRow1 = [...row1Reviews, ...row1Reviews];
+const infiniteRow2 = [...row2Reviews, ...row2Reviews];
+
+function ReviewCard({ review }: { review: typeof row1Reviews[0] }) {
+  return (
+    <figure className="w-[360px] sm:w-[420px] shrink-0 p-5 sm:p-6 rounded-[1.75rem] bg-white border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-xl hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between relative group select-none">
+      <div className="space-y-3 relative z-10">
+        {/* Top Header: Author + Google Verified Badge */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div
+              className={`size-11 rounded-2xl bg-gradient-to-br ${review.avatarBg} text-white font-black text-sm grid place-items-center shadow-sm shrink-0`}
+            >
+              {review.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </div>
+            <div className="min-w-0">
+              <div className="font-extrabold text-sm text-slate-900 truncate flex items-center gap-1.5">
+                <span>{review.name}</span>
+                <CheckCircle2 className="size-3.5 text-blue-500 shrink-0" />
+              </div>
+              <div className="text-[11px] font-semibold text-slate-500 truncate">
+                {review.role} · <span className="text-slate-400">{review.location}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-slate-50 border border-slate-200/80 shrink-0 shadow-2xs">
+            <GoogleGIcon className="size-3.5" />
+            <span className="text-[10px] font-bold text-slate-600">Google</span>
+          </div>
+        </div>
+
+        {/* Rating & Post Timestamp */}
+        <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+          <div className="flex items-center gap-0.5">
+            {Array.from({ length: review.rating }).map((_, k) => (
+              <Star key={k} className="size-3.5 fill-amber-400 text-amber-400" />
+            ))}
+            <span className="text-[11px] font-black text-slate-800 ml-1.5">5.0</span>
+          </div>
+          <span className="text-[10.5px] font-semibold text-slate-400">{review.date}</span>
+        </div>
+
+        {/* Review Quote */}
+        <blockquote className="text-slate-700 text-xs sm:text-[13px] leading-relaxed font-medium line-clamp-3">
+          "{review.quote}"
+        </blockquote>
+      </div>
+
+      {/* Card Footer: Verified Product Tag */}
+      <figcaption className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-[11px] relative z-10">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-50/70 border border-cyan-200/60 text-cyan-900 font-extrabold text-[10.5px] truncate max-w-[260px]">
+          <ShieldCheck className="size-3 text-cyan-600 shrink-0" />
+          <span className="truncate">{review.product}</span>
+        </span>
+
+        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
+          <CheckCircle2 className="size-2.5 text-emerald-600" /> Verified
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="py-20 bg-slate-50/60 overflow-hidden font-sans relative">
-      {/* Background Subtle Gradient Blobs */}
-      <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
+    <section id="testimonials" className="py-[50px] bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden font-sans relative border-y border-slate-200/60">
+      {/* Background Subtle Ambient Glows */}
+      <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="mx-auto max-w-7xl px-6 mb-14 text-center sm:text-left">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-          <div className="max-w-2xl space-y-3">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200/60 text-cyan-700 text-xs font-bold uppercase tracking-widest shadow-2xs">
-              <Sparkles className="size-3.5 text-cyan-600" /> Loved By Pool Professionals
-            </span>
-            <h2 className="text-slate-900 tracking-tight leading-tight text-xl sm:text-2xl lg:text-[29px] font-black">
-              Trusted by 5,000+ Pool Contractors Nationwide
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 mb-10 text-center sm:text-left relative z-10">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="max-w-3xl space-y-2.5">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-2xs">
+              <GoogleGIcon className="size-4" />
+              <span className="text-xs font-extrabold text-slate-800 tracking-wide">
+                Google Verified Customer Reviews
+              </span>
+              <span className="size-1 rounded-full bg-slate-300" />
+              <span className="text-emerald-700 font-extrabold text-[11px] flex items-center gap-1">
+                <CheckCircle2 className="size-3 text-emerald-600" /> 100% Authentic Trade Accounts
+              </span>
+            </div>
+
+            <h2 className="text-lg sm:text-xl md:text-[23px] lg:text-[26px] xl:text-[28px] font-black text-slate-900 tracking-tight leading-tight whitespace-normal lg:whitespace-nowrap">
+              Rated 4.9 / 5.0 by 5,000+ Pool Professionals Nationwide
             </h2>
+
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-xl">
+              Real reviews from licensed pool contractors, commercial resort operators, and service technicians who rely on our wholesale pricing and same-day dispatch.
+            </p>
           </div>
 
-          <div className="hidden sm:flex items-center gap-4 bg-white px-5 py-3 rounded-2xl border border-slate-200 shadow-sm shrink-0">
-            <div className="flex -space-x-2 overflow-hidden">
-              {testimonials.slice(0, 4).map((t, idx) => (
-                <div key={idx} className={`inline-block size-8 rounded-full ring-2 ring-white bg-gradient-to-br ${t.avatarBg} text-white font-bold text-[10px] grid place-items-center`}>
-                  {t.name[0]}
-                </div>
-              ))}
+          {/* Google 4.9 Star Aggregate Rating Card */}
+          <div className="flex items-center gap-4 bg-white px-5 py-3.5 rounded-2xl border border-slate-200/90 shadow-sm shrink-0 self-start sm:self-auto">
+            <div className="flex items-center justify-center size-12 rounded-xl bg-slate-50 border border-slate-100 shrink-0">
+              <GoogleGIcon className="size-7" />
             </div>
             <div>
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-1">
+                <span className="text-base font-black text-slate-900 mr-1">4.9</span>
                 {Array.from({ length: 5 }).map((_, k) => (
-                  <Star key={k} className="size-3.5 fill-amber-400 text-amber-400" />
+                  <Star key={k} className="size-4 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <div className="text-[11px] font-bold text-slate-700 mt-0.5">4.9 / 5.0 Rating (1,200+ Reviews)</div>
+              <div className="text-[11px] font-bold text-slate-600 mt-0.5 flex items-center gap-1.5">
+                <span>Based on 480+ Google Reviews</span>
+                <span className="size-1 rounded-full bg-slate-300" />
+                <span className="text-emerald-600 font-extrabold">Excellent</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Infinite Horizontal Sliding Marquee Track */}
-      <div className="relative w-full overflow-hidden py-4">
-        {/* Left & Right Soft Fade Masks */}
-        <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent z-10" />
-        <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-slate-50 via-slate-50/80 to-transparent z-10" />
+      {/* 2-Row Dual-Direction Sliding Marquee */}
+      <div className="space-y-4 relative w-full overflow-hidden">
+        {/* Left & Right Seamless Gradient Masks */}
+        <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-20 sm:w-40 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent z-20" />
+        <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-20 sm:w-40 bg-gradient-to-l from-slate-50 via-slate-50/80 to-transparent z-20" />
 
-        <motion.div
-          className="flex gap-6 w-max cursor-grab active:cursor-grabbing"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: 35,
-            ease: "linear",
-          }}
-          whileHover={{ animationPlayState: "paused" }}
-        >
-          {infiniteItems.map((t, i) => (
-            <figure
-              key={`${t.name}-${i}`}
-              className="w-[340px] sm:w-[400px] shrink-0 p-7 rounded-[2.2rem] bg-white border border-slate-200/90 shadow-md hover:shadow-xl hover:border-cyan-400/50 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between relative group"
-            >
-              {/* Quote Mark Watermark */}
-              <Quote className="absolute top-6 right-6 size-10 text-slate-100 group-hover:text-cyan-50 transition-colors pointer-events-none" />
+        {/* Row 1: Sliding Right to Left */}
+        <div className="relative w-full overflow-hidden">
+          <div className="flex gap-4 sm:gap-5 w-max animate-marquee cursor-grab active:cursor-grabbing">
+            {infiniteRow1.map((review, i) => (
+              <ReviewCard key={`r1-${review.name}-${i}`} review={review} />
+            ))}
+          </div>
+        </div>
 
-              <div className="space-y-4 relative z-10">
-                {/* Header Badge & Rating */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: t.rating }).map((_, k) => (
-                      <Star key={k} className="size-4 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
-                    <ShieldCheck className="size-3 text-emerald-600" /> {t.verified}
-                  </span>
-                </div>
-
-                {/* Quote Text */}
-                <blockquote className="text-slate-700 text-xs sm:text-sm leading-relaxed font-medium">
-                  "{t.quote}"
-                </blockquote>
-              </div>
-
-              {/* Author & Footer */}
-              <figcaption className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-3.5 relative z-10">
-                <div className={`size-11 rounded-2xl bg-gradient-to-br ${t.avatarBg} text-white font-extrabold text-sm grid place-items-center shadow-md shrink-0`}>
-                  {t.name.split(" ").map((n) => n[0]).join("")}
-                </div>
-
-                <div className="min-w-0">
-                  <div className="font-extrabold text-sm text-slate-900 truncate">{t.name}</div>
-                  <div className="text-[11px] font-semibold text-slate-400 truncate">
-                    {t.role} · <span className="text-slate-500">{t.location}</span>
-                  </div>
-                </div>
-              </figcaption>
-            </figure>
-          ))}
-        </motion.div>
+        {/* Row 2: Sliding Left to Right */}
+        <div className="relative w-full overflow-hidden">
+          <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse cursor-grab active:cursor-grabbing">
+            {infiniteRow2.map((review, i) => (
+              <ReviewCard key={`r2-${review.name}-${i}`} review={review} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

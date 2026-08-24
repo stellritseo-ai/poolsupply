@@ -4,7 +4,7 @@ import {
   Cpu, Wind, Pipette, Sparkles, Filter, Flame, Lightbulb, Zap, Waves, Box,
   Package, Wrench, Layers, Droplets, Scale, ShieldAlert, FlaskConical,
   LayoutGrid, Brush, Shield, ShieldCheck, Info, Award, Star, PhoneCall,
-  ShoppingGrid, Phone, ArrowRight, LogOut
+  Phone, ArrowRight, LogOut
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -87,7 +87,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>("Pool & Spa");
-  
+
   const cart = useCart();
   const { user, logout, openAuthModal } = useAuth();
   const isDarkText = alwaysDark || scrolled || mobileMenuOpen || searchOpen || userMenuOpen;
@@ -163,9 +163,8 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-50 transition-colors duration-200 py-2.5 sm:py-3.5 ${
-          isDarkText ? "glass" : "bg-transparent"
-        }`}
+        className={`fixed top-0 inset-x-0 z-50 transition-colors duration-200 py-2.5 sm:py-3.5 ${isDarkText ? "glass" : "bg-transparent"
+          }`}
       >
         <div className="mx-auto max-w-[1536px] px-4 sm:px-8 xl:px-12 flex items-center justify-between gap-3 xl:gap-8">
           {/* Logo */}
@@ -173,9 +172,8 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             <img
               src={logo}
               alt="Pool Supply Wholesalers Logo"
-              className={`h-10 sm:h-12 xl:h-16 w-auto object-contain group-hover:scale-[1.02] transition-transform duration-200 ${
-                isDarkText ? "" : "brightness-0 invert"
-              }`}
+              className={`h-10 sm:h-12 xl:h-16 w-auto object-contain group-hover:scale-[1.02] transition-transform duration-200 ${isDarkText ? "" : "brightness-0 invert"
+                }`}
             />
           </Link>
 
@@ -186,16 +184,14 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                 <div key={n.label} className="relative group shrink-0">
                   <Link
                     to={n.to}
-                    className={`transition-colors duration-300 relative py-2 flex items-center gap-1.5 whitespace-nowrap ${
-                      isDarkText ? "text-foreground/85 hover:text-foreground" : "text-white/85 hover:text-white"
-                    }`}
+                    className={`transition-colors duration-300 relative py-2 flex items-center gap-1.5 whitespace-nowrap ${isDarkText ? "text-foreground/85 hover:text-foreground" : "text-white/85 hover:text-white"
+                      }`}
                   >
                     {n.label}
                     <ChevronDown className="size-3.5 opacity-70 group-hover:rotate-180 transition-transform duration-300" />
                   </Link>
-                  <div className={`absolute left-0 top-full mt-2.5 rounded-[1.25rem] bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out origin-top-left scale-95 group-hover:scale-100 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.18),0_10px_20px_-5px_rgba(0,0,0,0.06)] border border-border/50 before:absolute before:-top-3 before:left-0 before:w-full before:h-4 ${
-                    n.items.length > 6 ? "w-[460px] p-3.5 grid grid-cols-2 gap-1.5" : "w-60 p-2.5 grid gap-1"
-                  }`}>
+                  <div className={`absolute left-0 top-full mt-2.5 rounded-[1.25rem] bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out origin-top-left scale-95 group-hover:scale-100 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.18),0_10px_20px_-5px_rgba(0,0,0,0.06)] border border-border/50 before:absolute before:-top-3 before:left-0 before:w-full before:h-4 ${n.items.length > 6 ? "w-[460px] p-3.5 grid grid-cols-2 gap-1.5" : "w-60 p-2.5 grid gap-1"
+                    }`}>
                     {n.items.map(sub => {
                       const Icon = sub.icon;
                       return (
@@ -218,9 +214,8 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                 <Link
                   key={n.label}
                   to={n.to}
-                  className={`transition-colors duration-300 relative whitespace-nowrap shrink-0 after:absolute after:left-0 after:-bottom-1 after:h-px after:w-0 after:bg-gradient-ocean hover:after:w-full after:transition-all ${
-                    isDarkText ? "text-foreground/85 hover:text-foreground" : "text-white/85 hover:text-white"
-                  }`}
+                  className={`transition-colors duration-300 relative whitespace-nowrap shrink-0 after:absolute after:left-0 after:-bottom-1 after:h-px after:w-0 after:bg-gradient-ocean hover:after:w-full after:transition-all ${isDarkText ? "text-foreground/85 hover:text-foreground" : "text-white/85 hover:text-white"
+                    }`}
                 >
                   {n.label}
                 </Link>
@@ -234,9 +229,8 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             <button
               aria-label="Search"
               onClick={() => { setSearchOpen(!searchOpen); setUserMenuOpen(false); setMoreMenuOpen(false); setMobileMenuOpen(false); }}
-              className={`size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer ${
-                isDarkText ? "hover:bg-muted" : "hover:bg-white/10"
-              }`}
+              className={`size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer ${isDarkText ? "hover:bg-muted" : "hover:bg-white/10"
+                }`}
             >
               {searchOpen ? <X className="size-[18px]" /> : <Search className="size-[18px]" />}
             </button>
@@ -246,11 +240,18 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
               <button
                 aria-label="Account"
                 onClick={() => { setUserMenuOpen(!userMenuOpen); setSearchOpen(false); setMoreMenuOpen(false); setMobileMenuOpen(false); }}
-                className={`size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer ${
-                  isDarkText ? "hover:bg-muted" : "hover:bg-white/10"
-                }`}
+                className={`size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer overflow-hidden ${isDarkText ? "hover:bg-muted" : "hover:bg-white/10"
+                  }`}
               >
-                <User className="size-[18px]" />
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="size-7 sm:size-8 rounded-full object-cover ring-1 ring-cyan-500/40"
+                  />
+                ) : (
+                  <User className="size-[18px]" />
+                )}
               </button>
               <AnimatePresence>
                 {userMenuOpen && (
@@ -267,10 +268,24 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                       </>
                     ) : (
                       <>
-                        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 truncate">
-                          Hi, {user.name.split(" ")[0]}
+                        <div className="flex items-center gap-2 px-3 py-2 border-b border-border/40 mb-1">
+                          {user.avatar ? (
+                            <img src={user.avatar} alt={user.name} className="size-6 rounded-full object-cover shrink-0" />
+                          ) : (
+                            <div className="size-6 rounded-full bg-cyan-500/10 text-cyan-600 grid place-items-center shrink-0">
+                              <User className="size-3.5" />
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <div className="text-xs font-bold text-foreground truncate">
+                              {user.name}
+                            </div>
+                            <div className="text-[10px] text-muted-foreground truncate">
+                              {user.email || user.phone}
+                            </div>
+                          </div>
                         </div>
-                        <Link to="/account" onClick={() => setUserMenuOpen(false)} className="block px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors font-medium">My Orders</Link>
+                        <Link to="/account" onClick={() => setUserMenuOpen(false)} className="block px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-white/50 rounded-lg transition-colors font-medium">My Account & Orders</Link>
                         <div className="h-px bg-border my-1 mx-2" />
                         <button onClick={() => { setUserMenuOpen(false); logout(); }} className="w-full text-left px-3 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-lg transition-colors font-medium cursor-pointer">Sign Out</button>
                       </>
@@ -284,9 +299,8 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             <button
               aria-label="Cart"
               onClick={cart.open}
-              className={`relative size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer ${
-                isDarkText ? "hover:bg-muted" : "hover:bg-white/10"
-              }`}
+              className={`relative size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer ${isDarkText ? "hover:bg-muted" : "hover:bg-white/10"
+                }`}
             >
               <ShoppingBag className="size-[18px]" />
               {cart.count > 0 && (
@@ -301,13 +315,12 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
               <button
                 aria-label="More Options"
                 onClick={() => { setMoreMenuOpen(!moreMenuOpen); setSearchOpen(false); setUserMenuOpen(false); }}
-                className={`group relative size-10 grid place-items-center rounded-full transition-all duration-300 backdrop-blur-md shadow-sm border cursor-pointer ${
-                  moreMenuOpen
-                    ? "bg-primary text-white border-primary shadow-md scale-105"
-                    : isDarkText
-                      ? "bg-white/80 hover:bg-white text-foreground border-border/60 hover:border-primary/40 hover:shadow-md hover:scale-105"
-                      : "bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40 hover:scale-105"
-                }`}
+                className={`group relative size-10 grid place-items-center rounded-full transition-all duration-300 backdrop-blur-md shadow-sm border cursor-pointer ${moreMenuOpen
+                  ? "bg-primary text-white border-primary shadow-md scale-105"
+                  : isDarkText
+                    ? "bg-white/80 hover:bg-white text-foreground border-border/60 hover:border-primary/40 hover:shadow-md hover:scale-105"
+                    : "bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40 hover:scale-105"
+                  }`}
               >
                 {moreMenuOpen ? (
                   <X className="size-4 transition-transform duration-300 rotate-0 group-hover:rotate-90" />
@@ -357,13 +370,12 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             <button
               aria-label="Open Mobile Menu"
               onClick={() => { setMobileMenuOpen(!mobileMenuOpen); setSearchOpen(false); setUserMenuOpen(false); setMoreMenuOpen(false); }}
-              className={`lg:hidden size-9 sm:size-10 grid place-items-center rounded-full transition-all duration-300 border cursor-pointer ${
-                mobileMenuOpen
-                  ? "bg-slate-900 text-white border-slate-800"
-                  : isDarkText
-                    ? "bg-white/80 text-foreground border-border/60 hover:bg-white"
-                    : "bg-white/10 text-white border-white/20 hover:bg-white/20"
-              }`}
+              className={`lg:hidden size-9 sm:size-10 grid place-items-center rounded-full transition-all duration-300 border cursor-pointer ${mobileMenuOpen
+                ? "bg-slate-900 text-white border-slate-800"
+                : isDarkText
+                  ? "bg-white/80 text-foreground border-border/60 hover:bg-white"
+                  : "bg-white/10 text-white border-white/20 hover:bg-white/20"
+                }`}
             >
               {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>

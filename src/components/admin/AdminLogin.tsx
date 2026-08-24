@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import {
   Lock,
   User,
@@ -12,7 +13,13 @@ import {
   AlertTriangle,
   Clock,
   KeyRound,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles,
+  Layers,
+  Database,
+  Truck,
+  Activity,
+  ArrowLeft,
 } from "lucide-react";
 import { loginAdmin, getLockoutStatus } from "@/lib/api/auth.functions";
 import logo from "@/assets/logo.png";
@@ -86,7 +93,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         localStorage.setItem("aquapro_admin_token", res.token);
         setTimeout(() => {
           onSuccess();
-        }, 600);
+        }, 500);
       } else {
         if (res.isLocked && res.lockedUntil) {
           setIsLocked(true);
@@ -95,7 +102,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         if (res.attemptsLeft !== undefined) {
           setAttemptsLeft(res.attemptsLeft);
         }
-        setError(res.error || "Authentication failed. Please check credentials.");
+        setError(res.error || "Authentication failed. Invalid username or password.");
         setIsLoading(false);
       }
     } catch (err) {
@@ -105,263 +112,292 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden font-sans select-none"
-      style={{
-        background: "linear-gradient(135deg, #000c1a 0%, #001f3f 40%, #003366 75%, #004080 100%)"
-      }}
-    >
-      {/* Background Animated Gradient Orbs */}
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[-20%] left-[-15%] w-[60vw] h-[60vw] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(89,210,243,0.3) 0%, transparent 70%)", filter: "blur(80px)" }}
-      />
-      <motion.div
-        animate={{ scale: [1, 1.25, 1], opacity: [0.1, 0.25, 0.1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[-25%] right-[-20%] w-[55vw] h-[55vw] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(0,137,201,0.25) 0%, transparent 70%)", filter: "blur(90px)" }}
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-8 lg:p-12 relative overflow-hidden font-sans select-none bg-[#040d1a]">
+      {/* ─── BACKGROUND AMBIENT IMAGERY & GLOWS ─── */}
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-60 pointer-events-none scale-100"
+        style={{ backgroundImage: "url('/about-hero.png')" }}
       />
 
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+      {/* Deep Gradient Overlays for High Legibility */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#040d1a]/85 via-[#06162a]/80 to-[#040d1a]/95 pointer-events-none" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#040d1a]/90 via-[#040d1a]/70 to-[#040d1a]/90 pointer-events-none" />
 
-      {/* Main Login Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-[460px] relative z-10"
-      >
-        <div
-          className="relative rounded-[2.5rem] overflow-hidden p-7 sm:p-10"
-          style={{
-            background: "rgba(10, 25, 47, 0.75)",
-            backdropFilter: "blur(40px)",
-            WebkitBackdropFilter: "blur(40px)",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
-            boxShadow: "0 40px 100px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2)"
-          }}
+      {/* Ambient Glowing Orbs */}
+      <div
+        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none z-[1]"
+        style={{
+          background: "radial-gradient(circle, rgba(6,182,212,0.18) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] rounded-full pointer-events-none z-[1]"
+        style={{
+          background: "radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
+
+      {/* Subtle Grid Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#0891b2_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none z-[1]" />
+
+      {/* ─── 2-COLUMN SPLIT CONTAINER ─── */}
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        {/* ─── LEFT COLUMN: BRAND & ENTERPRISE TELEMETRY CONTENT ─── */}
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="lg:col-span-7 space-y-6 text-white"
         >
-          {/* Top Metallic Specular Line */}
-          <div className="absolute top-0 left-12 right-12 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
-
-          {/* Logo & Security Badge Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5 }}
-            className="text-center mb-8"
-          >
-            <div
-              className="relative inline-flex size-20 rounded-3xl items-center justify-center mx-auto mb-5 shadow-2xl"
-              style={{
-                background: "linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05))",
-                backdropFilter: "blur(16px)",
-                border: "1px solid rgba(255,255,255,0.25)"
-              }}
-            >
-              <img src={logo} alt="Poolsby Logo" className="w-11 h-11 object-contain brightness-0 invert drop-shadow-md" />
-              {isLocked ? (
-                <span className="absolute -top-1 -right-1 size-5 rounded-full bg-rose-600 text-white grid place-items-center text-[10px] font-black border-2 border-slate-900 shadow-md">
-                  🔒
-                </span>
-              ) : (
-                <span className="absolute -bottom-1 -right-1 size-4 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-md" />
-              )}
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-cyan-300 text-[10px] font-extrabold uppercase tracking-widest mb-3 backdrop-blur-md">
-              <ShieldCheck className="size-3 text-cyan-400" />
-              Enterprise Security Shield
-            </div>
-
-            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-2">
-              Admin Portal
-            </h1>
-            <p className="text-xs text-slate-300/80 font-medium">
-              Authenticate with credential privileges to access global control
-            </p>
-          </motion.div>
-
-          {/* 2-HOUR LOCKOUT WARNING BANNER */}
-          <AnimatePresence>
-            {isLocked ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="mb-6 p-5 rounded-2xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-center space-y-2 backdrop-blur-md shadow-xl"
-              >
-                <div className="flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider text-rose-400">
-                  <ShieldAlert className="size-4 animate-bounce" />
-                  Security Lockout Active
-                </div>
-                <p className="text-xs text-rose-200/90 font-semibold leading-relaxed">
-                  Too many incorrect password attempts (3/3). Your account has been temporarily locked for 2 hours for security.
-                </p>
-                <div className="pt-2 border-t border-rose-500/20 flex items-center justify-center gap-2 text-sm font-black text-white font-mono">
-                  <Clock className="size-4 text-rose-400 animate-spin" style={{ animationDuration: "6s" }} />
-                  {remainingTimeStr || "Calculating time..."}
-                </div>
-              </motion.div>
-            ) : error ? (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mb-6 p-4 rounded-2xl bg-rose-900/40 border border-rose-500/30 text-rose-200 text-xs font-bold text-center leading-relaxed space-y-1 backdrop-blur-md"
-              >
-                <div className="flex items-center justify-center gap-1.5 text-rose-300">
-                  <AlertTriangle className="size-4 text-rose-400" />
-                  <span>Authentication Failed</span>
-                </div>
-                <div>{error}</div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-
-          {/* Attempt Indicator Badge */}
-          {!isLocked && attemptsLeft !== null && attemptsLeft < 3 && (
-            <div className="mb-4 text-center">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-extrabold">
-                <AlertTriangle className="size-3.5" />
-                {attemptsLeft} Attempt{attemptsLeft === 1 ? "" : "s"} Remaining Before 2-Hour Lockout
-              </span>
-            </div>
-          )}
-
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
-            {/* Username Input */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-300 pl-1">
-                Admin Username
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-cyan-400 transition-colors">
-                  <User className="size-4" />
-                </div>
-                <input
-                  type="text"
-                  required
-                  disabled={isLocked}
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Username"
-                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl text-xs font-bold text-white placeholder:text-slate-500 outline-none transition-all disabled:opacity-40"
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)"
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.background = "rgba(255,255,255,0.1)";
-                    e.target.style.border = "1px solid rgba(89,210,243,0.5)";
-                    e.target.style.boxShadow = "0 0 20px rgba(89,210,243,0.2)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.background = "rgba(255,255,255,0.06)";
-                    e.target.style.border = "1px solid rgba(255,255,255,0.12)";
-                    e.target.style.boxShadow = "none";
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Password Input */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-300 pl-1">
-                Security Password
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-cyan-400 transition-colors">
-                  <Lock className="size-4" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  required
-                  disabled={isLocked}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full pl-11 pr-12 py-3.5 rounded-2xl text-xs font-bold text-white placeholder:text-slate-500 outline-none transition-all disabled:opacity-40 tracking-wider"
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)"
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.background = "rgba(255,255,255,0.1)";
-                    e.target.style.border = "1px solid rgba(89,210,243,0.5)";
-                    e.target.style.boxShadow = "0 0 20px rgba(89,210,243,0.2)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.background = "rgba(255,255,255,0.06)";
-                    e.target.style.border = "1px solid rgba(255,255,255,0.12)";
-                    e.target.style.boxShadow = "none";
-                  }}
-                />
-                <button
-                  type="button"
-                  disabled={isLocked}
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Login Submit Button */}
-            <motion.button
-              type="submit"
-              disabled={isLoading || isLocked || !username || !password}
-              whileHover={{ scale: isLocked ? 1 : 1.02 }}
-              whileTap={{ scale: isLocked ? 1 : 0.98 }}
-              className="w-full relative overflow-hidden rounded-2xl py-4 text-xs font-black uppercase tracking-wider text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4 cursor-pointer shadow-2xl"
-              style={
-                isLocked
-                  ? { background: "#475569" }
-                  : {
-                      background: "linear-gradient(135deg, #0089C9 0%, #0066cc 100%)",
-                      boxShadow: "0 10px 30px rgba(0, 137, 201, 0.4)"
-                    }
-              }
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" />
-                  <span>Verifying Credentials...</span>
-                </>
-              ) : isLocked ? (
-                <>
-                  <Lock className="size-4" />
-                  <span>Account Locked (2 Hours)</span>
-                </>
-              ) : (
-                <>
-                  <span>Authenticate & Enter</span>
-                  <ArrowRight className="size-4" />
-                </>
-              )}
-            </motion.button>
-          </form>
-
-          {/* Encrypted Footer */}
-          <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="size-3.5 text-cyan-400" /> 256-Bit Encrypted
+          {/* Brand Badge */}
+          <div className="flex items-center gap-3">
+            <Link to="/" className="inline-block group">
+              <img
+                src={logo}
+                alt="Pool Supply Wholesalers"
+                className="h-9 w-auto object-contain brightness-0 invert opacity-95 group-hover:opacity-100 transition-opacity"
+              />
+            </Link>
+            <span className="text-[10px] font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-400/30">
+              Master Admin Console
             </span>
-            <span className="text-slate-500">3-Strike Security Active</span>
           </div>
-        </div>
 
-        {/* Footer info */}
-        <p className="text-center mt-5 text-[11px] font-semibold text-slate-400/70">
-          Pool Supply Wholesalers — Authorized Personnel Only
-        </p>
-      </motion.div>
+          {/* Main Headline */}
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
+              Global Supply Chain{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
+                Command Center
+              </span>
+            </h1>
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-medium max-w-xl">
+              Enterprise administrative gateway for managing multi-hub inventory, wholesale dealer accounts, high-frequency freight dispatch, and catalog pricing.
+            </p>
+          </div>
+
+          {/* 4 Feature Value Tiles */}
+          <div className="grid sm:grid-cols-2 gap-3.5 pt-2">
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+              <div className="flex items-center gap-2">
+                <Database className="size-4 text-cyan-400" />
+                <span className="font-extrabold text-xs text-white">Multi-Hub Inventory</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+                Real-time stock feeds across Nashville, LA, Dallas, and Orlando warehouses.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+              <div className="flex items-center gap-2">
+                <Truck className="size-4 text-cyan-400" />
+                <span className="font-extrabold text-xs text-white">Freight Logistics</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+                Live carrier dispatch, electronic BOLs, and automated shipment tracking.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+              <div className="flex items-center gap-2">
+                <Layers className="size-4 text-cyan-400" />
+                <span className="font-extrabold text-xs text-white">8,000+ OEM SKUs</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+                Pentair, Hayward, Jandy & Raypak distributor pricing and margin management.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="size-4 text-cyan-400" />
+                <span className="font-extrabold text-xs text-white">256-Bit Protection</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+                End-to-end encrypted session controls with brute-force lockout guard.
+              </p>
+            </div>
+          </div>
+
+          {/* System Status Banner */}
+          <div className="pt-2 flex items-center justify-between flex-wrap gap-3 text-xs text-slate-300 font-medium">
+            <div className="flex items-center gap-2">
+              <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Production DB Active · Latency &lt; 18ms</span>
+            </div>
+
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-xs font-extrabold text-cyan-400 hover:text-cyan-300 transition-colors"
+            >
+              <ArrowLeft className="size-3.5" />
+              <span>Return to Storefront</span>
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* ─── RIGHT COLUMN: LOGIN CARD ─── */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+          className="lg:col-span-5 w-full"
+        >
+          <div className="relative rounded-3xl overflow-hidden p-6 sm:p-8 bg-[#061220]/85 border border-cyan-500/30 backdrop-blur-2xl shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)]">
+            {/* Top Accent Gradient Line */}
+            <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
+
+            {/* Header */}
+            <div className="text-center mb-6 space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[10px] font-extrabold uppercase tracking-widest">
+                <ShieldCheck className="size-3 text-cyan-400" />
+                Authorized Access Only
+              </div>
+
+              <h2 className="text-2xl font-black text-white tracking-tight">
+                Account Sign In
+              </h2>
+              <p className="text-xs text-slate-300 font-medium">
+                Enter your administrative credentials to continue.
+              </p>
+            </div>
+
+            {/* 2-HOUR LOCKOUT WARNING BANNER */}
+            <AnimatePresence>
+              {isLocked ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="mb-5 p-4 rounded-2xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-center space-y-2 backdrop-blur-md shadow-lg"
+                >
+                  <div className="flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider text-rose-400">
+                    <ShieldAlert className="size-4 animate-bounce" />
+                    Security Lockout Active
+                  </div>
+                  <p className="text-xs text-rose-200/90 font-medium leading-relaxed">
+                    Too many incorrect password attempts (3/3). Account temporarily locked for 2 hours for security.
+                  </p>
+                  <div className="pt-2 border-t border-rose-500/20 flex items-center justify-center gap-2 text-sm font-black text-white font-mono">
+                    <Clock className="size-4 text-rose-400 animate-spin" style={{ animationDuration: "6s" }} />
+                    {remainingTimeStr || "Calculating time..."}
+                  </div>
+                </motion.div>
+              ) : error ? (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mb-5 p-3.5 rounded-2xl bg-rose-950/60 border border-rose-500/30 text-rose-200 text-xs font-bold text-center leading-relaxed space-y-1 backdrop-blur-md"
+                >
+                  <div className="flex items-center justify-center gap-1.5 text-rose-300">
+                    <AlertTriangle className="size-3.5 text-rose-400" />
+                    <span>Authentication Failed</span>
+                  </div>
+                  <div className="text-[11px] text-rose-200 font-medium">{error}</div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+
+            {/* Attempt Indicator Badge */}
+            {!isLocked && attemptsLeft !== null && attemptsLeft < 3 && (
+              <div className="mb-4 text-center">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-extrabold">
+                  <AlertTriangle className="size-3.5" />
+                  {attemptsLeft} Attempt{attemptsLeft === 1 ? "" : "s"} Remaining Before Lockout
+                </span>
+              </div>
+            )}
+
+            {/* ─── LOGIN FORM ─── */}
+            <form onSubmit={handleLogin} className="space-y-4">
+              {/* Username Input */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-wider text-slate-300 pl-1">
+                  Admin Username
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-cyan-400 transition-colors">
+                    <User className="size-4" />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    disabled={isLocked}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 bg-white/5 border border-white/10 outline-none focus:bg-white/10 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all disabled:opacity-40"
+                  />
+                </div>
+              </div>
+
+              {/* Password Input */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-wider text-slate-300 pl-1">
+                  Security Password
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-cyan-400 transition-colors">
+                    <Lock className="size-4" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    disabled={isLocked}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full pl-10 pr-11 py-3 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 bg-white/5 border border-white/10 outline-none focus:bg-white/10 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all disabled:opacity-40 tracking-wider"
+                  />
+                  <button
+                    type="button"
+                    disabled={isLocked}
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Login Submit Button */}
+              <button
+                type="submit"
+                disabled={isLoading || isLocked || !username || !password}
+                className="w-full relative overflow-hidden rounded-xl py-3.5 text-xs font-black uppercase tracking-wider text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-3 cursor-pointer shadow-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 shadow-cyan-900/40"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    <span>Verifying Credentials...</span>
+                  </>
+                ) : isLocked ? (
+                  <>
+                    <Lock className="size-4" />
+                    <span>Account Locked (2 Hours)</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Authenticate & Access Console</span>
+                    <ArrowRight className="size-4" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Encrypted Footer Badge */}
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="size-3.5 text-cyan-400" /> 256-Bit TLS Protected
+              </span>
+              <span className="text-slate-500">Authorized Personnel Only</span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

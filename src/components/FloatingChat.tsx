@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -17,6 +18,9 @@ import {
   User,
   Mail,
   Phone,
+  Headphones,
+  CheckCheck,
+  ShieldCheck,
 } from "lucide-react";
 import {
   getChatSessionDb,
@@ -28,12 +32,12 @@ import logo from "@/assets/logo.png";
 
 // ── Quick action shortcuts ────────────────────────────────────────────────────
 const QUICK_ACTIONS = [
-  { icon: <Droplet className="w-4 h-4 text-cyan-500" />, label: "Pumps", message: "I need help with pool pumps." },
-  { icon: <Flame className="w-4 h-4 text-orange-500" />, label: "Heaters", message: "Can you help me find a pool heater?" },
-  { icon: <Filter className="w-4 h-4 text-blue-500" />, label: "Filters", message: "I'm looking for pool filters." },
-  { icon: <Sparkles className="w-4 h-4 text-amber-500" />, label: "Cleaners", message: "Tell me about pool cleaners." },
-  { icon: <Lightbulb className="w-4 h-4 text-yellow-500" />, label: "Lighting", message: "I need pool lighting options." },
-  { icon: <LifeBuoy className="w-4 h-4 text-rose-500" />, label: "Support", message: "I need general support." },
+  { icon: <Droplet className="w-3.5 h-3.5 text-cyan-500" />, label: "Pool Pumps", message: "I need assistance with commercial pool pumps." },
+  { icon: <Flame className="w-3.5 h-3.5 text-orange-500" />, label: "Gas Heaters", message: "Can you help me choose the right pool heater?" },
+  { icon: <Filter className="w-3.5 h-3.5 text-blue-500" />, label: "Filters", message: "I'm looking for high-rate pool filters." },
+  { icon: <Sparkles className="w-3.5 h-3.5 text-amber-500" />, label: "Cleaners", message: "Tell me about commercial pool cleaners." },
+  { icon: <Lightbulb className="w-3.5 h-3.5 text-yellow-500" />, label: "Lighting", message: "I need LED pool lighting specifications." },
+  { icon: <LifeBuoy className="w-3.5 h-3.5 text-rose-500" />, label: "Support", message: "I need general wholesale support." },
 ];
 
 function formatTime(dateString: string) {
@@ -42,11 +46,17 @@ function formatTime(dateString: string) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export function FloatingChat() {
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [sessionId, setSessionId] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+
+  // Hide on all /admin pages
+  if (location.pathname.startsWith("/admin")) {
+    return null;
+  }
 
   // Registration form states
   const [regName, setRegName] = useState("");
@@ -76,78 +86,35 @@ export function FloatingChat() {
     }
   }, []);
 
-  // Poll every 4 s while the widget is open, or 15 s when closed (for background notification updates)
-  const { data, isLoading } = useQuery({
+  // Poll chat session from DB
+  const { data: sessionData, isLoading } = useQuery({
     queryKey: ["chatSession", sessionId],
-    queryFn: () => getChatSessionDb({ data: { sessionId } }),
-    refetchInterval: isOpen ? 4000 : 15000,
-    enabled: !!sessionId,
+    queryFn: () => (sessionId ? getChatSessionDb({ data: { sessionId } }) : Promise.resolve(null)),
+    enabled: !!sessionId && hasRegistered,
+    refetchInterval: 3000,
   });
 
-  const chatData = data as { success: boolean; session: ChatSession | null } | undefined;
-  const session = chatData?.session ?? null;
-  const messages: ChatMessage[] = session?.messages ?? [];
+  const session: ChatSession | null = sessionData?.session ?? null;
+  const messages = session?.messages ?? [];
   const isResolved = session?.status === "resolved";
-
-  // If session already has a name, sync it to hasRegistered and localStorage
-  useEffect(() => {
-    if (session?.userName) {
-      setHasRegistered(true);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("pool_chat_registered", "true");
-        localStorage.setItem("pool_chat_user_name", session.userName);
-        if (session.userEmail) localStorage.setItem("pool_chat_user_email", session.userEmail);
-        if (session.userPhone) localStorage.setItem("pool_chat_user_phone", session.userPhone);
-      }
-    }
-  }, [session?.userName]);
-
-  // Request notification permission when opening the chat widget
-  useEffect(() => {
-    if (isOpen && typeof window !== "undefined" && "Notification" in window) {
-      if (Notification.permission === "default") {
-        Notification.requestPermission();
-      }
-    }
-  }, [isOpen]);
-
-  // Browser notifications for new admin messages
-  const prevAdminMsgCount = useRef(0);
-  const isInitialChatLoad = useRef(true);
-
-  useEffect(() => {
-    if (!messages || messages.length === 0) return;
-
-    const adminMessages = messages.filter((m) => m.sender === "admin");
-    const currentCount = adminMessages.length;
-
-    if (isInitialChatLoad.current) {
-      prevAdminMsgCount.current = currentCount;
-      isInitialChatLoad.current = false;
-      return;
-    }
-
-    if (currentCount > prevAdminMsgCount.current) {
-      // Trigger notification
-      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
-        const lastAdminMsg = adminMessages[adminMessages.length - 1];
-        new Notification("Pool Supply Support", {
-          body: lastAdminMsg ? lastAdminMsg.text : "You have a new reply from support.",
-          icon: "/favicon.ico",
-        });
-      }
-    }
-    
-    prevAdminMsgCount.current = currentCount;
-  }, [messages]);
 
   // Auto-scroll
   useEffect(() => {
     if (isOpen) messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length, isOpen]);
 
+  const handleStartNewSession = () => {
+    const newId = crypto.randomUUID();
+    setSessionId(newId);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("pool_chat_session_id", newId);
+    }
+    queryClient.invalidateQueries({ queryKey: ["chatSession"] });
+  };
+
   const sendMutation = useMutation({
-    mutationFn: async (text: string) => {
+    mutationFn: async ({ text, targetSessionId }: { text: string; targetSessionId?: string }) => {
+      const activeId = targetSessionId || sessionId;
       const message: ChatMessage = {
         id: crypto.randomUUID(),
         sender: "user",
@@ -156,7 +123,7 @@ export function FloatingChat() {
       };
       await addChatMessageDb({
         data: {
-          sessionId,
+          sessionId: activeId,
           message,
           userName: regName ? regName.trim() : undefined,
           userEmail: regEmail ? regEmail.trim() : undefined,
@@ -191,9 +158,20 @@ export function FloatingChat() {
 
   const handleSend = (text?: string) => {
     const msg = (text ?? inputText).trim();
-    if (!msg || isResolved) return;
+    if (!msg) return;
     setInputText("");
-    sendMutation.mutate(msg);
+
+    if (isResolved) {
+      const newId = crypto.randomUUID();
+      setSessionId(newId);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("pool_chat_session_id", newId);
+      }
+      sendMutation.mutate({ text: msg, targetSessionId: newId });
+      return;
+    }
+
+    sendMutation.mutate({ text: msg });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -213,31 +191,42 @@ export function FloatingChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 420, damping: 32 }}
-            className="mb-4 w-[380px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-[0_24px_64px_-12px_rgba(0,0,0,0.32)] overflow-hidden border border-slate-200/80 bg-white flex flex-col"
-            style={{ maxHeight: "min(620px, 82vh)" }}
+            className="mb-4 w-[390px] max-w-[calc(100vw-2rem)] rounded-3xl shadow-[0_24px_70px_-12px_rgba(0,0,0,0.35)] overflow-hidden border border-slate-200/90 bg-white flex flex-col"
+            style={{ maxHeight: "min(630px, 84vh)" }}
           >
-            {/* Header */}
-            <div
-              className="px-5 py-4 flex items-center justify-between shrink-0"
-              style={{ background: "linear-gradient(135deg, #22306e 0%, #3d4fa3 100%)" }}
-            >
-              <div className="flex items-center gap-3">
+            {/* Executive Luxury Header */}
+            <div className="px-5 py-4 bg-gradient-to-r from-[#061220] via-[#091f38] to-[#040d1a] border-b border-cyan-500/20 text-white flex items-center justify-between shrink-0 shadow-sm relative overflow-hidden">
+              <div
+                className="absolute top-0 right-10 w-36 h-36 rounded-full pointer-events-none"
+                style={{
+                  background: "radial-gradient(circle, rgba(6,182,212,0.2) 0%, transparent 70%)",
+                  filter: "blur(20px)",
+                }}
+              />
+
+              <div className="flex items-center gap-3 relative z-10">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-white/15 ring-2 ring-white/20 flex items-center justify-center overflow-hidden">
-                    <img src={logo} alt="PSW" className="w-6 h-6 object-contain brightness-0 invert" />
+                  <div className="w-10 h-10 rounded-2xl bg-white/10 ring-1 ring-white/20 flex items-center justify-center overflow-hidden p-1.5 shadow-inner">
+                    <img src={logo} alt="PSW" className="w-full h-full object-contain brightness-0 invert" />
                   </div>
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-[#22306e]" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full ring-2 ring-[#061220] animate-pulse" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white text-[15px] leading-tight">Pool Supply Support</h3>
-                  <p className="text-white/60 text-[11px]">
-                    {!hasRegistered ? "We reply in minutes" : (isLoading ? "Loading…" : session ? `${messages.length} messages` : "We reply in minutes")}
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="font-extrabold text-white text-sm tracking-tight">Pool Supply Support</h3>
+                    <ShieldCheck className="size-3.5 text-cyan-400" />
+                  </div>
+                  <p className="text-cyan-200/80 text-[11px] font-medium flex items-center gap-1.5 mt-0.5">
+                    <span className="size-1.5 rounded-full bg-emerald-400 inline-block" />
+                    <span>Online · Instant Technical Advisory</span>
                   </p>
                 </div>
               </div>
+
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white/70 hover:bg-white/15 hover:text-white transition-colors"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white/70 hover:bg-white/15 hover:text-white transition-colors cursor-pointer relative z-10"
+                title="Close chat"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -245,19 +234,21 @@ export function FloatingChat() {
 
             {/* Pre-chat Form or Chat Content */}
             {!hasRegistered ? (
-              <div className="flex-1 overflow-y-auto px-5 py-6 bg-[#f5f6fa] flex flex-col gap-4">
-                <div className="text-center mb-2">
-                  <div className="w-12 h-12 rounded-full bg-[#22306e]/10 text-[#22306e] flex items-center justify-center mx-auto mb-3">
-                    <User className="w-6 h-6 text-[#22306e]" />
+              <div className="flex-1 overflow-y-auto px-6 py-7 bg-slate-50 flex flex-col gap-4">
+                <div className="text-center mb-1">
+                  <div className="w-12 h-12 rounded-2xl bg-cyan-50 border border-cyan-200/60 text-cyan-700 flex items-center justify-center mx-auto mb-3 shadow-2xs">
+                    <Headphones className="w-6 h-6 text-cyan-600" />
                   </div>
-                  <h4 className="font-extrabold text-slate-800 text-[15px]">Welcome to Live Support!</h4>
-                  <p className="text-xs text-slate-500 mt-1">Please introduce yourself to start chatting with us.</p>
+                  <h4 className="font-black text-slate-900 text-base">Live Technical Support</h4>
+                  <p className="text-xs text-slate-500 mt-1 font-medium leading-relaxed">
+                    Connect directly with certified commercial pool equipment specialists.
+                  </p>
                 </div>
 
                 <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                      Full Name <span className="text-red-500">*</span>
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                      Full Name <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
                       <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -269,14 +260,14 @@ export function FloatingChat() {
                           setRegName(e.target.value);
                           setFormError("");
                         }}
-                        placeholder="John Doe"
-                        className="w-full h-10 pl-9 pr-3 rounded-xl border border-slate-200 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-[#22306e]/20 focus:border-[#22306e]/50 transition-all"
+                        placeholder="e.g. Michael Miller"
+                        className="w-full h-10.5 pl-9 pr-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:outline-none focus:border-cyan-500 transition-all shadow-2xs"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
                       Email Address
                     </label>
                     <div className="relative">
@@ -288,16 +279,16 @@ export function FloatingChat() {
                           setRegEmail(e.target.value);
                           setFormError("");
                         }}
-                        placeholder="john@example.com"
-                        className="w-full h-10 pl-9 pr-3 rounded-xl border border-slate-200 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-[#22306e]/20 focus:border-[#22306e]/50 transition-all"
+                        placeholder="contractor@example.com"
+                        className="w-full h-10.5 pl-9 pr-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:outline-none focus:border-cyan-500 transition-all shadow-2xs"
                       />
                     </div>
                   </div>
 
-                  <div className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">— OR —</div>
+                  <div className="text-center text-[10px] font-black text-slate-300 uppercase tracking-widest">— OR —</div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
                       Phone Number
                     </label>
                     <div className="relative">
@@ -310,7 +301,7 @@ export function FloatingChat() {
                           setFormError("");
                         }}
                         placeholder="+1 (555) 000-0000"
-                        className="w-full h-10 pl-9 pr-3 rounded-xl border border-slate-200 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-[#22306e]/20 focus:border-[#22306e]/50 transition-all"
+                        className="w-full h-10.5 pl-9 pr-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:outline-none focus:border-cyan-500 transition-all shadow-2xs"
                       />
                     </div>
                   </div>
@@ -321,17 +312,16 @@ export function FloatingChat() {
 
                   <button
                     type="submit"
-                    className="w-full h-10 mt-3 rounded-xl text-white font-bold text-xs active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5"
-                    style={{ background: "linear-gradient(135deg, #22306e 0%, #3d4fa3 100%)" }}
+                    className="w-full h-11 mt-2 rounded-xl text-white font-black text-xs uppercase tracking-wider active:scale-95 transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600"
                   >
-                    Start Chatting
+                    <span>Start Live Chat</span>
                   </button>
                 </form>
               </div>
             ) : (
               <>
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto px-4 py-5 bg-[#f5f6fa] flex flex-col gap-3">
+                {/* Messages Stream Feed */}
+                <div className="flex-1 overflow-y-auto px-4 py-5 bg-slate-50/70 flex flex-col gap-3">
                   {/* Loading skeleton */}
                   {isLoading && messages.length === 0 && (
                     <div className="flex justify-center py-6">
@@ -339,18 +329,24 @@ export function FloatingChat() {
                     </div>
                   )}
 
-                  {/* Welcome message when no messages yet */}
+                  {/* Welcome banner when empty */}
                   {!isLoading && messages.length === 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-white rounded-2xl rounded-tl-sm px-4 py-3.5 shadow-sm border border-slate-100 text-slate-700 text-sm leading-relaxed"
+                      className="bg-white rounded-2xl p-4 shadow-2xs border border-slate-200/80 text-slate-700 text-xs leading-relaxed space-y-1"
                     >
-                      👋 Hi there! I'm your Pool Supply Wholesalers support assistant. Ask about pumps, heaters, filters, cleaners, lighting, or anything else. How can I help?
+                      <div className="font-extrabold text-slate-900 flex items-center gap-1.5 text-xs">
+                        <Sparkles className="size-3.5 text-cyan-600" />
+                        <span>Welcome to Wholesale Support!</span>
+                      </div>
+                      <p className="text-slate-600 font-medium text-[12px] leading-normal">
+                        Ask about pumps, heaters, sand filters, salt chlorinators, or contractor volume discounts. How can we help?
+                      </p>
                     </motion.div>
                   )}
 
-                  {/* Actual messages */}
+                  {/* Actual Chat Bubbles */}
                   {messages.map((msg, i) => {
                     const isUser = msg.sender === "user";
                     return (
@@ -358,120 +354,120 @@ export function FloatingChat() {
                         key={msg.id}
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i < 5 ? i * 0.025 : 0 }}
-                        className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                        transition={{ delay: i < 6 ? i * 0.02 : 0 }}
+                        className={`flex ${isUser ? "justify-end" : "justify-start"} items-end gap-2`}
                       >
                         {!isUser && (
-                          <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200/50 flex items-center justify-center shrink-0 mr-2 mt-auto overflow-hidden">
-                            <img src={logo} alt="Support" className="w-4 h-4 object-contain" />
+                          <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-700 flex items-center justify-center shrink-0 mb-1 overflow-hidden p-1 shadow-2xs">
+                            <img src={logo} alt="PSW" className="w-full h-full object-contain brightness-0 invert" />
                           </div>
                         )}
+
                         <div
-                          className={`max-w-[75%] rounded-2xl px-4 py-2.5 shadow-sm ${
+                          className={`max-w-[78%] rounded-2xl px-3.5 py-2 shadow-2xs transition-all ${
                             isUser
-                              ? "text-white rounded-tr-sm"
-                              : "bg-white text-slate-800 border border-slate-100 rounded-tl-sm"
+                              ? "bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-br-xs shadow-cyan-900/15"
+                              : "bg-white text-slate-900 border border-slate-200/90 rounded-bl-xs"
                           }`}
-                          style={isUser ? { background: "linear-gradient(135deg, #22306e, #3d4fa3)" } : undefined}
                         >
-                          <p className="text-sm leading-relaxed">{msg.text}</p>
-                          <p className={`text-[10px] mt-1 ${isUser ? "text-white/55 text-right" : "text-slate-400"}`}>
-                            {formatTime(msg.timestamp)}
-                          </p>
-                        </div>
-                        {isUser && (
-                          <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0 ml-2 mt-auto">
-                            <User className="w-3.5 h-3.5 text-slate-600" />
+                          {!isUser && (
+                            <div className="text-[9px] font-black text-cyan-700 tracking-wider uppercase mb-0.5">
+                              Support Representative
+                            </div>
+                          )}
+                          <p className="text-[13px] leading-snug font-medium whitespace-pre-wrap">{msg.text}</p>
+                          <div
+                            className={`text-[9px] mt-0.5 font-bold flex items-center justify-end gap-1 ${
+                              isUser ? "text-cyan-100/75" : "text-slate-400"
+                            }`}
+                          >
+                            <span>{formatTime(msg.timestamp)}</span>
+                            {isUser && <CheckCheck className="size-2.5 text-cyan-200/80" />}
                           </div>
-                        )}
+                        </div>
                       </motion.div>
                     );
                   })}
 
-                  {/* Resolved notice */}
+                  {/* Resolved notice banner */}
                   {isResolved && (
-                    <div className="flex items-center justify-center gap-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl py-2 px-3">
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                      This session has been resolved by our team.
+                    <div className="flex flex-col items-center justify-center gap-2.5 text-xs text-slate-700 bg-white border border-slate-200/90 rounded-2xl p-4 text-center my-2 shadow-2xs">
+                      <div className="flex items-center gap-1.5 font-extrabold text-emerald-700">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>This conversation has been resolved.</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 max-w-[260px] font-medium">
+                        Need assistance with another product or order? Click below to start a new chat.
+                      </p>
+                      <button
+                        onClick={handleStartNewSession}
+                        className="mt-0.5 px-4 py-2 rounded-xl text-white font-black text-xs shadow-md transition active:scale-95 flex items-center gap-1.5 cursor-pointer bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Start New Conversation</span>
+                      </button>
                     </div>
                   )}
 
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Quick Actions (only before first user message) */}
+                {/* Quick Actions (only before first message) */}
                 {messages.length === 0 && !isResolved && (
-                  <div className="px-4 pb-3 bg-[#f5f6fa] shrink-0">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Quick Actions</p>
+                  <div className="px-4 pb-3 bg-slate-50/70 shrink-0">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Quick Inquiries</p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {QUICK_ACTIONS.map((action, i) => (
                         <button
                           key={i}
                           onClick={() => handleSend(action.message)}
-                          className="flex items-center gap-1.5 bg-white hover:bg-slate-50 active:scale-95 transition-all px-2.5 py-2 rounded-xl border border-slate-100 shadow-sm text-xs font-medium text-slate-700"
+                          className="flex items-center gap-1.5 bg-white hover:bg-cyan-50/80 active:scale-95 transition-all px-2.5 py-2 rounded-xl border border-slate-200/80 shadow-2xs text-[11px] font-bold text-slate-700 hover:text-cyan-900 cursor-pointer"
                         >
                           {action.icon}
-                          {action.label}
+                          <span className="truncate">{action.label}</span>
                         </button>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* Sales CTA (only before first message) */}
-                {messages.length === 0 && !isResolved && (
-                  <div className="px-4 pb-3 bg-[#f5f6fa] shrink-0">
-                    <a
-                      href="tel:+1800000000"
-                      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:scale-[0.98] transition-all py-2.5 rounded-xl border border-slate-200 shadow-sm text-sm font-semibold text-[#22306e]"
+                {/* Input Bar */}
+                <div className="px-4 pb-4 pt-3 bg-white border-t border-slate-100 shrink-0">
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder={isResolved ? "Type to start a new chat session…" : "Ask about pool supplies…"}
+                      disabled={sendMutation.isPending}
+                      className="flex-1 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs font-medium text-slate-900 bg-slate-50 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all shadow-2xs"
+                    />
+                    <button
+                      onClick={() => handleSend()}
+                      disabled={!inputText.trim() || sendMutation.isPending}
+                      className="w-10.5 h-10.5 rounded-2xl text-white flex items-center justify-center shrink-0 shadow-md active:scale-95 disabled:opacity-40 transition-all cursor-pointer bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 shadow-cyan-900/20"
                     >
-                      <PhoneCall className="w-4 h-4 text-blue-500" />
-                      Contact Sales Team
-                    </a>
+                      {sendMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4 ml-0.5" />
+                      )}
+                    </button>
                   </div>
-                )}
-
-                {/* Input */}
-                {!isResolved ? (
-                  <div className="px-4 pb-4 pt-2 bg-white border-t border-slate-100 shrink-0">
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Ask about pool supplies…"
-                        disabled={sendMutation.isPending}
-                        className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#22306e]/20 focus:border-[#22306e]/50 transition-all"
-                      />
-                      <button
-                        onClick={() => handleSend()}
-                        disabled={!inputText.trim() || sendMutation.isPending}
-                        className="w-11 h-11 rounded-xl text-white flex items-center justify-center shrink-0 shadow-sm active:scale-95 disabled:opacity-40 transition-all"
-                        style={{ background: "linear-gradient(135deg, #22306e, #3d4fa3)" }}
-                      >
-                        {sendMutation.isPending ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Send className="w-4 h-4 ml-0.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
+                </div>
               </>
             )}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── FAB ──────────────────────────────────────────────────────────────── */}
+      {/* ── FAB Button ────────────────────────────────────────────────────────── */}
       <motion.button
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.94 }}
         onClick={() => setIsOpen((o) => !o)}
-        className="relative w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-white"
-        style={{ background: "linear-gradient(135deg, #22306e 0%, #3d4fa3 100%)" }}
+        className="relative w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white cursor-pointer bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 ring-4 ring-cyan-500/20"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -484,9 +480,10 @@ export function FloatingChat() {
             </motion.span>
           )}
         </AnimatePresence>
+
         {/* Unread indicator */}
         {session && (session.unreadUser ?? 0) > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center ring-2 ring-white">
             {session.unreadUser}
           </span>
         )}
