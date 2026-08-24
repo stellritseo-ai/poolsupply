@@ -3,7 +3,8 @@ import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { getShopProductsPagedDb, getShopCategoryBrandsDb, Product } from "@/lib/api/products.functions";
+import { getShopProductsPagedDb, getShopCategoryBrandsDb } from "@/lib/api/products.functions";
+import { Product } from "@/lib/products";
 import { useCart } from "@/components/site/cart-context";
 import {
   Star, ShoppingBag, Eye, Filter, ArrowUpDown, Search,

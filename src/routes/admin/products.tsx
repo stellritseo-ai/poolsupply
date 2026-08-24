@@ -471,9 +471,10 @@ function ProductsManager() {
     keepPreviousData: true,
   } as any);
 
-  const productsList: Product[] = dbProductsResult?.products || defaultProductsList;
-  const totalProducts: number = dbProductsResult?.total || productsList.length;
-  const totalPages: number = dbProductsResult?.pages || Math.ceil(totalProducts / pageSize);
+  const rawResult: any = dbProductsResult || {};
+  const productsList: Product[] = rawResult.products || defaultProductsList;
+  const totalProducts: number = rawResult.total || productsList.length;
+  const totalPages: number = rawResult.pages || Math.ceil(totalProducts / pageSize);
 
   // Selection & Bulk Delete State
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
