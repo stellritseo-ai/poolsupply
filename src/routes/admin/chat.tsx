@@ -38,6 +38,7 @@ import {
   Droplet,
   SlidersHorizontal,
   Trash2,
+  ArrowLeft,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -130,12 +131,17 @@ function AdminChat() {
   }, [sessions, statusFilter, search]);
 
   const selectedSession = useMemo(() => {
-    if (!selectedSessionId) return filteredSessions[0] || null;
+    if (!selectedSessionId) {
+      if (typeof window !== "undefined" && window.innerWidth >= 1024) {
+        return filteredSessions[0] || null;
+      }
+      return null;
+    }
     return sessions.find((s) => s.sessionId === selectedSessionId) ?? null;
   }, [selectedSessionId, filteredSessions, sessions]);
 
   useEffect(() => {
-    if (!selectedSessionId && filteredSessions.length > 0) {
+    if (!selectedSessionId && filteredSessions.length > 0 && typeof window !== "undefined" && window.innerWidth >= 1024) {
       setSelectedSessionId(filteredSessions[0].sessionId);
     }
   }, [filteredSessions, selectedSessionId]);
@@ -204,7 +210,7 @@ function AdminChat() {
   };
 
   return (
-    <div className="space-y-6 max-w-[1360px] mx-auto w-full">
+    <div className="space-y-4 sm:space-y-6 max-w-[1360px] mx-auto w-full min-w-0 max-w-full overflow-hidden">
       {/* Toast Notification Alert */}
       <AnimatePresence>
         {toast && (
@@ -212,16 +218,16 @@ function AdminChat() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-24 right-8 z-50 bg-[#061220] text-white px-5 py-3 rounded-2xl flex items-center gap-2.5 shadow-2xl text-xs font-bold border border-cyan-500/30 backdrop-blur-md"
+            className="fixed top-20 sm:top-24 right-4 sm:right-8 z-50 bg-[#061220] text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl flex items-center gap-2.5 shadow-2xl text-xs font-bold border border-cyan-500/30 backdrop-blur-md max-w-[90vw]"
           >
-            <CheckCircle className="size-4 text-cyan-400" />
-            <span>{toast}</span>
+            <CheckCircle className="size-4 text-cyan-400 shrink-0" />
+            <span className="truncate">{toast}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* ─── LUXURY EXECUTIVE COMMAND HEADER ─── */}
-      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden p-5 sm:p-7 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white shadow-xl">
+      <div className={`relative rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-7 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white shadow-xl ${selectedSessionId ? "hidden lg:block" : "block"}`}>
         <div
           className="absolute top-0 right-1/3 w-[400px] h-[400px] rounded-full pointer-events-none"
           style={{
@@ -249,12 +255,12 @@ function AdminChat() {
 
           {/* Quick Metrics HUD */}
           <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 sm:gap-3 w-full lg:w-auto shrink-0">
-            <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
+            <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
               <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">Total</div>
               <div className="text-base sm:text-lg font-black text-white mt-0.5">{sessions.length}</div>
             </div>
 
-            <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
+            <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
               <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-400 truncate">Live</div>
               <div className="text-base sm:text-lg font-black text-emerald-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
                 {activeCount}
@@ -262,7 +268,7 @@ function AdminChat() {
               </div>
             </div>
 
-            <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
+            <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
               <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">Unread</div>
               <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
                 {unreadCount}
@@ -272,7 +278,7 @@ function AdminChat() {
 
             <button
               onClick={() => refetch()}
-              className="col-span-3 sm:col-span-1 p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition flex items-center justify-center gap-1.5 sm:gap-2 text-xs font-bold cursor-pointer"
+              className="col-span-3 sm:col-span-1 p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition flex items-center justify-center gap-1.5 sm:gap-2 text-xs font-bold cursor-pointer"
               title="Sync Live Channels"
             >
               <RefreshCw className={`size-3.5 ${isLoading ? "animate-spin text-cyan-300" : ""}`} />
@@ -283,11 +289,11 @@ function AdminChat() {
       </div>
 
       {/* ─── DUAL-PANE CHAT CONSOLE ─── */}
-      <div className="grid lg:grid-cols-12 gap-6 items-start">
+      <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start w-full min-w-0">
         {/* LEFT 5 COLS: Session Search, Filter Bar & Card Feed */}
-        <div className={`lg:col-span-5 space-y-3 sm:space-y-4 ${selectedSessionId ? "hidden lg:block" : "block"}`}>
+        <div className={`lg:col-span-5 space-y-3 sm:space-y-4 w-full min-w-0 ${selectedSessionId ? "hidden lg:block" : "block"}`}>
           {/* Search & Filter Toolbar */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-2xs space-y-3">
+          <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xs space-y-2.5 sm:space-y-3">
             <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
               <input
@@ -308,7 +314,7 @@ function AdminChat() {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-[11px] sm:text-xs font-bold overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-[10px] sm:text-xs font-bold overflow-x-auto scrollbar-none">
               <button
                 onClick={() => setStatusFilter("all")}
                 className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${
@@ -362,13 +368,13 @@ function AdminChat() {
                   <div
                     key={session.sessionId}
                     onClick={() => setSelectedSessionId(session.sessionId)}
-                    className={`p-3.5 sm:p-4 rounded-2xl transition-all cursor-pointer flex items-start justify-between gap-3 border group active:bg-slate-100 ${
+                    className={`p-3 sm:p-4 rounded-2xl transition-all cursor-pointer flex items-start justify-between gap-2.5 sm:gap-3 border group active:bg-slate-100 ${
                       isSelected
                         ? "bg-gradient-to-r from-cyan-50/90 to-white border-cyan-500/40 shadow-sm"
                         : "bg-white border-slate-200/90 hover:border-slate-300 hover:shadow-2xs"
                     }`}
                   >
-                    <div className="flex items-start gap-2.5 sm:gap-3 overflow-hidden min-w-0">
+                    <div className="flex items-start gap-2.5 sm:gap-3 overflow-hidden min-w-0 flex-1">
                       <div className="relative shrink-0">
                         <div className="size-9 sm:size-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xs grid place-items-center shadow-2xs mt-0.5">
                           {session.userName?.charAt(0).toUpperCase() || "C"}
@@ -378,7 +384,7 @@ function AdminChat() {
                         )}
                       </div>
 
-                      <div className="space-y-0.5 sm:space-y-1 overflow-hidden min-w-0">
+                      <div className="space-y-0.5 sm:space-y-1 overflow-hidden min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 sm:gap-2">
                           <span className="font-black text-xs text-slate-900 truncate">
                             {session.userName || `Customer #${session.sessionId.substring(0, 5)}`}
@@ -396,7 +402,7 @@ function AdminChat() {
                     </div>
 
                     <div className="flex flex-col items-end gap-1.5 sm:gap-2 shrink-0">
-                      <span className="text-[10px] text-slate-400 font-bold whitespace-nowrap">
+                      <span className="text-[9px] sm:text-[10px] text-slate-400 font-bold whitespace-nowrap">
                         {lastMessage ? timeAgo(lastMessage.timestamp) : "Now"}
                       </span>
 
@@ -413,7 +419,7 @@ function AdminChat() {
                 );
               })
             ) : (
-              <div className="py-16 text-center text-slate-400 space-y-2 p-6 bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl">
+              <div className="py-12 sm:py-16 text-center text-slate-400 space-y-2 p-6 bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl">
                 <MessageSquare className="size-8 mx-auto text-slate-300 stroke-1" />
                 <p className="text-xs font-bold text-slate-700">No chat sessions found</p>
                 <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
@@ -425,7 +431,7 @@ function AdminChat() {
         </div>
 
         {/* RIGHT 7 COLS: Active Live Messaging Console */}
-        <div className={`lg:col-span-7 ${selectedSessionId ? "block" : "hidden lg:block"}`}>
+        <div className={`lg:col-span-7 w-full min-w-0 max-w-full ${selectedSessionId ? "block" : "hidden lg:block"}`}>
           <AnimatePresence mode="wait">
             {selectedSession ? (
               <motion.div
@@ -433,28 +439,29 @@ function AdminChat() {
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden flex flex-col h-[580px] sm:h-[670px]"
+                className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden flex flex-col h-[520px] sm:h-[670px] w-full min-w-0 max-w-full"
               >
                 {/* Header Profile Bar */}
-                <div className="p-3.5 sm:p-4 sm:px-6 bg-slate-50/90 border-b border-slate-100 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+                <div className="p-3 sm:p-4 sm:px-6 bg-slate-50/90 border-b border-slate-100 flex items-center justify-between gap-2.5 sm:gap-3 w-full min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-3.5 min-w-0 flex-1">
                     {/* Mobile Back Button */}
                     <button
                       onClick={() => setSelectedSessionId(null)}
-                      className="lg:hidden p-1.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold flex items-center gap-1 shrink-0"
+                      className="lg:hidden inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold shrink-0 cursor-pointer shadow-2xs"
                     >
-                      ←
+                      <ArrowLeft className="size-3.5" />
+                      <span className="hidden xs:inline">Channels</span>
                     </button>
 
                     <div className="relative shrink-0">
-                      <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xs sm:text-sm grid place-items-center shadow-md">
+                      <div className="size-8 sm:size-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xs sm:text-sm grid place-items-center shadow-md">
                         {selectedSession.userName?.charAt(0).toUpperCase() || "C"}
                       </div>
                       {selectedSession.status === "active" && (
-                        <span className="absolute -bottom-0.5 -right-0.5 size-2.5 sm:size-3 rounded-full bg-emerald-500 border-2 border-white animate-ping" />
+                        <span className="absolute -bottom-0.5 -right-0.5 size-2 sm:size-3 rounded-full bg-emerald-500 border-2 border-white animate-ping" />
                       )}
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="font-black text-xs sm:text-sm text-slate-900 flex items-center gap-1.5 truncate">
                         <span className="truncate">{selectedSession.userName || `Customer #${selectedSession.sessionId.substring(0, 5)}`}</span>
                         {selectedSession.status === "active" ? (
@@ -517,13 +524,13 @@ function AdminChat() {
                 </div>
 
                 {/* Live Message History Feed */}
-                <div className="flex-1 p-3.5 sm:p-6 overflow-y-auto space-y-3 sm:space-y-4 bg-slate-50/50">
+                <div className="flex-1 p-3 sm:p-6 overflow-y-auto space-y-3 sm:space-y-4 bg-slate-50/50">
                   {selectedSession.messages.map((msg) => {
                     const isAdmin = msg.sender === "admin";
                     return (
                       <div key={msg.id} className={`flex ${isAdmin ? "justify-end" : "justify-start"}`}>
                         <div
-                          className={`max-w-[88%] sm:max-w-[78%] rounded-2xl px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-medium space-y-1 shadow-2xs ${
+                          className={`max-w-[90%] sm:max-w-[78%] rounded-2xl px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-medium space-y-1 shadow-2xs break-words ${
                             isAdmin
                               ? "bg-gradient-to-br from-slate-900 via-[#0a1b2e] to-[#061220] text-white rounded-br-none border border-cyan-500/20"
                               : "bg-white text-slate-900 border border-slate-200/90 rounded-bl-none"
@@ -564,19 +571,19 @@ function AdminChat() {
                 {/* Message Input & Dispatch Bar */}
                 <form
                   onSubmit={handleSend}
-                  className="p-2.5 sm:p-3.5 bg-white border-t border-slate-100 flex items-center gap-2 sm:gap-2.5"
+                  className="p-2.5 sm:p-3.5 bg-white border-t border-slate-100 flex items-center gap-2 sm:gap-2.5 w-full min-w-0"
                 >
                   <input
                     type="text"
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    placeholder="Type official reply to customer..."
-                    className="flex-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition"
+                    placeholder="Type official reply..."
+                    className="flex-1 min-w-0 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition"
                   />
                   <button
                     type="submit"
                     disabled={!replyText.trim() || sendReplyMutation.isPending}
-                    className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black uppercase tracking-wider shadow-md disabled:opacity-40 transition active:scale-95 cursor-pointer shrink-0"
+                    className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black uppercase tracking-wider shadow-md disabled:opacity-40 transition active:scale-95 cursor-pointer shrink-0"
                   >
                     <Send className="size-3.5" />
                     <span className="hidden xs:inline">Send</span>
@@ -584,7 +591,7 @@ function AdminChat() {
                 </form>
               </motion.div>
             ) : (
-              <div className="p-12 sm:p-20 text-center bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl text-slate-400 text-xs font-bold space-y-2">
+              <div className="p-10 sm:p-20 text-center bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl text-slate-400 text-xs font-bold space-y-2">
                 <MessageSquare className="size-10 mx-auto text-slate-300 stroke-1" />
                 <p className="text-sm font-bold text-slate-700">No active chat selected</p>
                 <p className="text-xs text-slate-400">
