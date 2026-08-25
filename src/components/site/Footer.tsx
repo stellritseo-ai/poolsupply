@@ -7,38 +7,52 @@ import { subscribeEmail } from "@/lib/api/subscribers.functions";
 
 const ROUTE_MAP: Record<string, string> = {
   "About Us": "/about",
+  "About Distributor": "/about",
   "Contact Us": "/contact",
   "Why Choose Us": "/why-us",
   "Pool Pumps": "/shop/pumps",
+  "Commercial Pool Pumps": "/shop/pumps",
   "Heaters": "/shop/heaters",
+  "Gas & Propane Heaters": "/shop/heaters",
   "Filters": "/shop/filters",
+  "Cartridge & DE Filters": "/shop/filters",
   "Lights": "/shop/lights",
+  "LED Pool Lights": "/shop/lights",
   "Cleaners": "/shop/cleaners",
+  "Robotic Cleaners": "/shop/cleaners",
   "Automation": "/shop/automation",
+  "Automation & Controls": "/shop/automation",
   "Pentair": "/brands/pentair",
   "Hayward": "/brands/hayward",
   "Jandy": "/brands/jandy",
   "Raypak": "/brands/raypak",
   "Zodiac": "/brands/zodiac",
   "Waterway": "/brands/waterway",
+  "Equipment Sizing Wizard": "/finder",
+  "Pool Pump Buying Guide": "/shop/pumps",
+  "Filter Sizing & Care": "/shop/filters",
+  "Verified Reviews": "/reviews",
+  "Energy Savings Calculator": "/finder",
+  "Commercial Accounts": "/contact",
+  "Warranty & Support": "/contact",
 };
 
 const cols = [
   {
     title: "Equipment Categories",
-    links: ["Pool Pumps", "Heaters", "Filters", "Lights", "Cleaners", "Automation"],
+    links: ["Commercial Pool Pumps", "Gas & Propane Heaters", "Cartridge & DE Filters", "LED Pool Lights", "Robotic Cleaners", "Automation & Controls"],
   },
   {
     title: "Authorized Brands",
     links: ["Pentair", "Hayward", "Jandy", "Raypak", "Zodiac", "Waterway"],
   },
   {
-    title: "Contractor Support",
-    links: ["Contact Us", "Why Choose Us", "OEM Warranty", "Expedited Freight", "Hydraulic Sizing"],
+    title: "Pool Resources",
+    links: ["Equipment Sizing Wizard", "Pool Pump Buying Guide", "Filter Sizing & Care", "Verified Reviews", "Energy Savings Calculator"],
   },
   {
-    title: "Wholesale Company",
-    links: ["About Us", "Trade Accounts", "Commercial Bids", "Terms of Sale", "Privacy Policy"],
+    title: "Company & Support",
+    links: ["About Distributor", "Why Choose Us", "Contact Us", "Commercial Accounts", "Warranty & Support"],
   },
 ];
 

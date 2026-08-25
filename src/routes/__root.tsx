@@ -165,6 +165,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://js.stripe.com" },
+      { rel: "dns-prefetch", href: "https://js.stripe.com" },
+      { rel: "preconnect", href: "https://www.googletagmanager.com" },
+      { rel: "dns-prefetch", href: "https://www.googletagmanager.com" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" },
       { rel: "canonical", href: "https://poolsupplywholesalers.com/" },
     ],
@@ -181,7 +185,15 @@ function RootShell({ children }: { children: ReactNode }) {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Pool Supply Wholesalers",
+      "alternateName": ["PSW", "Pool Supply Wholesalers Online"],
       "url": "https://poolsupplywholesalers.com",
+      "description": "Pool Supply Wholesalers — wholesale pool supplies and commercial equipment online at trade pricing.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Pool Supply Wholesalers",
+        "url": "https://poolsupplywholesalers.com",
+        "logo": "https://poolsupplywholesalers.com/assets/logo.png"
+      },
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
@@ -193,15 +205,39 @@ function RootShell({ children }: { children: ReactNode }) {
     },
     {
       "@context": "https://schema.org",
-      "@type": ["WholesaleStore", "Store"],
+      "@type": ["Organization", "WholesaleStore", "Store"],
       "name": "Pool Supply Wholesalers",
+      "alternateName": ["Pool Supply Wholesalers LLC", "PSW Wholesale"],
       "url": "https://poolsupplywholesalers.com",
       "logo": "https://poolsupplywholesalers.com/assets/logo.png",
       "image": "https://poolsupplywholesalers.com/about-hero.png",
       "telephone": "+1-615-477-0407",
       "email": "sales@poolsupplywholesalers.com",
       "priceRange": "$$",
-      "description": "America's premier wholesale to retail distributor of commercial pool equipment, variable speed pumps, gas heaters, cartridge filters, and automation systems.",
+      "description": "America's premier wholesale to retail distributor of commercial pool equipment, variable speed pumps, gas heaters, cartridge filters, and automation systems from Pentair, Hayward, Jandy, and Raypak.",
+      "founder": [
+        {
+          "@type": "Person",
+          "name": "Jonathan Elio Rodriguez"
+        },
+        {
+          "@type": "Person",
+          "name": "David Elio Rodriguez"
+        }
+      ],
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "Pools By Elio",
+        "description": "Master pool construction and commercial aquatic contracting firm with 25+ years of industry leadership."
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-615-477-0407",
+        "contactType": "customer service",
+        "email": "sales@poolsupplywholesalers.com",
+        "areaServed": "US",
+        "availableLanguage": "English"
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "410 Scott Pike",

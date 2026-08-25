@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
 import { ObjectId } from "mongodb";
+import { sendContactEmailAdminNotification } from "../mailer";
 
 function toQueryId(id: string): any {
   try {
@@ -52,7 +53,7 @@ export const submitContactFormDb = createServerFn({ method: "POST" })
 
       await emailsCol.insertOne(doc);
 
-      // Create Admin Notification
+      // Create Admin In-App Notification
       const notifsCol = db.collection("notifications");
       await notifsCol.insertOne({
         title: `New Web Email from ${data.name}`,
@@ -60,6 +61,11 @@ export const submitContactFormDb = createServerFn({ method: "POST" })
         type: "system",
         read: false,
         createdAt: new Date()
+      });
+
+      // Dispatch real-time Email notification to admin inboxes (Yahoo & Gmail)
+      sendContactEmailAdminNotification(doc).catch((err) => {
+        console.error("Non-blocking error dispatching contact email notification:", err);
       });
 
       return { success: true, id };

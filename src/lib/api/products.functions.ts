@@ -57,12 +57,12 @@ export const getProductsDb = createServerFn({ method: "POST" })
       const rawProducts = await productsCol.find(query).limit(limit).toArray();
 
       const formatted = rawProducts.map((p: any) => {
-        const item = { ...p, id: p._id.toString() };
-        delete item._id;
+        const { _id, ...rest } = p;
+        const item = { ...rest, id: p.id || _id?.toString() };
         if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
           item.img = "/assets/commingsoon.png";
         }
-        return item as Product;
+        return item as unknown as Product;
       });
 
       return { success: true, products: formatted };
@@ -124,12 +124,12 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
 
           const raw = await productsCol.findOne({ $or: orConditions });
           if (raw) {
-            const item = { ...raw, id: raw.id || raw._id.toString() };
-            delete item._id;
+            const { _id, ...rest } = raw as any;
+            const item = { ...rest, id: rest.id || _id?.toString() };
             if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
               item.img = "/assets/commingsoon.png";
             }
-            return { success: true, product: item as Product };
+            return { success: true, product: item as unknown as Product };
           }
         }
       } catch (dbErr) {
@@ -314,12 +314,12 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
       ]);
 
       const formatted = rawProducts.map((p: any) => {
-        const item = { ...p, id: p.id || p._id.toString() };
-        delete item._id;
+        const { _id, ...rest } = p;
+        const item = { ...rest, id: p.id || _id?.toString() };
         if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
           item.img = "/assets/commingsoon.png";
         }
-        return item as Product;
+        return item as unknown as Product;
       });
 
       return {
@@ -386,12 +386,12 @@ export const getAllProductsAdminDb = createServerFn({ method: "POST" })
       ]);
 
       const formatted = rawProducts.map((p: any) => {
-        const item = { ...p, id: p.id || p._id.toString() };
-        delete item._id;
+        const { _id, ...rest } = p;
+        const item = { ...rest, id: p.id || _id?.toString() };
         if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
           item.img = "/assets/commingsoon.png";
         }
-        return item as Product;
+        return item as unknown as Product;
       });
 
       return { success: true, products: formatted, total, page, limit, pages: Math.ceil(total / limit) };
@@ -450,12 +450,12 @@ export const searchProductsDb = createServerFn({ method: "POST" })
         const matched = await productsCol.find({ $and: andConditions }).limit(24).toArray();
 
         formatted = matched.map((p: any) => {
-          const item = { ...p, id: p._id.toString() };
-          delete item._id;
+          const { _id, ...rest } = p;
+          const item = { ...rest, id: p.id || _id?.toString() };
           if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
             item.img = "/assets/commingsoon.png";
           }
-          return item as Product;
+          return item as unknown as Product;
         });
       } catch (dbErr) {
         console.error("DB Search failed, attempting fallback:", dbErr);
