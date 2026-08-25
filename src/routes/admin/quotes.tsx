@@ -21,6 +21,7 @@ import {
   MapPin,
   Send,
   Layers,
+  ArrowLeft,
 } from "lucide-react";
 import {
   getAdminQuotesDb,
@@ -407,7 +408,7 @@ function AdminQuotesPage() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 pb-16">
+    <div className="space-y-6 sm:space-y-8 pb-16 w-full min-w-0 max-w-full overflow-hidden">
       {/* ─── TOAST NOTIFICATION ─── */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl shadow-2xl border border-cyan-500/40 text-xs font-bold flex items-center gap-2 animate-bounce max-w-[90vw]">
@@ -417,7 +418,7 @@ function AdminQuotesPage() {
       )}
 
       {/* ─── TOP BAR BREADCRUMBS & ACTIONS ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-200/80 pb-4 sm:pb-5">
+      <div className={`flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-200/80 pb-4 sm:pb-5 ${selectedQuoteId ? "hidden lg:flex" : "flex"}`}>
         <div>
           <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-1">
             <Link to="/admin" className="hover:text-cyan-700 transition">
@@ -455,7 +456,7 @@ function AdminQuotesPage() {
       </div>
 
       {/* ─── 5-PILLAR METRIC HUD ─── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+      <div className={`grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 ${selectedQuoteId ? "hidden lg:grid" : "grid"}`}>
         {/* Metric 1 */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-5 shadow-2xs">
           <div className="flex items-center justify-between mb-1 sm:mb-2">
@@ -518,7 +519,7 @@ function AdminQuotesPage() {
       </div>
 
       {/* ─── LIVE SEARCH & MULTI-FILTER BAR ─── */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-4 shadow-2xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4">
+      <div className={`border border-slate-200/90 rounded-2xl p-3 sm:p-4 shadow-2xs flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4 bg-white ${selectedQuoteId ? "hidden lg:flex" : "flex"}`}>
         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <div className="relative flex-1">
             <Search className="size-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -534,7 +535,7 @@ function AdminQuotesPage() {
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="text-xs font-bold text-slate-400 hover:text-slate-700 px-2 py-1 shrink-0"
+              className="text-xs font-bold text-slate-400 hover:text-slate-700 px-2 py-1 shrink-0 cursor-pointer"
             >
               Clear
             </button>
@@ -578,9 +579,9 @@ function AdminQuotesPage() {
       </div>
 
       {/* ─── 2-COLUMN MASTER-DETAIL VIEW (Fluid on Mobile) ─── */}
-      <div className="grid lg:grid-cols-12 gap-6 items-start">
+      <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start w-full min-w-0">
         {/* Left Column (5 cols): List of Quotes */}
-        <div className={`lg:col-span-5 space-y-3 ${selectedQuoteId ? "hidden lg:block" : "block"}`}>
+        <div className={`lg:col-span-5 space-y-3 w-full min-w-0 ${selectedQuoteId ? "hidden lg:block" : "block"}`}>
           <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-slate-400 px-1">
             <span>SHOWING {filteredQuotes.length} PROPOSALS</span>
             <span>SORTED BY DATE</span>
@@ -658,30 +659,31 @@ function AdminQuotesPage() {
         </div>
 
         {/* Right Column (7 cols): Selected Quote Details & Controls */}
-        <div className={`lg:col-span-7 ${selectedQuoteId ? "block" : "hidden lg:block"}`}>
+        <div className={`lg:col-span-7 w-full min-w-0 max-w-full ${selectedQuoteId ? "block" : "hidden lg:block"}`}>
           {activeQuote ? (
-            <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 shadow-2xs space-y-4 sm:space-y-6">
+            <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 lg:p-7 shadow-2xs space-y-4 sm:space-y-6 w-full min-w-0 max-w-full overflow-hidden">
               {/* Header HUD with Status & Actions + Mobile Back Button */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 pb-4 sm:pb-5">
-                <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 pb-3.5 sm:pb-5">
+                <div className="flex items-start gap-2 sm:gap-3 min-w-0">
                   {/* Mobile Back Button */}
                   <button
                     onClick={() => setSelectedQuoteId(null)}
-                    className="lg:hidden p-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold flex items-center gap-1 shrink-0 mt-0.5"
+                    className="lg:hidden inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition shrink-0 mt-0.5 cursor-pointer"
                   >
-                    ←
+                    <ArrowLeft className="size-3.5" />
+                    <span>Back</span>
                   </button>
 
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-mono font-black text-xs sm:text-base text-cyan-800">#{activeQuote.quoteId}</span>
                       {activeQuote.isResolved ? (
-                        <span className="text-[10px] sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+                        <span className="text-[10px] sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1 shrink-0">
                           <Check className="size-3 sm:size-3.5" />
                           <span>Resolved</span>
                         </span>
                       ) : (
-                        <span className="text-[10px] sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+                        <span className="text-[10px] sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1 shrink-0">
                           <Clock className="size-3 sm:size-3.5" />
                           <span>{activeQuote.status || "Under Review"}</span>
                         </span>
@@ -726,7 +728,7 @@ function AdminQuotesPage() {
 
               {/* Customer & Job Site Card */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 sm:space-y-2">
+                <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 sm:space-y-2 min-w-0">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Client / Contractor Profile</div>
                   <div className="font-extrabold text-xs sm:text-sm text-slate-900 flex items-center gap-2 truncate">
                     <User className="size-3.5 sm:size-4 text-cyan-600 shrink-0" />
@@ -755,7 +757,7 @@ function AdminQuotesPage() {
                   )}
                 </div>
 
-                <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 sm:space-y-2">
+                <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 sm:space-y-2 min-w-0">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Project Details</div>
                   {activeQuote.projectLocation && (
                     <div className="text-xs text-slate-700 flex items-center gap-2 truncate">
@@ -775,24 +777,24 @@ function AdminQuotesPage() {
               </div>
 
               {/* Requested Scope & Items List */}
-              <div className="space-y-2.5 sm:space-y-3">
+              <div className="space-y-2.5 sm:space-y-3 w-full min-w-0">
                 <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-slate-400">Requested Bill of Materials (BOM)</div>
                 {activeQuote.items && activeQuote.items.length > 0 ? (
-                  <div className="border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100">
+                  <div className="border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100 w-full min-w-0">
                     {activeQuote.items.map((it: any, idx: number) => (
-                      <div key={idx} className="p-2.5 sm:p-3 bg-white flex items-center justify-between gap-2.5 text-xs">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span className="size-5 sm:size-6 rounded-lg bg-slate-100 text-slate-600 font-mono font-bold grid place-items-center text-[9px] sm:text-[10px] shrink-0">
+                      <div key={idx} className="p-2.5 sm:p-3 bg-white flex flex-col xs:flex-row xs:items-center justify-between gap-2 text-xs min-w-0">
+                        <div className="flex items-start xs:items-center gap-2 min-w-0 flex-1">
+                          <span className="size-5 sm:size-6 rounded-lg bg-slate-100 text-slate-600 font-mono font-bold grid place-items-center text-[9px] sm:text-[10px] shrink-0 mt-0.5 xs:mt-0">
                             {idx + 1}
                           </span>
-                          <div className="min-w-0">
-                            <div className="font-extrabold text-slate-900 text-xs truncate">{it.name || "Equipment Unit"}</div>
+                          <div className="min-w-0 flex-1">
+                            <div className="font-extrabold text-slate-900 text-xs leading-snug break-words">{it.name || "Equipment Unit"}</div>
                             {it.brand && <div className="text-[10px] text-slate-400 truncate">{it.brand}</div>}
                           </div>
                         </div>
-                        <div className="text-right shrink-0">
-                          <div className="font-black text-slate-900 text-xs">Qty: {it.qty || 1}</div>
-                          {it.price && <div className="text-[10px] text-slate-500">{formatUSD(it.price)} ea</div>}
+                        <div className="flex xs:flex-col items-center xs:items-end justify-between xs:justify-center shrink-0 pl-7 xs:pl-0 border-t xs:border-t-0 pt-1.5 xs:pt-0 border-slate-100">
+                          <div className="font-black text-slate-900 text-xs whitespace-nowrap">Qty: {it.qty || 1}</div>
+                          {it.price && <div className="text-[10px] text-slate-500 whitespace-nowrap">{formatUSD(it.price)} ea</div>}
                         </div>
                       </div>
                     ))}
@@ -804,26 +806,26 @@ function AdminQuotesPage() {
                 )}
 
                 {activeQuote.notes && (
-                  <div className="p-3 sm:p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 text-xs space-y-1">
+                  <div className="p-3 sm:p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 text-xs space-y-1 min-w-0 overflow-hidden">
                     <div className="font-bold text-amber-950">Contractor Project Scope & Requirements:</div>
-                    <div className="text-amber-900 whitespace-pre-wrap leading-relaxed">"{activeQuote.notes}"</div>
+                    <div className="text-amber-900 whitespace-pre-wrap leading-relaxed break-words">"{activeQuote.notes}"</div>
                   </div>
                 )}
               </div>
 
               {/* Admin Quote Pricing & Scope Control Form */}
-              <div className="p-3.5 sm:p-5 rounded-2xl bg-slate-900 text-white space-y-3.5 sm:space-y-4">
+              <div className="p-3.5 sm:p-5 rounded-2xl bg-slate-900 text-white space-y-3.5 sm:space-y-4 w-full min-w-0 max-w-full overflow-hidden">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5 sm:gap-2">
-                    <DollarSign className="size-4 text-cyan-400" />
+                    <DollarSign className="size-4 text-cyan-400 shrink-0" />
                     <span>Pricing & Scope Controls</span>
                   </h3>
                   <span className="text-[9px] sm:text-[10px] font-bold text-cyan-300 uppercase tracking-wider">Live DB Sync</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full min-w-0">
                   {/* Quoted Amount */}
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0">
                     <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">Quoted Package Price ($ USD)</label>
                     <div className="relative">
                       <DollarSign className="size-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -833,18 +835,18 @@ function AdminQuotesPage() {
                         value={editQuotedAmount}
                         onChange={(e) => setEditQuotedAmount(e.target.value)}
                         placeholder="e.g. 14500.00"
-                        className="w-full pl-9 pr-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        className="w-full min-w-0 max-w-full pl-9 pr-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                       />
                     </div>
                   </div>
 
                   {/* Status Dropdown */}
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0">
                     <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">Lifecycle Status</label>
                     <select
                       value={editStatus}
                       onChange={(e) => setEditStatus(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 cursor-pointer"
+                      className="w-full min-w-0 max-w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 cursor-pointer truncate"
                     >
                       <option value="Engineering Review">Engineering Review</option>
                       <option value="Under Review">Under Review</option>
@@ -859,32 +861,32 @@ function AdminQuotesPage() {
                   </div>
 
                   {/* Lead Time */}
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0">
                     <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">Estimated Lead Time / ETA</label>
                     <input
                       type="text"
                       value={editLeadTime}
                       onChange={(e) => setEditLeadTime(e.target.value)}
                       placeholder="e.g. 3-5 Business Days"
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                      className="w-full min-w-0 max-w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                     />
                   </div>
 
                   {/* Freight Terms */}
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0">
                     <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">Freight & Logistics Terms</label>
                     <input
                       type="text"
                       value={editFreightTerms}
                       onChange={(e) => setEditFreightTerms(e.target.value)}
                       placeholder="e.g. FOB Nashville / Prepaid Freight"
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                      className="w-full min-w-0 max-w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                     />
                   </div>
                 </div>
 
                 {/* Proposal Notes (Visible on Proposal) */}
-                <div className="space-y-1">
+                <div className="space-y-1 min-w-0">
                   <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">
                     Proposal Remarks (Visible on Printable Quote)
                   </label>
@@ -893,19 +895,19 @@ function AdminQuotesPage() {
                     value={editProposalNotes}
                     onChange={(e) => setEditProposalNotes(e.target.value)}
                     placeholder="Include detailed specifications, model numbers, pipe sizes, voltage requirements..."
-                    className="w-full p-2.5 sm:p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none"
+                    className="w-full min-w-0 max-w-full p-2.5 sm:p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none"
                   />
                 </div>
 
                 {/* Internal Admin Notes */}
-                <div className="space-y-1">
+                <div className="space-y-1 min-w-0">
                   <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">Internal Admin Notes (Private)</label>
                   <textarea
                     rows={2}
                     value={editAdminNotes}
                     onChange={(e) => setEditAdminNotes(e.target.value)}
                     placeholder="Add internal wholesale supplier notes, margin calculations..."
-                    className="w-full p-2.5 sm:p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none"
+                    className="w-full min-w-0 max-w-full p-2.5 sm:p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none"
                   />
                 </div>
 
