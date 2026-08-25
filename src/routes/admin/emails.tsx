@@ -232,7 +232,7 @@ function AdminWebEmailsPage() {
       </AnimatePresence>
 
       {/* ─── ULTRA-PREMIUM EXECUTIVE COMMAND HEADER ─── */}
-      <div className="relative rounded-3xl overflow-hidden p-6 sm:p-7 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white shadow-xl">
+      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden p-5 sm:p-7 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white shadow-xl">
         {/* Glow ambient background element */}
         <div
           className="absolute top-0 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
@@ -242,13 +242,13 @@ function AdminWebEmailsPage() {
           }}
         />
 
-        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[10px] font-extrabold uppercase tracking-widest">
+        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+          <div className="space-y-1 sm:space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[10px] font-extrabold uppercase tracking-widest">
               <Mail className="size-3 text-cyan-400" />
               Live Contractor Inquiries Feed
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+            <h1 className="text-xl sm:text-3xl font-black text-white tracking-tight leading-tight">
               Customer Communications{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
                 Command Hub
@@ -260,23 +260,23 @@ function AdminWebEmailsPage() {
           </div>
 
           {/* Quick Metrics HUD */}
-          <div className="flex items-center gap-3 shrink-0 flex-wrap">
-            <div className="p-3 px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Inquiries</div>
-              <div className="text-lg font-black text-white mt-0.5">{messages.length}</div>
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-3 w-full lg:w-auto shrink-0">
+            <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">Total Inquiries</div>
+              <div className="text-base sm:text-lg font-black text-white mt-0.5">{messages.length}</div>
             </div>
 
-            <div className="p-3 px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Unread Queue</div>
-              <div className="text-lg font-black text-cyan-300 mt-0.5 flex items-center gap-1.5">
+            <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">Unread Queue</div>
+              <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
                 {unreadCount}
-                {unreadCount > 0 && <span className="size-2 rounded-full bg-rose-500 animate-pulse" />}
+                {unreadCount > 0 && <span className="size-1.5 sm:size-2 rounded-full bg-rose-500 animate-pulse" />}
               </div>
             </div>
 
             <button
               onClick={() => refetch()}
-              className="p-3 px-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition flex items-center gap-2 text-xs font-bold cursor-pointer"
+              className="col-span-2 sm:col-span-1 p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition flex items-center justify-center gap-1.5 sm:gap-2 text-xs font-bold cursor-pointer"
               title="Sync Inquiries"
             >
               <RefreshCw className={`size-3.5 ${isLoading ? "animate-spin text-cyan-300" : ""}`} />
@@ -289,17 +289,17 @@ function AdminWebEmailsPage() {
       {/* ─── DUAL-PANE INBOX & DISPATCH CONSOLE ─── */}
       <div className="grid lg:grid-cols-12 gap-6 items-start">
         {/* LEFT PANE (5 Cols): Search, Filter Toolbar & Email Stream */}
-        <div className="lg:col-span-5 space-y-4">
+        <div className={`lg:col-span-5 space-y-3 sm:space-y-4 ${selectedId ? "hidden lg:block" : "block"}`}>
           {/* Search & Filter Toolbar */}
-          <div className="bg-white border border-slate-200/90 rounded-3xl p-4 shadow-2xs space-y-3">
+          <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-2xs space-y-3">
             <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
               <input
                 type="text"
-                placeholder="Search by contractor, email, keywords..."
+                placeholder="Search contractor, email, keywords..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-9 h-11 border border-slate-200 bg-slate-50 rounded-2xl text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
+                className="w-full pl-10 pr-9 h-10 sm:h-11 border border-slate-200 bg-slate-50 rounded-xl sm:rounded-2xl text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
               />
               {searchTerm && (
                 <button
@@ -312,10 +312,10 @@ function AdminWebEmailsPage() {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-2xl border border-slate-100 text-xs font-bold">
+            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-[11px] sm:text-xs font-bold overflow-x-auto scrollbar-none">
               <button
                 onClick={() => setFilterTab("all")}
-                className={`flex-1 py-2 rounded-xl transition text-center cursor-pointer ${filterTab === "all"
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${filterTab === "all"
                     ? "bg-white text-slate-900 shadow-2xs font-black"
                     : "text-slate-500 hover:text-slate-900"
                   }`}
@@ -324,7 +324,7 @@ function AdminWebEmailsPage() {
               </button>
               <button
                 onClick={() => setFilterTab("unread")}
-                className={`flex-1 py-2 rounded-xl transition text-center cursor-pointer ${filterTab === "unread"
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${filterTab === "unread"
                     ? "bg-white text-slate-900 shadow-2xs font-black"
                     : "text-slate-500 hover:text-slate-900"
                   }`}
@@ -333,7 +333,7 @@ function AdminWebEmailsPage() {
               </button>
               <button
                 onClick={() => setFilterTab("starred")}
-                className={`flex-1 py-2 rounded-xl transition text-center cursor-pointer ${filterTab === "starred"
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${filterTab === "starred"
                     ? "bg-white text-slate-900 shadow-2xs font-black"
                     : "text-slate-500 hover:text-slate-900"
                   }`}
@@ -344,7 +344,7 @@ function AdminWebEmailsPage() {
           </div>
 
           {/* Email Stream Feed */}
-          <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-2xs divide-y divide-slate-100 max-h-[640px] overflow-y-auto">
+          <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xs divide-y divide-slate-100 max-h-[640px] overflow-y-auto">
             {filteredMessages.length > 0 ? (
               filteredMessages.map((msg) => {
                 const isSelected = activeMessage?.id === msg.id;
@@ -353,25 +353,25 @@ function AdminWebEmailsPage() {
                   <div
                     key={msg.id}
                     onClick={() => setSelectedId(msg.id)}
-                    className={`p-4 transition cursor-pointer flex items-start justify-between gap-3 ${isSelected
+                    className={`p-3.5 sm:p-4 transition cursor-pointer flex items-start justify-between gap-3 active:bg-slate-100 ${isSelected
                         ? "bg-cyan-50/60 border-l-4 border-l-cyan-600"
                         : "hover:bg-slate-50/80 border-l-4 border-l-transparent"
                       }`}
                   >
-                    <div className="flex items-start gap-3 overflow-hidden">
-                      <div className="size-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xs grid place-items-center shrink-0 shadow-2xs mt-0.5">
+                    <div className="flex items-start gap-2.5 sm:gap-3 overflow-hidden min-w-0">
+                      <div className="size-9 sm:size-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xs grid place-items-center shrink-0 shadow-2xs mt-0.5">
                         {msg.name?.charAt(0).toUpperCase() || "U"}
                       </div>
-                      <div className="space-y-1 overflow-hidden">
-                        <div className="flex items-center gap-2">
+                      <div className="space-y-0.5 sm:space-y-1 overflow-hidden min-w-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
                           <span
-                            className={`text-xs font-black truncate ${!msg.read ? "text-slate-900 font-black" : "text-slate-700"
+                            className={`text-xs truncate ${!msg.read ? "text-slate-900 font-black" : "text-slate-700 font-bold"
                               }`}
                           >
                             {msg.name}
                           </span>
                           {!msg.read && (
-                            <span className="size-2 rounded-full bg-cyan-500 shrink-0 animate-pulse" />
+                            <span className="size-1.5 sm:size-2 rounded-full bg-cyan-500 shrink-0 animate-pulse" />
                           )}
                         </div>
                         <div className="text-xs font-extrabold text-slate-800 truncate">{msg.subject}</div>
@@ -379,7 +379,7 @@ function AdminWebEmailsPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end gap-2 shrink-0">
+                    <div className="flex flex-col items-end gap-1.5 sm:gap-2 shrink-0">
                       <span className="text-[10px] text-slate-400 font-bold whitespace-nowrap">
                         {timeAgo(msg.createdAt)}
                       </span>
@@ -408,7 +408,7 @@ function AdminWebEmailsPage() {
         </div>
 
         {/* RIGHT PANE (7 Cols): Master Reading Console & Smart Dispatcher */}
-        <div className="lg:col-span-7">
+        <div className={`lg:col-span-7 ${selectedId ? "block" : "hidden lg:block"}`}>
           <AnimatePresence mode="wait">
             {activeMessage ? (
               <motion.div
@@ -416,35 +416,43 @@ function AdminWebEmailsPage() {
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-2xs space-y-6"
+                className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-4 sm:space-y-6"
               >
                 {/* Header Profile Bar */}
-                <div className="flex items-start justify-between gap-4 pb-5 border-b border-slate-100">
-                  <div className="flex items-center gap-3.5">
-                    <div className="size-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-sm grid place-items-center shadow-md">
+                <div className="flex items-start justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-slate-100">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+                    {/* Mobile Back Button */}
+                    <button
+                      onClick={() => setSelectedId(null)}
+                      className="lg:hidden p-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold flex items-center gap-1 shrink-0"
+                    >
+                      ←
+                    </button>
+
+                    <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xs sm:text-sm grid place-items-center shadow-md shrink-0">
                       {activeMessage.name?.charAt(0).toUpperCase() || "U"}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-black text-base text-slate-900">{activeMessage.name}</h3>
-                        <span className="text-[10px] font-extrabold text-cyan-800 bg-cyan-50 border border-cyan-200/60 px-2 py-0.5 rounded-full">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                        <h3 className="font-black text-sm sm:text-base text-slate-900 truncate">{activeMessage.name}</h3>
+                        <span className="text-[9px] sm:text-[10px] font-extrabold text-cyan-800 bg-cyan-50 border border-cyan-200/60 px-2 py-0.5 rounded-full shrink-0">
                           Verified Contact
                         </span>
                       </div>
-                      <div className="text-xs text-slate-500 font-medium flex items-center gap-3 mt-1 flex-wrap">
+                      <div className="text-xs text-slate-500 font-medium flex items-center gap-2 sm:gap-3 mt-0.5 sm:mt-1 flex-wrap">
                         <a
                           href={`mailto:${activeMessage.email}`}
-                          className="hover:text-cyan-600 text-cyan-700 font-bold flex items-center gap-1"
+                          className="hover:text-cyan-600 text-cyan-700 font-bold flex items-center gap-1 text-[11px] truncate"
                         >
-                          <Mail className="size-3" />
-                          <span>{activeMessage.email}</span>
+                          <Mail className="size-3 shrink-0" />
+                          <span className="truncate">{activeMessage.email}</span>
                         </a>
                         {activeMessage.phone && (
                           <a
                             href={`tel:${activeMessage.phone}`}
-                            className="hover:text-cyan-600 text-slate-600 flex items-center gap-1"
+                            className="hover:text-cyan-600 text-slate-600 flex items-center gap-1 text-[11px] truncate"
                           >
-                            <Phone className="size-3 text-slate-400" />
+                            <Phone className="size-3 text-slate-400 shrink-0" />
                             <span>{activeMessage.phone}</span>
                           </a>
                         )}
@@ -452,35 +460,35 @@ function AdminWebEmailsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                     <button
                       onClick={handleCopyText}
-                      className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 transition cursor-pointer"
+                      className="p-1.5 sm:p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 transition cursor-pointer"
                       title="Copy Message Text"
                     >
-                      {copied ? <Check className="size-4 text-emerald-600" /> : <Copy className="size-4" />}
+                      {copied ? <Check className="size-4 text-emerald-600" /> : <Copy className="size-3.5 sm:size-4" />}
                     </button>
                     <button
                       onClick={() => handleDeleteMessage(activeMessage.id)}
                       disabled={isDeleting}
-                      className="p-2 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                      className="p-1.5 sm:p-2 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer"
                       title="Delete Inquiry"
                     >
-                      <Trash2 className="size-4" />
+                      <Trash2 className="size-3.5 sm:size-4" />
                     </button>
                   </div>
                 </div>
 
                 {/* Subject & Timeline Header */}
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
                     Inquiry Subject
                   </div>
-                  <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                  <h2 className="text-base sm:text-xl font-black text-slate-900 tracking-tight">
                     {activeMessage.subject}
                   </h2>
-                  <div className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-                    <Calendar className="size-3.5 text-slate-400" />
+                  <div className="text-[11px] sm:text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                    <Calendar className="size-3 sm:size-3.5 text-slate-400" />
                     <span>
                       Received on{" "}
                       {new Date(activeMessage.createdAt).toLocaleString("en-US", {
@@ -495,24 +503,24 @@ function AdminWebEmailsPage() {
                 </div>
 
                 {/* Message Body Container */}
-                <div className="p-6 rounded-2xl bg-slate-50/80 border border-slate-100 text-xs sm:text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap selection:bg-cyan-500/20">
+                <div className="p-4 sm:p-6 rounded-2xl bg-slate-50/80 border border-slate-100 text-xs sm:text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap selection:bg-cyan-500/20">
                   {activeMessage.message}
                 </div>
 
                 {/* Smart Response Chips */}
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                       <Sparkles className="size-3 text-cyan-600" />
                       <span>One-Click Smart Response Presets</span>
                     </label>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                     {SMART_REPLY_TEMPLATES.map((tmpl, idx) => (
                       <button
                         key={idx}
                         onClick={() => setReplyText(tmpl.text)}
-                        className="p-3 text-left rounded-2xl bg-slate-50 hover:bg-cyan-50 border border-slate-200 hover:border-cyan-300 text-xs transition cursor-pointer group"
+                        className="p-2.5 sm:p-3 text-left rounded-xl sm:rounded-2xl bg-slate-50 hover:bg-cyan-50 border border-slate-200 hover:border-cyan-300 text-xs transition cursor-pointer group"
                       >
                         <div className="font-extrabold text-slate-900 group-hover:text-cyan-900 flex items-center justify-between">
                           <span>{tmpl.title}</span>
@@ -527,7 +535,7 @@ function AdminWebEmailsPage() {
                 </div>
 
                 {/* Response Composer */}
-                <div className="space-y-3 pt-2">
+                <div className="space-y-2.5 sm:space-y-3 pt-1">
                   <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">
                     Dispatch Response to Contractor
                   </label>
@@ -536,26 +544,26 @@ function AdminWebEmailsPage() {
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder={`Compose customized response to ${activeMessage.email}...`}
-                    className="w-full p-4 rounded-2xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition"
+                    className="w-full p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition"
                   />
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <span className="text-[11px] text-slate-400 font-medium">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                    <span className="text-[11px] text-slate-400 font-medium truncate">
                       Recipient: <span className="font-bold text-slate-700">{activeMessage.email}</span>
                     </span>
 
                     <button
                       onClick={handleSendReply}
                       disabled={!replyText.trim()}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black uppercase tracking-wider shadow-md disabled:opacity-40 cursor-pointer transition active:scale-95 shadow-cyan-900/30"
+                      className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black uppercase tracking-wider shadow-md disabled:opacity-40 cursor-pointer transition active:scale-95 shadow-cyan-900/30"
                     >
                       <Send className="size-3.5" />
-                      <span>Dispatch Response via Mail Client</span>
+                      <span>Dispatch via Mail Client</span>
                     </button>
                   </div>
                 </div>
               </motion.div>
             ) : (
-              <div className="p-20 text-center bg-white border border-slate-200/90 rounded-3xl text-slate-400 text-xs font-bold space-y-2">
+              <div className="p-12 sm:p-20 text-center bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl text-slate-400 text-xs font-bold space-y-2">
                 <Inbox className="size-10 mx-auto text-slate-300 stroke-1" />
                 <p className="text-sm font-bold text-slate-700">No message selected</p>
                 <p className="text-xs text-slate-400">Select an inquiry from the left stream to inspect customer details.</p>

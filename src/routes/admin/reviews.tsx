@@ -524,7 +524,7 @@ function ReviewsModerator() {
       </AnimatePresence>
 
       {/* ─── 1. EXECUTIVE TITLE BANNER ─── */}
-      <div className="relative rounded-[32px] overflow-hidden p-7 sm:p-9 border border-cyan-500/20 bg-gradient-to-r from-[#020b18] via-[#05182e] to-[#040f1d] text-white shadow-2xl">
+      <div className="relative rounded-2xl sm:rounded-[32px] overflow-hidden p-5 sm:p-7 sm:p-9 border border-cyan-500/20 bg-gradient-to-r from-[#020b18] via-[#05182e] to-[#040f1d] text-white shadow-2xl">
         <div
           className="absolute -top-24 right-1/4 w-[500px] h-[350px] rounded-full pointer-events-none opacity-40"
           style={{
@@ -533,13 +533,13 @@ function ReviewsModerator() {
           }}
         />
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
+          <div className="space-y-1.5 sm:space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/40 text-cyan-400 text-[10px] font-black tracking-widest uppercase shadow-inner">
               <Sparkles className="size-3 text-cyan-400" />
-              <span>Commercial Product Feedback & Trust Audit</span>
+              <span>Product Feedback & Moderation</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-black text-white tracking-tight leading-tight">
+            <h1 className="text-xl sm:text-3xl lg:text-[34px] font-black text-white tracking-tight leading-tight">
               Product Reviews <span className="text-[#00F0FF]">Moderation</span>
             </h1>
             <p className="text-slate-400 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
@@ -547,10 +547,10 @@ function ReviewsModerator() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 flex-wrap">
             <button
               onClick={() => refetch()}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-black text-xs transition cursor-pointer backdrop-blur-md shadow-md"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-black text-xs transition cursor-pointer backdrop-blur-md shadow-md"
               title="Refresh Review Feeds"
             >
               <RefreshCw className={`size-3.5 text-cyan-400 ${isRefetching ? "animate-spin" : ""}`} />
@@ -560,7 +560,7 @@ function ReviewsModerator() {
             <Link
               to="/reviews"
               target="_blank"
-              className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-xs transition shadow-lg cursor-pointer"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-xs transition shadow-lg cursor-pointer"
             >
               <ExternalLink className="size-3.5 text-cyan-700" />
               <span>Public Reviews Page</span>
@@ -570,95 +570,95 @@ function ReviewsModerator() {
       </div>
 
       {/* ─── 2. 4-PILLAR EXECUTIVE HUD METRICS ─── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         {/* Metric 1: Total Reviews */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs hover:border-cyan-500/30 transition group">
-          <div className="flex items-center justify-between mb-3">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Published</span>
-            <div className="size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center group-hover:scale-110 transition">
-              <MessageSquare className="size-4.5" />
+            <div className="size-7 sm:size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center group-hover:scale-110 transition">
+              <MessageSquare className="size-3.5 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight">{stats.total}</div>
-          <div className="mt-2 flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
-            <span className="text-emerald-600 font-extrabold flex items-center gap-0.5">
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{stats.total}</div>
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-slate-400 truncate">
+            <span className="text-emerald-600 font-extrabold flex items-center gap-0.5 shrink-0">
               <TrendingUp className="size-3" /> Live Feed
             </span>
-            <span>· All Catalog SKUs</span>
+            <span className="truncate">· All SKUs</span>
           </div>
         </div>
 
         {/* Metric 2: Average Score */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs hover:border-cyan-500/30 transition group">
-          <div className="flex items-center justify-between mb-3">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Catalog Score</span>
-            <div className="size-9 rounded-xl bg-amber-50 text-amber-600 grid place-items-center group-hover:scale-110 transition">
-              <Star className="size-4.5 fill-amber-400 text-amber-400" />
+            <div className="size-7 sm:size-9 rounded-xl bg-amber-50 text-amber-600 grid place-items-center group-hover:scale-110 transition">
+              <Star className="size-3.5 sm:size-4.5 fill-amber-400 text-amber-400" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight flex items-baseline gap-1.5">
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-baseline gap-1.5">
             {stats.avgRating.toFixed(1)}
             <span className="text-xs font-bold text-amber-500">/ 5.0 ★</span>
           </div>
-          <div className="mt-2 flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-slate-400 truncate">
             <span className="text-amber-700 font-extrabold">{stats.fiveStarRatio}%</span>
             <span>Rated 5-Stars</span>
           </div>
         </div>
 
         {/* Metric 3: Verified Contractors */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs hover:border-cyan-500/30 transition group">
-          <div className="flex items-center justify-between mb-3">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Verified Pros</span>
-            <div className="size-9 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center group-hover:scale-110 transition">
-              <ShieldCheck className="size-4.5" />
+            <div className="size-7 sm:size-9 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center group-hover:scale-110 transition">
+              <ShieldCheck className="size-3.5 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight">{stats.verifiedCount}</div>
-          <div className="mt-2 flex items-center gap-1.5 text-[11px] font-extrabold text-emerald-700">
-            <span>Verified Trade Customers</span>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{stats.verifiedCount}</div>
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold text-emerald-700 truncate">
+            <span>Verified Buyers</span>
           </div>
         </div>
 
         {/* Metric 4: Moderation Status */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs hover:border-cyan-500/30 transition group">
-          <div className="flex items-center justify-between mb-3">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Moderation Queue</span>
-            <div className="size-9 rounded-xl bg-indigo-50 text-indigo-700 grid place-items-center group-hover:scale-110 transition">
-              <Award className="size-4.5" />
+            <div className="size-7 sm:size-9 rounded-xl bg-indigo-50 text-indigo-700 grid place-items-center group-hover:scale-110 transition">
+              <Award className="size-3.5 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight">
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {stats.pendingCount + stats.flaggedCount}
           </div>
-          <div className="mt-2 flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-slate-400 truncate">
             <span className="text-emerald-700 font-extrabold">All Clear</span>
-            <span>· 100% In Compliance</span>
+            <span>· Compliance</span>
           </div>
         </div>
       </div>
 
       {/* ─── 3. SEARCH & DYNAMIC FILTER TOOLBAR ─── */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-4 sm:p-5 shadow-2xs space-y-3">
-        <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
+      <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-2xs space-y-3">
+        <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
           {/* Search Input */}
           <div className="relative w-full md:max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Search by reviewer, equipment model, SKU, or keywords..."
+              placeholder="Search reviewer, equipment, SKU, or words..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 h-11 border border-slate-200 bg-slate-50 rounded-2xl text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all shadow-inner"
+              className="w-full pl-10 pr-4 h-10 sm:h-11 border border-slate-200 bg-slate-50 rounded-xl sm:rounded-2xl text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all shadow-inner"
             />
           </div>
 
           {/* Quick Filter Switchers */}
-          <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             {/* Star Rating Pills */}
-            <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/70 shrink-0">
+            <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl sm:rounded-2xl border border-slate-200/70 shrink-0">
               {[
-                { id: "all", label: "All Ratings" },
+                { id: "all", label: "All" },
                 { id: "5", label: "5 ★" },
                 { id: "4", label: "4 ★" },
                 { id: "3", label: "3 ★" },
@@ -667,7 +667,7 @@ function ReviewsModerator() {
                 <button
                   key={pill.id}
                   onClick={() => setRatingFilter(pill.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-black transition cursor-pointer shrink-0 ${
                     ratingFilter === pill.id
                       ? "bg-slate-900 text-white shadow-sm"
                       : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/60"
@@ -682,7 +682,7 @@ function ReviewsModerator() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-11 px-3.5 border border-slate-200 bg-slate-50 rounded-2xl text-xs font-black text-slate-800 focus:outline-none focus:border-cyan-500 focus:bg-white cursor-pointer shrink-0"
+              className="h-10 sm:h-11 px-3 sm:px-3.5 border border-slate-200 bg-slate-50 rounded-xl sm:rounded-2xl text-xs font-black text-slate-800 focus:outline-none focus:border-cyan-500 focus:bg-white cursor-pointer shrink-0"
             >
               <option value="all">All Feedback</option>
               <option value="verified">Verified Pros Only</option>
@@ -694,177 +694,281 @@ function ReviewsModerator() {
         </div>
       </div>
 
-      {/* ─── 4. MASTER REVIEWS TABLE ─── */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-2xs">
+      {/* ─── 4. MASTER REVIEWS VIEW (MOBILE CARDS + DESKTOP TABLE) ─── */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xs">
         {isLoading ? (
-          <div className="py-24 text-center space-y-3">
+          <div className="py-20 text-center space-y-3">
             <RefreshCw className="size-8 mx-auto text-cyan-600 animate-spin" />
             <div className="text-sm font-black text-slate-900">Loading Product Feedback Telemetry...</div>
             <div className="text-xs text-slate-400">Syncing verified buyer reviews from database.</div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-semibold border-collapse">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-[10px]">
-                  <th className="p-4 sm:px-6 font-black">Equipment Model & SKU</th>
-                  <th className="p-4 sm:px-6 font-black">Trade Reviewer</th>
-                  <th className="p-4 sm:px-6 font-black">Rating</th>
-                  <th className="p-4 sm:px-6 font-black">Review Details</th>
-                  <th className="p-4 sm:px-6 font-black">Date</th>
-                  <th className="p-4 sm:px-6 font-black text-center">Status</th>
-                  <th className="p-4 sm:px-6 font-black text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {filteredReviews.length > 0 ? (
-                  filteredReviews.map((r) => (
-                    <tr
-                      key={r.id}
-                      onClick={() => setSelectedReview(r)}
-                      className="hover:bg-cyan-50/40 transition-colors cursor-pointer group"
-                    >
-                      {/* Col 1: Equipment Thumbnail & SKU */}
-                      <td className="p-4 sm:px-6 max-w-xs">
-                        <div className="flex items-center gap-3">
-                          <div className="size-11 rounded-2xl bg-slate-50 border border-slate-200/80 p-1 grid place-items-center shrink-0 shadow-2xs group-hover:border-cyan-500/30">
-                            <img
-                              src={r.productImg || "/assets/commingsoon.png"}
-                              alt={r.productName}
-                              className="size-full object-contain mix-blend-multiply"
-                              onError={(e) => {
-                                e.currentTarget.src = "/assets/commingsoon.png";
-                              }}
-                            />
-                          </div>
-                          <div className="min-w-0">
-                            <div className="font-black text-slate-900 text-xs sm:text-sm truncate group-hover:text-cyan-800 transition">
-                              {r.productName}
+          <>
+            {/* Mobile Cards View (< 768px) */}
+            <div className="block md:hidden divide-y divide-slate-100">
+              {filteredReviews.length > 0 ? (
+                filteredReviews.map((r) => (
+                  <div
+                    key={r.id}
+                    onClick={() => setSelectedReview(r)}
+                    className="p-4 space-y-3 hover:bg-slate-50 active:bg-slate-100 transition cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="size-11 rounded-xl bg-slate-50 border border-slate-200 p-1 grid place-items-center shrink-0">
+                          <img
+                            src={r.productImg || "/assets/commingsoon.png"}
+                            alt={r.productName}
+                            className="size-full object-contain mix-blend-multiply"
+                            onError={(e) => {
+                              e.currentTarget.src = "/assets/commingsoon.png";
+                            }}
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-extrabold text-xs text-slate-900 line-clamp-1">{r.productName}</div>
+                          <div className="text-[10px] font-mono text-slate-400">SKU: {r.productSku}</div>
+                        </div>
+                      </div>
+
+                      <span
+                        className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-black border shrink-0 ${
+                          r.status === "Published"
+                            ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                            : r.status === "Pending"
+                            ? "bg-amber-50 text-amber-800 border-amber-200"
+                            : "bg-rose-50 text-rose-800 border-rose-200"
+                        }`}
+                      >
+                        {r.status || "Published"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 text-xs">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="font-bold text-slate-900 truncate">{r.author}</span>
+                        {r.verifiedPurchase && <ShieldCheck className="size-3 text-cyan-600 shrink-0" />}
+                        <span className="text-[10px] text-slate-400 truncate">({r.role || "Buyer"})</span>
+                      </div>
+
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`size-3 ${
+                              i < r.rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="font-black text-xs text-slate-900">{r.title}</div>
+                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 leading-relaxed">
+                        {r.content || "No detailed review body submitted."}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-400">
+                      <span>{formatReviewDate(r.date)}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedReview(r);
+                          }}
+                          className="font-extrabold text-cyan-700 hover:underline"
+                        >
+                          Inspect & Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm(`Permanently remove review by "${r.author}"?`)) {
+                              deleteMutation.mutate(r);
+                            }
+                          }}
+                          className="text-rose-600 hover:text-rose-700 p-1"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-12 text-center text-slate-400 space-y-2">
+                  <MessageSquare className="size-8 mx-auto text-slate-300 stroke-1" />
+                  <div className="text-slate-700 font-bold text-xs">No reviews match your filters</div>
+                </div>
+              )}
+            </div>
+
+            {/* Desktop Table View (>= 768px) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs font-semibold border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-[10px]">
+                    <th className="p-4 sm:px-6 font-black">Equipment Model & SKU</th>
+                    <th className="p-4 sm:px-6 font-black">Trade Reviewer</th>
+                    <th className="p-4 sm:px-6 font-black">Rating</th>
+                    <th className="p-4 sm:px-6 font-black">Review Details</th>
+                    <th className="p-4 sm:px-6 font-black">Date</th>
+                    <th className="p-4 sm:px-6 font-black text-center">Status</th>
+                    <th className="p-4 sm:px-6 font-black text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {filteredReviews.length > 0 ? (
+                    filteredReviews.map((r) => (
+                      <tr
+                        key={r.id}
+                        onClick={() => setSelectedReview(r)}
+                        className="hover:bg-cyan-50/40 transition-colors cursor-pointer group"
+                      >
+                        {/* Col 1: Equipment Thumbnail & SKU */}
+                        <td className="p-4 sm:px-6 max-w-xs">
+                          <div className="flex items-center gap-3">
+                            <div className="size-11 rounded-2xl bg-slate-50 border border-slate-200/80 p-1 grid place-items-center shrink-0 shadow-2xs group-hover:border-cyan-500/30">
+                              <img
+                                src={r.productImg || "/assets/commingsoon.png"}
+                                alt={r.productName}
+                                className="size-full object-contain mix-blend-multiply"
+                                onError={(e) => {
+                                  e.currentTarget.src = "/assets/commingsoon.png";
+                                }}
+                              />
                             </div>
-                            <div className="text-[11px] text-slate-400 font-bold flex items-center gap-1.5 mt-0.5">
-                              <span className="font-mono">{r.productSku}</span>
-                              {r.productBrand && (
-                                <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">
-                                  {r.productBrand}
+                            <div className="min-w-0">
+                              <div className="font-black text-slate-900 text-xs sm:text-sm truncate group-hover:text-cyan-800 transition">
+                                {r.productName}
+                              </div>
+                              <div className="text-[11px] text-slate-400 font-bold flex items-center gap-1.5 mt-0.5">
+                                <span className="font-mono">{r.productSku}</span>
+                                {r.productBrand && (
+                                  <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">
+                                    {r.productBrand}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Col 2: Reviewer Contractor */}
+                        <td className="p-4 sm:px-6">
+                          <div className="space-y-0.5">
+                            <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
+                              <span>{r.author}</span>
+                              {r.verifiedPurchase && (
+                                <span
+                                  className="inline-flex items-center gap-0.5 text-cyan-700"
+                                  title="Verified Contractor Purchase"
+                                >
+                                  <ShieldCheck className="size-3.5 text-cyan-600" />
                                 </span>
                               )}
                             </div>
+                            <div className="text-[11px] text-emerald-700 font-bold flex items-center gap-1">
+                              <UserCheck className="size-3 text-emerald-600" />
+                              <span>{r.role || "Verified Buyer"}</span>
+                            </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      {/* Col 2: Reviewer Contractor */}
-                      <td className="p-4 sm:px-6">
-                        <div className="space-y-0.5">
-                          <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
-                            <span>{r.author}</span>
-                            {r.verifiedPurchase && (
-                              <span
-                                className="inline-flex items-center gap-0.5 text-cyan-700"
-                                title="Verified Contractor Purchase"
-                              >
-                                <ShieldCheck className="size-3.5 text-cyan-600" />
-                              </span>
-                            )}
+                        {/* Col 3: Star Rating */}
+                        <td className="p-4 sm:px-6">
+                          <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-0.5">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`size-3.5 ${
+                                    i < r.rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-xs font-black text-slate-900 ml-1">{r.rating}.0</span>
                           </div>
-                          <div className="text-[11px] text-emerald-700 font-bold flex items-center gap-1">
-                            <UserCheck className="size-3 text-emerald-600" />
-                            <span>{r.role || "Verified Buyer"}</span>
+                        </td>
+
+                        {/* Col 4: Review Snippet */}
+                        <td className="p-4 sm:px-6 max-w-sm">
+                          <div className="font-black text-slate-900 text-xs truncate">{r.title}</div>
+                          <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 font-medium leading-relaxed">
+                            {r.content || "No detailed review body submitted."}
+                          </p>
+                        </td>
+
+                        {/* Col 5: Date */}
+                        <td className="p-4 sm:px-6 text-slate-700 font-medium whitespace-nowrap">
+                          <div className="font-bold text-slate-900 text-xs">
+                            {formatReviewDate(r.date)}
                           </div>
-                        </div>
-                      </td>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Verified Timestamp</div>
+                        </td>
 
-                      {/* Col 3: Star Rating */}
-                      <td className="p-4 sm:px-6">
-                        <div className="flex items-center gap-1">
-                          <div className="flex items-center gap-0.5">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`size-3.5 ${
-                                  i < r.rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-xs font-black text-slate-900 ml-1">{r.rating}.0</span>
-                        </div>
-                      </td>
-
-                      {/* Col 4: Review Snippet */}
-                      <td className="p-4 sm:px-6 max-w-sm">
-                        <div className="font-black text-slate-900 text-xs truncate">{r.title}</div>
-                        <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 font-medium leading-relaxed">
-                          {r.content || "No detailed review body submitted."}
-                        </p>
-                      </td>
-
-                      {/* Col 5: Date */}
-                      <td className="p-4 sm:px-6 text-slate-700 font-medium whitespace-nowrap">
-                        <div className="font-bold text-slate-900 text-xs">
-                          {formatReviewDate(r.date)}
-                        </div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">Verified Timestamp</div>
-                      </td>
-
-                      {/* Col 6: Moderation Status Pill */}
-                      <td className="p-4 sm:px-6 text-center">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black border ${
-                            r.status === "Published"
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                              : r.status === "Pending"
-                              ? "bg-amber-50 text-amber-800 border-amber-200"
-                              : "bg-rose-50 text-rose-800 border-rose-200"
-                          }`}
-                        >
-                          {r.status === "Published" && <CheckCircle2 className="size-3" />}
-                          {r.status || "Published"}
-                        </span>
-                      </td>
-
-                      {/* Col 7: Quick Actions */}
-                      <td className="p-4 sm:px-6 text-center">
-                        <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedReview(r);
-                            }}
-                            className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-cyan-50 text-slate-700 hover:text-cyan-800 border border-slate-200 transition cursor-pointer font-bold text-[11px] flex items-center gap-1 shadow-2xs"
+                        {/* Col 6: Moderation Status Pill */}
+                        <td className="p-4 sm:px-6 text-center">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black border ${
+                              r.status === "Published"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                                : r.status === "Pending"
+                                ? "bg-amber-50 text-amber-800 border-amber-200"
+                                : "bg-rose-50 text-rose-800 border-rose-200"
+                            }`}
                           >
-                            <span>Inspect</span>
-                            <ChevronRight className="size-3.5" />
-                          </button>
+                            {r.status === "Published" && <CheckCircle2 className="size-3" />}
+                            {r.status || "Published"}
+                          </span>
+                        </td>
 
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (confirm(`Permanently remove review by "${r.author}"?`)) {
-                                deleteMutation.mutate(r);
-                              }
-                            }}
-                            className="p-1.5 rounded-xl bg-white border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer shadow-2xs"
-                            title="Remove Review"
-                          >
-                            <Trash2 className="size-3.5" />
-                          </button>
-                        </div>
+                        {/* Col 7: Quick Actions */}
+                        <td className="p-4 sm:px-6 text-center">
+                          <div className="flex items-center justify-center gap-1.5">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedReview(r);
+                              }}
+                              className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-cyan-50 text-slate-700 hover:text-cyan-800 border border-slate-200 transition cursor-pointer font-bold text-[11px] flex items-center gap-1 shadow-2xs"
+                            >
+                              <span>Inspect</span>
+                              <ChevronRight className="size-3.5" />
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (confirm(`Permanently remove review by "${r.author}"?`)) {
+                                  deleteMutation.mutate(r);
+                                }
+                              }}
+                              className="p-1.5 rounded-xl bg-white border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer shadow-2xs"
+                              title="Remove Review"
+                            >
+                              <Trash2 className="size-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={7} className="text-center py-20 text-slate-400 font-bold text-xs space-y-2">
+                        <MessageSquare className="size-10 mx-auto text-slate-300 stroke-1" />
+                        <div className="text-slate-700 font-black text-sm">No product reviews found</div>
+                        <div className="text-slate-400 text-xs">Try adjusting your search query or rating filter above.</div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={7} className="text-center py-20 text-slate-400 font-bold text-xs space-y-2">
-                      <MessageSquare className="size-10 mx-auto text-slate-300 stroke-1" />
-                      <div className="text-slate-700 font-black text-sm">No product reviews found</div>
-                      <div className="text-slate-400 text-xs">Try adjusting your search query or rating filter above.</div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -885,33 +989,33 @@ function ReviewsModerator() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-xl bg-white shadow-2xl border-l border-slate-200 flex flex-col overflow-hidden"
+              className="fixed top-0 right-0 bottom-0 z-50 w-full sm:max-w-xl bg-white shadow-2xl border-l border-slate-200 flex flex-col overflow-hidden"
             >
               {/* Drawer Header */}
-              <div className="p-6 border-b border-slate-100 bg-slate-50/90 flex items-center justify-between">
+              <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/90 flex items-center justify-between">
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-wider text-cyan-800 flex items-center gap-1.5">
                     <Sparkles className="size-3 text-cyan-600" />
                     <span>Review Audit & Moderation</span>
                   </div>
-                  <h2 className="text-lg font-black text-slate-900 mt-0.5">Customer Testimonial Details</h2>
+                  <h2 className="text-base sm:text-lg font-black text-slate-900 mt-0.5">Customer Testimonial Details</h2>
                 </div>
 
                 <button
                   onClick={() => setSelectedReview(null)}
-                  className="size-9 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100 grid place-items-center transition cursor-pointer shadow-2xs"
+                  className="size-8 sm:size-9 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100 grid place-items-center transition cursor-pointer shadow-2xs"
                 >
                   <X className="size-4" />
                 </button>
               </div>
 
               {/* Drawer Body */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
                 {/* 1. Target Equipment Card */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Target Product</div>
                   <div className="flex items-center gap-3">
-                    <div className="size-14 rounded-2xl bg-white border border-slate-200 p-1.5 grid place-items-center shrink-0 shadow-sm">
+                    <div className="size-12 sm:size-14 rounded-2xl bg-white border border-slate-200 p-1.5 grid place-items-center shrink-0 shadow-sm">
                       <img
                         src={selectedReview.productImg || "/assets/commingsoon.png"}
                         alt={selectedReview.productName}
@@ -922,8 +1026,8 @@ function ReviewsModerator() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-black text-slate-900 text-sm leading-snug">{selectedReview.productName}</div>
-                      <div className="text-xs text-slate-500 font-medium mt-0.5 flex items-center gap-2">
+                      <div className="font-black text-slate-900 text-xs sm:text-sm leading-snug truncate">{selectedReview.productName}</div>
+                      <div className="text-[11px] text-slate-500 font-medium mt-0.5 flex items-center gap-2 truncate">
                         <span>SKU: {selectedReview.productSku}</span>
                         {selectedReview.productBrand && <span>· {selectedReview.productBrand}</span>}
                       </div>
@@ -933,7 +1037,7 @@ function ReviewsModerator() {
                         to="/products/$productId"
                         params={{ productId: selectedReview.productId }}
                         target="_blank"
-                        className="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-cyan-700 transition"
+                        className="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-cyan-700 transition shrink-0"
                         title="View Catalog Item"
                       >
                         <ExternalLink className="size-4" />
@@ -943,35 +1047,35 @@ function ReviewsModerator() {
                 </div>
 
                 {/* 2. Reviewer Profile */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Trade Reviewer</div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
-                        <span>{selectedReview.author}</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="font-black text-slate-900 text-sm flex items-center gap-1.5 truncate">
+                        <span className="truncate">{selectedReview.author}</span>
                         {selectedReview.verifiedPurchase && (
-                          <span className="text-[10px] font-black text-cyan-900 bg-cyan-100 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                          <span className="text-[10px] font-black text-cyan-900 bg-cyan-100 px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0">
                             <ShieldCheck className="size-3 text-cyan-700" />
                             Verified Pro
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-slate-400 mt-0.5">
+                      <div className="text-xs text-slate-400 mt-0.5 truncate">
                         Submitted on {formatReviewDate(selectedReview.date)}
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200 text-amber-900">
-                      <Star className="size-4 fill-amber-400 text-amber-400" />
-                      <span className="font-black text-sm">{selectedReview.rating}.0</span>
+                    <div className="flex items-center gap-1 bg-amber-50 px-2.5 sm:px-3 py-1.5 rounded-xl border border-amber-200 text-amber-900 shrink-0">
+                      <Star className="size-3.5 sm:size-4 fill-amber-400 text-amber-400" />
+                      <span className="font-black text-xs sm:text-sm">{selectedReview.rating}.0</span>
                     </div>
                   </div>
                 </div>
 
                 {/* 3. Review Content */}
-                <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-3 shadow-md">
+                <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 text-white space-y-2 sm:space-y-3 shadow-md">
                   <div className="text-[10px] font-black uppercase tracking-widest text-cyan-400">Published Review</div>
-                  <div className="text-base font-black text-white">{selectedReview.title}</div>
+                  <div className="text-sm sm:text-base font-black text-white">{selectedReview.title}</div>
                   <p className="text-xs text-slate-300 leading-relaxed font-medium">
                     {selectedReview.content || "No extended review commentary provided."}
                   </p>
@@ -992,7 +1096,7 @@ function ReviewsModerator() {
                             newStatus: st,
                           })
                         }
-                        className={`py-2.5 px-2 rounded-xl text-xs font-black transition cursor-pointer border text-center ${
+                        className={`py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer border text-center ${
                           selectedReview.status === st
                             ? "bg-slate-900 text-white border-slate-900 shadow-md"
                             : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
@@ -1006,14 +1110,14 @@ function ReviewsModerator() {
               </div>
 
               {/* Drawer Footer Actions */}
-              <div className="p-6 border-t border-slate-200 bg-slate-50/90 flex items-center justify-between gap-3">
+              <div className="p-4 sm:p-6 border-t border-slate-200 bg-slate-50/90 flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-3">
                 <button
                   onClick={() => {
                     if (confirm(`Permanently remove review by "${selectedReview.author}"?`)) {
                       deleteMutation.mutate(selectedReview);
                     }
                   }}
-                  className="px-4 py-2.5 rounded-xl border border-rose-200 text-rose-700 bg-white hover:bg-rose-50 font-black text-xs transition cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl border border-rose-200 text-rose-700 bg-white hover:bg-rose-50 font-black text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <Trash2 className="size-3.5" />
                   <span>Remove Review</span>

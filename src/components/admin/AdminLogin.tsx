@@ -112,7 +112,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-8 lg:p-12 relative overflow-hidden font-sans select-none bg-[#040d1a]">
+    <div className="min-h-screen flex items-center justify-center p-3.5 sm:p-8 lg:p-12 relative overflow-hidden font-sans select-none bg-[#040d1a]">
       {/* ─── BACKGROUND AMBIENT IMAGERY & GLOWS ─── */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-60 pointer-events-none scale-100"
@@ -143,46 +143,46 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
       <div className="absolute inset-0 bg-[radial-gradient(#0891b2_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none z-[1]" />
 
       {/* ─── 2-COLUMN SPLIT CONTAINER ─── */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto grid lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center py-6 sm:py-0">
         {/* ─── LEFT COLUMN: BRAND & ENTERPRISE TELEMETRY CONTENT ─── */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="lg:col-span-7 space-y-6 text-white"
+          className="lg:col-span-7 space-y-4 sm:space-y-6 text-white"
         >
           {/* Brand Badge */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <Link to="/" className="inline-block group">
               <img
                 src={logo}
                 alt="Pool Supply Wholesalers"
-                className="h-9 w-auto object-contain brightness-0 invert opacity-95 group-hover:opacity-100 transition-opacity"
+                className="h-7 sm:h-9 w-auto object-contain brightness-0 invert opacity-95 group-hover:opacity-100 transition-opacity"
               />
             </Link>
-            <span className="text-[10px] font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-400/30">
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-cyan-400/30">
               Master Admin Console
             </span>
           </div>
 
           {/* Main Headline */}
-          <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
+          <div className="space-y-2 sm:space-y-3">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
               Global Supply Chain{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-white">
                 Command Center
               </span>
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-medium max-w-xl">
+            <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed font-medium max-w-xl">
               Enterprise administrative gateway for managing multi-hub inventory, wholesale dealer accounts, high-frequency freight dispatch, and catalog pricing.
             </p>
           </div>
 
           {/* 4 Feature Value Tiles */}
-          <div className="grid sm:grid-cols-2 gap-3.5 pt-2">
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5 pt-1 sm:pt-2">
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1 sm:space-y-1.5 hover:border-cyan-500/30 transition-all">
               <div className="flex items-center gap-2">
-                <Database className="size-4 text-cyan-400" />
+                <Database className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">Multi-Hub Inventory</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
@@ -190,9 +190,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1 sm:space-y-1.5 hover:border-cyan-500/30 transition-all">
               <div className="flex items-center gap-2">
-                <Truck className="size-4 text-cyan-400" />
+                <Truck className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">Freight Logistics</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
@@ -200,9 +200,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1 sm:space-y-1.5 hover:border-cyan-500/30 transition-all">
               <div className="flex items-center gap-2">
-                <Layers className="size-4 text-cyan-400" />
+                <Layers className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">8,000+ OEM SKUs</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
@@ -210,9 +210,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1.5 hover:border-cyan-500/30 transition-all">
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-1 sm:space-y-1.5 hover:border-cyan-500/30 transition-all">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-cyan-400" />
+                <ShieldCheck className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">256-Bit Protection</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
@@ -222,9 +222,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
           </div>
 
           {/* System Status Banner */}
-          <div className="pt-2 flex items-center justify-between flex-wrap gap-3 text-xs text-slate-300 font-medium">
+          <div className="pt-1 sm:pt-2 flex items-center justify-between flex-wrap gap-2.5 sm:gap-3 text-xs text-slate-300 font-medium">
             <div className="flex items-center gap-2">
-              <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="size-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
               <span>Production DB Active · Latency &lt; 18ms</span>
             </div>
 
@@ -245,7 +245,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
           className="lg:col-span-5 w-full"
         >
-          <div className="relative rounded-3xl overflow-hidden p-6 sm:p-8 bg-[#061220]/85 border border-cyan-500/30 backdrop-blur-2xl shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)]">
+          <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden p-5 sm:p-8 bg-[#061220]/85 border border-cyan-500/30 backdrop-blur-2xl shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)]">
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 

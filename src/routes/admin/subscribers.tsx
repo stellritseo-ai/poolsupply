@@ -139,18 +139,18 @@ function SubscribersList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-            <Users className="size-7 text-cyan-600" />
+          <h1 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+            <Users className="size-6 sm:size-7 text-cyan-600 shrink-0" />
             <span>Newsletter & Trade Leads</span>
           </h1>
-          <p className="text-slate-400 text-xs sm:text-sm font-medium mt-1">
+          <p className="text-slate-400 text-xs sm:text-sm font-medium mt-0.5 sm:mt-1">
             Manage wholesale newsletter subscribers, contractor email marketing leads, and CSV export records.
           </p>
         </div>
 
         <button
           onClick={exportToCSV}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black uppercase tracking-wider shadow-md cursor-pointer transition"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black uppercase tracking-wider shadow-md cursor-pointer transition shrink-0"
         >
           <Download className="size-4" />
           <span>Export to CSV</span>
@@ -166,80 +166,121 @@ function SubscribersList() {
             placeholder="Search subscribers by email address..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 h-10.5 border border-slate-200 bg-slate-50 rounded-xl text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
+            className="w-full pl-10 pr-4 h-10 sm:h-10.5 border border-slate-200 bg-slate-50 rounded-xl text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
           />
         </div>
       </div>
 
-      {/* Subscribers Table */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-2xs">
+      {/* Subscribers Content (Mobile Cards + Desktop Table) */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xs">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="size-8 animate-spin text-cyan-600 mb-3" />
             <p className="text-xs font-bold text-slate-400">Loading newsletter leads...</p>
           </div>
         ) : filteredSubscribers.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="size-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-3 border border-slate-100 text-slate-300">
-              <Mail className="size-8" />
+          <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center p-4">
+            <div className="size-14 sm:size-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-3 border border-slate-100 text-slate-300">
+              <Mail className="size-7 sm:size-8" />
             </div>
-            <h3 className="text-base font-extrabold text-slate-900 mb-1">No subscribers found</h3>
+            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mb-1">No subscribers found</h3>
             <p className="text-xs text-slate-400">There are no subscribers matching your search term.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-black uppercase tracking-wider text-slate-400">
-                  <th className="p-4 sm:px-6">Email Address</th>
-                  <th className="p-4 sm:px-6">Subscription Date</th>
-                  <th className="p-4 sm:px-6 text-center">Lead Status</th>
-                  <th className="p-4 sm:px-6 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-xs font-semibold">
-                {filteredSubscribers.map((sub) => (
-                  <tr key={sub.id} className="hover:bg-slate-50/80 transition-colors group">
-                    <td className="p-4 sm:px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center font-black">
-                          <Mail className="size-4" />
-                        </div>
-                        <span className="font-bold text-slate-900 text-xs sm:text-sm">{sub.email}</span>
+          <>
+            {/* Mobile Cards View (< 768px) */}
+            <div className="block md:hidden divide-y divide-slate-100">
+              {filteredSubscribers.map((sub) => (
+                <div key={sub.id} className="p-4 space-y-2 hover:bg-slate-50 transition">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="size-8 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center font-black shrink-0">
+                        <Mail className="size-3.5" />
                       </div>
-                    </td>
+                      <span className="font-bold text-slate-900 text-xs truncate">{sub.email}</span>
+                    </div>
 
-                    <td className="p-4 sm:px-6 text-slate-500 font-medium">
-                      {new Date(sub.createdAt).toLocaleString("en-US", {
+                    <button
+                      onClick={() => handleDelete(sub.id, sub.email)}
+                      className="p-1.5 rounded-lg bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer shrink-0"
+                      title="Unsubscribe Lead"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                    <span>
+                      {new Date(sub.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
                       })}
-                    </td>
+                    </span>
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2 py-0.5 rounded-full text-[9px] font-extrabold">
+                      <CheckCircle className="size-2.5 text-emerald-600" />
+                      Active Lead
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-                    <td className="p-4 sm:px-6 text-center">
-                      <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2.5 py-1 rounded-full text-[10px] font-extrabold">
-                        <CheckCircle className="size-3 text-emerald-600" />
-                        Active Subscriber
-                      </span>
-                    </td>
-
-                    <td className="p-4 sm:px-6 text-right">
-                      <button
-                        onClick={() => handleDelete(sub.id, sub.email)}
-                        className="p-2 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer"
-                        title="Unsubscribe Lead"
-                      >
-                        <Trash2 className="size-4" />
-                      </button>
-                    </td>
+            {/* Desktop Table View (>= 768px) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                    <th className="p-4 sm:px-6">Email Address</th>
+                    <th className="p-4 sm:px-6">Subscription Date</th>
+                    <th className="p-4 sm:px-6 text-center">Lead Status</th>
+                    <th className="p-4 sm:px-6 text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-xs font-semibold">
+                  {filteredSubscribers.map((sub) => (
+                    <tr key={sub.id} className="hover:bg-slate-50/80 transition-colors group">
+                      <td className="p-4 sm:px-6">
+                        <div className="flex items-center gap-3">
+                          <div className="size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center font-black">
+                            <Mail className="size-4" />
+                          </div>
+                          <span className="font-bold text-slate-900 text-xs sm:text-sm">{sub.email}</span>
+                        </div>
+                      </td>
+
+                      <td className="p-4 sm:px-6 text-slate-500 font-medium">
+                        {new Date(sub.createdAt).toLocaleString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </td>
+
+                      <td className="p-4 sm:px-6 text-center">
+                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2.5 py-1 rounded-full text-[10px] font-extrabold">
+                          <CheckCircle className="size-3 text-emerald-600" />
+                          Active Subscriber
+                        </span>
+                      </td>
+
+                      <td className="p-4 sm:px-6 text-right">
+                        <button
+                          onClick={() => handleDelete(sub.id, sub.email)}
+                          className="p-2 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                          title="Unsubscribe Lead"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

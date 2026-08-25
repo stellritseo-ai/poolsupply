@@ -367,31 +367,31 @@ export function SystemSettings() {
       </AnimatePresence>
 
       {/* ── Executive Top Header ────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white p-6 sm:p-8 shadow-xl border border-slate-800">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white p-4 sm:p-6 sm:p-8 shadow-xl border border-slate-800">
         {/* Glow ambient decorations */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-10 right-1/3 w-64 h-64 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
+          <div className="space-y-1.5 sm:space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 <Radio className="size-3 text-cyan-400 animate-pulse" />
                 Production Engine
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                 <ShieldCheck className="size-3 text-emerald-400" />
                 MongoDB Atlas Live
               </span>
               {maintenanceMode && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   <AlertTriangle className="size-3 text-amber-400" />
                   Maintenance Mode Active
                 </span>
               )}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white flex items-center gap-3">
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white flex items-center gap-3">
               <span>System & Security Operations</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm max-w-2xl font-normal leading-relaxed">
@@ -399,17 +399,17 @@ export function SystemSettings() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 self-start md:self-auto shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 self-start md:self-auto shrink-0 flex-wrap">
             <button
               onClick={() => loadAllData(true)}
               disabled={isRefreshing}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 text-xs font-bold border border-slate-700 hover:border-slate-600 transition shadow-sm cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 text-xs font-bold border border-slate-700 hover:border-slate-600 transition shadow-sm cursor-pointer disabled:opacity-50"
             >
               <RefreshCw className={`size-3.5 ${isRefreshing ? "animate-spin text-cyan-400" : "text-slate-400"}`} />
-              <span>{isRefreshing ? "Refreshing..." : "Refresh Telemetry"}</span>
+              <span>{isRefreshing ? "Refreshing..." : "Refresh Feed"}</span>
             </button>
 
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800/50 border border-slate-700/50 text-[11px] text-slate-300 font-mono">
+            <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/50 border border-slate-700/50 text-[11px] text-slate-300 font-mono">
               <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>v2.4.0-stable</span>
             </div>
@@ -417,51 +417,51 @@ export function SystemSettings() {
         </div>
 
         {/* ── KPI Quick Highlights ────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 mt-8 pt-6 border-t border-slate-800/80">
-          <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-800/80">
+          <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold">
               <span>Super Admin</span>
               <Shield className="size-3.5 text-cyan-400" />
             </div>
-            <div className="mt-1 text-base sm:text-lg font-black text-white truncate">pools (Master)</div>
-            <div className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
+            <div className="mt-1 text-sm sm:text-base lg:text-lg font-black text-white truncate">pools (Master)</div>
+            <div className="text-[9px] sm:text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5 truncate">
               <CheckCircle className="size-2.5" /> Bcrypt Salt 10 Active
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
+          <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold">
               <span>Staff Accounts</span>
               <Users className="size-3.5 text-blue-400" />
             </div>
-            <div className="mt-1 text-base sm:text-lg font-black text-white">{users.length} Active</div>
-            <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
+            <div className="mt-1 text-sm sm:text-base lg:text-lg font-black text-white">{users.length} Active</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-400 font-semibold mt-0.5 truncate">
               {users.filter(u => u.role === "admin").length} Admins · {users.filter(u => u.role !== "admin").length} Staff
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
-              <span>Storefront State</span>
+          <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold">
+              <span>Storefront</span>
               <Globe className="size-3.5 text-emerald-400" />
             </div>
-            <div className="mt-1 text-base sm:text-lg font-black text-white">
-              {maintenanceMode ? "Maintenance" : "Live Storefront"}
+            <div className="mt-1 text-sm sm:text-base lg:text-lg font-black text-white truncate">
+              {maintenanceMode ? "Maintenance" : "Live Store"}
             </div>
-            <div className={`text-[10px] font-semibold mt-0.5 ${maintenanceMode ? "text-amber-400" : "text-emerald-400"}`}>
-              {maintenanceMode ? "Public Access Blocked" : "Public Checkout Active"}
+            <div className={`text-[9px] sm:text-[10px] font-semibold mt-0.5 truncate ${maintenanceMode ? "text-amber-400" : "text-emerald-400"}`}>
+              {maintenanceMode ? "Access Blocked" : "Checkout Active"}
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
+          <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold">
               <span>DB Products</span>
               <Database className="size-3.5 text-purple-400" />
             </div>
-            <div className="mt-1 text-base sm:text-lg font-black text-white">
+            <div className="mt-1 text-sm sm:text-base lg:text-lg font-black text-white truncate">
               {dbStats ? `${dbStats.productsCount || 0} Synced` : "Connecting..."}
             </div>
-            <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
+            <div className="text-[9px] sm:text-[10px] text-slate-400 font-semibold mt-0.5 truncate">
               {dbStats?.ordersCount || 0} Orders · {dbStats?.reviewsCount || 0} Reviews
             </div>
           </div>
@@ -469,7 +469,7 @@ export function SystemSettings() {
       </div>
 
       {/* ── Modern Segmented Tab Bar ────────────────────────────────────────── */}
-      <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-100/90 border border-slate-200 shadow-inner overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-slate-100/90 border border-slate-200 shadow-inner overflow-x-auto scrollbar-none">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -477,7 +477,7 @@ export function SystemSettings() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`relative flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 isActive
                   ? "text-slate-900 font-extrabold shadow-sm bg-white"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
@@ -486,22 +486,22 @@ export function SystemSettings() {
               {isActive && (
                 <motion.div
                   layoutId="activeSettingsTab"
-                  className="absolute inset-0 rounded-xl bg-white shadow-xs border border-slate-200/70"
+                  className="absolute inset-0 rounded-lg sm:rounded-xl bg-white shadow-xs border border-slate-200/70"
                   transition={{ type: "spring", stiffness: 450, damping: 35 }}
                 />
               )}
               <span className="relative z-10 flex items-center gap-2">
-                <Icon className={`size-4 ${isActive ? "text-cyan-600" : "text-slate-400"}`} />
+                <Icon className={`size-3.5 sm:size-4 ${isActive ? "text-cyan-600" : "text-slate-400"}`} />
                 <span>{tab.label}</span>
                 {tab.count !== undefined && (
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                  <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
                     isActive ? "bg-cyan-50 text-cyan-700 border border-cyan-200" : "bg-slate-200/80 text-slate-600"
                   }`}>
                     {tab.count}
                   </span>
                 )}
                 {tab.badge && (
-                  <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider ${
+                  <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider hidden xs:inline ${
                     isActive ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-500"
                   }`}>
                     {tab.badge}
@@ -514,7 +514,7 @@ export function SystemSettings() {
       </div>
 
       {/* ── Main Tab Panels ──────────────────────────────────────────────── */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden p-6 sm:p-8 lg:p-10 transition-all">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden p-4 sm:p-6 lg:p-8 transition-all">
         {/* ═══════════════════════════════════════════════════════════════════ */}
         {/* TAB 1: USERS & ROLES */}
         {/* ═══════════════════════════════════════════════════════════════════ */}

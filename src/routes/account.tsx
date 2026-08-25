@@ -1031,8 +1031,8 @@ function AccountPage() {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col selection:bg-cyan-500/20">
         <Header alwaysDark />
-        <main className="flex-1 pt-36 pb-24 flex items-center justify-center px-6">
-          <div className="max-w-md w-full rounded-3xl p-8 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white text-center shadow-2xl space-y-6">
+        <main className="flex-1 pt-28 sm:pt-36 pb-16 sm:pb-24 flex items-center justify-center px-4 sm:px-6">
+          <div className="max-w-md w-full rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white text-center shadow-2xl space-y-5 sm:space-y-6">
             <div className="size-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 grid place-items-center mx-auto shadow-inner">
               <ShieldCheck className="size-8" />
             </div>
@@ -1161,18 +1161,18 @@ function AccountPage() {
               </div>
 
               {/* Quick HUD Metrics */}
-              <div className="flex items-center gap-3 shrink-0 flex-wrap">
-                <div className="p-3 px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:items-center gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0">
+                <div className="p-3 px-3.5 sm:px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
                   <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Orders</div>
                   <div className="text-base sm:text-lg font-black text-white mt-0.5">{orders.length}</div>
                 </div>
 
-                <div className="p-3 px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <div className="p-3 px-3.5 sm:px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
                   <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Lifetime Volume</div>
-                  <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5">{formatUSD(lifetimeSpent)}</div>
+                  <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 truncate">{formatUSD(lifetimeSpent)}</div>
                 </div>
 
-                <div className="p-3 px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                <div className="p-3 px-3.5 sm:px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
                   <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Active Quotes</div>
                   <div className="text-base sm:text-lg font-black text-emerald-300 mt-0.5">{quotes.length}</div>
                 </div>
@@ -1182,7 +1182,7 @@ function AccountPage() {
                     logout();
                     window.location.href = "/";
                   }}
-                  className="p-3 px-4 rounded-2xl bg-white/10 hover:bg-rose-500/20 hover:border-rose-500/40 border border-white/15 text-white transition flex items-center gap-2 text-xs font-bold cursor-pointer"
+                  className="p-3 px-3.5 sm:px-4 rounded-2xl bg-white/10 hover:bg-rose-500/20 hover:border-rose-500/40 border border-white/15 text-white transition flex items-center justify-center gap-2 text-xs font-bold cursor-pointer col-span-2 sm:col-span-1"
                   title="Sign Out"
                 >
                   <LogOut className="size-4" />
@@ -1192,10 +1192,106 @@ function AccountPage() {
             </div>
           </div>
 
+          {/* ─── MOBILE / TABLET HORIZONTAL TAB NAVIGATION (VISIBLE ON < LG) ─── */}
+          <div className="lg:hidden space-y-3">
+            {/* Mobile Category Dropdown Selector */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-2xs flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="size-8 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-700 text-white grid place-items-center shrink-0 shadow-xs">
+                  {activeTab === "overview" && <Layers className="size-4" />}
+                  {activeTab.startsWith("purchases") && <Package className="size-4" />}
+                  {activeTab.startsWith("wishlist") && <Heart className="size-4" />}
+                  {activeTab.startsWith("billing") && <Receipt className="size-4" />}
+                  {activeTab.startsWith("settings") && <Settings className="size-4" />}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Current Section</div>
+                  <div className="text-xs font-extrabold text-slate-900 truncate capitalize">
+                    {activeTab.replace("-", " › ")}
+                  </div>
+                </div>
+              </div>
+
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value as TabType)}
+                className="h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-800 focus:outline-none focus:border-cyan-500 focus:bg-white transition cursor-pointer"
+              >
+                <optgroup label="Overview">
+                  <option value="overview">Account Dashboard</option>
+                </optgroup>
+                <optgroup label="Purchases">
+                  <option value="purchases-history">Purchase History ({orders.length})</option>
+                  <option value="purchases-returns">Returns ({returns.length})</option>
+                  <option value="purchases-reorder">Reorder Items ({allOrderedItems.length})</option>
+                  <option value="purchases-quotes">Quotes ({quotes.length})</option>
+                </optgroup>
+                <optgroup label="Wishlists">
+                  <option value="wishlist-all">All Lists ({Object.keys(profile.wishlists || {}).length})</option>
+                  <option value="wishlist-my">My List ({activeWishlistItems.length})</option>
+                </optgroup>
+                <optgroup label="Billing">
+                  <option value="billing-invoices">Invoices ({orders.length})</option>
+                  <option value="billing-history">Transaction History</option>
+                  <option value="billing-statement">Print Statement</option>
+                </optgroup>
+                <optgroup label="Settings">
+                  <option value="settings-profile">Profile Information</option>
+                  <option value="settings-email">Email Preferences</option>
+                  <option value="settings-address">Address Book ({(profile.addresses || []).length})</option>
+                  <option value="settings-cards">Credit Cards ({(profile.cards || []).length})</option>
+                  <option value="settings-password">Update Password</option>
+                </optgroup>
+              </select>
+            </div>
+
+            {/* Mobile Scrollable Horizontal Pill Strip */}
+            <div className="flex gap-2 overflow-x-auto pb-1.5 pt-0.5 no-scrollbar scroll-smooth">
+              {[
+                { id: "overview", label: "Dashboard", icon: Layers },
+                { id: "purchases-history", label: "Orders", icon: Package, count: orders.length },
+                { id: "purchases-quotes", label: "Quotes", icon: FileText, count: quotes.length },
+                { id: "purchases-returns", label: "Returns", icon: RotateCcw, count: returns.length },
+                { id: "purchases-reorder", label: "Reorder", icon: Repeat },
+                { id: "wishlist-all", label: "Lists", icon: ListPlus },
+                { id: "billing-invoices", label: "Invoices", icon: Receipt },
+                { id: "billing-statement", label: "Statement", icon: Printer },
+                { id: "settings-profile", label: "Profile", icon: User },
+                { id: "settings-address", label: "Addresses", icon: MapPin },
+                { id: "settings-cards", label: "Cards", icon: CreditCard },
+                { id: "settings-password", label: "Password", icon: Lock },
+              ].map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as TabType)}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 cursor-pointer shadow-2xs ${
+                      isActive
+                        ? "bg-gradient-to-r from-cyan-600 to-blue-700 text-white shadow-sm"
+                        : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80"
+                    }`}
+                  >
+                    <Icon className="size-3.5 shrink-0" />
+                    <span>{item.label}</span>
+                    {item.count !== undefined && item.count > 0 && (
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                        isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+                      }`}>
+                        {item.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* ─── MAIN PORTAL CONTENT WITH STRUCTURED SIDEBAR ─── */}
           <div className="grid lg:grid-cols-12 gap-8 items-start">
-            {/* LEFT 3.5 COLS: Categorized Navigation Sidebar */}
-            <aside className="lg:col-span-4 space-y-6">
+            {/* LEFT 3.5 COLS: Categorized Navigation Sidebar (Desktop Only) */}
+            <aside className="hidden lg:block lg:col-span-4 space-y-6">
               <div className="bg-white border border-slate-200/90 rounded-3xl p-5 shadow-2xs space-y-6">
                 {/* 1. Overview */}
                 <div className="space-y-1">
@@ -1454,7 +1550,7 @@ function AccountPage() {
             </aside>
 
             {/* RIGHT 8 COLS: Active Tab View Container */}
-            <div className="lg:col-span-8 space-y-6">
+            <div className="w-full lg:col-span-8 space-y-6">
               {/* ─── TAB 1: OVERVIEW ─── */}
               {activeTab === "overview" && (
                 <div className="space-y-6">
@@ -1750,26 +1846,26 @@ function AccountPage() {
                       {filteredOrders.map((order) => (
                         <div key={order.id} className="border border-slate-200/90 rounded-2xl overflow-hidden shadow-2xs bg-white">
                           {/* Order Card Header */}
-                          <div className="p-4 sm:px-5 bg-slate-50/80 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
-                            <div className="flex items-center gap-4 sm:gap-6 flex-wrap text-xs">
+                          <div className="p-3.5 sm:p-4 sm:px-5 bg-slate-50/80 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                            <div className="grid grid-cols-3 sm:flex sm:items-center gap-3 sm:gap-6 text-xs">
                               <div>
-                                <div className="text-[10px] uppercase font-bold text-slate-400">Order ID</div>
-                                <div className="font-mono font-black text-slate-900">#{order.id}</div>
+                                <div className="text-[9.5px] sm:text-[10px] uppercase font-bold text-slate-400">Order ID</div>
+                                <div className="font-mono font-black text-xs sm:text-sm text-slate-900 truncate">#{order.id}</div>
                               </div>
                               <div>
-                                <div className="text-[10px] uppercase font-bold text-slate-400">Date Placed</div>
-                                <div className="font-bold text-slate-700">
+                                <div className="text-[9.5px] sm:text-[10px] uppercase font-bold text-slate-400">Date Placed</div>
+                                <div className="font-bold text-slate-700 text-[11px] sm:text-xs">
                                   {new Date(order.placedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                                 </div>
                               </div>
                               <div>
-                                <div className="text-[10px] uppercase font-bold text-slate-400">Total</div>
-                                <div className="font-black text-slate-900">{formatUSD(order.total)}</div>
+                                <div className="text-[9.5px] sm:text-[10px] uppercase font-bold text-slate-400">Total</div>
+                                <div className="font-black text-xs sm:text-sm text-slate-900">{formatUSD(order.total)}</div>
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${
+                            <div className="flex items-center gap-2 flex-wrap pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
+                              <span className={`text-[9.5px] sm:text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${
                                 order.status === "Delivered" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
                                 order.status === "Shipped" ? "bg-blue-50 text-blue-700 border-blue-200" :
                                 "bg-amber-50 text-amber-700 border-amber-200"
@@ -1796,17 +1892,17 @@ function AccountPage() {
                           </div>
 
                           {/* Line Items with Images */}
-                          <div className="p-4 sm:p-5 divide-y divide-slate-100">
+                          <div className="p-3.5 sm:p-4 sm:p-5 divide-y divide-slate-100">
                             {(order.items || []).map((it: any, idx: number) => {
                               const fallbackImg = catalogProducts.find(p => p.id === it.id || (p.name && it.name && p.name.toLowerCase() === it.name.toLowerCase()))?.img;
                               const itemImg = getProductImage(it.img || fallbackImg);
                               return (
-                                <div key={idx} className="py-3.5 first:pt-0 last:pb-0 flex items-center justify-between gap-4 text-xs">
-                                  <div className="flex items-center gap-3.5 sm:gap-4 flex-1 min-w-0">
+                                <div key={idx} className="py-3.5 first:pt-0 last:pb-0 flex flex-col xs:flex-row xs:items-center justify-between gap-3 text-xs">
+                                  <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                                     <Link
                                       to="/products/$productId"
                                       params={{ productId: it.id || "sample" }}
-                                      className="size-14 sm:size-16 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 shrink-0 grid place-items-center overflow-hidden hover:border-cyan-500 transition group shadow-2xs"
+                                      className="size-12 xs:size-14 sm:size-16 rounded-xl bg-slate-50 border border-slate-200/80 p-1.5 shrink-0 grid place-items-center overflow-hidden hover:border-cyan-500 transition group shadow-2xs"
                                     >
                                       <img
                                         src={itemImg}
@@ -1828,8 +1924,8 @@ function AccountPage() {
                                       >
                                         {it.name}
                                       </Link>
-                                      <div className="text-[11px] text-slate-500 flex items-center gap-2 flex-wrap">
-                                        <span className="font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[10px] uppercase">
+                                      <div className="text-[10px] sm:text-[11px] text-slate-500 flex items-center gap-2 flex-wrap">
+                                        <span className="font-bold text-slate-700 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded text-[9.5px] sm:text-[10px] uppercase">
                                           {it.brand || "PSW"}
                                         </span>
                                         <span>Qty: <strong className="text-slate-900">{it.qty}</strong></span>
@@ -1839,10 +1935,10 @@ function AccountPage() {
                                     </div>
                                   </div>
 
-                                  <div className="flex items-center gap-3 shrink-0">
-                                    <div className="text-right">
-                                      <div className="font-black text-sm text-slate-900">{formatUSD((it.price || 0) * (it.qty || 1))}</div>
-                                      <span className="text-[10px] font-bold text-emerald-600">In Stock</span>
+                                  <div className="flex items-center justify-between xs:justify-end gap-3 shrink-0 pt-2 xs:pt-0 border-t xs:border-t-0 border-slate-100">
+                                    <div className="text-left xs:text-right">
+                                      <div className="font-black text-xs sm:text-sm text-slate-900">{formatUSD((it.price || 0) * (it.qty || 1))}</div>
+                                      <span className="text-[9.5px] sm:text-[10px] font-bold text-emerald-600">In Stock</span>
                                     </div>
                                     <button
                                       onClick={() => handleReorder(it)}
@@ -2354,18 +2450,18 @@ function AccountPage() {
                   </div>
 
                   {/* ── Summary Preview Bar ── */}
-                  <div className="grid grid-cols-3 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                  <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 xs:gap-4 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100">
                     <div className="text-center">
                       <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Orders</div>
-                      <div className="text-lg font-black text-slate-900">{statementOrders.length}</div>
+                      <div className="text-base sm:text-lg font-black text-slate-900">{statementOrders.length}</div>
                     </div>
-                    <div className="text-center border-x border-slate-200">
+                    <div className="text-center xs:border-x border-y xs:border-y-0 py-2.5 xs:py-0 border-slate-200">
                       <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Total Spent</div>
-                      <div className="text-lg font-black text-cyan-700">{formatUSD(statementTotal)}</div>
+                      <div className="text-base sm:text-lg font-black text-cyan-700">{formatUSD(statementTotal)}</div>
                     </div>
                     <div className="text-center">
                       <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Avg Order</div>
-                      <div className="text-lg font-black text-slate-900">
+                      <div className="text-base sm:text-lg font-black text-slate-900">
                         {statementOrders.length > 0 ? formatUSD(statementTotal / statementOrders.length) : "$0.00"}
                       </div>
                     </div>
@@ -2416,7 +2512,7 @@ function AccountPage() {
                     <button
                       onClick={() => setIsStatementOpen(true)}
                       disabled={statementOrders.length === 0}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs transition cursor-pointer shadow-md"
+                      className="w-full xs:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs transition cursor-pointer shadow-md"
                     >
                       <Printer className="size-3.5" />
                       <span>Print Statement ({statementOrders.length} orders)</span>
@@ -2435,18 +2531,18 @@ function AccountPage() {
                       initial={{ opacity: 0, scale: 0.96 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.96 }}
-                      className="relative bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto"
+                      className="relative bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[92vh] flex flex-col"
                     >
                       {/* Top bar — hidden on print */}
-                      <div className="no-print bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-xs font-bold">
-                          <FileText className="size-4 text-cyan-400" />
-                          <span>Account Statement — {statementOrders.length} orders · {formatUSD(statementTotal)}</span>
+                      <div className="no-print bg-slate-900 text-white px-4 sm:px-6 py-3.5 flex items-center justify-between shrink-0">
+                        <div className="flex items-center gap-2 text-xs font-bold truncate pr-2">
+                          <FileText className="size-4 text-cyan-400 shrink-0" />
+                          <span className="truncate">Statement — {statementOrders.length} orders · {formatUSD(statementTotal)}</span>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                           <button
                             onClick={() => printStatement()}
-                            className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                            className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                           >
                             <Printer className="size-3.5" />
                             <span>Print</span>
@@ -2461,7 +2557,7 @@ function AccountPage() {
                       </div>
 
                       {/* ── Printable Statement Sheet ── */}
-                      <div id="psw-statement-printable" className="p-10 sm:p-14 bg-white text-black font-sans">
+                      <div id="psw-statement-printable" className="p-5 sm:p-10 md:p-14 bg-white text-black font-sans overflow-y-auto">
 
                         {/* Header row: logo + title */}
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-8 border-b-2 border-slate-200">
@@ -2976,18 +3072,18 @@ function AccountPage() {
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
-              className="relative bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto"
+              className="relative bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[92vh] flex flex-col"
             >
               {/* Modal Top Bar (Hidden on Print) */}
-              <div className="no-print bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold">
-                  <FileText className="size-4 text-cyan-400" />
-                  <span>PSW Invoice #{selectedInvoice.id}</span>
+              <div className="no-print bg-slate-900 text-white px-4 sm:px-6 py-3.5 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-2 text-xs font-bold truncate pr-2">
+                  <FileText className="size-4 text-cyan-400 shrink-0" />
+                  <span className="truncate">PSW Invoice #{selectedInvoice.id}</span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                   <button
                     onClick={() => window.print()}
-                    className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                    className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                   >
                     <Printer className="size-3.5" />
                     <span>Print Invoice</span>
@@ -3004,7 +3100,7 @@ function AccountPage() {
               {/* Printable Invoice Sheet */}
               <div
                 id="stellr-invoice-printable"
-                className="p-8 sm:p-12 md:p-14 bg-white text-black font-sans select-text space-y-6 min-h-[600px] flex flex-col justify-between"
+                className="p-4 sm:p-8 md:p-12 lg:p-14 bg-white text-black font-sans select-text space-y-6 min-h-[600px] flex flex-col justify-between overflow-y-auto"
               >
                 {/* 1. Header: Title & Logo */}
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
@@ -3041,7 +3137,7 @@ function AccountPage() {
                     <img
                       src="/logo.png"
                       alt="Pool Supply Wholesalers"
-                      className="h-16 sm:h-20 w-auto object-contain"
+                      className="h-14 sm:h-20 w-auto object-contain"
                     />
                   </div>
                 </div>
@@ -3123,7 +3219,7 @@ function AccountPage() {
 
                 {/* 5. Financial Summary Breakdown (Aligned Right) */}
                 <div className="pt-2 flex justify-end">
-                  <div className="w-72 space-y-1.5 text-sm text-black">
+                  <div className="w-full sm:w-72 space-y-1.5 text-sm text-black">
                     <div className="flex justify-between py-1 border-b border-slate-100">
                       <span className="font-normal text-black">Subtotal</span>
                       <span className="font-normal text-black">{formatUSD(selectedInvoice.subtotal || selectedInvoice.total || 50)}</span>
@@ -3205,16 +3301,16 @@ function AccountPage() {
       {/* ─── ADD ADDRESS MODAL ─── */}
       <AnimatePresence>
         {isAddressModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5"
+              className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl border border-slate-200 space-y-4 sm:space-y-5 my-auto max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="font-black text-base text-slate-900">Add New Commercial Address</h3>
-                <button onClick={() => setIsAddressModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold">
+                <h3 className="font-black text-sm sm:text-base text-slate-900">Add New Commercial Address</h3>
+                <button onClick={() => setIsAddressModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold transition cursor-pointer">
                   ✕
                 </button>
               </div>
@@ -3244,7 +3340,7 @@ function AccountPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div>
                     <label className="block font-bold text-slate-500 mb-1">City</label>
                     <input
@@ -3281,7 +3377,7 @@ function AccountPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-black text-xs uppercase tracking-wider shadow-md cursor-pointer mt-2"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white font-black text-xs uppercase tracking-wider shadow-md cursor-pointer mt-2 transition"
                 >
                   Save Address
                 </button>
@@ -3294,16 +3390,16 @@ function AccountPage() {
       {/* ─── ADD CARD MODAL ─── */}
       <AnimatePresence>
         {isCardModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5"
+              className="bg-white rounded-3xl max-w-md w-full p-5 sm:p-8 shadow-2xl border border-slate-200 space-y-4 sm:space-y-5 my-auto max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="font-black text-base text-slate-900">Add Payment Card</h3>
-                <button onClick={() => setIsCardModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold">
+                <h3 className="font-black text-sm sm:text-base text-slate-900">Add Payment Card</h3>
+                <button onClick={() => setIsCardModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold transition cursor-pointer">
                   ✕
                 </button>
               </div>
@@ -3361,7 +3457,7 @@ function AccountPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-black text-xs uppercase tracking-wider shadow-md cursor-pointer mt-2"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white font-black text-xs uppercase tracking-wider shadow-md cursor-pointer mt-2 transition"
                 >
                   Save Encrypted Card
                 </button>
@@ -3374,24 +3470,24 @@ function AccountPage() {
       {/* ─── RETURN RMA MODAL ─── */}
       <AnimatePresence>
         {isReturnModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5 my-auto"
+              className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl border border-slate-200 space-y-4 sm:space-y-5 my-auto max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div>
-                  <h3 className="font-black text-base text-slate-900 flex items-center gap-2">
+                  <h3 className="font-black text-sm sm:text-base text-slate-900 flex items-center gap-2">
                     <RotateCcw className="size-4 text-cyan-600" />
                     <span>Submit Return (RMA) Request</span>
                   </h3>
-                  <p className="text-[11px] text-slate-400">Our commercial RMA desk will process replacement or credit within 24 hours</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400">Our commercial RMA desk will process replacement or credit within 24 hours</p>
                 </div>
                 <button
                   onClick={() => setIsReturnModalOpen(false)}
-                  className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold"
+                  className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold transition cursor-pointer"
                 >
                   ✕
                 </button>
@@ -3471,16 +3567,16 @@ function AccountPage() {
       {/* ─── REQUEST QUOTE MODAL ─── */}
       <AnimatePresence>
         {isQuoteModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5"
+              className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl border border-slate-200 space-y-4 sm:space-y-5 my-auto max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="font-black text-base text-slate-900">Request Commercial Project Quote</h3>
-                <button onClick={() => setIsQuoteModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold">
+                <h3 className="font-black text-sm sm:text-base text-slate-900">Request Commercial Project Quote</h3>
+                <button onClick={() => setIsQuoteModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold transition cursor-pointer">
                   ✕
                 </button>
               </div>
@@ -3498,7 +3594,7 @@ function AccountPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block font-bold text-slate-700 mb-1">Job Site Location</label>
                     <input
@@ -3560,16 +3656,16 @@ function AccountPage() {
       {/* ─── CREATE NEW LIST MODAL ─── */}
       <AnimatePresence>
         {isCreateListModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5"
+              className="bg-white rounded-3xl max-w-md w-full p-5 sm:p-8 shadow-2xl border border-slate-200 space-y-4 sm:space-y-5 my-auto max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="font-black text-base text-slate-900">Create New Project List</h3>
-                <button onClick={() => setIsCreateListModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold">
+                <h3 className="font-black text-sm sm:text-base text-slate-900">Create New Project List</h3>
+                <button onClick={() => setIsCreateListModalOpen(false)} className="size-8 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center text-xs font-bold transition cursor-pointer">
                   ✕
                 </button>
               </div>
@@ -3589,7 +3685,7 @@ function AccountPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-black text-xs uppercase tracking-wider shadow-md cursor-pointer mt-2"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white font-black text-xs uppercase tracking-wider shadow-md cursor-pointer mt-2 transition"
                 >
                   Create List
                 </button>

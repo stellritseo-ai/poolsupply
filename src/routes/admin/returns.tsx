@@ -381,81 +381,81 @@ function ReturnsManagerPage() {
       </AnimatePresence>
 
       {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs">
-        <div className="flex items-center gap-3.5">
-          <div className="size-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white grid place-items-center shadow-md">
-            <RotateCcw className="size-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-xs">
+        <div className="flex items-center gap-3 sm:gap-3.5">
+          <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white grid place-items-center shadow-md shrink-0">
+            <RotateCcw className="size-5 sm:size-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Returns & RMA Management</h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-100 text-amber-900 border border-amber-200">
+            <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+              <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">Returns & RMA Management</h1>
+              <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-amber-100 text-amber-900 border border-amber-200">
                 {metrics.total} Requests
               </span>
             </div>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
-              Review customer warranty claims, approve RMA slips, and manage resolution lifecycles
+            <p className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">
+              Review warranty claims, approve RMA slips, and manage resolution lifecycles
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={() => refetch()}
             disabled={isRefetching}
-            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+            className="px-3 sm:px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
             title="Refresh returns data"
           >
             <RefreshCw className={`size-3.5 ${isRefetching ? "animate-spin text-cyan-600" : ""}`} />
-            <span>{isRefetching ? "Syncing..." : "Refresh"}</span>
+            <span>{isRefetching ? "Syncing..." : "Refresh Feed"}</span>
           </button>
         </div>
       </div>
 
       {/* ── Metric KPI Cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
-        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Total Returns</div>
-          <div className="text-2xl font-black text-slate-900">{metrics.total}</div>
-          <div className="text-[11px] text-slate-500 mt-1">All time claims</div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
+          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Total Returns</div>
+          <div className="text-xl sm:text-2xl font-black text-slate-900">{metrics.total}</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">All time claims</div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 shadow-2xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-amber-700 mb-1 flex items-center gap-1">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 shadow-2xs">
+          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700 mb-1 flex items-center gap-1">
             <Clock className="size-3" />
             <span>Under Review</span>
           </div>
-          <div className="text-2xl font-black text-amber-900">{metrics.underReview}</div>
-          <div className="text-[11px] text-amber-700 font-medium mt-1">Needs action</div>
+          <div className="text-xl sm:text-2xl font-black text-amber-900">{metrics.underReview}</div>
+          <div className="text-[10px] sm:text-[11px] text-amber-700 font-medium mt-0.5 truncate">Needs action</div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 shadow-2xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 mb-1 flex items-center gap-1">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 shadow-2xs">
+          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-700 mb-1 flex items-center gap-1">
             <CheckCircle2 className="size-3" />
             <span>Resolved</span>
           </div>
-          <div className="text-2xl font-black text-emerald-900">{metrics.resolved}</div>
-          <div className="text-[11px] text-emerald-700 font-medium mt-1">Case closed</div>
+          <div className="text-xl sm:text-2xl font-black text-emerald-900">{metrics.resolved}</div>
+          <div className="text-[10px] sm:text-[11px] text-emerald-700 font-medium mt-0.5 truncate">Case closed</div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 shadow-2xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-rose-700 mb-1 flex items-center gap-1">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 shadow-2xs">
+          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-rose-700 mb-1 flex items-center gap-1">
             <AlertTriangle className="size-3" />
             <span>Unresolved</span>
           </div>
-          <div className="text-2xl font-black text-rose-900">{metrics.unresolved}</div>
-          <div className="text-[11px] text-rose-700 font-medium mt-1">Open cases</div>
+          <div className="text-xl sm:text-2xl font-black text-rose-900">{metrics.unresolved}</div>
+          <div className="text-[10px] sm:text-[11px] text-rose-700 font-medium mt-0.5 truncate">Open cases</div>
         </div>
 
-        <div className="col-span-2 lg:col-span-1 p-4 rounded-2xl bg-blue-50/70 border border-blue-200/80 shadow-2xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-blue-700 mb-1">RMA Total Value</div>
-          <div className="text-2xl font-black text-blue-950">{formatUSD(metrics.totalValue)}</div>
-          <div className="text-[11px] text-blue-700 font-medium mt-1">Claim volume</div>
+        <div className="col-span-2 sm:col-span-1 p-3.5 sm:p-4 rounded-2xl bg-blue-50/70 border border-blue-200/80 shadow-2xs">
+          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-700 mb-1">RMA Total Value</div>
+          <div className="text-lg sm:text-2xl font-black text-blue-950 truncate">{formatUSD(metrics.totalValue)}</div>
+          <div className="text-[10px] sm:text-[11px] text-blue-700 font-medium mt-0.5 truncate">Claim volume</div>
         </div>
       </div>
 
       {/* ── Search & Filter Controls ── */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3">
+      <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* Search */}
           <div className="relative flex-1">
@@ -464,8 +464,8 @@ function ReturnsManagerPage() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by RMA #, Order ID, customer name, email, product..."
-              className="w-full h-10 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:bg-white focus:border-cyan-500 focus:outline-none transition"
+              placeholder="Search RMA #, Order ID, customer, email, product..."
+              className="w-full h-10 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-800 focus:bg-white focus:border-cyan-500 focus:outline-none transition shadow-2xs"
             />
             {searchTerm && (
               <button
@@ -478,10 +478,10 @@ function ReturnsManagerPage() {
           </div>
 
           {/* Resolution Filter */}
-          <div className="flex items-center gap-1.5 shrink-0 bg-slate-100 p-1 rounded-xl">
+          <div className="flex items-center gap-1 shrink-0 bg-slate-100 p-1 rounded-xl overflow-x-auto scrollbar-none">
             <button
               onClick={() => setResolutionFilter("all")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 ${
                 resolutionFilter === "all" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -489,7 +489,7 @@ function ReturnsManagerPage() {
             </button>
             <button
               onClick={() => setResolutionFilter("unresolved")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 shrink-0 ${
                 resolutionFilter === "unresolved"
                   ? "bg-rose-600 text-white shadow-xs"
                   : "text-slate-600 hover:text-rose-700"
@@ -500,7 +500,7 @@ function ReturnsManagerPage() {
             </button>
             <button
               onClick={() => setResolutionFilter("resolved")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 shrink-0 ${
                 resolutionFilter === "resolved"
                   ? "bg-emerald-600 text-white shadow-xs"
                   : "text-slate-600 hover:text-emerald-700"
@@ -513,8 +513,8 @@ function ReturnsManagerPage() {
         </div>
 
         {/* Status Chips */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-100 text-xs">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mr-1 flex items-center gap-1">
+        <div className="flex items-center gap-1.5 pt-1 border-t border-slate-100 text-xs overflow-x-auto scrollbar-none pb-0.5">
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mr-1 flex items-center gap-1 shrink-0">
             <Filter className="size-3" />
             <span>Filter:</span>
           </span>
@@ -530,7 +530,7 @@ function ReturnsManagerPage() {
             <button
               key={chip.id}
               onClick={() => setStatusFilter(chip.id)}
-              className={`px-3 py-1 rounded-xl font-bold transition cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1 rounded-xl font-bold transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
                 statusFilter === chip.id
                   ? "bg-slate-900 text-white shadow-xs"
                   : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200"
@@ -545,8 +545,8 @@ function ReturnsManagerPage() {
       {/* ── Main Master-Detail 2-Column Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Returns List (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200/80 shadow-2xs overflow-hidden">
-          <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="lg:col-span-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-2xs overflow-hidden">
+          <div className="p-3.5 sm:p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <div className="font-bold text-xs text-slate-700">
               Showing {filteredReturns.length} of {returnsList.length} Returns
             </div>
@@ -574,7 +574,7 @@ function ReturnsManagerPage() {
                   <button
                     key={ret.id}
                     onClick={() => handleSelectReturn(ret)}
-                    className={`w-full p-4 text-left transition cursor-pointer flex flex-col gap-2.5 relative ${
+                    className={`w-full p-3.5 sm:p-4 text-left transition cursor-pointer flex flex-col gap-2.5 relative active:bg-slate-100 ${
                       isSelected
                         ? "bg-cyan-50/60 border-l-4 border-l-cyan-600"
                         : "hover:bg-slate-50/80 border-l-4 border-l-transparent"
@@ -582,11 +582,11 @@ function ReturnsManagerPage() {
                   >
                     {/* Top row: RMA ID + Status */}
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
                         <span className="font-mono font-black text-xs text-slate-900">{ret.rmaId}</span>
                         <span className="text-[11px] font-semibold text-slate-500">Order #{ret.orderId}</span>
                       </div>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 shrink-0">
                         {isResolved ? (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
                             <Check className="size-2.5" />
@@ -603,11 +603,11 @@ function ReturnsManagerPage() {
 
                     {/* Customer & Reason */}
                     <div>
-                      <div className="font-bold text-xs text-slate-800 flex items-center gap-1.5">
-                        <User className="size-3 text-slate-400" />
-                        <span>{ret.customerName || "Trade Customer"}</span>
+                      <div className="font-bold text-xs text-slate-800 flex items-center gap-1.5 truncate">
+                        <User className="size-3 text-slate-400 shrink-0" />
+                        <span className="truncate">{ret.customerName || "Trade Customer"}</span>
                         {ret.customerCompany && (
-                          <span className="text-slate-400 font-normal text-[11px]">({ret.customerCompany})</span>
+                          <span className="text-slate-400 font-normal text-[11px] truncate">({ret.customerCompany})</span>
                         )}
                       </div>
                       <div className="text-xs text-slate-600 line-clamp-1 mt-0.5">
@@ -630,25 +630,25 @@ function ReturnsManagerPage() {
         {/* Right Column: Selected Return Full Details (7 cols) */}
         <div className="lg:col-span-7">
           {selectedReturn ? (
-            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-2xs p-6 sm:p-7 space-y-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-2xs p-4 sm:p-6 lg:p-7 space-y-4 sm:space-y-6">
               {/* ── Detail Header ── */}
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-5 border-b border-slate-100">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-slate-100">
                 <div>
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <h2 className="text-2xl font-black text-slate-900 font-mono tracking-tight">{selectedReturn.rmaId}</h2>
+                  <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-mono tracking-tight">{selectedReturn.rmaId}</h2>
                     {selectedReturn.isResolved || selectedReturn.status === "Resolved" ? (
-                      <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5 shadow-2xs">
+                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5 shadow-2xs">
                         <CheckCircle2 className="size-3.5" />
-                        <span>REQUEST RESOLVED</span>
+                        <span>RESOLVED</span>
                       </span>
                     ) : (
-                      <span className="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5 shadow-2xs">
+                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5 shadow-2xs">
                         <Clock className="size-3.5" />
-                        <span>UNRESOLVED / IN PROGRESS</span>
+                        <span>IN PROGRESS</span>
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-slate-400 font-medium mt-1">
+                  <div className="text-[11px] sm:text-xs text-slate-400 font-medium mt-1">
                     Submitted on{" "}
                     {new Date(selectedReturn.createdAt).toLocaleString("en-US", {
                       dateStyle: "medium",
@@ -658,10 +658,10 @@ function ReturnsManagerPage() {
                 </div>
 
                 {/* Quick Print & Action */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => handlePrintRmaSlip(selectedReturn)}
-                    className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                    className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                   >
                     <Printer className="size-3.5" />
                     <span>Print RMA Slip</span>
@@ -669,10 +669,10 @@ function ReturnsManagerPage() {
 
                   <button
                     onClick={() => handleDeleteReturn(selectedReturn.id, selectedReturn.rmaId)}
-                    className="size-9 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 grid place-items-center transition cursor-pointer"
+                    className="size-8 sm:size-9 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 grid place-items-center transition cursor-pointer"
                     title="Delete RMA record"
                   >
-                    <Trash2 className="size-4" />
+                    <Trash2 className="size-3.5 sm:size-4" />
                   </button>
                 </div>
               </div>

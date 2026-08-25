@@ -455,100 +455,99 @@ function AdminQuotesPage() {
       </div>
 
       {/* ─── 5-PILLAR METRIC HUD ─── */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         {/* Metric 1 */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Quotes</span>
-            <div className="size-8 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
-              <Layers className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
+              <Layers className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight">{totalQuotesCount}</div>
-          <div className="text-[11px] font-semibold text-slate-400 mt-0.5">All customer project requests</div>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{totalQuotesCount}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 truncate">All customer project requests</div>
         </div>
 
         {/* Metric 2 */}
-        <div className="bg-white border border-amber-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-amber-50/40">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-amber-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-amber-50/40">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">Under Review</span>
-            <div className="size-8 rounded-xl bg-amber-100 text-amber-800 grid place-items-center">
-              <Clock className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-amber-100 text-amber-800 grid place-items-center">
+              <Clock className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-amber-950 tracking-tight">{underReviewCount}</div>
-          <div className="text-[11px] font-semibold text-amber-800/80 mt-0.5">Pending engineering review</div>
+          <div className="text-xl sm:text-2xl font-black text-amber-950 tracking-tight">{underReviewCount}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-amber-800/80 mt-0.5 truncate">Engineering review</div>
         </div>
 
         {/* Metric 3 */}
-        <div className="bg-white border border-cyan-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-cyan-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">Pricing Ready</span>
-            <div className="size-8 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
-              <Send className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
+              <Send className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-cyan-950 tracking-tight">{pricingReadyCount}</div>
-          <div className="text-[11px] font-semibold text-cyan-800/80 mt-0.5">Proposals ready / sent</div>
+          <div className="text-xl sm:text-2xl font-black text-cyan-950 tracking-tight">{pricingReadyCount}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-cyan-800/80 mt-0.5 truncate">Proposals ready</div>
         </div>
 
         {/* Metric 4 */}
-        <div className="bg-white border border-emerald-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">Accepted / Closed</span>
-            <div className="size-8 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
-              <Check className="size-4" />
+        <div className="bg-white border border-emerald-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">Accepted / Won</span>
+            <div className="size-7 sm:size-8 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
+              <Check className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-emerald-950 tracking-tight">{acceptedCount}</div>
-          <div className="text-[11px] font-semibold text-emerald-800/80 mt-0.5">Converted to job orders</div>
+          <div className="text-xl sm:text-2xl font-black text-emerald-950 tracking-tight">{acceptedCount}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-emerald-800/80 mt-0.5 truncate">Converted to job orders</div>
         </div>
 
         {/* Metric 5 */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs col-span-2 md:col-span-1">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Pipeline Value</span>
-            <div className="size-8 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center">
-              <DollarSign className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center">
+              <DollarSign className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight">{formatUSD(totalPipelineValue)}</div>
-          <div className="text-[11px] font-semibold text-slate-400 mt-0.5">Cumulative quoted volume</div>
+          <div className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight truncate">{formatUSD(totalPipelineValue)}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 truncate">Cumulative volume</div>
         </div>
       </div>
 
       {/* ─── LIVE SEARCH & MULTI-FILTER BAR ─── */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3 flex-1 min-w-[280px]">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 shadow-2xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <div className="relative flex-1">
             <Search className="size-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by Quote ID, Project Name, Contractor, Email, or City..."
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition"
+              placeholder="Search Quote ID, Project, Contractor, City..."
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition shadow-2xs"
             />
           </div>
 
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="text-xs font-bold text-slate-400 hover:text-slate-700 px-2 py-1"
+              className="text-xs font-bold text-slate-400 hover:text-slate-700 px-2 py-1 shrink-0"
             >
               Clear
             </button>
           )}
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {/* Status filter */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-bold text-slate-400">Status:</span>
+          <div className="flex items-center gap-1.5 min-w-0">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition cursor-pointer"
+              className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition cursor-pointer max-w-[180px] truncate"
             >
               <option value="all">All Statuses ({quotesList.length})</option>
               <option value="Engineering Review">Engineering Review</option>
@@ -566,7 +565,7 @@ function AdminQuotesPage() {
           {/* Unresolved only toggle */}
           <button
             onClick={() => setOnlyUnresolved(!onlyUnresolved)}
-            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer border ${
+            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer border shrink-0 ${
               onlyUnresolved
                 ? "bg-amber-100 text-amber-900 border-amber-300"
                 : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
@@ -582,13 +581,13 @@ function AdminQuotesPage() {
       <div className="grid lg:grid-cols-12 gap-6 items-start">
         {/* Left Column (5 cols): List of Quotes */}
         <div className="lg:col-span-5 space-y-3">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400 px-1">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 px-1">
             <span>SHOWING {filteredQuotes.length} PROPOSALS</span>
             <span>SORTED BY DATE</span>
           </div>
 
           {isLoading ? (
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-8 text-center space-y-3">
+            <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-8 text-center space-y-3">
               <RefreshCw className="size-6 text-cyan-600 animate-spin mx-auto" />
               <p className="text-xs font-bold text-slate-500">Loading quote proposals...</p>
             </div>
@@ -602,14 +601,14 @@ function AdminQuotesPage() {
                   <div
                     key={q.id || q.quoteId}
                     onClick={() => handleSelectQuote(q)}
-                    className={`p-4 rounded-2xl border transition-all cursor-pointer text-left space-y-2 ${
+                    className={`p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer text-left space-y-2 active:bg-slate-100 ${
                       isSelected
                         ? "bg-cyan-50/80 border-cyan-500 shadow-sm"
                         : "bg-white border-slate-200/90 hover:border-slate-300 hover:shadow-2xs"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
                         <span className="font-mono font-black text-xs text-cyan-800">#{q.quoteId}</span>
                         {isResolved ? (
                           <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300">
@@ -629,14 +628,14 @@ function AdminQuotesPage() {
 
                     <div>
                       <div className="font-extrabold text-sm text-slate-900 line-clamp-1">{q.projectName}</div>
-                      <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-                        <User className="size-3 text-slate-400" />
-                        <span className="font-semibold text-slate-700">{q.customerName || "Customer"}</span>
-                        {q.customerCompany && <span>· {q.customerCompany}</span>}
+                      <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5 truncate">
+                        <User className="size-3 text-slate-400 shrink-0" />
+                        <span className="font-semibold text-slate-700 truncate">{q.customerName || "Customer"}</span>
+                        {q.customerCompany && <span className="truncate">· {q.customerCompany}</span>}
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-100">
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 pt-2 border-t border-slate-100">
                       <span className="flex items-center gap-1">
                         <Calendar className="size-3" />
                         {new Date(q.createdAt).toLocaleDateString()}
@@ -648,7 +647,7 @@ function AdminQuotesPage() {
               })}
             </div>
           ) : (
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-12 text-center text-slate-400 space-y-3">
+            <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center text-slate-400 space-y-3">
               <FileText className="size-10 mx-auto text-slate-300 stroke-1" />
               <p className="text-xs font-bold text-slate-700">No quote requests found</p>
               <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
@@ -661,32 +660,32 @@ function AdminQuotesPage() {
         {/* Right Column (7 cols): Selected Quote Details & Controls */}
         <div className="lg:col-span-7">
           {activeQuote ? (
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-2xs space-y-6">
+            <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 shadow-2xs space-y-4 sm:space-y-6">
               {/* Header HUD with Status & Actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 pb-4 sm:pb-5">
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono font-black text-base text-cyan-800">#{activeQuote.quoteId}</span>
+                    <span className="font-mono font-black text-sm sm:text-base text-cyan-800">#{activeQuote.quoteId}</span>
                     {activeQuote.isResolved ? (
-                      <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
-                        <Check className="size-3.5" />
-                        <span>Resolved / Completed</span>
+                      <span className="text-[11px] sm:text-xs font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+                        <Check className="size-3 sm:size-3.5" />
+                        <span>Resolved</span>
                       </span>
                     ) : (
-                      <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
-                        <Clock className="size-3.5" />
+                      <span className="text-[11px] sm:text-xs font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+                        <Clock className="size-3 sm:size-3.5" />
                         <span>{activeQuote.status || "Under Review"}</span>
                       </span>
                     )}
                   </div>
-                  <h2 className="text-lg font-black text-slate-900 tracking-tight mt-1">{activeQuote.projectName}</h2>
-                  <p className="text-xs text-slate-400">Submitted {new Date(activeQuote.createdAt).toLocaleString()}</p>
+                  <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight mt-1">{activeQuote.projectName}</h2>
+                  <p className="text-[11px] sm:text-xs text-slate-400">Submitted {new Date(activeQuote.createdAt).toLocaleString()}</p>
                 </div>
 
-                <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+                <div className="flex items-center gap-2 flex-wrap shrink-0">
                   <button
                     onClick={() => handleToggleResolved(activeQuote)}
-                    className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer border ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold transition cursor-pointer border ${
                       activeQuote.isResolved
                         ? "bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200"
                         : "bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-emerald-200"
@@ -707,7 +706,7 @@ function AdminQuotesPage() {
 
                   <button
                     onClick={() => handlePrintProposal(activeQuote)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition cursor-pointer shadow-xs"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition cursor-pointer shadow-xs"
                   >
                     <Printer className="size-3.5 text-cyan-400" />
                     <span>Print Proposal</span>
@@ -716,26 +715,26 @@ function AdminQuotesPage() {
               </div>
 
               {/* Customer & Job Site Card */}
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Client / Contractor Profile</div>
                   <div className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
-                    <User className="size-4 text-cyan-600" />
-                    <span>{activeQuote.customerName || "Trade Customer"}</span>
+                    <User className="size-4 text-cyan-600 shrink-0" />
+                    <span className="truncate">{activeQuote.customerName || "Trade Customer"}</span>
                   </div>
                   {activeQuote.customerCompany && (
-                    <div className="text-xs text-slate-600 flex items-center gap-2">
-                      <Building className="size-3.5 text-slate-400" />
-                      <span>{activeQuote.customerCompany}</span>
+                    <div className="text-xs text-slate-600 flex items-center gap-2 truncate">
+                      <Building className="size-3.5 text-slate-400 shrink-0" />
+                      <span className="truncate">{activeQuote.customerCompany}</span>
                     </div>
                   )}
-                  <div className="text-xs text-slate-600 flex items-center gap-2">
-                    <Mail className="size-3.5 text-slate-400" />
-                    <span>{activeQuote.customerEmail || activeQuote.customerIdentifier}</span>
+                  <div className="text-xs text-slate-600 flex items-center gap-2 truncate">
+                    <Mail className="size-3.5 text-slate-400 shrink-0" />
+                    <span className="truncate">{activeQuote.customerEmail || activeQuote.customerIdentifier}</span>
                   </div>
                   {activeQuote.customerPhone && (
                     <div className="text-xs text-slate-600 flex items-center gap-2">
-                      <Phone className="size-3.5 text-slate-400" />
+                      <Phone className="size-3.5 text-slate-400 shrink-0" />
                       <span>{activeQuote.customerPhone}</span>
                     </div>
                   )}
@@ -746,21 +745,21 @@ function AdminQuotesPage() {
                   )}
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Project Details</div>
                   {activeQuote.projectLocation && (
                     <div className="text-xs text-slate-700 flex items-center gap-2">
                       <MapPin className="size-3.5 text-cyan-600 shrink-0" />
-                      <span><strong>Job Location:</strong> {activeQuote.projectLocation}</span>
+                      <span><strong>Location:</strong> {activeQuote.projectLocation}</span>
                     </div>
                   )}
                   <div className="text-xs text-slate-700 flex items-center gap-2">
                     <Calendar className="size-3.5 text-cyan-600 shrink-0" />
-                    <span><strong>Target Date:</strong> {activeQuote.targetCompletionDate}</span>
+                    <span><strong>Target:</strong> {activeQuote.targetCompletionDate}</span>
                   </div>
                   <div className="text-xs text-slate-700 flex items-center gap-2">
                     <DollarSign className="size-3.5 text-cyan-600 shrink-0" />
-                    <span><strong>Customer Est. Budget:</strong> {formatUSD(activeQuote.estimatedBudget || 0)}</span>
+                    <span><strong>Customer Budget:</strong> {formatUSD(activeQuote.estimatedBudget || 0)}</span>
                   </div>
                 </div>
               </div>
@@ -772,16 +771,16 @@ function AdminQuotesPage() {
                   <div className="border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100">
                     {activeQuote.items.map((it: any, idx: number) => (
                       <div key={idx} className="p-3 bg-white flex items-center justify-between gap-3 text-xs">
-                        <div className="flex items-center gap-2.5">
-                          <span className="size-6 rounded-lg bg-slate-100 text-slate-600 font-mono font-bold grid place-items-center text-[10px]">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className="size-6 rounded-lg bg-slate-100 text-slate-600 font-mono font-bold grid place-items-center text-[10px] shrink-0">
                             {idx + 1}
                           </span>
-                          <div>
-                            <div className="font-extrabold text-slate-900">{it.name || "Equipment Unit"}</div>
-                            {it.brand && <div className="text-[10px] text-slate-400">{it.brand}</div>}
+                          <div className="min-w-0">
+                            <div className="font-extrabold text-slate-900 truncate">{it.name || "Equipment Unit"}</div>
+                            {it.brand && <div className="text-[10px] text-slate-400 truncate">{it.brand}</div>}
                           </div>
                         </div>
-                        <div className="text-right">
+                        <div className="text-right shrink-0">
                           <div className="font-black text-slate-900">Qty: {it.qty || 1}</div>
                           {it.price && <div className="text-[10px] text-slate-500">{formatUSD(it.price)} ea</div>}
                         </div>
@@ -795,7 +794,7 @@ function AdminQuotesPage() {
                 )}
 
                 {activeQuote.notes && (
-                  <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 text-xs space-y-1">
                     <div className="font-bold text-amber-950">Contractor Project Scope & Requirements:</div>
                     <div className="text-amber-900 whitespace-pre-wrap">"{activeQuote.notes}"</div>
                   </div>
@@ -803,19 +802,19 @@ function AdminQuotesPage() {
               </div>
 
               {/* Admin Quote Pricing & Scope Control Form */}
-              <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-4">
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 text-white space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-black text-white flex items-center gap-2">
                     <DollarSign className="size-4 text-cyan-400" />
-                    <span>Wholesale Engineering & Pricing Controls</span>
+                    <span>Pricing & Scope Controls</span>
                   </h3>
                   <span className="text-[10px] font-bold text-cyan-300 uppercase tracking-wider">Live DB Sync</span>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {/* Quoted Amount */}
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-extrabold text-slate-300">Quoted Wholesale Package Price ($ USD)</label>
+                    <label className="text-[11px] font-extrabold text-slate-300">Quoted Package Price ($ USD)</label>
                     <div className="relative">
                       <DollarSign className="size-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
@@ -877,13 +876,13 @@ function AdminQuotesPage() {
                 {/* Proposal Notes (Visible on Proposal) */}
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-extrabold text-slate-300">
-                    Engineering Proposal Remarks (Visible on Printable Quote)
+                    Proposal Remarks (Visible on Printable Quote)
                   </label>
                   <textarea
                     rows={3}
                     value={editProposalNotes}
                     onChange={(e) => setEditProposalNotes(e.target.value)}
-                    placeholder="Include detailed specifications, model numbers, pipe sizes, voltage requirements, and delivery logistics..."
+                    placeholder="Include detailed specifications, model numbers, pipe sizes, voltage requirements..."
                     className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none"
                   />
                 </div>
@@ -895,16 +894,16 @@ function AdminQuotesPage() {
                     rows={2}
                     value={editAdminNotes}
                     onChange={(e) => setEditAdminNotes(e.target.value)}
-                    placeholder="Add internal wholesale supplier notes, margin calculations, or contractor credit remarks..."
+                    placeholder="Add internal wholesale supplier notes, margin calculations..."
                     className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none"
                   />
                 </div>
 
                 {/* Submit & Delete actions */}
-                <div className="flex items-center justify-between pt-2">
+                <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-3 pt-2">
                   <button
                     onClick={() => setDeleteConfirmId(activeQuote.id || activeQuote.quoteId)}
-                    className="inline-flex items-center gap-1.5 text-xs font-extrabold text-rose-400 hover:text-rose-300 transition cursor-pointer"
+                    className="inline-flex items-center justify-center gap-1.5 text-xs font-extrabold text-rose-400 hover:text-rose-300 transition cursor-pointer py-1"
                   >
                     <Trash2 className="size-3.5" />
                     <span>Delete Quote Request</span>
@@ -913,7 +912,7 @@ function AdminQuotesPage() {
                   <button
                     onClick={handleSaveChanges}
                     disabled={isUpdating}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs uppercase tracking-wider shadow-md transition cursor-pointer disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs uppercase tracking-wider shadow-md transition cursor-pointer disabled:opacity-50"
                   >
                     <Sparkles className="size-3.5" />
                     <span>{isUpdating ? "Saving Changes..." : "Save & Update Quote"}</span>
@@ -949,10 +948,10 @@ function AdminQuotesPage() {
               )}
             </div>
           ) : (
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-16 text-center text-slate-400 space-y-3">
+            <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center text-slate-400 space-y-3">
               <FileText className="size-12 mx-auto text-slate-300 stroke-1" />
               <p className="text-sm font-bold text-slate-700">Select a quote to view proposal details</p>
-              <p className="text-xs text-slate-400">Pick any commercial proposal from the left list to review specifications and set pricing.</p>
+              <p className="text-xs text-slate-400">Pick any commercial proposal from the list to review specifications and set pricing.</p>
             </div>
           )}
         </div>

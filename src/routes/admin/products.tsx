@@ -1126,11 +1126,11 @@ function ProductsManager() {
       </AnimatePresence>
 
       {/* Header and Toolbar */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-            Products Catalog
-            <span className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">
+          <h1 className="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2 sm:gap-3 flex-wrap">
+            <span>Products Catalog</span>
+            <span className="text-[10px] sm:text-xs font-bold bg-slate-100 text-slate-600 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-slate-200">
               {dbLoading ? "Loading..." :
                 searchTerm || selectedCategory !== "all"
                   ? `${totalProducts.toLocaleString()} items (filtered)`
@@ -1138,57 +1138,57 @@ function ProductsManager() {
               }
             </span>
           </h1>
-          <p className="text-slate-500 text-sm mt-1">Manage wholesale products, inventories, and pricing metrics.</p>
+          <p className="text-slate-500 text-xs sm:text-sm mt-1">Manage wholesale products, inventories, and pricing metrics.</p>
         </div>
 
         {/* Right Action Buttons */}
-        <div className="flex items-center justify-end gap-2.5 flex-wrap shrink-0">
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
           {productsList.length > 0 && (
             <button
               onClick={handleDeleteAllProducts}
-              className="py-2.5 px-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+              className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
             >
-              <Trash2 className="size-3.5" /> Delete All Products
+              <Trash2 className="size-3.5" /> <span>Delete All</span>
             </button>
           )}
           <button
             onClick={() => setPriceAdjustModalOpen(true)}
-            className="py-2.5 px-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-600 hover:text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
           >
-            <TrendingUp className="size-3.5" /> Bulk Price Adjust
+            <TrendingUp className="size-3.5" /> <span>Bulk Prices</span>
           </button>
           <button
             onClick={() => setImportModalOpen(true)}
-            className="py-2.5 px-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-600 hover:text-white font-extrabold text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
           >
-            <FileSpreadsheet className="size-3.5" /> Import Excel / CSV
+            <FileSpreadsheet className="size-3.5" /> <span>Import Excel</span>
           </button>
           <button
             onClick={openAddModal}
-            className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-xs shadow-md hover:shadow-lg hover:brightness-110 flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer border border-cyan-400/40"
+            className="py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-[11px] sm:text-xs shadow-md hover:shadow-lg hover:brightness-110 flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer border border-cyan-400/40"
           >
-            <Plus className="size-4" /> Add New Product
+            <Plus className="size-4" /> <span>Add Product</span>
           </button>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="grid sm:grid-cols-[1fr_200px] gap-4 bg-white border border-slate-200/60 p-4 rounded-[2rem] shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_220px] gap-3 sm:gap-4 bg-white border border-slate-200/60 p-3.5 sm:p-4 rounded-2xl sm:rounded-[2rem] shadow-sm">
         <div className="relative">
-          <Search className="absolute left-3 top-3.5 size-4 text-slate-400" />
+          <Search className="absolute left-3 top-3 sm:top-3.5 size-4 text-slate-400" />
           <input
             type="text"
             placeholder="Search by SKU, brand, or name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 h-11 border border-slate-200 bg-slate-50 rounded-xl text-xs focus:outline-none focus:border-primary focus:bg-white transition-all"
+            className="w-full pl-9 h-10 sm:h-11 border border-slate-200 bg-slate-50 rounded-xl text-xs focus:outline-none focus:border-primary focus:bg-white transition-all"
           />
         </div>
 
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="h-11 px-3 border border-slate-200 bg-slate-50 rounded-xl text-xs font-bold focus:outline-none focus:border-primary focus:bg-white cursor-pointer"
+          className="h-10 sm:h-11 px-3 border border-slate-200 bg-slate-50 rounded-xl text-xs font-bold focus:outline-none focus:border-primary focus:bg-white cursor-pointer"
         >
           <option value="all">All Categories ({productsList.length})</option>
           {dynamicCategories.map(cat => {
@@ -1211,38 +1211,113 @@ function ProductsManager() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="bg-slate-900 text-white px-6 py-4 rounded-[1.5rem] flex items-center justify-between shadow-xl border border-slate-800 flex-wrap gap-4"
+            className="bg-slate-900 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-2xl sm:rounded-[1.5rem] flex flex-col xs:flex-row xs:items-center justify-between shadow-xl border border-slate-800 gap-3 sm:gap-4"
           >
-            <div className="flex items-center gap-3">
-              <span className="size-7 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xs grid place-items-center border border-rose-500/30">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <span className="size-6 sm:size-7 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xs grid place-items-center border border-rose-500/30 shrink-0">
                 {selectedIds.length}
               </span>
-              <span className="text-xs font-bold text-slate-200">
-                {selectedIds.length} product{selectedIds.length > 1 ? "s" : ""} selected for bulk actions
+              <span className="text-xs font-bold text-slate-200 truncate">
+                {selectedIds.length} product{selectedIds.length > 1 ? "s" : ""} selected
               </span>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <button
                 onClick={() => setSelectedIds([])}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
               >
                 Deselect All
               </button>
               <button
                 onClick={() => setShowBulkDeleteModal(true)}
-                className="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg transition active:scale-95 cursor-pointer"
+                className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 sm:gap-2 shadow-lg transition active:scale-95 cursor-pointer"
               >
-                <Trash2 className="size-4" /> Delete Selected ({selectedIds.length})
+                <Trash2 className="size-3.5 sm:size-4" /> <span>Delete ({selectedIds.length})</span>
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Products Table */}
-      <div className="bg-white border border-slate-200/60 rounded-[2rem] overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
+      {/* Products Table (Desktop & Mobile Responsive Dual Mode) */}
+      <div className="bg-white border border-slate-200/60 rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-sm">
+        {/* Mobile Product Card List (< md screens) */}
+        <div className="block md:hidden divide-y divide-slate-100">
+          {paginatedProducts.length > 0 ? (
+            paginatedProducts.map((p) => {
+              const isLow = p.stock < 10;
+              const isSelected = selectedIds.includes(p.id);
+              return (
+                <div key={p.id} className={`p-3.5 transition-colors ${isSelected ? "bg-amber-50/60" : "hover:bg-slate-50/50"}`}>
+                  <div className="flex items-start gap-3">
+                    <div className="pt-1 shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={(e) => handleSelectOne(p.id, e.target.checked)}
+                        className="size-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer accent-primary"
+                      />
+                    </div>
+
+                    <div className="size-14 rounded-xl bg-slate-100/80 border border-slate-200/50 flex items-center justify-center overflow-hidden shrink-0">
+                      {p.img ? (
+                        <img src={p.img} alt={p.name} referrerPolicy="no-referrer" className="size-full object-contain p-1" onError={(e) => { if (!e.currentTarget.src.endsWith('/assets/commingsoon.png')) e.currentTarget.src = "/assets/commingsoon.png"; }} />
+                      ) : (
+                        <Package className="size-5 text-slate-400" />
+                      )}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-xs text-slate-900 truncate capitalize">{p.name}</div>
+                      <div className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-slate-600">{p.brand}</span>
+                        <span>•</span>
+                        <span className="font-mono text-slate-700">SKU: {p.sku}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2 mt-2 pt-1.5 border-t border-slate-100">
+                        <div>
+                          <div className="font-black text-sm text-slate-900">{formatUSD(p.price)}</div>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            {isLow && <AlertTriangle className="size-3 text-rose-500 animate-pulse" />}
+                            <span className={`text-[10px] ${isLow ? "text-rose-600 font-bold" : "text-slate-500"}`}>
+                              {p.stock} in stock
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            onClick={() => openEditModal(p)}
+                            className="size-8 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 grid place-items-center transition cursor-pointer"
+                            title="Edit Product"
+                          >
+                            <Edit className="size-3.5" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteId(p.id)}
+                            className="size-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 grid place-items-center transition cursor-pointer"
+                            title="Delete Product"
+                          >
+                            <Trash2 className="size-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-10 text-slate-400 font-semibold text-xs">
+              No products matching search or filters.
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Table (>= md screens) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-xs font-semibold border-collapse">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/50 text-slate-400 uppercase tracking-wider">
@@ -1343,30 +1418,30 @@ function ProductsManager() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-slate-100 px-5 py-3 bg-slate-50/50">
-            <span className="text-[11px] text-slate-400 font-semibold">
+          <div className="flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 px-4 sm:px-5 py-3 bg-slate-50/50 gap-2.5 sm:gap-0">
+            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold">
               Showing {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, totalProducts)} of {totalProducts.toLocaleString()} products
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="size-8 rounded-lg hover:bg-slate-200 disabled:opacity-30 grid place-items-center transition cursor-pointer"
+                className="size-7 sm:size-8 rounded-lg hover:bg-slate-200 disabled:opacity-30 grid place-items-center transition cursor-pointer"
               >
                 <ChevronLeft className="size-4 text-slate-600" />
               </button>
-              {Array.from({ length: Math.min(7, totalPages) }, (_, i) => {
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let page = i + 1;
-                if (totalPages > 7) {
-                  if (currentPage <= 4) page = i + 1;
-                  else if (currentPage >= totalPages - 3) page = totalPages - 6 + i;
-                  else page = currentPage - 3 + i;
+                if (totalPages > 5) {
+                  if (currentPage <= 3) page = i + 1;
+                  else if (currentPage >= totalPages - 2) page = totalPages - 4 + i;
+                  else page = currentPage - 2 + i;
                 }
                 return (
                   <button
                     key={page}
                     onClick={() => setCurrentPage(page)}
-                    className={`size-8 rounded-lg text-[11px] font-bold transition cursor-pointer ${page === currentPage ? "bg-slate-900 text-white" : "hover:bg-slate-200 text-slate-600"}`}
+                    className={`size-7 sm:size-8 rounded-lg text-[10px] sm:text-[11px] font-bold transition cursor-pointer ${page === currentPage ? "bg-slate-900 text-white" : "hover:bg-slate-200 text-slate-600"}`}
                   >
                     {page}
                   </button>
@@ -1375,7 +1450,7 @@ function ProductsManager() {
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="size-8 rounded-lg hover:bg-slate-200 disabled:opacity-30 grid place-items-center transition cursor-pointer"
+                className="size-7 sm:size-8 rounded-lg hover:bg-slate-200 disabled:opacity-30 grid place-items-center transition cursor-pointer"
               >
                 <ChevronRight className="size-4 text-slate-600" />
               </button>
@@ -1399,16 +1474,16 @@ function ProductsManager() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-full max-w-2xl bg-white rounded-[2rem] border border-slate-200/60 p-6 shadow-2xl space-y-5"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-[calc(100vw-24px)] max-w-2xl bg-white rounded-2xl sm:rounded-[2rem] border border-slate-200/60 p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-5 max-h-[92vh] overflow-y-auto"
             >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-2xl bg-emerald-100 text-emerald-700 grid place-items-center shrink-0">
-                    <FileSpreadsheet className="size-6" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 sm:pb-4">
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-emerald-100 text-emerald-700 grid place-items-center shrink-0">
+                    <FileSpreadsheet className="size-5 sm:size-6" />
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-lg text-slate-900">Bulk Import Products (Excel / CSV)</h3>
-                    <p className="text-xs text-slate-500">Upload your product list CSV or Excel export to import into database.</p>
+                    <h3 className="font-extrabold text-base sm:text-lg text-slate-900">Bulk Import Products</h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500">Upload product list CSV or Excel export into database.</p>
                   </div>
                 </div>
                 <button
@@ -1420,23 +1495,23 @@ function ProductsManager() {
               </div>
 
               {/* Sample Template Download Bar */}
-              <div className="bg-emerald-50/70 border border-emerald-200/60 p-3.5 rounded-2xl flex items-center justify-between gap-4">
+              <div className="bg-emerald-50/70 border border-emerald-200/60 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="text-xs">
                   <span className="font-bold text-emerald-900 block">Need a sample format?</span>
-                  <span className="text-emerald-700 text-[11px]">Download our 15-column sample template formatted with: Category, Sub Category, Manufacturer, Name, Display Name, SKU, Price, Qty Available, Details, Image Link, SEO Keywords, Product Description, Specifications, 5-Star Review 1, 5-Star Review 2.</span>
+                  <span className="text-emerald-700 text-[11px]">Download our 15-column sample template (.xlsx) with preconfigured pool categories & schemas.</span>
                 </div>
                 <button
                   onClick={downloadSampleExcel}
-                  className="px-4 py-2 rounded-xl bg-white border border-emerald-300 text-emerald-800 text-xs font-bold flex items-center gap-2 hover:bg-emerald-100/50 transition shrink-0 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-white border border-emerald-300 text-emerald-800 text-xs font-bold flex items-center gap-1.5 hover:bg-emerald-100/50 transition shrink-0 cursor-pointer w-full sm:w-auto justify-center"
                 >
-                  <Download className="size-4" /> Download Excel Template (.xlsx)
+                  <Download className="size-3.5" /> <span>Download Template</span>
                 </button>
               </div>
 
               {/* Dropzone File Upload */}
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50/60 hover:bg-emerald-50/30 p-6 rounded-2xl text-center cursor-pointer transition-all space-y-2"
+                className="border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50/60 hover:bg-emerald-50/30 p-5 sm:p-6 rounded-xl sm:rounded-2xl text-center cursor-pointer transition-all space-y-2"
               >
                 <input
                   ref={fileInputRef}
@@ -1445,12 +1520,12 @@ function ProductsManager() {
                   onChange={handleFileChange}
                   className="hidden"
                 />
-                <UploadCloud className="size-10 text-emerald-600 mx-auto" />
+                <UploadCloud className="size-8 sm:size-10 text-emerald-600 mx-auto" />
                 <div className="text-xs font-bold text-slate-700">
                   {fileName ? (
                     <span className="text-emerald-700 font-extrabold">{fileName}</span>
                   ) : (
-                    "Click to select or drag & drop your Excel (.csv, .xlsx, .json) file here"
+                    "Click to select or drag & drop Excel (.csv, .xlsx, .json)"
                   )}
                 </div>
                 <p className="text-[10px] text-slate-400 font-semibold">Supports CSV (UTF-8), Excel CSV, or JSON exports</p>
@@ -1461,12 +1536,12 @@ function ProductsManager() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-800 px-1">
                     <span>Parsed Catalog Preview</span>
-                    <span className="text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                      {parsedProducts.length} items ready to import
+                    <span className="text-emerald-600 bg-emerald-50 px-2 sm:px-2.5 py-0.5 rounded-full border border-emerald-200 text-[11px]">
+                      {parsedProducts.length} items ready
                     </span>
                   </div>
 
-                  <div className="max-h-48 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100 text-xs text-slate-700 bg-white">
+                  <div className="max-h-40 sm:max-h-48 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100 text-xs text-slate-700 bg-white">
                     {parsedProducts.slice(0, 6).map((p, idx) => (
                       <div key={idx} className="p-2.5 flex items-center justify-between gap-3">
                         <div className="min-w-0">
@@ -1505,21 +1580,21 @@ function ProductsManager() {
               )}
 
               {/* Import Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-end gap-2.5 sm:gap-3 pt-2">
                 <button
                   onClick={() => { setImportModalOpen(false); setParsedProducts([]); setFileName(""); }}
                   disabled={isImporting}
-                  className="px-5 py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={executeBulkImport}
                   disabled={parsedProducts.length === 0 || isImporting}
-                  className="px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {isImporting ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
-                  Import {parsedProducts.length > 0 ? `${parsedProducts.length} Products` : "File"} to Database
+                  {isImporting ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}
+                  <span>Import {parsedProducts.length > 0 ? `${parsedProducts.length} Items` : "File"}</span>
                 </button>
               </div>
             </motion.div>
@@ -1542,10 +1617,10 @@ function ProductsManager() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-51 w-full max-w-2xl bg-white rounded-[2rem] border border-slate-200/60 p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-51 w-[calc(100vw-24px)] max-w-2xl bg-white rounded-2xl sm:rounded-[2rem] border border-slate-200/60 p-4 sm:p-8 max-h-[92vh] overflow-y-auto shadow-2xl"
             >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-                <h3 className="font-extrabold text-lg text-slate-900">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 sm:pb-4 mb-4 sm:mb-6">
+                <h3 className="font-extrabold text-base sm:text-lg text-slate-900">
                   {editingProduct ? "Edit Wholesale Product" : "Add New Wholesale Product"}
                 </h3>
                 <button
@@ -1556,11 +1631,11 @@ function ProductsManager() {
                 </button>
               </div>
 
-              <form onSubmit={saveProduct} className="space-y-4">
+              <form onSubmit={saveProduct} className="space-y-3.5 sm:space-y-4">
                 {/* Section 1: Classification */}
-                <div className="bg-slate-50 border border-slate-200/70 p-4 rounded-2xl space-y-3">
+                <div className="bg-slate-50 border border-slate-200/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl space-y-2.5 sm:space-y-3">
                   <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">1. Categorization & Brand</span>
-                  <div className="grid sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <label className="block">
                       <span className="block text-[10px] font-bold text-slate-600 mb-1">Parent Category</span>
                       <select
@@ -1599,8 +1674,8 @@ function ProductsManager() {
                 </div>
 
                 {/* Section 2: Product Titles & Identifiers */}
-                <div className="grid sm:grid-cols-3 gap-3">
-                  <label className="block sm:col-span-1">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">System Name</span>
                     <input
                       type="text" required value={name} onChange={(e) => setName(e.target.value)}
@@ -1609,7 +1684,7 @@ function ProductsManager() {
                     />
                   </label>
 
-                  <label className="block sm:col-span-1">
+                  <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Display Name (Public)</span>
                     <input
                       type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}
@@ -1618,7 +1693,7 @@ function ProductsManager() {
                     />
                   </label>
 
-                  <label className="block sm:col-span-1">
+                  <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">SKU Code</span>
                     <input
                       type="text" required value={sku} onChange={(e) => setSku(e.target.value)}
@@ -1629,7 +1704,7 @@ function ProductsManager() {
                 </div>
 
                 {/* Section 3: Pricing & Stock */}
-                <div className="grid sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Wholesale Price ($)</span>
                     <input
@@ -1648,7 +1723,7 @@ function ProductsManager() {
                 </div>
 
                 {/* Section 4: Details & Image */}
-                <div className="grid sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Feature Details / Short Summary</span>
                     <input
@@ -1664,7 +1739,7 @@ function ProductsManager() {
                       <input
                         type="text" value={img} onChange={(e) => setImg(e.target.value)}
                         placeholder="https://... or click upload"
-                        className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition min-w-0"
                       />
                       <label className="h-9 px-3 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 transition">
                         {isUploading ? <Loader2 className="size-3.5 animate-spin" /> : <UploadCloud className="size-3.5" />}
@@ -1676,7 +1751,7 @@ function ProductsManager() {
                 </div>
 
                 {/* Section 5: SEO Keywords & Specs */}
-                <div className="grid sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className="block">
                     <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">SEO Keywords</span>
                     <input
@@ -1707,12 +1782,12 @@ function ProductsManager() {
                 </label>
 
                 {/* Section 7: 5-Star Customer Reviews */}
-                <div className="bg-amber-50/60 border border-amber-200/70 p-4 rounded-2xl space-y-3">
+                <div className="bg-amber-50/60 border border-amber-200/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl space-y-2.5 sm:space-y-3">
                   <div className="flex items-center gap-2">
                     <Star className="size-4 text-amber-500 fill-amber-500" />
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900">5-Star Verified Customer Reviews</span>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <label className="block">
                       <span className="block text-[10px] font-bold text-amber-800 mb-1">5-Star Review 1</span>
                       <textarea
@@ -1733,17 +1808,17 @@ function ProductsManager() {
                   </div>
                 </div>
 
-                <div className="flex gap-3 justify-end pt-4">
+                <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-end pt-3 sm:pt-4">
                   <button
                     type="button" onClick={() => setFormOpen(false)}
-                    className="px-5 py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
+                    className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isUploading || isSavingProduct}
-                    className="px-6 py-2.5 rounded-full bg-gradient-ocean text-white font-semibold text-xs hover:opacity-95 transition-all shadow disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+                    className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-ocean text-white font-semibold text-xs hover:opacity-95 transition-all shadow disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
                   >
                     {isSavingProduct && <Loader2 className="size-3.5 animate-spin" />}
                     <span>{editingProduct ? "Save Changes" : "Create Product"}</span>
@@ -1770,24 +1845,24 @@ function ProductsManager() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-full max-w-sm bg-white rounded-[2rem] border border-slate-200/60 p-6 text-center shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-[calc(100vw-24px)] max-w-sm bg-white rounded-2xl sm:rounded-[2rem] border border-slate-200/60 p-5 sm:p-6 text-center shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
             >
-              <AlertTriangle className="size-12 text-rose-500 mx-auto animate-bounce mb-3" />
-              <h3 className="font-extrabold text-base text-slate-900">Delete Product</h3>
-              <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+              <AlertTriangle className="size-10 sm:size-12 text-rose-500 mx-auto animate-bounce mb-2 sm:mb-3" />
+              <h3 className="font-extrabold text-sm sm:text-base text-slate-900">Delete Product</h3>
+              <p className="text-xs text-slate-500 mt-1.5 sm:mt-2 leading-relaxed">
                 Are you sure you want to delete this product? This will remove the item from active consumer catalog grids. This action cannot be undone.
               </p>
 
-              <div className="flex gap-3 mt-6 justify-center">
+              <div className="flex gap-2.5 sm:gap-3 mt-5 sm:mt-6 justify-center">
                 <button
                   onClick={() => setDeleteId(null)}
-                  className="px-5 py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={deleteProduct}
-                  className="px-5 py-2.5 rounded-full bg-rose-600 text-white font-semibold text-xs hover:bg-rose-700 transition cursor-pointer"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-rose-600 text-white font-semibold text-xs hover:bg-rose-700 transition cursor-pointer"
                 >
                   Delete Item
                 </button>
@@ -1812,19 +1887,19 @@ function ProductsManager() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-full max-w-md bg-white rounded-[2rem] border border-slate-200/60 p-6 shadow-2xl space-y-4"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-[calc(100vw-24px)] max-w-md bg-white rounded-2xl sm:rounded-[2rem] border border-slate-200/60 p-4 sm:p-6 shadow-2xl space-y-3 sm:space-y-4 max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center gap-3">
-                <div className="size-12 rounded-2xl bg-rose-100 text-rose-600 grid place-items-center shrink-0">
-                  <Trash2 className="size-6" />
+                <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-rose-100 text-rose-600 grid place-items-center shrink-0">
+                  <Trash2 className="size-5 sm:size-6" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-base text-slate-900">Delete {selectedIds.length} Products?</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">This will permanently remove the selected items from database & catalog.</p>
+                  <h3 className="font-extrabold text-sm sm:text-base text-slate-900">Delete {selectedIds.length} Products?</h3>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">This will permanently remove the selected items from database & catalog.</p>
                 </div>
               </div>
 
-              <div className="max-h-44 overflow-y-auto bg-slate-50 border border-slate-200/60 rounded-xl p-3 text-xs space-y-1 text-left scrollbar-thin">
+              <div className="max-h-36 sm:max-h-44 overflow-y-auto bg-slate-50 border border-slate-200/60 rounded-xl p-3 text-xs space-y-1 text-left scrollbar-thin">
                 {productsList
                   .filter(p => selectedIds.includes(p.id))
                   .slice(0, 6)
@@ -1836,27 +1911,28 @@ function ProductsManager() {
                 )}
               </div>
 
-              <div className="flex gap-3 justify-end pt-2">
+              <div className="flex gap-2.5 sm:gap-3 justify-end pt-2">
                 <button
                   onClick={() => setShowBulkDeleteModal(false)}
                   disabled={isBulkDeleting}
-                  className="px-5 py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={executeBulkDelete}
                   disabled={isBulkDeleting}
-                  className="px-6 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition flex items-center gap-2 shadow-md disabled:opacity-50 cursor-pointer"
+                  className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition flex items-center gap-1.5 sm:gap-2 shadow-md disabled:opacity-50 cursor-pointer"
                 >
-                  {isBulkDeleting ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-                  Confirm Bulk Delete ({selectedIds.length})
+                  {isBulkDeleting ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
+                  <span>Delete ({selectedIds.length})</span>
                 </button>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
+
       {/* Bulk Price Adjustment Modal */}
       <AnimatePresence>
         {priceAdjustModalOpen && (
@@ -1872,17 +1948,17 @@ function ProductsManager() {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-full max-w-xl bg-white rounded-[2.5rem] border border-slate-200/80 p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[61] w-[calc(100vw-24px)] max-w-xl bg-white rounded-2xl sm:rounded-[2.5rem] border border-slate-200/80 p-4 sm:p-8 shadow-2xl space-y-4 sm:space-y-6 max-h-[92vh] overflow-y-auto"
             >
               {/* Modal Header */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="size-12 rounded-2xl bg-indigo-100 text-indigo-600 grid place-items-center shrink-0">
-                    <TrendingUp className="size-6" />
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-indigo-100 text-indigo-600 grid place-items-center shrink-0">
+                    <TrendingUp className="size-5 sm:size-6" />
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-lg text-slate-900 tracking-tight">Bulk Price Adjuster</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">Adjust pricing across catalog by percentage or fixed dollar amounts</p>
+                    <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">Bulk Price Adjuster</h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">Adjust pricing across catalog by percentage or fixed dollar amounts</p>
                   </div>
                 </div>
                 <button
@@ -1896,7 +1972,7 @@ function ProductsManager() {
               {/* Step 1: Target Scope */}
               <div className="space-y-2">
                 <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">1. Target Scope</span>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 xs:grid-cols-3 gap-2">
                   {[
                     { id: "all", label: "All Products", count: productsList.length },
                     { id: "category", label: "By Category", count: affectedProducts.length },
@@ -1910,7 +1986,7 @@ function ProductsManager() {
                         type="button"
                         disabled={disabled}
                         onClick={() => setAdjustScope(s.id as any)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${active
+                        className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${active
                             ? "border-indigo-600 bg-indigo-50 text-indigo-900 font-bold shadow-xs"
                             : disabled
                               ? "opacity-40 cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400"
@@ -1962,7 +2038,7 @@ function ProductsManager() {
                         key={m.id}
                         type="button"
                         onClick={() => setAdjustMode(m.id as any)}
-                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${active
+                        className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer ${active
                             ? "border-indigo-600 bg-indigo-600 text-white font-bold shadow-xs"
                             : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold"
                           }`}
@@ -1980,7 +2056,7 @@ function ProductsManager() {
                 <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
                   3. Enter {adjustMode.startsWith("percent") ? "Percentage Value (%)" : "Dollar Amount ($)"}
                 </span>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
                   <div className="relative flex-1">
                     <span className="absolute left-3.5 top-3 text-slate-400 font-extrabold text-sm">
                       {adjustMode.startsWith("percent") ? "%" : "$"}
@@ -1996,13 +2072,13 @@ function ProductsManager() {
                   </div>
 
                   {/* Dynamic Preset Buttons for % and $ (Increase & Decrease) */}
-                  <div className="flex gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {(adjustMode.startsWith("percent") ? [5, 10, 15, 20, 25] : [5, 10, 25, 50, 100]).map((val) => (
                       <button
                         key={val}
                         type="button"
                         onClick={() => setAdjustValue(val)}
-                        className={`px-2.5 py-2 rounded-lg border text-xs font-extrabold transition cursor-pointer ${adjustValue === val ? "bg-indigo-600 text-white border-indigo-600" : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200"
+                        className={`px-2.5 py-1.5 sm:py-2 rounded-lg border text-xs font-extrabold transition cursor-pointer flex-1 sm:flex-none ${adjustValue === val ? "bg-indigo-600 text-white border-indigo-600" : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200"
                           }`}
                       >
                         {adjustMode.includes("decrease") ? "-" : "+"}
@@ -2014,13 +2090,13 @@ function ProductsManager() {
               </div>
 
               {/* Step 4: Options */}
-              <div className="bg-slate-50 rounded-2xl border border-slate-200/80 p-4">
+              <div className="bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-200/80 p-3.5 sm:p-4">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={adjustMsrp}
                     onChange={(e) => setAdjustMsrp(e.target.checked)}
-                    className="size-4 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500"
+                    className="size-4 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500 shrink-0"
                   />
                   <div>
                     <div className="text-xs font-bold text-slate-800">Proportionally Adjust MSRP Retail Price</div>
@@ -2031,9 +2107,9 @@ function ProductsManager() {
 
               {/* Step 5: Live Sample Calculation Preview */}
               {affectedProducts.length > 0 && (
-                <div className="border border-indigo-100 bg-indigo-50/50 rounded-2xl p-4 space-y-2">
+                <div className="border border-indigo-100 bg-indigo-50/50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-900">
+                    <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-indigo-900">
                       Live Sample Preview ({affectedProducts.length} items affected)
                     </span>
                   </div>
@@ -2042,11 +2118,11 @@ function ProductsManager() {
                       const { price: newP } = calculateAdjustedPrices(p);
                       const diff = newP - p.price;
                       return (
-                        <div key={p.id} className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-indigo-100">
+                        <div key={p.id} className="flex flex-col xs:flex-row xs:items-center justify-between bg-white p-2.5 rounded-xl border border-indigo-100 gap-1.5 xs:gap-0">
                           <div className="truncate font-semibold text-slate-700 max-w-[220px]">
                             {p.name} <span className="text-[10px] text-slate-400">({p.sku})</span>
                           </div>
-                          <div className="text-right shrink-0">
+                          <div className="text-left xs:text-right shrink-0">
                             <span className="line-through text-slate-400 text-[11px] mr-1.5">${p.price.toFixed(2)}</span>
                             <span className="font-extrabold text-indigo-700">${newP.toFixed(2)}</span>
                             <span className={`ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${diff >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
@@ -2061,12 +2137,12 @@ function ProductsManager() {
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-3 justify-end pt-2">
+              <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-end pt-2">
                 <button
                   type="button"
                   onClick={() => setPriceAdjustModalOpen(false)}
                   disabled={isAdjustingPrices}
-                  className="px-5 py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -2074,15 +2150,15 @@ function ProductsManager() {
                   type="button"
                   onClick={handleApplyPriceAdjustment}
                   disabled={isAdjustingPrices || affectedProducts.length === 0}
-                  className="px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-lg flex items-center gap-2 transition disabled:opacity-50 cursor-pointer active:scale-97"
+                  className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-lg flex items-center gap-2 transition disabled:opacity-50 cursor-pointer active:scale-97"
                 >
                   {isAdjustingPrices ? (
                     <>
-                      <Loader2 className="size-4 animate-spin" /> Saving Changes...
+                      <Loader2 className="size-3.5 animate-spin" /> <span>Saving Changes...</span>
                     </>
                   ) : (
                     <>
-                      <TrendingUp className="size-4" /> Apply to {affectedProducts.length} Products
+                      <TrendingUp className="size-3.5" /> <span>Apply to {affectedProducts.length} Products</span>
                     </>
                   )}
                 </button>

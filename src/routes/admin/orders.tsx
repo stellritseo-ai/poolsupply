@@ -506,76 +506,76 @@ function OrdersManager() {
       </div>
 
       {/* ─── 4-PILLAR EXECUTIVE METRIC HUD ─── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         {/* Metric 1: Total Orders */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs hover:shadow-xs transition">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Orders</span>
-            <div className="size-9 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
-              <ShoppingBag className="size-4.5" />
+            <div className="size-8 sm:size-9 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
+              <ShoppingBag className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">{totalOrders}</div>
-          <div className="text-[11px] font-semibold text-slate-400 mt-1 flex items-center gap-1">
+          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{totalOrders}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 sm:mt-1 flex items-center gap-1 truncate">
             <span className="text-emerald-600 font-bold">100% verified</span> in Atlas
           </div>
         </div>
 
         {/* Metric 2: Pending Fulfillment */}
-        <div className="bg-white border border-amber-200/90 rounded-2xl p-5 shadow-2xs bg-gradient-to-br from-white to-amber-50/40 hover:shadow-xs transition">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-amber-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-amber-50/40 hover:shadow-xs transition">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">Pending Dispatch</span>
-            <div className="size-9 rounded-xl bg-amber-100 text-amber-800 grid place-items-center">
-              <Clock className="size-4.5" />
+            <div className="size-8 sm:size-9 rounded-xl bg-amber-100 text-amber-800 grid place-items-center">
+              <Clock className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-amber-950 tracking-tight">{pendingOrders}</div>
-          <div className="text-[11px] font-semibold text-amber-800/80 mt-1">
-            Awaiting warehouse dock
+          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-amber-950 tracking-tight">{pendingOrders}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-amber-800/80 mt-0.5 sm:mt-1 truncate">
+            Awaiting dock
           </div>
         </div>
 
         {/* Metric 3: In Transit */}
-        <div className="bg-white border border-cyan-200/90 rounded-2xl p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40 hover:shadow-xs transition">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-cyan-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40 hover:shadow-xs transition">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">Freight In-Transit</span>
-            <div className="size-9 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
-              <Truck className="size-4.5" />
+            <div className="size-8 sm:size-9 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
+              <Truck className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-cyan-950 tracking-tight">{shippedOrders}</div>
-          <div className="text-[11px] font-semibold text-cyan-800/80 mt-1">
-            Dispatched carrier routes
+          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-cyan-950 tracking-tight">{shippedOrders}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-cyan-800/80 mt-0.5 sm:mt-1 truncate">
+            Dispatched routes
           </div>
         </div>
 
         {/* Metric 4: Gross Revenue */}
-        <div className="bg-white border border-emerald-200/90 rounded-2xl p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40 hover:shadow-xs transition">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-emerald-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40 hover:shadow-xs transition">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">Settled Revenue</span>
-            <div className="size-9 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
-              <DollarSign className="size-4.5" />
+            <div className="size-8 sm:size-9 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
+              <DollarSign className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-emerald-950 tracking-tight">{formatUSD(totalRevenue)}</div>
-          <div className="text-[11px] font-semibold text-emerald-800/80 mt-1">
+          <div className="text-lg sm:text-2xl lg:text-3xl font-black text-emerald-950 tracking-tight truncate">{formatUSD(totalRevenue)}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-emerald-800/80 mt-0.5 sm:mt-1 truncate">
             Gross wholesale sales
           </div>
         </div>
       </div>
 
       {/* ─── TOOLBAR & SEGMENTED STATUS CONTROLS ─── */}
-      <div className="bg-white border border-slate-200/90 p-4 rounded-3xl shadow-2xs space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-white border border-slate-200/90 p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl shadow-2xs space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Search Box */}
-          <div className="relative flex-1 min-w-[280px]">
+          <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Search by Order #, contractor name, company, email, or SKU..."
+              placeholder="Search by Order #, customer, SKU..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-10 h-11 border border-slate-200 bg-slate-50/80 rounded-2xl text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/10 transition-all shadow-2xs"
+              className="w-full pl-10 pr-10 h-10 sm:h-11 border border-slate-200 bg-slate-50/80 rounded-xl sm:rounded-2xl text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/10 transition-all shadow-2xs"
             />
             {searchTerm && (
               <button
@@ -588,21 +588,21 @@ function OrdersManager() {
           </div>
 
           {/* Sort Switcher */}
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-2xl text-xs font-bold shrink-0">
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl sm:rounded-2xl text-xs font-bold shrink-0 overflow-x-auto">
             <button
               onClick={() => setSortBy("newest")}
-              className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer flex items-center gap-1 text-[11px] sm:text-xs shrink-0 ${
                 sortBy === "newest"
                   ? "bg-white text-slate-900 shadow-2xs font-black"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              <Sparkles className="size-3.5 text-cyan-600" />
-              <span>Newest on Top</span>
+              <Sparkles className="size-3 text-cyan-600" />
+              <span>Newest</span>
             </button>
             <button
               onClick={() => setSortBy("oldest")}
-              className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
                 sortBy === "oldest"
                   ? "bg-white text-slate-900 shadow-2xs font-black"
                   : "text-slate-600 hover:text-slate-900"
@@ -612,7 +612,7 @@ function OrdersManager() {
             </button>
             <button
               onClick={() => setSortBy("highest")}
-              className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
                 sortBy === "highest"
                   ? "bg-white text-slate-900 shadow-2xs font-black"
                   : "text-slate-600 hover:text-slate-900"
@@ -624,10 +624,10 @@ function OrdersManager() {
         </div>
 
         {/* Status Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5 text-xs font-bold">
+        <div className="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5 text-xs font-bold scrollbar-none">
           <button
             onClick={() => setStatusFilter("all")}
-            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
               statusFilter === "all"
                 ? "bg-slate-900 text-white font-black shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200/80"
@@ -647,7 +647,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Pending")}
-            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
               statusFilter === "Pending"
                 ? "bg-amber-600 text-white font-black shadow-sm"
                 : "bg-amber-50 text-amber-900 border border-amber-200/70 hover:bg-amber-100"
@@ -668,7 +668,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Shipped")}
-            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
               statusFilter === "Shipped"
                 ? "bg-cyan-700 text-white font-black shadow-sm"
                 : "bg-cyan-50 text-cyan-900 border border-cyan-200/70 hover:bg-cyan-100"
@@ -689,7 +689,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Delivered")}
-            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
               statusFilter === "Delivered"
                 ? "bg-emerald-700 text-white font-black shadow-sm"
                 : "bg-emerald-50 text-emerald-900 border border-emerald-200/70 hover:bg-emerald-100"
@@ -710,7 +710,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Cancelled")}
-            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
               statusFilter === "Cancelled"
                 ? "bg-rose-700 text-white font-black shadow-sm"
                 : "bg-rose-50 text-rose-900 border border-rose-200/70 hover:bg-rose-100"
@@ -731,146 +731,199 @@ function OrdersManager() {
         </div>
       </div>
 
-      {/* ─── PIXEL-PERFECT MASTER ORDERS TABLE ─── */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-2xs">
+      {/* ─── MASTER ORDERS TABLE & MOBILE CARD VIEW ─── */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xs">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-24">
             <Loader2 className="size-9 animate-spin text-cyan-600 mb-3" />
             <p className="text-xs font-bold text-slate-400">Loading wholesale orders database...</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-semibold border-collapse">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-[10px]">
-                  <th className="p-4 sm:px-6 font-black">Order ID</th>
-                  <th className="p-4 sm:px-6 font-black">Contractor Customer</th>
-                  <th className="p-4 sm:px-6 font-black">Date Placed</th>
-                  <th className="p-4 sm:px-6 font-black">Logistics & Pay</th>
-                  <th className="p-4 sm:px-6 font-black text-right">Total Amount</th>
-                  <th className="p-4 sm:px-6 font-black text-center">Fulfillment</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {filteredOrders.length > 0 ? (
-                  filteredOrders.map((o) => {
-                    const StatusIcon = getStatusIcon(o.status);
-                    const isNew = isRecentOrder(o.placedAt);
-                    const items = o.items || [];
+          <>
+            {/* Mobile Card List (< md screens) */}
+            <div className="block md:hidden divide-y divide-slate-100">
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((o) => {
+                  const StatusIcon = getStatusIcon(o.status);
+                  const isNew = isRecentOrder(o.placedAt);
+                  const items = o.items || [];
 
-                    return (
-                      <tr
-                        key={o.id}
-                        className="hover:bg-cyan-50/40 transition-colors cursor-pointer group"
-                        onClick={() => setSelectedOrder(o)}
-                      >
-                        {/* Col 1: Order ID + NEW Pill */}
-                        <td className="p-4 sm:px-6">
-                          <div className="flex items-center gap-2">
-                            <span className="font-black text-slate-900 font-mono text-sm group-hover:text-cyan-700 transition-colors">
-                              #{o.id}
-                            </span>
-                            {isNew && (
-                              <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-[9px] font-black uppercase tracking-wider shadow-xs animate-pulse">
-                                NEW
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-[10px] text-slate-400 font-bold mt-0.5 flex items-center gap-1">
-                            <Boxes className="size-3 text-slate-400" />
-                            <span>{items.length} line item(s)</span>
-                          </div>
-                        </td>
-
-                        {/* Col 2: Customer Profile */}
-                        <td className="p-4 sm:px-6">
-                          <div className="space-y-0.5">
-                            <div className="font-black text-slate-900 text-sm">
-                              {o.name}
-                            </div>
-                            <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
-                              <Mail className="size-3 text-slate-400 shrink-0" />
-                              <span>{o.email}</span>
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Col 3: Placed Date */}
-                        <td className="p-4 sm:px-6 text-slate-700 font-medium">
-                          <div className="font-bold text-slate-900 text-xs">
-                            {new Date(o.placedAt).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </div>
-                          <div className="text-[11px] text-slate-400 mt-0.5">
-                            {new Date(o.placedAt).toLocaleTimeString("en-US", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </div>
-                        </td>
-
-                        {/* Col 4: Logistics & Payment */}
-                        <td className="p-4 sm:px-6">
-                          <div className="font-bold text-slate-800 flex items-center gap-1.5">
-                            {o.method === "pickup" ? (
-                              <span className="text-amber-800 flex items-center gap-1">
-                                <Warehouse className="size-3 text-amber-700" />
-                                <span>Hub Pickup</span>
-                              </span>
-                            ) : (
-                              <span className="text-cyan-800 flex items-center gap-1">
-                                <Truck className="size-3 text-cyan-700" />
-                                <span>Freight Carrier</span>
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-[10px] text-slate-400 font-medium mt-0.5 flex items-center gap-1">
-                            <CreditCard className="size-3 text-slate-400" />
-                            <span>{o.paymentType || "Commercial Card"}</span>
-                            <span>·</span>
-                            <span className="text-emerald-600 font-bold">{o.paymentStatus || "Paid"}</span>
-                          </div>
-                        </td>
-
-                        {/* Col 5: Total Price */}
-                        <td className="p-4 sm:px-6 text-right">
-                          <div className="font-black text-slate-900 text-sm tracking-tight">
-                            {formatUSD(o.total)}
-                          </div>
-                          <div className="text-[10px] font-bold text-emerald-600">
-                            Verified Invoice
-                          </div>
-                        </td>
-
-                        {/* Col 6: Status Badge */}
-                        <td className="p-4 sm:px-6 text-center">
-                          <span
-                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border ${getStatusStyle(
-                              o.status
-                            )}`}
-                          >
-                            <StatusIcon className="size-3" />
-                            {o.status || "Pending"}
+                  return (
+                    <div
+                      key={o.id}
+                      onClick={() => setSelectedOrder(o)}
+                      className="p-4 hover:bg-cyan-50/40 transition-colors cursor-pointer space-y-2.5 active:bg-slate-100"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-black text-slate-900 font-mono text-sm">
+                            #{o.id}
                           </span>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="text-center py-24 text-slate-400 font-bold text-xs space-y-2">
-                      <ShoppingBag className="size-12 mx-auto text-slate-300 stroke-1" />
-                      <div className="text-slate-700 font-black text-sm">No wholesale customer orders found</div>
-                      <div className="text-slate-400 text-xs">Try adjusting your search query or status filter above.</div>
-                    </td>
+                          {isNew && (
+                            <span className="px-1.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-[9px] font-black uppercase tracking-wider">
+                              NEW
+                            </span>
+                          )}
+                        </div>
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black border ${getStatusStyle(
+                            o.status
+                          )}`}
+                        >
+                          <StatusIcon className="size-3" />
+                          {o.status || "Pending"}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs">
+                        <div>
+                          <div className="font-black text-slate-900">{o.name}</div>
+                          <div className="text-[11px] text-slate-400 font-medium truncate max-w-[200px]">{o.email}</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-black text-slate-900 text-sm">{formatUSD(o.total || 0)}</div>
+                          <div className="text-[10px] text-slate-400 font-semibold">{items.length} item(s)</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-100 font-medium">
+                        <span>{formatRelativeTime(o.placedAt)}</span>
+                        <span className="text-cyan-700 font-bold flex items-center gap-0.5">
+                          View details <ChevronRight className="size-3" />
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-16 text-slate-400 font-bold text-xs space-y-2 p-4">
+                  <ShoppingBag className="size-10 mx-auto text-slate-300 stroke-1" />
+                  <div className="text-slate-700 font-black text-sm">No wholesale customer orders found</div>
+                  <div className="text-slate-400 text-xs">Try adjusting your search query or status filter.</div>
+                </div>
+              )}
+            </div>
+
+            {/* Desktop Table (>= md screens) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs font-semibold border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-[10px]">
+                    <th className="p-4 sm:px-6 font-black">Order ID</th>
+                    <th className="p-4 sm:px-6 font-black">Contractor Customer</th>
+                    <th className="p-4 sm:px-6 font-black">Date Placed</th>
+                    <th className="p-4 sm:px-6 font-black">Logistics & Pay</th>
+                    <th className="p-4 sm:px-6 font-black text-right">Total Amount</th>
+                    <th className="p-4 sm:px-6 font-black text-center">Fulfillment</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {filteredOrders.length > 0 ? (
+                    filteredOrders.map((o) => {
+                      const StatusIcon = getStatusIcon(o.status);
+                      const isNew = isRecentOrder(o.placedAt);
+                      const items = o.items || [];
+
+                      return (
+                        <tr
+                          key={o.id}
+                          className="hover:bg-cyan-50/40 transition-colors cursor-pointer group"
+                          onClick={() => setSelectedOrder(o)}
+                        >
+                          {/* Col 1: Order ID + NEW Pill */}
+                          <td className="p-4 sm:px-6">
+                            <div className="flex items-center gap-2">
+                              <span className="font-black text-slate-900 font-mono text-sm group-hover:text-cyan-700 transition-colors">
+                                #{o.id}
+                              </span>
+                              {isNew && (
+                                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-[9px] font-black uppercase tracking-wider shadow-xs animate-pulse">
+                                  NEW
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[10px] text-slate-400 font-bold mt-0.5 flex items-center gap-1">
+                              <Boxes className="size-3 text-slate-400" />
+                              <span>{items.length} line item(s)</span>
+                            </div>
+                          </td>
+
+                          {/* Col 2: Customer Profile */}
+                          <td className="p-4 sm:px-6">
+                            <div className="space-y-0.5">
+                              <div className="font-black text-slate-900 text-sm">
+                                {o.name}
+                              </div>
+                              <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
+                                <Mail className="size-3 text-slate-400 shrink-0" />
+                                <span>{o.email}</span>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Col 3: Placed Date */}
+                          <td className="p-4 sm:px-6 text-slate-700 font-medium">
+                            <div className="font-bold text-slate-900 text-xs">
+                              {formatRelativeTime(o.placedAt)}
+                            </div>
+                            <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                              {new Date(o.placedAt).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
+                            </div>
+                          </td>
+
+                          {/* Col 4: Logistics & Payment Method */}
+                          <td className="p-4 sm:px-6">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                                <Truck className="size-3 text-slate-400" />
+                                <span>{o.method === "pickup" ? "Hub Pickup" : "Freight Delivery"}</span>
+                              </div>
+                              <div className="text-[10px] text-slate-400 flex items-center gap-1">
+                                <CreditCard className="size-3 text-slate-400" />
+                                <span>{o.paymentType || "Card"}</span>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Col 5: Total Amount */}
+                          <td className="p-4 sm:px-6 text-right">
+                            <div className="font-black text-slate-900 text-sm">{formatUSD(o.total || 0)}</div>
+                            <div className="text-[10px] text-emerald-600 font-bold mt-0.5">
+                              {o.paymentStatus || "Paid"}
+                            </div>
+                          </td>
+
+                          {/* Col 6: Fulfillment Status Pill */}
+                          <td className="p-4 sm:px-6 text-center">
+                            <span
+                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border ${getStatusStyle(
+                                o.status
+                              )}`}
+                            >
+                              <StatusIcon className="size-3" />
+                              {o.status || "Pending"}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="text-center py-24 text-slate-400 font-bold text-xs space-y-2">
+                        <ShoppingBag className="size-12 mx-auto text-slate-300 stroke-1" />
+                        <div className="text-slate-700 font-black text-sm">No wholesale customer orders found</div>
+                        <div className="text-slate-400 text-xs">Try adjusting your search query or status filter above.</div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -886,21 +939,21 @@ function OrdersManager() {
               className="bg-white w-full max-w-2xl h-full sm:h-[94vh] sm:rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden"
             >
               {/* Drawer Top Header */}
-              <div className="p-6 border-b border-slate-100 bg-slate-900 text-white shrink-0 relative">
+              <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-900 text-white shrink-0 relative">
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="absolute top-5 right-5 size-8.5 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center transition cursor-pointer"
+                  className="absolute top-4 sm:top-5 right-4 sm:right-5 size-8 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center transition cursor-pointer"
                 >
                   <X className="size-4" />
                 </button>
 
-                <div className="flex items-start gap-4 pr-10">
-                  <div className="size-13 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xl grid place-items-center shrink-0 shadow-lg">
-                    <ShoppingBag className="size-6 text-white" />
+                <div className="flex items-start gap-3 sm:gap-4 pr-8 sm:pr-10">
+                  <div className="size-10 sm:size-13 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-lg sm:text-xl grid place-items-center shrink-0 shadow-lg">
+                    <ShoppingBag className="size-5 sm:size-6 text-white" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2.5 flex-wrap">
-                      <h2 className="text-xl font-black text-white tracking-tight font-mono">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="text-base sm:text-xl font-black text-white tracking-tight font-mono truncate">
                         Order #{selectedOrder.id}
                       </h2>
                       {isRecentOrder(selectedOrder.placedAt) && (
@@ -923,8 +976,8 @@ function OrdersManager() {
                       </span>
                     </div>
 
-                    <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-3">
-                      <span>Placed on {new Date(selectedOrder.placedAt).toLocaleString()}</span>
+                    <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 flex items-center gap-2 flex-wrap">
+                      <span>Placed on {new Date(selectedOrder.placedAt).toLocaleDateString()}</span>
                       <span>·</span>
                       <span className="text-emerald-400 font-bold">{selectedOrder.paymentStatus || "Paid"}</span>
                     </div>
@@ -932,29 +985,29 @@ function OrdersManager() {
                 </div>
 
                 {/* Quick Action Buttons in Header */}
-                <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-white/10">
+                <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3 mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-white/10">
                   <button
                     onClick={() => printInvoice(selectedOrder)}
-                    className="py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                    className="py-2 sm:py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
                   >
-                    <Printer className="size-4" />
+                    <Printer className="size-3.5 sm:size-4" />
                     <span>Print Commercial Invoice</span>
                   </button>
 
                   <button
                     onClick={() => setDeleteConfirmId(selectedOrder.id)}
-                    className="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-rose-600/80 text-white font-black text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-white/10"
+                    className="py-2 sm:py-2.5 px-3 rounded-xl bg-white/10 hover:bg-rose-600/80 text-white font-black text-xs transition flex items-center justify-center gap-2 cursor-pointer border border-white/10"
                   >
-                    <Trash2 className="size-4" />
+                    <Trash2 className="size-3.5 sm:size-4" />
                     <span>Delete Record</span>
                   </button>
                 </div>
               </div>
 
               {/* Scrollable Drawer Content */}
-              <div className="p-6 overflow-y-auto flex-1 space-y-6">
+              <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4 sm:space-y-6">
                 {/* 1. Fulfillment Lifecycle Progress */}
-                <div className="p-4.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5 sm:space-y-3">
                   <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-500">
                     <span>Fulfillment Progress</span>
                     <span className="text-cyan-700 font-extrabold">{selectedOrder.status || "Pending Fulfillment"}</span>
@@ -1001,12 +1054,12 @@ function OrdersManager() {
                     <span>Update Order Lifecycle</span>
                     {isUpdatingStatus && <span className="text-cyan-600 font-bold">Saving changes...</span>}
                   </label>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 xs:grid-cols-4 gap-1.5 sm:gap-2">
                     {(["Pending", "Shipped", "Delivered", "Cancelled"] as Order["status"][]).map((st) => (
                       <button
                         key={st}
                         onClick={() => updateStatus(selectedOrder.id, st)}
-                        className={`py-2.5 px-2 rounded-xl text-xs font-black transition-all cursor-pointer border text-center ${
+                        className={`py-2 sm:py-2.5 px-2 rounded-xl text-xs font-black transition-all cursor-pointer border text-center ${
                           selectedOrder.status === st || (!selectedOrder.status && st === "Pending")
                             ? "bg-slate-900 text-white border-slate-900 shadow-md"
                             : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"

@@ -306,92 +306,92 @@ function CustomersAdmin() {
       </div>
 
       {/* ─── 4-PILLAR METRIC HUD ─── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Registered</span>
-            <div className="size-8 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
-              <Users className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
+              <Users className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight">{totalCustomers}</div>
-          <div className="text-[11px] font-semibold text-slate-400 mt-0.5">Customer & contractor accounts</div>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{totalCustomers}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 truncate">Customer & contractor accounts</div>
         </div>
 
-        <div className="bg-white border border-cyan-200/90 rounded-2xl p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-cyan-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">Trade Contractors</span>
-            <div className="size-8 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
-              <Building className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
+              <Building className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-cyan-950 tracking-tight">{verifiedContractors}</div>
-          <div className="text-[11px] font-semibold text-cyan-800/80 mt-0.5">Verified commercial accounts</div>
+          <div className="text-xl sm:text-2xl font-black text-cyan-950 tracking-tight">{verifiedContractors}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-cyan-800/80 mt-0.5 truncate">Verified commercial accounts</div>
         </div>
 
-        <div className="bg-white border border-emerald-200/90 rounded-2xl p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-emerald-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">Active Buyers</span>
-            <div className="size-8 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
-              <ShoppingBag className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
+              <ShoppingBag className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-emerald-950 tracking-tight">{activeBuyers}</div>
-          <div className="text-[11px] font-semibold text-emerald-800/80 mt-0.5">Accounts with order history</div>
+          <div className="text-xl sm:text-2xl font-black text-emerald-950 tracking-tight">{activeBuyers}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-emerald-800/80 mt-0.5 truncate">Accounts with order history</div>
         </div>
 
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Client Spend</span>
-            <div className="size-8 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center">
-              <DollarSign className="size-4" />
+            <div className="size-7 sm:size-8 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center">
+              <DollarSign className="size-3.5 sm:size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight">{formatUSD(totalLifetimeRevenue)}</div>
-          <div className="text-[11px] font-semibold text-slate-400 mt-0.5">Cumulative customer volume</div>
+          <div className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight truncate">{formatUSD(totalLifetimeRevenue)}</div>
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 truncate">Cumulative customer volume</div>
         </div>
       </div>
 
       {/* ─── LIVE SEARCH & FILTER BAR ─── */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3 flex-1 min-w-[280px]">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 shadow-2xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Search by customer name, company, email, phone, or license #..."
+              placeholder="Search customer, company, email, license #..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full h-10 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 transition shadow-2xs"
             />
           </div>
           {search && (
-            <button onClick={() => setSearch("")} className="text-xs font-bold text-slate-400 hover:text-slate-700">
+            <button onClick={() => setSearch("")} className="text-xs font-bold text-slate-400 hover:text-slate-700 shrink-0">
               Clear
             </button>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+        <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold overflow-x-auto scrollbar-none">
           <button
             onClick={() => setFilterType("all")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
               filterType === "all" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            All Accounts ({totalCustomers})
+            All ({totalCustomers})
           </button>
           <button
             onClick={() => setFilterType("buyers")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
               filterType === "buyers" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Active Buyers ({activeBuyers})
+            Buyers ({activeBuyers})
           </button>
           <button
             onClick={() => setFilterType("contractors")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
               filterType === "contractors" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -399,24 +399,24 @@ function CustomersAdmin() {
           </button>
           <button
             onClick={() => setFilterType("recent")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
               filterType === "recent" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Newest (30d)
+            New (30d)
           </button>
         </div>
       </div>
 
-      {/* ─── MAIN TABLE CONTAINER ─── */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden">
+      {/* ─── MAIN TABLE & MOBILE CARD LIST CONTAINER ─── */}
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="size-8 animate-spin text-cyan-600 mb-3" />
             <p className="text-xs font-bold text-slate-400">Loading verified customer accounts...</p>
           </div>
         ) : filteredCustomers.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="flex flex-col items-center justify-center py-20 text-center p-4">
             <div className="size-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-3 border border-slate-100 text-slate-300">
               <Users className="size-8" />
             </div>
@@ -424,160 +424,225 @@ function CustomersAdmin() {
             <p className="text-xs text-slate-400">No accounts match your current filters or search query.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-black uppercase tracking-wider text-slate-400">
-                  <th className="p-4 sm:px-6">Customer & Contractor Profile</th>
-                  <th className="p-4 sm:px-6">Direct Contact</th>
-                  <th className="p-4 sm:px-6 text-center">Orders Placed</th>
-                  <th className="p-4 sm:px-6 text-center">RMA Claims</th>
-                  <th className="p-4 sm:px-6 text-center">Quotes & Bids</th>
-                  <th className="p-4 sm:px-6 text-right">Lifetime Spend</th>
-                  <th className="p-4 sm:px-6 text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-xs font-semibold">
-                <AnimatePresence>
-                  {filteredCustomers.map((customer: any, index: number) => {
-                    const isSelected = activeCustomer?.id === customer.id;
-                    const ordersCount = customer.orders?.length || customer.totalOrders || 0;
-                    const returnsCount = customer.returns?.length || 0;
-                    const quotesCount = customer.quotes?.length || 0;
+          <>
+            {/* Mobile Customer Cards (< md screens) */}
+            <div className="block md:hidden divide-y divide-slate-100">
+              {filteredCustomers.map((customer: any) => {
+                const isSelected = activeCustomer?.id === customer.id;
+                const ordersCount = customer.orders?.length || customer.totalOrders || 0;
+                const quotesCount = customer.quotes?.length || 0;
 
-                    return (
-                      <motion.tr
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.02 }}
-                        key={customer.id}
-                        onClick={() => {
-                          setSelectedCustomerId(customer.id);
-                          setActiveTab("orders");
-                        }}
-                        className={`transition-colors cursor-pointer group ${
-                          isSelected ? "bg-cyan-50/80 border-l-4 border-l-cyan-600" : "hover:bg-slate-50/80"
-                        }`}
-                      >
-                        {/* Customer Info */}
-                        <td className="p-4 sm:px-6">
-                          <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shrink-0 shadow-xs overflow-hidden">
-                              {customer.avatar ? (
-                                <img
-                                  src={customer.avatar}
-                                  alt={customer.name}
-                                  className="size-full rounded-full object-cover"
-                                />
-                              ) : (
-                                <div className="size-full bg-slate-900 rounded-full grid place-items-center text-cyan-300">
-                                  <User className="size-5 text-cyan-300" />
+                return (
+                  <div
+                    key={customer.id}
+                    onClick={() => {
+                      setSelectedCustomerId(customer.id);
+                      setActiveTab("orders");
+                    }}
+                    className={`p-4 transition-colors cursor-pointer space-y-2.5 active:bg-slate-100 ${
+                      isSelected ? "bg-cyan-50/80" : "hover:bg-slate-50/80"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="size-9 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shrink-0 overflow-hidden">
+                          {customer.avatar ? (
+                            <img src={customer.avatar} alt={customer.name} className="size-full rounded-full object-cover" />
+                          ) : (
+                            <div className="size-full bg-slate-900 rounded-full grid place-items-center text-cyan-300">
+                              <User className="size-4 text-cyan-300" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-black text-slate-900 text-sm truncate">{customer.name}</div>
+                          {customer.company && (
+                            <span className="text-[10px] font-bold text-cyan-800 truncate block">
+                              {customer.company}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="text-right shrink-0">
+                        <div className="font-black text-sm text-slate-900">
+                          {formatUSD(customer.lifetimeValue || customer.totalSpent || 0)}
+                        </div>
+                        <div className="text-[10px] text-emerald-600 font-bold">Total Spend</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+                      <div className="flex items-center gap-3">
+                        <span><strong>{ordersCount}</strong> Orders</span>
+                        <span>·</span>
+                        <span><strong>{quotesCount}</strong> Quotes</span>
+                      </div>
+                      <span className="text-cyan-700 font-bold flex items-center gap-0.5">
+                        Inspect 360 <ChevronRight className="size-3" />
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table (>= md screens) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                    <th className="p-4 sm:px-6">Customer & Contractor Profile</th>
+                    <th className="p-4 sm:px-6">Direct Contact</th>
+                    <th className="p-4 sm:px-6 text-center">Orders Placed</th>
+                    <th className="p-4 sm:px-6 text-center">RMA Claims</th>
+                    <th className="p-4 sm:px-6 text-center">Quotes & Bids</th>
+                    <th className="p-4 sm:px-6 text-right">Lifetime Spend</th>
+                    <th className="p-4 sm:px-6 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-xs font-semibold">
+                  <AnimatePresence>
+                    {filteredCustomers.map((customer: any, index: number) => {
+                      const isSelected = activeCustomer?.id === customer.id;
+                      const ordersCount = customer.orders?.length || customer.totalOrders || 0;
+                      const returnsCount = customer.returns?.length || 0;
+                      const quotesCount = customer.quotes?.length || 0;
+
+                      return (
+                        <motion.tr
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.02 }}
+                          key={customer.id}
+                          onClick={() => {
+                            setSelectedCustomerId(customer.id);
+                            setActiveTab("orders");
+                          }}
+                          className={`transition-colors cursor-pointer group ${
+                            isSelected ? "bg-cyan-50/80 border-l-4 border-l-cyan-600" : "hover:bg-slate-50/80"
+                          }`}
+                        >
+                          {/* Customer Info */}
+                          <td className="p-4 sm:px-6">
+                            <div className="flex items-center gap-3">
+                              <div className="size-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shrink-0 shadow-xs overflow-hidden">
+                                {customer.avatar ? (
+                                  <img
+                                    src={customer.avatar}
+                                    alt={customer.name}
+                                    className="size-full rounded-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="size-full bg-slate-900 rounded-full grid place-items-center text-cyan-300">
+                                    <User className="size-5 text-cyan-300" />
+                                  </div>
+                                )}
+                              </div>
+                              <div>
+                                <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
+                                  <span>{customer.name}</span>
+                                  {customer.company && (
+                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-900">
+                                      {customer.company}
+                                    </span>
+                                  )}
                                 </div>
+                                <div className="text-[10px] font-bold text-slate-400 flex items-center gap-2 mt-0.5">
+                                  <span className="flex items-center gap-1">
+                                    <Calendar className="size-3" />
+                                    Joined {new Date(customer.createdAt).toLocaleDateString()}
+                                  </span>
+                                  {customer.contractorId && (
+                                    <span className="font-mono text-slate-500 font-extrabold">· Lic #{customer.contractorId}</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Contact */}
+                          <td className="p-4 sm:px-6">
+                            <div className="space-y-1">
+                              {customer.email && (
+                                <a
+                                  href={`mailto:${customer.email}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="text-slate-800 hover:text-cyan-700 flex items-center gap-1.5 text-xs font-semibold truncate max-w-[200px]"
+                                >
+                                  <Mail className="size-3 text-slate-400 shrink-0" />
+                                  <span>{customer.email}</span>
+                                </a>
+                              )}
+                              {customer.phone && (
+                                <a
+                                  href={`tel:${customer.phone}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="text-slate-500 hover:text-slate-800 flex items-center gap-1.5 text-[11px] font-mono"
+                                >
+                                  <Phone className="size-3 text-slate-400 shrink-0" />
+                                  <span>{customer.phone}</span>
+                                </a>
                               )}
                             </div>
-                            <div>
-                              <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
-                                <span>{customer.name}</span>
-                                {customer.company && (
-                                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-900">
-                                    {customer.company}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-[10px] font-bold text-slate-400 flex items-center gap-2 mt-0.5">
-                                <span className="flex items-center gap-1">
-                                  <Calendar className="size-3" />
-                                  Joined {new Date(customer.createdAt).toLocaleDateString()}
-                                </span>
-                                {customer.contractorId && (
-                                  <span className="font-mono text-slate-500 font-extrabold">· Lic #{customer.contractorId}</span>
-                                )}
-                              </div>
+                          </td>
+
+                          {/* Total Orders */}
+                          <td className="p-4 sm:px-6 text-center">
+                            <span className="font-black text-slate-900">{ordersCount}</span>
+                          </td>
+
+                          {/* RMA Claims */}
+                          <td className="p-4 sm:px-6 text-center">
+                            {returnsCount > 0 ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+                                {returnsCount} RMA
+                              </span>
+                            ) : (
+                              <span className="text-slate-300">—</span>
+                            )}
+                          </td>
+
+                          {/* Quotes */}
+                          <td className="p-4 sm:px-6 text-center">
+                            {quotesCount > 0 ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-cyan-100 text-cyan-900 border border-cyan-300">
+                                {quotesCount} RFQ
+                              </span>
+                            ) : (
+                              <span className="text-slate-300">—</span>
+                            )}
+                          </td>
+
+                          {/* Lifetime Value */}
+                          <td className="p-4 sm:px-6 text-right">
+                            <div className="font-black text-sm text-slate-900">
+                              {formatUSD(customer.lifetimeValue || customer.totalSpent || 0)}
                             </div>
-                          </div>
-                        </td>
+                            <div className="text-[10px] font-extrabold text-emerald-600">Verified Spend</div>
+                          </td>
 
-                        {/* Contact */}
-                        <td className="p-4 sm:px-6">
-                          <div className="space-y-1">
-                            {customer.email && (
-                              <div className="flex items-center gap-1.5 text-xs text-slate-700">
-                                <Mail className="size-3.5 text-slate-400 shrink-0" />
-                                <span className="font-bold text-slate-800">{customer.email}</span>
-                              </div>
-                            )}
-                            {customer.phone && (
-                              <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
-                                <Phone className="size-3.5 text-slate-400 shrink-0" />
-                                <span>{customer.phone}</span>
-                              </div>
-                            )}
-                            {!customer.email && !customer.phone && (
-                              <span className="text-[11px] text-slate-400 italic">No direct contact</span>
-                            )}
-                          </div>
-                        </td>
-
-                        {/* Orders */}
-                        <td className="p-4 sm:px-6 text-center">
-                          <span className="inline-flex items-center justify-center gap-1 bg-cyan-50 text-cyan-800 border border-cyan-200/60 px-3 py-1 rounded-full text-xs font-black">
-                            <ShoppingBag className="size-3" />
-                            {ordersCount} Orders
-                          </span>
-                        </td>
-
-                        {/* Returns */}
-                        <td className="p-4 sm:px-6 text-center">
-                          {returnsCount > 0 ? (
-                            <span className="inline-flex items-center justify-center gap-1 bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-0.5 rounded-full text-xs font-extrabold">
-                              <RotateCcw className="size-3" />
-                              {returnsCount} RMA
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 text-[11px] font-medium">—</span>
-                          )}
-                        </td>
-
-                        {/* Quotes */}
-                        <td className="p-4 sm:px-6 text-center">
-                          {quotesCount > 0 ? (
-                            <span className="inline-flex items-center justify-center gap-1 bg-blue-50 text-blue-900 border border-blue-200 px-2.5 py-0.5 rounded-full text-xs font-extrabold">
-                              <FileText className="size-3" />
-                              {quotesCount} Quotes
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 text-[11px] font-medium">—</span>
-                          )}
-                        </td>
-
-                        {/* Lifetime Value */}
-                        <td className="p-4 sm:px-6 text-right">
-                          <div className="font-black text-sm text-slate-900">
-                            {formatUSD(customer.lifetimeValue || customer.totalSpent || 0)}
-                          </div>
-                          <div className="text-[10px] font-extrabold text-emerald-600">Verified Spend</div>
-                        </td>
-
-                        {/* View Button */}
-                        <td className="p-4 sm:px-6 text-center">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedCustomerId(customer.id);
-                              setActiveTab("orders");
-                            }}
-                            className="p-2 rounded-xl bg-slate-50 hover:bg-cyan-50 text-slate-500 hover:text-cyan-700 border border-slate-200 transition cursor-pointer"
-                          >
-                            <ChevronRight className="size-4" />
-                          </button>
-                        </td>
-                      </motion.tr>
-                    );
-                  })}
-                </AnimatePresence>
-              </tbody>
-            </table>
-          </div>
+                          {/* View Button */}
+                          <td className="p-4 sm:px-6 text-center">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCustomerId(customer.id);
+                                setActiveTab("orders");
+                              }}
+                              className="p-2 rounded-xl bg-slate-50 hover:bg-cyan-50 text-slate-500 hover:text-cyan-700 border border-slate-200 transition cursor-pointer"
+                            >
+                              <ChevronRight className="size-4" />
+                            </button>
+                          </td>
+                        </motion.tr>
+                      );
+                    })}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -592,16 +657,16 @@ function CustomersAdmin() {
               className="bg-white w-full max-w-2xl h-full sm:h-[94vh] sm:rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden"
             >
               {/* Drawer Top Header */}
-              <div className="p-6 border-b border-slate-100 bg-slate-900 text-white shrink-0 relative">
+              <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-900 text-white shrink-0 relative">
                 <button
                   onClick={() => setSelectedCustomerId(null)}
-                  className="absolute top-5 right-5 size-8 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center transition cursor-pointer"
+                  className="absolute top-4 sm:top-5 right-4 sm:right-5 size-8 rounded-full bg-white/10 hover:bg-white/20 text-white grid place-items-center transition cursor-pointer"
                 >
                   <X className="size-4" />
                 </button>
 
-                <div className="flex items-start gap-4 pr-10">
-                  <div className="size-14 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shrink-0 shadow-lg overflow-hidden">
+                <div className="flex items-start gap-3 sm:gap-4 pr-8 sm:pr-10">
+                  <div className="size-11 sm:size-14 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shrink-0 shadow-lg overflow-hidden">
                     {activeCustomer.avatar ? (
                       <img
                         src={activeCustomer.avatar}
@@ -610,34 +675,34 @@ function CustomersAdmin() {
                       />
                     ) : (
                       <div className="size-full bg-slate-800 rounded-full grid place-items-center text-cyan-300">
-                        <User className="size-7 text-cyan-300" />
+                        <User className="size-5 sm:size-7 text-cyan-300" />
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h2 className="text-xl font-black text-white tracking-tight">{activeCustomer.name}</h2>
-                      <ShieldCheck className="size-5 text-cyan-400" />
+                      <h2 className="text-base sm:text-xl font-black text-white tracking-tight truncate">{activeCustomer.name}</h2>
+                      <ShieldCheck className="size-4 sm:size-5 text-cyan-400 shrink-0" />
                     </div>
                     {activeCustomer.company && (
-                      <div className="text-xs font-bold text-cyan-300 mt-0.5 flex items-center gap-1.5">
-                        <Building className="size-3.5" />
-                        <span>{activeCustomer.company}</span>
+                      <div className="text-xs font-bold text-cyan-300 mt-0.5 flex items-center gap-1.5 truncate">
+                        <Building className="size-3.5 shrink-0" />
+                        <span className="truncate">{activeCustomer.company}</span>
                         {activeCustomer.contractorId && (
-                          <span className="text-white/60">· License #{activeCustomer.contractorId}</span>
+                          <span className="text-white/60">· Lic #{activeCustomer.contractorId}</span>
                         )}
                       </div>
                     )}
-                    <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-3 flex-wrap">
+                    <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 flex items-center gap-2 sm:gap-3 flex-wrap">
                       {activeCustomer.email && (
-                        <a href={`mailto:${activeCustomer.email}`} className="hover:text-cyan-300 flex items-center gap-1">
-                          <Mail className="size-3" />
-                          <span>{activeCustomer.email}</span>
+                        <a href={`mailto:${activeCustomer.email}`} className="hover:text-cyan-300 flex items-center gap-1 truncate max-w-[220px]">
+                          <Mail className="size-3 shrink-0" />
+                          <span className="truncate">{activeCustomer.email}</span>
                         </a>
                       )}
                       {activeCustomer.phone && (
                         <a href={`tel:${activeCustomer.phone}`} className="hover:text-cyan-300 flex items-center gap-1">
-                          <Phone className="size-3" />
+                          <Phone className="size-3 shrink-0" />
                           <span>{activeCustomer.phone}</span>
                         </a>
                       )}
@@ -646,29 +711,29 @@ function CustomersAdmin() {
                 </div>
 
                 {/* KPI Bar */}
-                <div className="grid grid-cols-3 gap-3 mt-6 pt-4 border-t border-white/10 text-center">
-                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[10px] font-black uppercase text-slate-400">Lifetime Spend</div>
-                    <div className="text-base font-black text-cyan-300 mt-0.5">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10 text-center">
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">Lifetime Spend</div>
+                    <div className="text-xs sm:text-base font-black text-cyan-300 mt-0.5 truncate">
                       {formatUSD(activeCustomer.lifetimeValue || activeCustomer.totalSpent || 0)}
                     </div>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[10px] font-black uppercase text-slate-400">Total Orders</div>
-                    <div className="text-base font-black text-white mt-0.5">{activeCustomer.orders?.length || 0}</div>
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">Total Orders</div>
+                    <div className="text-xs sm:text-base font-black text-white mt-0.5">{activeCustomer.orders?.length || 0}</div>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[10px] font-black uppercase text-slate-400">RMA Claims</div>
-                    <div className="text-base font-black text-amber-400 mt-0.5">{activeCustomer.returns?.length || 0}</div>
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">RMA Claims</div>
+                    <div className="text-xs sm:text-base font-black text-amber-400 mt-0.5">{activeCustomer.returns?.length || 0}</div>
                   </div>
                 </div>
               </div>
 
               {/* Navigation Tabs */}
-              <div className="flex items-center gap-1 px-6 pt-3 border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto text-xs font-bold">
+              <div className="flex items-center gap-1 px-4 sm:px-6 pt-3 border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto text-xs font-bold scrollbar-none">
                 <button
                   onClick={() => setActiveTab("orders")}
-                  className={`px-4 py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
                     activeTab === "orders"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -680,19 +745,19 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("returns")}
-                  className={`px-4 py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
                     activeTab === "returns"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   <RotateCcw className="size-3.5" />
-                  <span>Returns & RMA ({activeCustomer.returns?.length || 0})</span>
+                  <span>Returns ({activeCustomer.returns?.length || 0})</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("quotes")}
-                  className={`px-4 py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
                     activeTab === "quotes"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -704,7 +769,7 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("addresses")}
-                  className={`px-4 py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
                     activeTab === "addresses"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -716,7 +781,7 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("info")}
-                  className={`px-4 py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
                     activeTab === "info"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"

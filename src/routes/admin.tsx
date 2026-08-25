@@ -280,28 +280,30 @@ function AdminLayout() {
       {/* ─── MAIN CONTENT AREA ─── */}
       <div className="flex-1 flex flex-col overflow-x-hidden relative">
         {/* TOP NAVBAR */}
-        <header className="h-20 bg-white/95 backdrop-blur-xl border-b border-slate-200/80 px-6 md:px-8 flex items-center justify-between gap-4 shrink-0 z-30 sticky top-0 shadow-2xs">
+        <header className="h-16 sm:h-20 bg-white/95 backdrop-blur-xl border-b border-slate-200/80 px-3.5 sm:px-6 md:px-8 flex items-center justify-between gap-3 sm:gap-4 shrink-0 z-30 sticky top-0 shadow-2xs">
           {/* Left: Mobile Toggle & System Health */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5 sm:gap-4">
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
+              aria-label="Open navigation menu"
+              className="lg:hidden size-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 grid place-items-center transition cursor-pointer shrink-0"
             >
               <Menu className="size-5" />
             </button>
 
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-800 text-[11px] font-bold">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Production DB Active · 99.98% Uptime</span>
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-800 text-[10px] sm:text-[11px] font-bold truncate">
+              <span className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+              <span className="hidden xs:inline">Production DB Active · 99.98% Uptime</span>
+              <span className="xs:hidden">DB Active</span>
             </div>
           </div>
 
           {/* Right Action Icons & Direct Store Link */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Link
               to="/"
               target="_blank"
-              className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 transition-all shadow-2xs"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 transition-all shadow-2xs"
             >
               <span>Live Website</span>
               <ExternalLink className="size-3 text-slate-400" />
@@ -311,11 +313,12 @@ function AdminLayout() {
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="relative size-10 rounded-xl bg-slate-100 hover:bg-slate-200 grid place-items-center text-slate-700 transition cursor-pointer"
+                aria-label="Notifications"
+                className="relative size-9 sm:size-10 rounded-xl bg-slate-100 hover:bg-slate-200 grid place-items-center text-slate-700 transition cursor-pointer"
               >
-                <Bell className="size-4.5" />
+                <Bell className="size-4 sm:size-4.5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 size-5 rounded-full bg-rose-500 text-white font-black text-[10px] grid place-items-center shadow-md">
+                  <span className="absolute -top-1 -right-1 size-4.5 sm:size-5 rounded-full bg-rose-500 text-white font-black text-[9px] sm:text-[10px] grid place-items-center shadow-md">
                     {unreadCount}
                   </span>
                 )}
@@ -328,7 +331,7 @@ function AdminLayout() {
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 mt-3 w-80 sm:w-96 bg-white rounded-3xl border border-slate-200 shadow-2xl p-4 z-50 space-y-3"
+                    className="fixed sm:absolute top-16 sm:top-auto right-3 sm:right-0 mt-1 sm:mt-3 w-[calc(100vw-24px)] xs:w-80 sm:w-96 max-w-sm bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl p-4 z-50 space-y-3"
                   >
                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                       <div className="flex items-center gap-2">
@@ -380,7 +383,7 @@ function AdminLayout() {
         </header>
 
         {/* Main Content Router View */}
-        <main className="flex-1 p-6 md:p-8">
+        <main className="flex-1 p-3.5 sm:p-6 md:p-8">
           <Outlet />
         </main>
       </div>
