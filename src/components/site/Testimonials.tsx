@@ -170,7 +170,7 @@ const infiniteRow2 = [...row2Reviews, ...row2Reviews];
 
 function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
   return (
-    <figure className="w-[280px] xs:w-[320px] sm:w-[380px] md:w-[400px] shrink-0 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-xl hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between relative group select-none">
+    <figure className="w-[300px] sm:w-[380px] md:w-[400px] shrink-0 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-xl hover:border-cyan-400/60 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between relative group select-none">
       <div className="space-y-2.5 sm:space-y-3 relative z-10">
         {/* Top Header: Author + Google Verified Badge */}
         <div className="flex items-start justify-between gap-2 sm:gap-3">
@@ -194,7 +194,7 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-slate-50 border border-slate-200/80 shrink-0 shadow-2xs">
+          <div className="flex items-center gap-1 px-2 py-0.5 sm:py-1 rounded-full bg-slate-50 border border-slate-200/80 shrink-0 shadow-2xs">
             <GoogleGIcon className="size-3 sm:size-3.5" />
             <span className="text-[9px] sm:text-[10px] font-bold text-slate-600">Google</span>
           </div>
@@ -219,7 +219,7 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
 
       {/* Card Footer: Verified Product Tag */}
       <figcaption className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1.5 text-[10px] sm:text-[11px] relative z-10">
-        <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-cyan-50/70 border border-cyan-200/60 text-cyan-900 font-extrabold text-[9.5px] sm:text-[10.5px] truncate max-w-[170px] xs:max-w-[210px] sm:max-w-[260px]">
+        <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-cyan-50/70 border border-cyan-200/60 text-cyan-900 font-extrabold text-[9.5px] sm:text-[10.5px] truncate max-w-[180px] sm:max-w-[260px]">
           <ShieldCheck className="size-2.5 sm:size-3 text-cyan-600 shrink-0" />
           <span className="truncate">{review.product}</span>
         </span>
@@ -234,47 +234,52 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="py-10 sm:py-14 md:py-18 lg:py-22 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden font-sans relative border-y border-slate-200/60">
+    <section id="testimonials" className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden font-sans relative border-y border-slate-200/60">
       {/* Background Subtle Ambient Glows */}
       <div className="absolute top-1/2 left-1/4 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
       <div className="absolute bottom-0 right-1/4 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 mb-8 sm:mb-10 relative z-10">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 sm:gap-6">
-          <div className="max-w-3xl space-y-2 sm:space-y-3">
-            <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white border border-slate-200 shadow-2xs">
-              <GoogleGIcon className="size-3.5 sm:size-4 shrink-0" />
-              <span className="text-[10px] sm:text-xs font-extrabold text-slate-800 tracking-wide">
-                Google Verified Customer Reviews
-              </span>
-              <span className="size-1 rounded-full bg-slate-300 hidden xs:inline-block" />
-              <span className="text-emerald-700 font-extrabold text-[10px] sm:text-[11px] flex items-center gap-1">
-                <CheckCircle2 className="size-3 text-emerald-600 shrink-0" /> 100% Authentic Trade Accounts
-              </span>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-8 sm:mb-10 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="max-w-3xl space-y-2.5 sm:space-y-3">
+            {/* Verified Badges */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs">
+                <GoogleGIcon className="size-3.5 sm:size-4 shrink-0" />
+                <span className="text-[11px] sm:text-xs font-extrabold text-slate-800 tracking-wide">
+                  Google Verified Customer Reviews
+                </span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 shadow-2xs text-emerald-800 text-[11px] sm:text-xs font-extrabold">
+                <CheckCircle2 className="size-3 sm:size-3.5 text-emerald-600 shrink-0" />
+                <span>100% Authentic Trade Accounts</span>
+              </div>
             </div>
 
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Rated 4.9 / 5.0 by 5,000+ Pool Professionals Nationwide
+            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-slate-900 tracking-tight leading-tight">
+              Rated 4.9 / 5.0 by <span className="text-gradient">5,000+ Pool Professionals</span> Nationwide
             </h2>
 
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-2xl">
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-2xl font-medium">
               Real reviews from licensed pool contractors, commercial resort operators, and service technicians who rely on our wholesale pricing and same-day dispatch.
             </p>
           </div>
 
           {/* Google 4.9 Star Aggregate Rating Card */}
-          <div className="flex items-center gap-3.5 sm:gap-4 bg-white p-3 sm:px-5 sm:py-3.5 rounded-2xl border border-slate-200/90 shadow-sm shrink-0 self-start sm:self-auto w-full xs:w-auto">
-            <div className="flex items-center justify-center size-10 sm:size-12 rounded-xl bg-slate-50 border border-slate-100 shrink-0">
-              <GoogleGIcon className="size-5 sm:size-7" />
+          <div className="flex items-center gap-3.5 sm:gap-4 bg-white p-3.5 sm:px-5 sm:py-4 rounded-2xl border border-slate-200/90 shadow-sm shrink-0 self-start md:self-auto">
+            <div className="flex items-center justify-center size-11 sm:size-12 rounded-xl bg-slate-50 border border-slate-100 shrink-0 shadow-2xs">
+              <GoogleGIcon className="size-6 sm:size-7" />
             </div>
             <div>
-              <div className="flex items-center gap-1">
-                <span className="text-sm sm:text-base font-black text-slate-900 mr-0.5">4.9</span>
-                {Array.from({ length: 5 }).map((_, k) => (
-                  <Star key={k} className="size-3.5 sm:size-4 fill-amber-400 text-amber-400" />
-                ))}
+              <div className="flex items-center gap-1.5">
+                <span className="text-base sm:text-lg font-black text-slate-900">4.9</span>
+                <div className="flex items-center gap-0.5">
+                  {Array.from({ length: 5 }).map((_, k) => (
+                    <Star key={k} className="size-3.5 sm:size-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
               </div>
-              <div className="text-[10px] sm:text-[11px] font-bold text-slate-600 mt-0.5 flex items-center gap-1.5 flex-wrap">
+              <div className="text-[11px] sm:text-xs font-bold text-slate-600 mt-0.5 flex items-center gap-1.5">
                 <span>480+ Google Reviews</span>
                 <span className="size-1 rounded-full bg-slate-300" />
                 <span className="text-emerald-600 font-extrabold">Excellent</span>
@@ -287,8 +292,8 @@ export function Testimonials() {
       {/* 2-Row Dual-Direction Sliding Marquee */}
       <div className="space-y-3 sm:space-y-4 relative w-full overflow-hidden">
         {/* Left & Right Seamless Gradient Masks */}
-        <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-12 xs:w-20 sm:w-36 md:w-44 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent z-20" />
-        <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-12 xs:w-20 sm:w-36 md:w-44 bg-gradient-to-l from-slate-50 via-slate-50/80 to-transparent z-20" />
+        <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-16 sm:w-36 md:w-44 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent z-20" />
+        <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-16 sm:w-36 md:w-44 bg-gradient-to-l from-slate-50 via-slate-50/80 to-transparent z-20" />
 
         {/* Row 1: Sliding Right to Left */}
         <div className="relative w-full overflow-hidden">
