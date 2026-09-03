@@ -51,38 +51,113 @@ export const Route = createFileRoute("/products/$productId")({
       : undefined;
 
     const jsonLd = product
-      ? {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": product.name || "Pool Equipment",
-        "image": [imageUrl],
-        "description": descText,
-        "sku": product.sku || product.id,
-        "mpn": product.sku || product.id,
-        "brand": {
-          "@type": "Brand",
-          "name": product.brand || "Pool Supply Wholesalers"
-        },
-        "offers": {
-          "@type": "Offer",
-          "url": productUrl,
-          "priceCurrency": "USD",
-          "price": product.price || 0,
-          "itemCondition": "https://schema.org/NewCondition",
-          "availability": (product.stock ?? 0) > 0
-            ? "https://schema.org/InStock"
-            : "https://schema.org/OutOfStock",
-          "seller": {
-            "@type": "Organization",
-            "name": "Pool Supply Wholesalers"
+      ? [
+          {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": product.name || "Pool Equipment",
+            "image": [imageUrl],
+            "description": descText,
+            "sku": product.sku || product.id,
+            "mpn": product.sku || product.id,
+            "productID": product.sku || product.id,
+            "category": product.category || "Pool Equipment",
+            "brand": {
+              "@type": "Brand",
+              "name": product.brand || "Pool Supply Wholesalers"
+            },
+            "manufacturer": {
+              "@type": "Organization",
+              "name": product.brand || "Pool Supply Wholesalers",
+              "url": `https://poolsupplywholesalers.com/brands/${(product.brand || "").toLowerCase()}`
+            },
+            "offers": {
+              "@type": "Offer",
+              "url": productUrl,
+              "priceCurrency": "USD",
+              "price": product.price || 0,
+              "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0],
+              "itemCondition": "https://schema.org/NewCondition",
+              "availability": (product.stock ?? 0) > 0
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+              "seller": {
+                "@type": "Organization",
+                "name": "Pool Supply Wholesalers",
+                "url": "https://poolsupplywholesalers.com"
+              },
+              "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": "0",
+                  "currency": "USD"
+                },
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "unitCode": "DAY"
+                  },
+                  "transitTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 1,
+                    "maxValue": 5,
+                    "unitCode": "DAY"
+                  }
+                },
+                "shippingDestination": {
+                  "@type": "DefinedRegion",
+                  "addressCountry": "US"
+                }
+              },
+              "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "US",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                "merchantReturnDays": 30,
+                "returnMethod": "https://schema.org/ReturnByMail",
+                "returnFees": "https://schema.org/FreeReturn"
+              }
+            },
+            ...(avgRating ? {
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": avgRating,
+                "bestRating": "5",
+                "worstRating": "1",
+                "reviewCount": reviews.length
+              },
+              "review": reviews.slice(0, 5).map((r: Review) => ({
+                "@type": "Review",
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": r.rating || 5,
+                  "bestRating": "5",
+                  "worstRating": "1"
+                },
+                "author": {
+                  "@type": "Person",
+                  "name": r.author || "Verified Customer"
+                },
+                "name": r.title || "",
+                "reviewBody": r.content || "",
+                "datePublished": r.date || new Date().toISOString().split("T")[0]
+              }))
+            } : {})
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
+              { "@type": "ListItem", "position": 2, "name": product.category || "Pool Equipment", "item": `https://poolsupplywholesalers.com/shop/${product.category?.toLowerCase().replace(/ /g, "-") || "all"}` },
+              { "@type": "ListItem", "position": 3, "name": product.name || "Product", "item": productUrl }
+            ]
           }
-        },
-        "aggregateRating": avgRating ? {
-          "@type": "AggregateRating",
-          "ratingValue": avgRating,
-          "reviewCount": reviews.length
-        } : undefined
-      }
+        ]
       : null;
 
     return {
@@ -90,11 +165,17 @@ export const Route = createFileRoute("/products/$productId")({
         { title },
         { name: "description", content: description },
         { name: "keywords", content: `${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale, buy ${product?.category || "pool supply"}, commercial pool equipment, wholesale pool supply Nashville TN` },
+        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:image", content: imageUrl },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "og:url", content: productUrl },
         { property: "og:type", content: "product" },
+        { property: "product:price:amount", content: String(product?.price || 0) },
+        { property: "product:price:currency", content: "USD" },
+        { property: "product:availability", content: (product?.stock ?? 0) > 0 ? "in stock" : "out of stock" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
@@ -103,12 +184,10 @@ export const Route = createFileRoute("/products/$productId")({
       links: [
         { rel: "canonical", href: productUrl }
       ],
-      scripts: jsonLd ? [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(jsonLd)
-        }
-      ] : []
+      scripts: jsonLd ? jsonLd.map(ld => ({
+        type: "application/ld+json",
+        children: JSON.stringify(ld)
+      })) : []
     };
   },
   component: ProductDetailPage,

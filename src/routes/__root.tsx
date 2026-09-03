@@ -152,6 +152,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://poolsupplywholesalers.com/" },
       { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Pool Supply Wholesalers — Commercial Pool Equipment" },
+      { property: "og:locale", content: "en_US" },
 
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Pool Supply Wholesalers — Wholesale to Retail Pool Supplies" },
@@ -263,7 +267,72 @@ function RootShell({ children }: { children: ReactNode }) {
           { "@type": "OfferCatalog", "name": "Salt Water Chlorinators at Wholesale Pricing" },
           { "@type": "OfferCatalog", "name": "Smart Commercial & Retail Pool Automation" }
         ]
-      }
+      },
+      "sameAs": [
+        "https://www.facebook.com/poolsupplywholesalers",
+        "https://www.instagram.com/poolsupplywholesalers",
+        "https://www.linkedin.com/company/pool-supply-wholesalers",
+        "https://www.youtube.com/@poolsupplywholesalers"
+      ],
+      "knowsAbout": [
+        "Commercial Pool Equipment",
+        "Variable Speed Pool Pumps",
+        "Gas Pool Heaters",
+        "Pool Cartridge Filters",
+        "Salt Chlorine Generators",
+        "Pool Automation Systems",
+        "Wholesale Pool Supplies"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".faq-speakable", "h1", ".hero-description"]
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What pool equipment brands does Pool Supply Wholesalers carry?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pool Supply Wholesalers is an authorized wholesale to retail distributor for Pentair, Hayward, Jandy, Raypak, Zodiac, and Waterway. We carry pumps, heaters, filters, automation systems, salt chlorinators, LED lights, and robotic cleaners from all major brands at wholesale to retail pricing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I get wholesale pool equipment pricing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pool Supply Wholesalers offers wholesale to retail pricing to everyone — contractors, service professionals, and homeowners. No membership required. Simply shop our catalog at poolsupplywholesalers.com and all products display our direct wholesale to retail pricing, typically 20-40% below standard retail MSRP."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Pool Supply Wholesalers ship nationwide?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Pool Supply Wholesalers ships to all 50 US states with same-day shipping available from distribution hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL. Most orders ship within 1 business day with 2-5 day delivery nationwide."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between a variable speed pool pump and a single speed pump?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Variable speed pool pumps (VSPs) use a permanent magnet motor that can run at any speed between 600-3,450 RPM, saving 70-90% on electricity versus fixed-speed pumps. Single speed pumps run at a fixed 3,450 RPM at full power always. As of 2021, the US DOE mandates variable speed for most pool pump replacements. Pool Supply Wholesalers carries Pentair IntelliFlo, Hayward TriStar VS, and Jandy FloPro VS at wholesale pricing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are Pentair and Hayward pool equipment prices negotiable for commercial accounts?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pool Supply Wholesalers offers special commercial account pricing for contractors, pool builders, property managers, and aquatic facilities ordering in volume. Contact our team at sales@poolsupplywholesalers.com or call +1-615-477-0407 to set up a commercial wholesale account with dedicated pricing and priority fulfillment."
+          }
+        }
+      ]
     }
   ];
 

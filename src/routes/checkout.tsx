@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { PaymentCardBadges } from "@/components/site/PaymentCardIcons";
 import { computeTotals, formatUSD, useCart } from "@/components/site/cart-context";
 import { useAuth } from "@/components/site/auth-context";
 import { createOrderDb } from "@/lib/api/orders.functions";
@@ -398,7 +399,7 @@ function CheckoutPage() {
               <p className="text-xs text-slate-500 mt-1 font-medium">Verify your shipping address and complete secure payment.</p>
             </div>
             <div className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-3.5 py-2 rounded-2xl border border-slate-200 shadow-xs">
-              <Lock className="size-4 text-emerald-600" /> 256-Bit SSL Encrypted Checkout
+              <Lock className="size-4 text-emerald-600" />SSL Encrypted Checkout
             </div>
           </div>
 
@@ -446,7 +447,7 @@ function CheckoutPage() {
               </Section>
 
               {/* Stripe Payment Gateway Section */}
-              <Section icon={CreditCard} title="Payment Details (Stripe Official Elements)">
+              <Section icon={CreditCard} title="Payment Details (Stripe Official)">
                 <div className="space-y-4">
                   {stripeError && (
                     <motion.div
@@ -469,16 +470,11 @@ function CheckoutPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs">
                     <span className="font-extrabold text-slate-700 flex items-center gap-1.5">
-                      <Lock className="size-4 text-cyan-600" /> Stripe PCI Level 1 Certified 256-Bit SSL Gateway
+                      <Lock className="size-4 text-cyan-600 shrink-0" /> Stripe Secure Payment
                     </span>
-                    <div className="flex items-center gap-1">
-                      <span className="text-[10px] font-black bg-blue-100 text-blue-800 px-2 py-0.5 rounded">VISA</span>
-                      <span className="text-[10px] font-black bg-rose-100 text-rose-800 px-2 py-0.5 rounded">MC</span>
-                      <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">AMEX</span>
-                      <span className="text-[10px] font-black bg-amber-100 text-amber-800 px-2 py-0.5 rounded">DISCOVER</span>
-                    </div>
+                    <PaymentCardBadges />
                   </div>
 
                   <Input
@@ -515,7 +511,7 @@ function CheckoutPage() {
 
                   <p className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5 pt-1">
                     <ShieldCheck className="size-4 text-emerald-600 shrink-0" />
-                    Official Stripe Live Gateway. Your card data is processed directly inside Stripe's PCI Level 1 encrypted vault.
+                    Official Stripe Live Gateway. Your card data is processed directly inside Stripe's encrypted vault.
                   </p>
                 </div>
               </Section>
@@ -644,8 +640,23 @@ function CheckoutPage() {
                   )}
                 </button>
 
+                <div className="pt-1 flex flex-col items-center gap-1.5">
+                  <PaymentCardBadges className="flex items-center justify-center gap-1.5" />
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    Accepted Payment Methods
+                  </span>
+                </div>
+
                 <p className="text-[11px] text-slate-400 text-center font-semibold leading-relaxed">
-                  By completing order, you agree to Pool Supply Wholesalers' Terms of Commercial Wholesale & Shipping Guarantee.
+                  By completing order, you agree to Pool Supply Wholesalers'{" "}
+                  <Link to="/terms-and-conditions" target="_blank" className="text-cyan-400 hover:underline">
+                    Terms & Conditions
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy-policy" target="_blank" className="text-cyan-400 hover:underline">
+                    Privacy Policy
+                  </Link>
+                  .
                 </p>
               </motion.div>
             </aside>

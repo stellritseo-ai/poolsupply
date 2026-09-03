@@ -401,6 +401,36 @@ export const getAllProductsAdminDb = createServerFn({ method: "POST" })
     }
   });
 
+export const getAllProductsForExportDb = createServerFn({ method: "POST" })
+  .handler(async () => {
+    try {
+      const db = await connectDB();
+      if (!db) {
+        return { success: true, products: defaultProducts };
+      }
+      const productsCol = db.collection("products");
+      const rawProducts = await productsCol.find({}).sort({ name: 1 }).toArray();
+
+      if (!rawProducts || rawProducts.length === 0) {
+        return { success: true, products: defaultProducts };
+      }
+
+      const formatted = rawProducts.map((p: any) => {
+        const { _id, ...rest } = p;
+        const item = { ...rest, id: p.id || _id?.toString() };
+        if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
+          item.img = "/assets/commingsoon.png";
+        }
+        return item as unknown as Product;
+      });
+
+      return { success: true, products: formatted };
+    } catch (e: any) {
+      console.error("Failed to fetch all products for export from DB:", e);
+      return { success: true, products: defaultProducts };
+    }
+  });
+
 export const searchProductsDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ query: z.string() }))
   .handler(async ({ data }) => {

@@ -29,8 +29,9 @@ import {
   Star
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import * as XLSX from "xlsx";
 import { uploadImage } from "@/lib/api/upload.functions";
-import { saveProductDb, deleteProductDb, bulkDeleteProductsDb, bulkSaveProductsDb, getAllProductsAdminDb, deleteAllProductsDb } from "@/lib/api/products.functions";
+import { saveProductDb, deleteProductDb, bulkDeleteProductsDb, bulkSaveProductsDb, getAllProductsAdminDb, getAllProductsForExportDb, deleteAllProductsDb } from "@/lib/api/products.functions";
 
 export const Route = createFileRoute("/admin/products")({
   component: ProductsManager,
@@ -374,6 +375,37 @@ export function parseJSONRows(rows: any[]): Product[] {
   return parsed;
 }
 
+export function formatProductToExcelRow(p: Product) {
+  let specsStr = "";
+  if (p.specs && typeof p.specs === "object") {
+    specsStr = Object.entries(p.specs)
+      .filter(([k, v]) => Boolean(k) && Boolean(v))
+      .map(([k, v]) => `${k}: ${v}`)
+      .join("; ");
+  }
+
+  const review1 = p.reviews && p.reviews[0] ? (p.reviews[0].content || p.reviews[0].title || "") : "";
+  const review2 = p.reviews && p.reviews[1] ? (p.reviews[1].content || p.reviews[1].title || "") : "";
+
+  return {
+    "Category": p.parentCategory || p.category || "Pool & Spa",
+    "Sub Category": p.subCategory || p.category || "",
+    "Manufacturer": p.brand || "",
+    "Name": p.name || "",
+    "Display Name": p.displayName || p.name || "",
+    "SKU": p.sku || "",
+    "Price": Number(p.price) || 0,
+    "Qty Available": Number(p.stock) || 0,
+    "Details": p.details || "",
+    "Image Link": p.img || (p as any).image || "",
+    "SEO Keywords": p.seoKeywords || "",
+    "Product Description": p.description || "",
+    "Specifications": specsStr,
+    "5-Star Review 1": review1,
+    "5-Star Review 2": review2
+  };
+}
+
 export async function parseExcelOrCSV(file: File): Promise<Product[]> {
   const name = file.name.toLowerCase();
 
@@ -393,23 +425,7 @@ export async function parseExcelOrCSV(file: File): Promise<Product[]> {
     return parseCSV(text);
   }
 
-  // Load SheetJS dynamically in browser for .xlsx and .xls files
-  let XLSX = (typeof window !== "undefined" ? (window as any).XLSX : null);
-  if (!XLSX && typeof document !== "undefined") {
-    try {
-      XLSX = await new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
-        script.onload = () => resolve((window as any).XLSX);
-        script.onerror = () => reject(new Error("Failed to load Excel library"));
-        document.head.appendChild(script);
-      });
-    } catch (err) {
-      console.error("CDN XLSX load failed, falling back to text parse", err);
-    }
-  }
-
-  if (XLSX) {
+  try {
     const buffer = await file.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: "array" });
     const sheetName = workbook.SheetNames[0];
@@ -424,6 +440,8 @@ export async function parseExcelOrCSV(file: File): Promise<Product[]> {
 
     const csvText = XLSX.utils.sheet_to_csv(worksheet);
     return parseCSV(csvText);
+  } catch (err) {
+    console.error("XLSX parsing failed:", err);
   }
 
   // Fallback text parsing
@@ -582,6 +600,7 @@ function ProductsManager() {
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [parsedProducts, setParsedProducts] = useState<Product[]>([]);
   const [isImporting, setIsImporting] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [importProgress, setImportProgress] = useState<{ current: number; total: number } | null>(null);
   const [fileName, setFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -798,13 +817,14 @@ function ProductsManager() {
       }
     ];
 
-    if (XLSX) {
+    try {
       const worksheet = XLSX.utils.json_to_sheet(sampleData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Products Template");
       XLSX.writeFile(workbook, "poolsby_product_import_template.xlsx");
       triggerToast("Downloaded native Excel (.xlsx) product import template!");
-    } else {
+    } catch (err) {
+      console.error("XLSX template write error:", err);
       const csvContent = generateSampleCSV();
       const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
@@ -815,6 +835,69 @@ function ProductsManager() {
       link.click();
       document.body.removeChild(link);
       triggerToast("Downloaded CSV product import template!");
+    }
+  };
+
+  // Full Catalog Excel (.xlsx) Exporter
+  const handleExportExcel = async () => {
+    setIsExporting(true);
+    triggerToast("⏳ Preparing Excel export of all products...");
+    try {
+      let exportItems: Product[] = [];
+      try {
+        const res = await getAllProductsForExportDb();
+        if (res.success && Array.isArray(res.products) && res.products.length > 0) {
+          exportItems = res.products;
+        }
+      } catch (err) {
+        console.error("Failed to fetch all products from DB for export:", err);
+      }
+
+      if (exportItems.length === 0) {
+        exportItems = defaultProductsList.length > 0 ? defaultProductsList : productsList;
+      }
+
+      if (exportItems.length === 0) {
+        triggerToast("No products found to export.");
+        setIsExporting(false);
+        return;
+      }
+
+      const rows = exportItems.map(formatProductToExcelRow);
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+
+      // Auto-fit generous column widths
+      worksheet["!cols"] = [
+        { wch: 18 }, // Category
+        { wch: 18 }, // Sub Category
+        { wch: 18 }, // Manufacturer
+        { wch: 38 }, // Name
+        { wch: 42 }, // Display Name
+        { wch: 16 }, // SKU
+        { wch: 12 }, // Price
+        { wch: 14 }, // Qty Available
+        { wch: 38 }, // Details
+        { wch: 38 }, // Image Link
+        { wch: 32 }, // SEO Keywords
+        { wch: 55 }, // Product Description
+        { wch: 48 }, // Specifications
+        { wch: 45 }, // 5-Star Review 1
+        { wch: 45 }, // 5-Star Review 2
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Products Catalog");
+
+      const dateStr = new Date().toISOString().split("T")[0];
+      const filename = `poolsby_products_catalog_${dateStr}.xlsx`;
+      XLSX.writeFile(workbook, filename);
+
+      triggerToast(`🎉 Successfully exported ${exportItems.length} products to ${filename}!`);
+    } catch (err: any) {
+      console.error("Export Excel error:", err);
+      triggerToast("Failed to export Excel file: " + (err.message || "Unknown error"));
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -1156,6 +1239,22 @@ function ProductsManager() {
             className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
           >
             <TrendingUp className="size-3.5" /> <span>Bulk Prices</span>
+          </button>
+          <button
+            onClick={handleExportExcel}
+            disabled={isExporting}
+            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-700 hover:bg-teal-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Export all products to Excel file (.xlsx)"
+          >
+            {isExporting ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" /> <span>Exporting...</span>
+              </>
+            ) : (
+              <>
+                <Download className="size-3.5" /> <span>Export Excel</span>
+              </>
+            )}
           </button>
           <button
             onClick={() => setImportModalOpen(true)}

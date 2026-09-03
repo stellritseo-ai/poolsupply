@@ -35,6 +35,11 @@ const ROUTE_MAP: Record<string, string> = {
   "Energy Savings Calculator": "/finder",
   "Commercial Accounts": "/contact",
   "Warranty & Support": "/contact",
+  "Privacy Policy": "/privacy-policy",
+  "Terms & Conditions": "/terms-and-conditions",
+  "Terms and Conditions": "/terms-and-conditions",
+  "Blog & Resources": "/blog",
+  "Blog": "/blog",
 };
 
 const cols = [
@@ -52,7 +57,7 @@ const cols = [
   },
   {
     title: "Company & Support",
-    links: ["About Distributor", "Why Choose Us", "Contact Us", "Commercial Accounts", "Warranty & Support"],
+    links: ["About Distributor", "Blog & Resources", "Why Choose Us", "Contact Us", "Commercial Accounts", "Warranty & Support"],
   },
 ];
 
@@ -194,11 +199,11 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-500">
           <p>© {new Date().getFullYear()} Pool Supply Wholesalers. All Rights Reserved.</p>
           <div className="flex items-center gap-6">
-            <Link to="/contact" className="hover:text-slate-400 transition">
-              Customer Support
+            <Link to="/privacy-policy" className="hover:text-cyan-400 transition-colors">
+              Privacy Policy
             </Link>
-            <Link to="/about" className="hover:text-slate-400 transition">
-              About Distributor
+            <Link to="/terms-and-conditions" className="hover:text-cyan-400 transition-colors">
+              Terms & Conditions
             </Link>
             <p className="text-slate-400">
               Design By{" "}

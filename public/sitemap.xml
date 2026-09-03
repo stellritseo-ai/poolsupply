@@ -1,108 +1,431 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Core Storefront Pages -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- ══════════════════════════════════════════
+       CORE PAGES
+  ══════════════════════════════════════════ -->
+
   <url>
     <loc>https://poolsupplywholesalers.com/</loc>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/about</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/why-us</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/contact</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/reviews</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/finder</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog/how-to-choose-variable-speed-pool-pump-commercial</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog/pentair-vs-hayward-vs-jandy-pool-heater-comparison-2026</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog/cartridge-filter-vs-sand-filter-pool-contractor-guide</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog/pool-automation-systems-explained-2026</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog/how-to-size-pool-salt-chlorinator</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog/top-10-signs-pool-pump-motor-needs-replacement</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog/commercial-pool-equipment-checklist-complete-build-supply-list</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════════
+       LEGAL PAGES
+  ══════════════════════════════════════════ -->
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/privacy-policy</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/terms-and-conditions</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════════
+       SHOP — MAIN CATALOG
+  ══════════════════════════════════════════ -->
+
   <url>
     <loc>https://poolsupplywholesalers.com/shop/all</loc>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
+
+  <!-- Pool & Spa Equipment -->
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/pool-spa</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <url>
     <loc>https://poolsupplywholesalers.com/shop/pumps</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://poolsupplywholesalers.com/shop/heaters</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://poolsupplywholesalers.com/shop/filters</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://poolsupplywholesalers.com/shop/lights</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://poolsupplywholesalers.com/shop/cleaners</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
+
   <url>
     <loc>https://poolsupplywholesalers.com/shop/automation</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+
   <url>
-    <loc>https://poolsupplywholesalers.com/shop/sanitization</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://poolsupplywholesalers.com/shop/cleaners</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+
   <url>
-    <loc>https://poolsupplywholesalers.com/shop/valves</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://poolsupplywholesalers.com/shop/lights</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/salt-systems</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/blowers</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/chlorine-feeders</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/skid-systems</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Parts & Hardware -->
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/parts-hardware</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Authorized Brand Pages -->
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/motors</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/plumbing</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/bulk</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/pool-kits</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Chemicals -->
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/chemicals</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/algaecides</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/balancers</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/cal-hypo</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/dichlor</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <!-- Maintenance & Cleaning -->
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/maintenance-cleaning</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/maintenance</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/deck-products</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/plaster</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <!-- Safety & Accessibility -->
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/safety-accessibility</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/shop/ladders-and-rails</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════════
+       AUTHORIZED BRAND PAGES
+  ══════════════════════════════════════════ -->
+
   <url>
     <loc>https://poolsupplywholesalers.com/brands/pentair</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://poolsupplywholesalers.com/brands/hayward</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://poolsupplywholesalers.com/brands/jandy</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://poolsupplywholesalers.com/brands/raypak</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://poolsupplywholesalers.com/brands/waterway</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
-  <!-- Tools & Informational Pages -->
   <url>
-    <loc>https://poolsupplywholesalers.com/finder</loc>
+    <loc>https://poolsupplywholesalers.com/brands/raypak</loc>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+
   <url>
-    <loc>https://poolsupplywholesalers.com/why-us</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://poolsupplywholesalers.com/about</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://poolsupplywholesalers.com/reviews</loc>
+    <loc>https://poolsupplywholesalers.com/brands/zodiac</loc>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.8</priority>
   </url>
+
   <url>
-    <loc>https://poolsupplywholesalers.com/contact</loc>
+    <loc>https://poolsupplywholesalers.com/brands/waterway</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════════
+       BLOG & ARTICLES
+  ══════════════════════════════════════════ -->
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog#how-to-choose-variable-speed-pool-pump-commercial</loc>
+    <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog#pentair-vs-hayward-vs-jandy-pool-heater-comparison-2026</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog#cartridge-filter-vs-sand-filter-pool-contractor-guide</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog#pool-automation-systems-explained-2026</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog#how-to-size-pool-salt-chlorinator</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog#top-10-signs-pool-pump-motor-needs-replacement</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://poolsupplywholesalers.com/blog#commercial-pool-equipment-checklist-complete-build-supply-list</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
 </urlset>

@@ -4,7 +4,7 @@ import {
   Cpu, Wind, Pipette, Sparkles, Filter, Flame, Lightbulb, Zap, Waves, Box,
   Package, Wrench, Layers, Droplets, Scale, ShieldAlert, FlaskConical,
   LayoutGrid, Brush, Shield, ShieldCheck, Info, Award, Star, PhoneCall,
-  Phone, ArrowRight, LogOut
+  Phone, ArrowRight, LogOut, BookOpen
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -73,6 +73,7 @@ const NAV = [
 
 const MORE_MENU = [
   { label: "About Us", to: "/about", icon: Info },
+  { label: "Blog", to: "/blog", icon: BookOpen },
   { label: "Product Finder", to: "/finder", icon: Sparkles },
   { label: "Why Us", to: "/why-us", icon: Award },
   { label: "Reviews", to: "/reviews", icon: Star },
