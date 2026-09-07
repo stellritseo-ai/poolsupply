@@ -19,6 +19,7 @@ export type Product = {
   displayName?: string;
   brand: string;
   price: number;
+  salePrice?: number;
   msrp: number; // For retail comparison
   rating: number;
   img: string;
@@ -32,6 +33,7 @@ export type Product = {
   seoKeywords?: string;
   specs: Record<string, string | undefined>;
   reviews: Review[];
+  productSize?: string;
 };
 
 export const products = defaultProducts;
@@ -136,6 +138,12 @@ export function getRelatedProducts(product: Product, limit = 4, productList?: Pr
 export function invalidateProductsCache(queryClient: QueryClient) {
   queryClient.invalidateQueries({ queryKey: ["products"] });
   queryClient.invalidateQueries({ queryKey: ["product-detail"] });
+  queryClient.invalidateQueries({ queryKey: ["shop-products"] });
+  queryClient.invalidateQueries({ queryKey: ["admin_all_products"] });
+  queryClient.invalidateQueries({ queryKey: ["admin_bulk_prices_all_catalog"] });
+  queryClient.invalidateQueries({ queryKey: ["all_products"] });
+  queryClient.invalidateQueries({ queryKey: ["search-products"] });
+  queryClient.invalidateQueries({ queryKey: ["best-sellers-curated-db"] });
 }
 
 export function useProductByIdQuery(id: string) {
@@ -149,7 +157,7 @@ export function useProductByIdQuery(id: string) {
       }
       return getProductById(id) || null;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
     enabled: !!id,
   });
 }

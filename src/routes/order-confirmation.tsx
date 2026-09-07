@@ -144,7 +144,7 @@ function ConfirmationPage() {
                 subtotal: typeof parsed.subtotal === "number" ? parsed.subtotal : 5398.99,
                 discount: typeof parsed.discount === "number" ? parsed.discount : 0,
                 promoCode: parsed.promoCode || null,
-                shipping: typeof parsed.shipping === "number" ? parsed.shipping : +(5398.99 * 0.15).toFixed(2),
+                shipping: typeof parsed.shipping === "number" ? parsed.shipping : 0,
                 tax: typeof parsed.tax === "number" ? parsed.tax : +(5398.99 * 0.0925).toFixed(2),
                 total: typeof parsed.total === "number" ? parsed.total : 0,
                 method: parsed.method || "standard",
@@ -153,7 +153,7 @@ function ConfirmationPage() {
               };
 
               const subAfterDisc = Math.max(0, matchedOrder.subtotal - (matchedOrder.discount || 0));
-              matchedOrder.shipping = matchedOrder.shipping || +(subAfterDisc * 0.15).toFixed(2);
+              matchedOrder.shipping = matchedOrder.shipping || 0;
               matchedOrder.tax = matchedOrder.tax || +(subAfterDisc * 0.0925).toFixed(2);
               matchedOrder.total = +(subAfterDisc + matchedOrder.shipping + matchedOrder.tax).toFixed(2);
 
@@ -191,7 +191,7 @@ function ConfirmationPage() {
         ];
 
         const sub = 4694.99;
-        const shp = +(sub * 0.15).toFixed(2);
+        const shp = 0; // Demo: no shipping for fallback display
         const tx = +(sub * 0.0925).toFixed(2);
 
         setOrder({
@@ -445,7 +445,7 @@ function ConfirmationPage() {
                           {item.name}
                         </h4>
                         <div className="text-xs font-semibold text-slate-500">
-                          Unit Wholesale: <span className="font-bold text-slate-700">{formatUSD(item.price)}</span>
+                          Unit Price: <span className="font-bold text-slate-700">{formatUSD(item.price)}</span>
                         </div>
                       </div>
 
@@ -525,7 +525,9 @@ function ConfirmationPage() {
                   <div className="flex items-center justify-between text-slate-600">
                     <div className="flex items-center gap-1.5">
                       <span>Freight & Logistics</span>
-                      <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded font-bold text-slate-500">15%</span>
+                      <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded font-bold text-slate-500">
+                        {order?.method === "pickup" ? "Hub Pickup" : "Distance Calculated"}
+                      </span>
                     </div>
                     <span className="font-bold text-slate-900 font-mono text-sm">{formatUSD(order?.shipping || 0)}</span>
                   </div>

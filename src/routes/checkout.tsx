@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect, useRef, type FormEvent } from "react";
+import { useState, useEffect, useRef, useMemo, type FormEvent } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -21,7 +21,8 @@ import {
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { PaymentCardBadges } from "@/components/site/PaymentCardIcons";
-import { computeTotals, formatUSD, useCart } from "@/components/site/cart-context";
+import { formatUSD, useCart } from "@/components/site/cart-context";
+import { computeShipping, computeShippingAsync, type ShippingResult } from "@/lib/shipping";
 import { useAuth } from "@/components/site/auth-context";
 import { createOrderDb } from "@/lib/api/orders.functions";
 import { createStripePaymentIntentDb } from "@/lib/api/stripe.functions";
@@ -53,7 +54,7 @@ type FormState = {
   phone: string;
   paymentType: PaymentType;
   cardName: string;
-  method: "standard" | "express";
+  method: "standard" | "pickup";
 };
 
 const INITIAL: FormState = {
@@ -114,9 +115,8 @@ function CheckoutPage() {
   const [isStripeLoading, setIsStripeLoading] = useState(true);
   const cardContainerRef = useRef<HTMLDivElement>(null);
 
-  // Fixed rates: 9.25% sales tax, 15% shipping
+  // Fixed tax rate
   const TAX_RATE = 0.0925;
-  const SHIPPING_RATE = 0.15;
 
   let discount = 0;
   if (appliedPromo) {
@@ -128,8 +128,45 @@ function CheckoutPage() {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Shipping — async OSM Nominatim geocoding, 400ms debounce
+  // ---------------------------------------------------------------------------
+  const [shippingResult, setShippingResult] = useState<ShippingResult>(
+    () => computeShipping(items, "", "")
+  );
+  const [shippingLoading, setShippingLoading] = useState(false);
+
+  useEffect(() => {
+    // Not enough info yet — show pending estimate
+    if (form.zip.length < 5 || !form.state.trim()) {
+      setShippingResult(computeShipping(items, form.zip, form.state));
+      setShippingLoading(false);
+      return;
+    }
+
+    setShippingLoading(true);
+    const timer = setTimeout(async () => {
+      try {
+        const result = await computeShippingAsync(items, form.zip, form.state);
+        setShippingResult(result);
+      } catch {
+        setShippingResult(computeShipping(items, form.zip, form.state));
+      } finally {
+        setShippingLoading(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.zip, form.state]);
+
   const discountedSubtotal = Math.max(0, subtotal - discount);
-  const shipping = discountedSubtotal === 0 ? 0 : +(discountedSubtotal * SHIPPING_RATE).toFixed(2);
+  const shipping =
+    discountedSubtotal === 0
+      ? 0
+      : form.method === "pickup"
+        ? 0
+        : shippingResult.amount;
   const tax = +(discountedSubtotal * TAX_RATE).toFixed(2);
   const total = +(discountedSubtotal + shipping + tax).toFixed(2);
 
@@ -379,13 +416,13 @@ function CheckoutPage() {
                   Transparent Pricing — No Hidden Fees
                 </h3>
                 <p className="text-xs text-slate-300 font-medium mt-0.5">
-                  15% commercial freight shipping + 9.25% sales tax applied at checkout on all orders.
+                  Dynamic freight shipping (by item size &amp; delivery zone) + 9.25% TN sales tax applied at checkout.
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-[11px] font-black bg-cyan-600/80 px-2.5 py-1 rounded-lg">
-                Shipping: 15%
+                Shipping: Miles-Based
               </span>
               <span className="text-[11px] font-black bg-indigo-600/80 px-2.5 py-1 rounded-lg">
                 Tax: 9.25%
@@ -429,22 +466,145 @@ function CheckoutPage() {
                 </div>
               </Section>
 
-              {/* Shipping Speed Option */}
-              <Section icon={Truck} title="Shipping Method">
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                  <div className="size-10 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-600 text-white grid place-items-center shrink-0 shadow-sm">
-                    <Truck className="size-5" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-extrabold text-xs text-slate-900">Standard Commercial Freight & Ground</div>
-                    <div className="text-[11px] text-slate-500 font-medium mt-0.5">Delivered in 3–5 business days via Commercial Freight</div>
-                    <div className="mt-2 text-[11px] font-black text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-1 rounded-lg inline-block">
-                      15% of order total
+              {/* Shipping Method Section — hidden as requested */}
+              <div className="hidden" style={{ display: "none" }} aria-hidden="true">
+                <Section icon={Truck} title="Shipping Method">
+                  <div className="space-y-3">
+                    {/* Standard Commercial Delivery Option */}
+                    <div
+                      onClick={() => set("method", "standard")}
+                      className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${form.method === "standard"
+                        ? "bg-cyan-50/40 border-cyan-400 shadow-sm ring-1 ring-cyan-400/30"
+                        : "bg-slate-50/60 border-slate-200 hover:border-slate-300"
+                        }`}
+                    >
+                      <div className={`size-10 rounded-xl grid place-items-center shrink-0 shadow-sm ${form.method === "standard"
+                        ? "bg-gradient-to-br from-cyan-600 to-blue-600 text-white"
+                        : "bg-slate-200 text-slate-600"
+                        }`}>
+                        {shippingLoading ? (
+                          <Loader2 className="size-5 animate-spin" />
+                        ) : (
+                          <Truck className="size-5" />
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-2 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="font-extrabold text-xs text-slate-900 flex items-center gap-2">
+                            <span>Standard Commercial Delivery</span>
+                            {form.method === "standard" && (
+                              <span className="text-[9px] font-extrabold text-cyan-700 bg-cyan-100 border border-cyan-300 px-1.5 py-0.5 rounded-full">
+                                Selected
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="text-[11px] text-slate-500 font-medium">
+                          Delivered in 3–5 business days via Commercial Freight &amp; Ground
+                        </div>
+
+                        {/* Zone label + geocode badge */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <div className="text-[11px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5">
+                            {shippingLoading ? (
+                              <><Loader2 className="size-3 animate-spin" /> Calculating exact distance…</>
+                            ) : shippingResult.isPending ? (
+                              "Enter address to calculate exact shipping"
+                            ) : (
+                              `Zone ${shippingResult.zone} · ${shippingResult.zoneLabel}`
+                            )}
+                          </div>
+                          {!shippingLoading && shippingResult.geocoded && !shippingResult.isPending && (
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <svg className="size-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+                              OpenStreetMap
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Distance info */}
+                        {!shippingLoading && shippingResult.distanceMiles !== undefined && (
+                          <div className="text-[10px] text-slate-500 font-medium">
+                            📍 {shippingResult.distanceMiles} mi from Nashville warehouse (412 Ezell Pike)
+                          </div>
+                        )}
+
+                        {/* Per-class breakdown */}
+                        {!shippingLoading && !shippingResult.isPending && shippingResult.breakdown.length > 0 && (
+                          <div className="space-y-1 bg-white/70 p-2.5 rounded-xl border border-slate-200/80">
+                            {shippingResult.breakdown.map((b) => (
+                              <div key={b.cls} className="flex items-center justify-between text-[10px] text-slate-600 font-medium">
+                                <span className="capitalize">{b.cls} item{b.lineCount > 1 ? `s (×${b.lineCount})` : ""} · {b.rateLabel}</span>
+                                <span className="font-bold text-slate-800">${b.finalAmount.toFixed(2)}</span>
+                              </div>
+                            ))}
+                            <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium border-t border-slate-200 pt-1">
+                              <span>
+                                {shippingResult.multiplier >= 2
+                                  ? "Outside TN: 2.0× full base rate"
+                                  : `Distance scaling: ${(shippingResult.multiplier * 100).toFixed(1)}% (${shippingResult.distanceMiles ?? 0} mi / 50 mi)`}
+                              </span>
+                              <span className="font-black text-slate-800">{formatUSD(shippingResult.amount)}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {!shippingLoading && shippingResult.isPending && (
+                          <div className="text-[10px] text-slate-400 font-medium italic">
+                            Distance rate: Small $50 · Medium $150 · Large $400 (scaled by miles from Nashville, capped at 50 mi)
+                          </div>
+                        )}
+                      </div>
+                      <div className="font-black text-sm text-slate-900 shrink-0">
+                        {shippingLoading ? (
+                          <Loader2 className="size-4 animate-spin text-slate-400" />
+                        ) : shippingResult.isPending ? (
+                          "—"
+                        ) : (
+                          formatUSD(shippingResult.amount)
+                        )}
+                      </div>
                     </div>
+
+                    {/* Free Local Warehouse Pickup (Available if within 5 miles) */}
+                    {!shippingLoading && shippingResult.isFreePickup && (
+                      <div
+                        onClick={() => set("method", "pickup")}
+                        className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${form.method === "pickup"
+                          ? "bg-emerald-50/70 border-emerald-400 shadow-sm ring-1 ring-emerald-400/30"
+                          : "bg-emerald-50/20 border-emerald-200/60 hover:border-emerald-300"
+                          }`}
+                      >
+                        <div className={`size-10 rounded-xl grid place-items-center shrink-0 shadow-sm ${form.method === "pickup"
+                          ? "bg-gradient-to-br from-emerald-500 to-green-600 text-white"
+                          : "bg-emerald-100 text-emerald-700"
+                          }`}>
+                          <Truck className="size-5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="font-extrabold text-xs text-emerald-900 flex items-center gap-2">
+                              <span>Free Local Warehouse Pickup</span>
+                              {form.method === "pickup" && (
+                                <span className="text-[9px] font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded-full">
+                                  Selected
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                            Your address is within 5 miles of our warehouse ({shippingResult.distanceMiles} mi) — pickup is 100% FREE!
+                          </div>
+                          <div className="text-[10px] text-emerald-600 font-semibold mt-1">
+                            📍 Warehouse: 412 Ezell Pike, Nashville, TN 37217 (Mon–Fri 8AM–5PM)
+                          </div>
+                        </div>
+                        <div className="font-black text-sm text-emerald-700 shrink-0">FREE</div>
+                      </div>
+                    )}
                   </div>
-                  <div className="font-black text-sm text-slate-900">{formatUSD(shipping)}</div>
-                </div>
-              </Section>
+                </Section>
+              </div>
 
               {/* Stripe Payment Gateway Section */}
               <Section icon={CreditCard} title="Payment Details (Stripe Official)">
@@ -542,7 +702,9 @@ function CheckoutPage() {
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[10px] uppercase tracking-widest text-slate-400 font-extrabold">{it.brand}</div>
+                        <div className="text-[10px] uppercase tracking-widest text-slate-400 font-extrabold flex items-center gap-1.5 flex-wrap">
+                          <span>{it.brand}</span>
+                        </div>
                         <div className="text-xs font-bold text-slate-800 truncate">{it.name}</div>
                         <div className="text-[11px] text-slate-400 font-semibold">{formatUSD(it.price)} each</div>
                       </div>
@@ -606,13 +768,22 @@ function CheckoutPage() {
                     <Row label={`Discount (${appliedPromo})`} value={`-${formatUSD(discount)}`} className="text-emerald-600 font-extrabold" />
                   )}
 
-                  {/* SHIPPING DISPLAY — 15% of subtotal */}
+                  {/* SHIPPING DISPLAY — dynamic distance-based */}
                   <div className="flex items-center justify-between text-slate-700 font-bold bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                     <span className="flex items-center gap-1.5 text-xs">
-                      <Truck className="size-4 text-cyan-600" /> Shipping (15% of order)
+                      <Truck className="size-4 text-cyan-600" />
+                      {form.method === "pickup"
+                        ? "Free Local Hub Pickup"
+                        : shippingResult.isPending
+                          ? "Shipping (enter address)"
+                          : `Shipping (${shippingResult.distanceMiles !== undefined ? `${shippingResult.distanceMiles} mi` : `Zone ${shippingResult.zone}`})`}
                     </span>
                     <span className="text-xs font-black text-slate-900">
-                      {formatUSD(shipping)}
+                      {form.method === "pickup"
+                        ? "FREE"
+                        : shippingResult.isPending
+                          ? "—"
+                          : formatUSD(shipping)}
                     </span>
                   </div>
 

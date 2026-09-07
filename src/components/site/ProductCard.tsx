@@ -10,8 +10,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
   const { add } = useCart();
-  const savings = p.msrp && p.msrp > p.price ? p.msrp - p.price : 0;
-  const savingsPercent = p.msrp && p.msrp > p.price ? Math.round((savings / p.msrp) * 100) : 0;
+  const effectivePrice = p.salePrice && p.salePrice > 0 ? p.salePrice : p.price;
+  const savings = p.msrp && p.msrp > effectivePrice ? p.msrp - effectivePrice : 0;
+  const savingsPercent = p.msrp && p.msrp > effectivePrice ? Math.round((savings / p.msrp) * 100) : 0;
 
   return (
     <article
@@ -39,12 +40,14 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
 
             {/* Top Badges */}
             <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
-              {p.category ? (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[8.5px] sm:text-[9.5px] font-extrabold uppercase tracking-wider text-slate-700 bg-white/95 backdrop-blur-md rounded-full shadow-2xs border border-white/80">
-                  <span className="size-1 rounded-full bg-cyan-500" />
-                  {p.category}
-                </span>
-              ) : <div />}
+              <div className="flex items-center gap-1 flex-wrap max-w-[70%]">
+                {p.category ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[8.5px] sm:text-[9.5px] font-extrabold uppercase tracking-wider text-slate-700 bg-white/95 backdrop-blur-md rounded-full shadow-2xs border border-white/80 truncate">
+                    <span className="size-1 rounded-full bg-cyan-500 shrink-0" />
+                    {p.category}
+                  </span>
+                ) : null}
+              </div>
 
               {savingsPercent > 5 && (
                 <span className="px-1.5 py-0.5 text-[8.5px] sm:text-[9px] font-black uppercase tracking-tight text-emerald-700 bg-emerald-50/95 backdrop-blur-md border border-emerald-200/80 rounded-full shadow-2xs">
@@ -85,23 +88,23 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
         <div>
           <div className="flex items-baseline gap-1.5 flex-wrap">
             <span className="text-sm sm:text-base font-black tracking-tight text-slate-900">
-              {formatUSD(p.price)}
+              {formatUSD(effectivePrice)}
             </span>
-            {p.msrp && p.msrp > p.price && (
+            {p.msrp && p.msrp > effectivePrice && (
               <span className="text-[10.5px] text-slate-400 line-through font-medium">
                 {formatUSD(p.msrp)}
               </span>
             )}
           </div>
           <span className="text-[8.5px] uppercase font-extrabold text-emerald-600 tracking-wider block">
-            Direct Trade Price
+            Sale Price
           </span>
         </div>
 
         <button
           onClick={(e) => {
             e.preventDefault();
-            add(p, 1);
+            add({ ...p, price: effectivePrice }, 1);
           }}
           className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white text-[10.5px] sm:text-xs font-bold transition-all duration-200 shadow-2xs hover:shadow-cyan-500/20 cursor-pointer shrink-0"
         >

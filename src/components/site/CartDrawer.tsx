@@ -5,7 +5,7 @@ import { computeTotals, formatUSD, useCart } from "./cart-context";
 
 export function CartDrawer() {
   const { items, isOpen, close, setQty, remove, subtotal } = useCart();
-  const { shipping, tax, total } = computeTotals(subtotal);
+  const { shipping, tax, total } = computeTotals(items);
 
   return (
     <AnimatePresence>
@@ -67,7 +67,9 @@ export function CartDrawer() {
                         <img src={it.img} alt={it.name} className="size-full object-contain p-2 mix-blend-multiply" />
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{it.brand}</div>
+                        <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold flex items-center gap-1.5 flex-wrap">
+                          <span>{it.brand}</span>
+                        </div>
                         <Link
                           to="/products/$productId"
                           params={{ productId: it.id }}
@@ -113,16 +115,18 @@ export function CartDrawer() {
             {items.length > 0 && (
               <footer className="border-t border-border px-6 py-5 space-y-3 bg-surface">
                 <Row label="Subtotal" value={formatUSD(subtotal)} />
-                <Row label="Shipping (15% of subtotal)" value={formatUSD(shipping)} muted />
                 <Row label="Sales Tax (9.25%)" value={formatUSD(tax)} muted />
                 <div className="h-px bg-border my-1" />
-                <Row label="Total" value={formatUSD(total)} bold />
+                <Row label="Estimated Total" value={formatUSD(subtotal + tax)} bold />
+                <p className="text-[11px] text-muted-foreground text-center">
+                  Shipping & delivery options calculated at checkout
+                </p>
                 <Link
                   to="/checkout"
                   onClick={close}
                   className="mt-2 block text-center py-4 rounded-full bg-gradient-ocean text-white font-semibold shadow-[var(--shadow-soft)] hover:opacity-95 transition"
                 >
-                  Checkout · {formatUSD(total)}
+                  Checkout · {formatUSD(subtotal + tax)}
                 </Link>
                 <button onClick={close} className="w-full text-center py-2 text-sm text-muted-foreground hover:text-foreground transition">
                   Continue shopping

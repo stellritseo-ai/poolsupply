@@ -41,7 +41,7 @@ export const Route = createFileRoute("/products/$productId")({
       ? `${product.name} Wholesale Pricing | ${product.brand || "Pool Supply Wholesalers"}`
       : "Pool Equipment Product Details — Pool Supply Wholesalers";
     const descText = product?.description || "Commercial pool equipment at direct wholesale trade pricing.";
-    const description = `Buy ${product?.name || "equipment"} at wholesale price ${product?.price ? formatUSD(product.price) : ""}. ${descText.slice(0, 140)}... Fast same-day dispatch from Pool Supply Wholesalers.`;
+    const description = `Buy ${product?.name || "equipment"} online for ${product?.price ? formatUSD(product.price) : ""}. ${descText.slice(0, 140)}... Fast same-day dispatch from Pool Supply Wholesalers.`;
     const imageUrl = product?.img ? getProductImage(product.img) : "https://poolsupplywholesalers.com/about-hero.png";
     const productUrl = `https://poolsupplywholesalers.com/products/${params.productId}`;
 
@@ -209,7 +209,7 @@ function ProductDetailPage() {
       return getProductById(productId) || null;
     },
     initialData: loaderData?.product || undefined,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
   });
 
   const product = dbProduct || loaderData?.product || getProductById(productId);
@@ -269,8 +269,9 @@ function ProductDetailPage() {
     setWriteOpen(false);
   }, [productId, product?.id]);
 
-  const savings = product ? product.msrp - product.price : 0;
-  const savingsPercent = product && product.msrp ? Math.round((savings / product.msrp) * 100) : 0;
+  const effectivePrice = product ? (product.salePrice && product.salePrice > 0 ? product.salePrice : product.price) : 0;
+  const savings = product && product.msrp && product.msrp > effectivePrice ? product.msrp - effectivePrice : 0;
+  const savingsPercent = product && product.msrp && product.msrp > effectivePrice ? Math.round((savings / product.msrp) * 100) : 0;
   const related = product ? getRelatedProducts(product, 4, categoryProducts && categoryProducts.length > 0 ? categoryProducts : undefined) : [];
 
   // Calculate average rating
@@ -437,8 +438,12 @@ function ProductDetailPage() {
                 <div className="grid grid-cols-3 gap-2 sm:gap-3">
                   <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                     <Truck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Flat Shipping</span>
-                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">15% Shipping Charge</span>
+                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">
+                      Fast Shipping
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">
+                      Distance Calculated
+                    </span>
                   </div>
                   <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                     <ShieldCheck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
@@ -461,7 +466,9 @@ function ProductDetailPage() {
                 className="space-y-5 sm:space-y-6"
               >
                 <div>
-                  <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">{product.brand}</span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">{product.brand}</span>
+                  </div>
                   <h1 className="mt-1.5 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-snug capitalize">{product.name}</h1>
 
                   {/* Rating & Reviews anchor */}
@@ -482,25 +489,37 @@ function ProductDetailPage() {
                 </div>
 
                 {/* Pricing card */}
-                <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-surface border border-border/50 space-y-3.5 sm:space-y-4">
-                  <div className="flex items-baseline gap-3 flex-wrap">
-                    <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Wholesale Price</div>
-                    <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(product.price)}</div>
-                  </div>
+                {(() => {
+                  const effectivePrice = product.salePrice && product.salePrice > 0 ? product.salePrice : product.price;
+                  return (
+                    <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-surface border border-border/50 space-y-3.5 sm:space-y-4">
+                      <div className="flex items-baseline gap-3 flex-wrap">
+                        <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+                          Sale Price
+                        </div>
+                        <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(effectivePrice)}</div>
+                        {product.msrp && product.msrp > effectivePrice && (
+                          <div className="text-xs text-muted-foreground line-through font-medium">
+                            MSRP: {formatUSD(product.msrp)}
+                          </div>
+                        )}
+                      </div>
 
-                  <div className="h-px bg-border/40" />
+                      <div className="h-px bg-border/40" />
 
-                  <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
-                    <div>
-                      <span className="text-muted-foreground uppercase tracking-wider text-[10px]">SKU</span>
-                      <p className="text-foreground mt-0.5 font-mono">{product.sku}</p>
+                      <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
+                        <div>
+                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">SKU</span>
+                          <p className="text-foreground mt-0.5 font-mono">{product.sku}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">Category</span>
+                          <p className="text-foreground mt-0.5">{product.category}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground uppercase tracking-wider text-[10px]">Category</span>
-                      <p className="text-foreground mt-0.5">{product.category}</p>
-                    </div>
-                  </div>
-                </div>
+                  );
+                })()}
 
                 {/* Purchase interactions */}
                 <div className="space-y-4">
@@ -528,13 +547,18 @@ function ProductDetailPage() {
                       </div>
 
                       {/* Add Button */}
-                      <button
-                        onClick={() => add(product, qty)}
-                        className="flex-1 py-3.5 px-6 rounded-full bg-gradient-ocean text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:shadow-[var(--shadow-float)] transition-all duration-300 hover:-translate-y-0.5 active:scale-98"
-                      >
-                        <ShoppingBag className="size-4" />
-                        Add to Cart · {formatUSD(product.price * qty)}
-                      </button>
+                      {(() => {
+                        const effectivePrice = product.salePrice && product.salePrice > 0 ? product.salePrice : product.price;
+                        return (
+                          <button
+                            onClick={() => add({ ...product, price: effectivePrice }, qty)}
+                            className="flex-1 py-3.5 px-6 rounded-full bg-gradient-ocean text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:shadow-[var(--shadow-float)] transition-all duration-300 hover:-translate-y-0.5 active:scale-98"
+                          >
+                            <ShoppingBag className="size-4" />
+                            Add to Cart · {formatUSD(effectivePrice * qty)}
+                          </button>
+                        );
+                      })()}
                     </div>
                   ) : (
                     <button
@@ -546,7 +570,7 @@ function ProductDetailPage() {
                   )}
 
                   <p className="text-xs text-muted-foreground text-center">
-                    🚚 Standard 15% freight & shipping charge applied at checkout. Same day dispatch for orders before 2 PM.
+                    🚚 Distance-based shipping calculated at checkout. Same day dispatch for orders before 2 PM.
                   </p>
                 </div>
 

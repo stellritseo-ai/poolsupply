@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { computeShipping } from "@/lib/shipping";
 
 export type CartItem = {
   id: string;
@@ -7,6 +8,7 @@ export type CartItem = {
   price: number;
   img: string;
   qty: number;
+  productSize?: string;
 };
 
 type CartCtx = {
@@ -46,10 +48,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartCtx>(() => ({
     items,
     add: (item, qty = 1) => {
+      const effectivePrice = (item as any).salePrice && Number((item as any).salePrice) > 0 ? Number((item as any).salePrice) : item.price;
+      const normalizedItem = { ...item, price: effectivePrice };
       setItems((prev) => {
         const ex = prev.find((p) => p.id === item.id);
-        if (ex) return prev.map((p) => p.id === item.id ? { ...p, qty: p.qty + qty } : p);
-        return [...prev, { ...item, qty }];
+        if (ex) return prev.map((p) => p.id === item.id ? { ...p, price: effectivePrice, qty: p.qty + qty } : p);
+        return [...prev, { ...normalizedItem, qty }];
       });
       setIsOpen(true);
     },
@@ -74,15 +78,25 @@ export function useCart() {
   return c;
 }
 
-// Pricing helpers (placeholders)
-export const SHIPPING_RATE = 0.15; // 15% of subtotal
-export const TAX_RATE = 0.0925;   // 9.25% fixed sales tax
+// Pricing helpers
+export const TAX_RATE = 0.0925; // 9.25% fixed TN sales tax
 
-export function computeTotals(subtotal: number) {
-  const shipping = subtotal === 0 ? 0 : +(subtotal * SHIPPING_RATE).toFixed(2);
+/**
+ * Compute order totals with dynamic zone-based shipping.
+ * zip and state are optional — when omitted the cart drawer shows a
+ * zone-4 estimate ("Regional Ground" ~$X estimated).
+ */
+export function computeTotals(
+  items: CartItem[],
+  zip?: string,
+  state?: string
+) {
+  const result = computeShipping(items, zip ?? "", state ?? "");
+  const subtotal = items.reduce((n, i) => n + i.qty * i.price, 0);
+  const shipping = result.amount;
   const tax = +(subtotal * TAX_RATE).toFixed(2);
   const total = +(subtotal + shipping + tax).toFixed(2);
-  return { shipping, tax, total };
+  return { shipping, tax, total, shippingResult: result };
 }
 
 export function formatUSD(n: number) {

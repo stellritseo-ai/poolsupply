@@ -16,7 +16,7 @@ function toQueryId(id: string): any {
 
 
 export const getProductsDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ limit: z.number().optional(), category: z.string().optional() }).optional())
+  .inputValidator(z.object({ limit: z.number().optional(), category: z.string().optional(), ids: z.array(z.string()).optional() }).optional())
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -28,7 +28,17 @@ export const getProductsDb = createServerFn({ method: "POST" })
       const limit = data?.limit || 200;
       let query: any = {};
 
-      if (data?.category && data.category !== "all") {
+      if (data?.ids && data.ids.length > 0) {
+        const queryIds = data.ids.map(toQueryId);
+        const skus = data.ids.map((s) => s.replace(/^p-/, "").toUpperCase());
+        query = {
+          $or: [
+            { id: { $in: data.ids } },
+            { _id: { $in: queryIds } },
+            { sku: { $in: skus } }
+          ]
+        };
+      } else if (data?.category && data.category !== "all") {
         // Build multiple slug variants to match DB values like "Ladders & Rails", "Pumps", "Pool & Spa", etc.
         const slug = data.category.toLowerCase();
         const baseName = slug.replace(/^pool-/, "").replace(/-systems?$/, "").trim();
@@ -61,6 +71,13 @@ export const getProductsDb = createServerFn({ method: "POST" })
         const item = { ...rest, id: p.id || _id?.toString() };
         if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
           item.img = "/assets/commingsoon.png";
+        }
+        const rawPrice = Number(item.price) || 0;
+        const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+        if (rawSale) {
+          item.wholesalePrice = rawPrice;
+          item.salePrice = rawSale;
+          item.price = rawSale;
         }
         return item as unknown as Product;
       });
@@ -129,6 +146,13 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
             if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
               item.img = "/assets/commingsoon.png";
             }
+            const rawPrice = Number(item.price) || 0;
+            const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+            if (rawSale) {
+              item.wholesalePrice = rawPrice;
+              item.salePrice = rawSale;
+              item.price = rawSale;
+            }
             return { success: true, product: item as unknown as Product };
           }
         }
@@ -153,6 +177,13 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
         const item = { ...defaultFound };
         if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
           item.img = "/assets/commingsoon.png";
+        }
+        const rawPrice = Number(item.price) || 0;
+        const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+        if (rawSale) {
+          item.wholesalePrice = rawPrice;
+          item.salePrice = rawSale;
+          item.price = rawSale;
         }
         return { success: true, product: item as Product };
       }
@@ -303,9 +334,9 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
 
       // ── Projection: only fields needed by ProductCard ─────────────────
       const projection = {
-        name: 1, sku: 1, brand: 1, price: 1, msrp: 1, rating: 1,
+        name: 1, sku: 1, brand: 1, price: 1, salePrice: 1, msrp: 1, rating: 1,
         img: 1, category: 1, parentCategory: 1, subCategory: 1,
-        stock: 1, id: 1, seoKeywords: 1,
+        stock: 1, id: 1, seoKeywords: 1, productSize: 1,
       };
 
       const [rawProducts, total] = await Promise.all([
@@ -318,6 +349,13 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
         const item = { ...rest, id: p.id || _id?.toString() };
         if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
           item.img = "/assets/commingsoon.png";
+        }
+        const rawPrice = Number(item.price) || 0;
+        const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+        if (rawSale) {
+          item.wholesalePrice = rawPrice;
+          item.salePrice = rawSale;
+          item.price = rawSale;
         }
         return item as unknown as Product;
       });
@@ -377,7 +415,7 @@ export const getAllProductsAdminDb = createServerFn({ method: "POST" })
 
       const [rawProducts, total] = await Promise.all([
         productsCol
-          .find(query, { projection: { name: 1, sku: 1, brand: 1, price: 1, msrp: 1, stock: 1, img: 1, image: 1, category: 1, parentCategory: 1, subCategory: 1, id: 1 } })
+          .find(query, { projection: { name: 1, sku: 1, brand: 1, price: 1, salePrice: 1, msrp: 1, stock: 1, img: 1, image: 1, category: 1, parentCategory: 1, subCategory: 1, id: 1, productSize: 1 } })
           .sort({ name: 1 })
           .skip(skip)
           .limit(limit)
@@ -463,6 +501,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
               { description: { $regex: regex } },
               { details: { $regex: regex } },
               { seoKeywords: { $regex: regex } },
+              { productSize: { $regex: regex } },
               { "specs.Manufacturer / Brand": { $regex: regex } },
               { "specs.Official SKU": { $regex: regex } },
               { "specs.Official SKU / Part Number": { $regex: regex } },
@@ -484,6 +523,13 @@ export const searchProductsDb = createServerFn({ method: "POST" })
           const item = { ...rest, id: p.id || _id?.toString() };
           if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
             item.img = "/assets/commingsoon.png";
+          }
+          const rawPrice = Number(item.price) || 0;
+          const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+          if (rawSale) {
+            item.wholesalePrice = rawPrice;
+            item.salePrice = rawSale;
+            item.price = rawSale;
           }
           return item as unknown as Product;
         });
@@ -509,7 +555,17 @@ export const searchProductsDb = createServerFn({ method: "POST" })
           return terms.every(term => fullText.includes(term.toLowerCase()));
         }).slice(0, 24);
 
-        formatted = defaultMatched;
+        formatted = defaultMatched.map((p: any) => {
+          const item = { ...p };
+          const rawPrice = Number(item.price) || 0;
+          const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+          if (rawSale) {
+            item.wholesalePrice = rawPrice;
+            item.salePrice = rawSale;
+            item.price = rawSale;
+          }
+          return item as Product;
+        });
       }
 
       return { success: true, products: formatted };
@@ -532,9 +588,15 @@ export const saveProductDb = createServerFn({ method: "POST" })
         product.id = `p-${(product.sku || "prod").toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now()}`;
       }
       product.price = Number(product.price) || 0;
+      if (product.salePrice !== undefined && product.salePrice !== null && product.salePrice !== "") {
+        product.salePrice = Number(product.salePrice);
+      } else {
+        delete product.salePrice;
+      }
       product.msrp = Number(product.msrp || product.price) || product.price;
       product.stock = Number(product.stock) || 0;
       product.rating = Number(product.rating) || 5.0;
+      product.productSize = product.productSize ? String(product.productSize).trim() : "";
 
       const queryId = toQueryId(product.id);
       const doc = { ...product, _id: queryId };
@@ -573,6 +635,10 @@ export const bulkSaveProductsDb = createServerFn({ method: "POST" })
         if (!product.id) {
           product.id = `p-${(product.sku || "prod").toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now()}`;
         }
+        product.productSize = product.productSize ? String(product.productSize).trim() : "";
+        if (product.salePrice !== undefined && product.salePrice !== null && product.salePrice !== "") {
+          product.salePrice = Number(product.salePrice);
+        }
         const queryId = toQueryId(product.id);
         const doc = { ...product, _id: queryId };
         return {
@@ -589,6 +655,102 @@ export const bulkSaveProductsDb = createServerFn({ method: "POST" })
     } catch (e: any) {
       console.error("Failed to bulk save products to DB:", e);
       return { success: false, error: "Failed to bulk save products to database." };
+    }
+  });
+
+export const bulkAdjustPricesDb = createServerFn({ method: "POST" })
+  .inputValidator(z.object({
+    scope: z.enum(["all", "category", "selected"]),
+    category: z.string().optional(),
+    selectedIds: z.array(z.string()).optional(),
+    mode: z.enum(["percent_increase", "percent_decrease", "fixed_increase", "fixed_decrease"]),
+    value: z.number().min(0),
+    adjustMsrp: z.boolean().default(true),
+  }))
+  .handler(async ({ data }) => {
+    try {
+      const db = await connectDB();
+      if (!db) return { success: false, error: "Database unavailable" };
+      const productsCol = db.collection("products");
+
+      let filter: any = {};
+      if (data.scope === "selected" && data.selectedIds && data.selectedIds.length > 0) {
+        const queryIds = data.selectedIds.map(toQueryId);
+        filter = {
+          $or: [
+            { _id: { $in: queryIds } },
+            { id: { $in: data.selectedIds } }
+          ]
+        };
+      } else if (data.scope === "category" && data.category && data.category !== "all") {
+        const catRegex = new RegExp(`^${data.category.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i");
+        filter = {
+          $or: [
+            { category: { $regex: catRegex } },
+            { parentCategory: { $regex: catRegex } },
+            { subCategory: { $regex: catRegex } },
+          ]
+        };
+      }
+
+      // Find all matching products in the database
+      const matching = await productsCol
+        .find(filter, { projection: { id: 1, _id: 1, price: 1, salePrice: 1, msrp: 1 } })
+        .toArray();
+
+      if (!matching || matching.length === 0) {
+        return { success: true, count: 0 };
+      }
+
+      const val = Math.max(0, data.value);
+      const operations = matching.map((p) => {
+        const currentPrice = Number(p.price) || 0;
+        const currentMsrp = Number(p.msrp || p.price) || currentPrice;
+        let newPrice = currentPrice;
+        let newMsrp = currentMsrp;
+
+        if (data.mode === "percent_increase") {
+          newPrice = currentPrice * (1 + val / 100);
+          newMsrp = currentMsrp * (1 + val / 100);
+        } else if (data.mode === "percent_decrease") {
+          newPrice = Math.max(0.01, currentPrice * (1 - val / 100));
+          newMsrp = Math.max(0.01, currentMsrp * (1 - val / 100));
+        } else if (data.mode === "fixed_increase") {
+          newPrice = currentPrice + val;
+          newMsrp = currentMsrp + val;
+        } else if (data.mode === "fixed_decrease") {
+          newPrice = Math.max(0.01, currentPrice - val);
+          newMsrp = Math.max(0.01, currentMsrp - val);
+        }
+
+        newPrice = Math.round(newPrice * 100) / 100;
+        newMsrp = Math.round(newMsrp * 100) / 100;
+
+        const updateDoc: any = { salePrice: newPrice };
+        if (data.adjustMsrp) {
+          updateDoc.msrp = newMsrp;
+        }
+
+        return {
+          updateOne: {
+            filter: { _id: p._id },
+            update: { $set: updateDoc }
+          }
+        };
+      });
+
+      let modifiedTotal = 0;
+      const BATCH_SIZE = 1000;
+      for (let i = 0; i < operations.length; i += BATCH_SIZE) {
+        const batch = operations.slice(i, i + BATCH_SIZE);
+        const res = await productsCol.bulkWrite(batch, { ordered: false });
+        modifiedTotal += (res.modifiedCount || 0);
+      }
+
+      return { success: true, count: modifiedTotal };
+    } catch (e: any) {
+      console.error("Failed in bulkAdjustPricesDb:", e);
+      return { success: false, error: e.message || "Failed to adjust prices" };
     }
   });
 

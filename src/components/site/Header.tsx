@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useCart } from "./cart-context";
+import { useCart, formatUSD } from "./cart-context";
 import { useAuth } from "./auth-context";
 import { AuthModal } from "./AuthModal";
 import logo from "@/assets/logo.png";
@@ -497,7 +497,9 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                                 <h4 className="text-xs sm:text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors capitalize">{product.name}</h4>
                               </div>
                               <div className="text-right shrink-0">
-                                <div className="text-sm font-black text-[oklch(0.50_0.14_232)]">${product.price.toLocaleString()}</div>
+                                <div className="text-sm font-black text-[oklch(0.50_0.14_232)]">
+                                  {formatUSD(product.salePrice && product.salePrice > 0 ? product.salePrice : product.price)}
+                                </div>
                               </div>
                             </Link>
                           ))}
