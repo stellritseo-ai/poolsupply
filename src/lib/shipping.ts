@@ -62,12 +62,14 @@ export function classifyProductByNameAndPrice(
   const lowerCat = (category || "").toLowerCase();
   const numPrice = typeof price === "number" ? price : parseFloat(String(price)) || 0;
 
-  // 1. Weight / Volume extraction from title, description or details
+  // 1. Weight / Volume extraction — scan the full text (name + category + details)
+  //    Multi-pack pattern: "4 x 10 lb" → 40 lbs total
   const multiLbMatch = text.match(/(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*(?:lb|lbs|pound)/);
   let totalWeight = 0;
   if (multiLbMatch) {
     totalWeight = parseFloat(multiLbMatch[1]) * parseFloat(multiLbMatch[2]);
   } else {
+    // Single weight: "80 lb", "50 lbs", "25 kg"
     const singleLbMatch = text.match(/\b(\d+(?:\.\d+)?)\s*(?:lb|lbs|pound|pounds|kg)\b/);
     if (singleLbMatch) {
       const val = parseFloat(singleLbMatch[1]);
@@ -79,13 +81,25 @@ export function classifyProductByNameAndPrice(
   const galMatch = text.match(/\b(\d+(?:\.\d+)?)\s*(?:gal|gallon|gallons)\b/);
   const gallons = galMatch ? parseFloat(galMatch[1]) : 0;
 
-  // Direct weight triggers:
-  // Any product >= 35 lbs or >= 5 gallons is Heavy Freight / Large (e.g. 80 lb plaster, 50 lb tabs)
+  // 2. Heavy chemicals / dry goods sold in bags (salt, sand, DE, granular chemicals):
+  //    These are always heavy freight regardless of their cheap unit price.
+  const isHeavyBulkMaterial = /\b(salt|sand\s+filter|de powder|diatomaceous|granular|shock granules?|hybrid base|plaster|aggregate|glass beads?|pebble|stucco|mortar|marcite|stabilizer|cyanuric|muriatic|algaecide|mineral spring|sequa-sol|natural chemistry)\b/.test(lowerName) ||
+    lowerCat === "plaster" || lowerCat === "chemicals";
+
+  // Direct weight triggers (highest priority):
+  // Any item >= 35 lbs is Large (heavy freight: 80 lb plaster, 50 lb salt, 40 lb shock)
   if (totalWeight >= 35 || gallons >= 5) return "Large";
-  // Any product >= 10 lbs or >= 1 gallon is Medium
+  // Any item >= 10 lbs or >= 1 gallon is Medium
   if (totalWeight >= 10 || gallons >= 1) return "Medium";
 
-  // Plaster, aggregates, sand, beads, pebbles, mortar (e.g. 80 lb bags, 50 lb bags)
+  // For heavy materials where the weight might not be in the name, use category + price heuristic
+  if (isHeavyBulkMaterial) {
+    // Multi-bag packs or standard bags typically >= $20 → treat as Large
+    if (numPrice >= 20) return "Large";
+    return "Medium";
+  }
+
+  // Plaster, aggregates, sand, beads, pebbles, mortar (explicit fallback)
   if (/\b(plaster|aggregate|glass beads|pebble|stucco|mortar|marcite)\b/.test(lowerName) || lowerCat === "plaster") {
     if (totalWeight >= 35 || /\b(80|50|40)\s*lb\b/.test(lowerName) || numPrice > 25) {
       return "Large";
