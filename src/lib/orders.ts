@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getOrdersDb, Order } from "./api/orders.functions";
 
-export function useOrders() {
+export function useOrders(options?: { refetchInterval?: number }) {
   const query = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
@@ -11,7 +11,8 @@ export function useOrders() {
       }
       return [];
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 3000,
+    refetchInterval: options?.refetchInterval,
   });
 
   return {

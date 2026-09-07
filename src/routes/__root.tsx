@@ -374,6 +374,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const [isMaintenance, setIsMaintenance] = useState(false);
+  const [maintenanceNotice, setMaintenanceNotice] = useState<string>("");
 
   useEffect(() => {
     let isMounted = true;
@@ -388,6 +389,9 @@ function RootComponent() {
         if (isMounted) {
           if (res.success && res.settings?.maintenanceMode) {
             setIsMaintenance(true);
+            if (res.settings.maintenanceNotice) {
+              setMaintenanceNotice(res.settings.maintenanceNotice);
+            }
           } else {
             setIsMaintenance(false);
           }
@@ -460,7 +464,7 @@ function RootComponent() {
             transition={{ delay: 0.5, duration: 0.5 }}
             className="text-white/80 text-sm sm:text-base font-medium leading-relaxed mb-10 max-w-md mx-auto"
           >
-            We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates.
+            {maintenanceNotice || "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates."}
           </motion.p>
 
           <motion.div

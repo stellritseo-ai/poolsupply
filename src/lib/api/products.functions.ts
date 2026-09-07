@@ -1187,4 +1187,141 @@ export const updateReviewStatusDb = createServerFn({ method: "POST" })
     }
   });
 
+export const inspectProductsCollection = createServerFn({ method: "POST" })
+  .handler(async () => {
+    try {
+      const db = await connectDB();
+      if (!db) return { success: false, error: "Database offline" };
+      const productsCol = db.collection("products");
+      const total = await productsCol.countDocuments();
+
+      // Duplicate SKUs
+      const skuDupes = await productsCol.aggregate([
+        { $match: { sku: { $exists: true, $ne: "" } } },
+        { $group: { _id: { $toUpper: "$sku" }, count: { $sum: 1 }, ids: { $push: "$_id" } } },
+        { $match: { count: { $gt: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 20 }
+      ]).toArray();
+
+      const allSkuDupes = await productsCol.aggregate([
+        { $match: { sku: { $exists: true, $ne: "" } } },
+        { $group: { _id: { $toUpper: "$sku" }, count: { $sum: 1 } } },
+        { $match: { count: { $gt: 1 } } }
+      ]).toArray();
+
+      const excessDuplicates = allSkuDupes.reduce((sum, d) => sum + (d.count - 1), 0);
+
+      const serializedSamples = skuDupes.slice(0, 5).map((s: any) => ({
+        sku: String(s._id || ""),
+        count: Number(s.count) || 0,
+        ids: (s.ids || []).map((id: any) => id?.toString ? id.toString() : String(id)),
+      }));
+
+      return {
+        success: true,
+        total,
+        uniqueDuplicateSkusCount: allSkuDupes.length,
+        excessDuplicates,
+        cleanTotal: total - excessDuplicates,
+        sampleDuplicates: serializedSamples,
+      };
+    } catch (e: any) {
+      console.error("Inspect products collection error:", e);
+      return { success: false, error: e.message };
+    }
+  });
+
+export const deduplicateProductsDb = createServerFn({ method: "POST" })
+  .handler(async () => {
+    try {
+      const db = await connectDB();
+      if (!db) return { success: false, error: "Database offline" };
+      const productsCol = db.collection("products");
+
+      const initialTotal = await productsCol.countDocuments();
+      const allIdsToDelete = new Set<any>();
+
+      // 1. Deduplicate by SKU (case-insensitive)
+      const skuGroups = await productsCol.aggregate([
+        { $match: { sku: { $exists: true, $ne: "" } } },
+        { 
+          $group: { 
+            _id: { $toUpper: "$sku" }, 
+            count: { $sum: 1 }, 
+            docs: { 
+              $push: { 
+                _id: "$_id", 
+                salePrice: "$salePrice",
+                price: "$price",
+                img: "$img",
+                hasReviews: { $cond: [{ $gt: [{ $size: { $ifNull: ["$reviews", []] } }, 0] }, 1, 0] }
+              } 
+            } 
+          } 
+        },
+        { $match: { count: { $gt: 1 } } }
+      ]).toArray();
+
+      for (const group of skuGroups) {
+        const docs = group.docs || [];
+        // Sort docs so the most complete one stays at index 0
+        docs.sort((a: any, b: any) => {
+          if (b.hasReviews !== a.hasReviews) return b.hasReviews - a.hasReviews;
+          const aHasSale = a.salePrice != null && Number(a.salePrice) > 0 ? 1 : 0;
+          const bHasSale = b.salePrice != null && Number(b.salePrice) > 0 ? 1 : 0;
+          if (bHasSale !== aHasSale) return bHasSale - aHasSale;
+          const aHasHttpImg = typeof a.img === "string" && a.img.startsWith("http") ? 1 : 0;
+          const bHasHttpImg = typeof b.img === "string" && b.img.startsWith("http") ? 1 : 0;
+          if (bHasHttpImg !== aHasHttpImg) return bHasHttpImg - aHasHttpImg;
+          return 0;
+        });
+
+        // Keep index 0, mark the remaining duplicates for deletion
+        for (let i = 1; i < docs.length; i++) {
+          allIdsToDelete.add(docs[i]._id);
+        }
+      }
+
+      // 2. Deduplicate by Product ID
+      const idGroups = await productsCol.aggregate([
+        { $match: { id: { $exists: true, $ne: "" } } },
+        { $group: { _id: "$id", count: { $sum: 1 }, ids: { $push: "$_id" } } },
+        { $match: { count: { $gt: 1 } } }
+      ]).toArray();
+
+      for (const group of idGroups) {
+        const remaining = (group.ids || []).filter((id: any) => !allIdsToDelete.has(id));
+        if (remaining.length > 1) {
+          for (let i = 1; i < remaining.length; i++) {
+            allIdsToDelete.add(remaining[i]);
+          }
+        }
+      }
+
+      const toDeleteArray = Array.from(allIdsToDelete);
+      let removedCount = 0;
+
+      if (toDeleteArray.length > 0) {
+        // Execute batch deletion in chunks of 1000
+        for (let i = 0; i < toDeleteArray.length; i += 1000) {
+          const batch = toDeleteArray.slice(i, i + 1000);
+          const res = await productsCol.deleteMany({ _id: { $in: batch } });
+          removedCount += res.deletedCount || 0;
+        }
+      }
+
+      const remainingTotal = await productsCol.countDocuments();
+      return { 
+        success: true, 
+        initialTotal,
+        removedCount, 
+        remainingTotal 
+      };
+    } catch (e: any) {
+      console.error("Deduplicate products error:", e);
+      return { success: false, error: e.message };
+    }
+  });
+
 

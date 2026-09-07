@@ -87,7 +87,7 @@ const cardVariants = {
 
 function DashboardIndex() {
   const loaderData = Route.useLoaderData() as any;
-  const { orders: dbOrdersList } = useOrders();
+  const { orders: dbOrdersList, refetch: refetchOrders } = useOrders({ refetchInterval: 5000 });
 
   // Fast 4-card KPI stats (refreshes every 5s)
   // Note: No initialData — SSR loader returns zeros due to cold DB connection,
@@ -148,6 +148,7 @@ function DashboardIndex() {
     refetchQuick();
     refetchReturns();
     refetchQuotes();
+    refetchOrders();
   };
 
   const qs = quickStats || {
@@ -188,164 +189,169 @@ function DashboardIndex() {
       { name: "Lights", sales: 314, revenue: 74200, color: "#006DAB" },
       { name: "Cleaners", sales: 74, revenue: 62800, color: "#00B4D8" },
     ],
-    monthlyRevenueChart: [
-      { name: "Mar", revenue: 28400, ordersCount: 14, target: 30000 },
-      { name: "Apr", revenue: 34200, ordersCount: 19, target: 35000 },
-      { name: "May", revenue: 45800, ordersCount: 26, target: 40000 },
-      { name: "Jun", revenue: 58900, ordersCount: 31, target: 45000 },
-      { name: "Jul", revenue: 72400, ordersCount: 42, target: 50000 },
-      { name: "Aug", revenue: 86300, ordersCount: 56, target: 60000 },
-    ],
+    monthlyRevenueChart: [],
     recentOrders: [],
     topProducts: [],
   };
 
   // Strictly real orders from database
-  const displayOrders = useMemo(() => {
-    if (m.recentOrders && m.recentOrders.length > 0) return m.recentOrders;
+  const allOrders = useMemo(() => {
     if (dbOrdersList && dbOrdersList.length > 0) return dbOrdersList;
+    if (m.recentOrders && m.recentOrders.length > 0) return m.recentOrders;
     return [];
-  }, [m.recentOrders, dbOrdersList]);
+  }, [dbOrdersList, m.recentOrders]);
 
-  // Dynamic Chart State & Computations
+  const displayOrders = allOrders;
+
+  // Dynamic Chart State & Computations (100% Real Database Connected)
   const [chartTimeframe, setChartTimeframe] = useState<"7D" | "30D" | "6M" | "12M">("6M");
   const [chartMetric, setChartMetric] = useState<"revenue" | "orders">("revenue");
 
   const dynamicChartData = useMemo(() => {
-    const orders = displayOrders || [];
+    const orders = allOrders || [];
     const now = new Date();
 
     if (chartTimeframe === "7D") {
-      const baseDailyRev = [4200, 5800, 3900, 6400, 7800, 8900, 9400];
-      const baseDailyOrders = [3, 4, 2, 5, 6, 7, 8];
-      const days: { name: string; fullDate: string; revenue: number; ordersCount: number }[] = [];
+      const days: { name: string; fullDate: string; startOfDay: number; revenue: number; ordersCount: number }[] = [];
 
       for (let i = 6; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
         const dayLabel = d.toLocaleDateString("en-US", { weekday: "short" });
-        const slotIdx = 6 - i;
+        const startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
         days.push({
           name: dayLabel,
           fullDate: d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-          revenue: baseDailyRev[slotIdx] || 5000,
-          ordersCount: baseDailyOrders[slotIdx] || 4,
+          startOfDay,
+          revenue: 0,
+          ordersCount: 0,
         });
       }
 
       orders.forEach((o: any) => {
         if (!o.placedAt) return;
         const oDate = new Date(o.placedAt);
-        const diffDays = Math.floor((now.getTime() - oDate.getTime()) / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0 && diffDays <= 6) {
-          const targetIndex = 6 - diffDays;
-          if (days[targetIndex]) {
-            days[targetIndex].revenue += Number(o.total) || 0;
-            days[targetIndex].ordersCount += 1;
-          }
+        if (isNaN(oDate.getTime())) return;
+        const oStartOfDay = new Date(oDate.getFullYear(), oDate.getMonth(), oDate.getDate()).getTime();
+        const target = days.find((b) => b.startOfDay === oStartOfDay);
+        if (target) {
+          target.revenue += Number(o.total) || 0;
+          target.ordersCount += 1;
         }
       });
-      return days;
+
+      return days.map(d => ({
+        ...d,
+        revenue: Math.round(d.revenue * 100) / 100,
+      }));
     }
 
     if (chartTimeframe === "30D") {
-      const days: { name: string; fullDate: string; revenue: number; ordersCount: number }[] = [];
+      const days: { name: string; fullDate: string; startOfDay: number; revenue: number; ordersCount: number }[] = [];
+
       for (let i = 29; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
         const dayLabel = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-        const progress = (30 - i) / 30;
-        const baseRev = Math.round(1800 + progress * 2400 + Math.sin(i * 0.8) * 800);
-        const baseOrders = Math.round(2 + progress * 3 + (i % 3));
+        const startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 
         days.push({
           name: i % 5 === 0 || i === 0 ? dayLabel : "",
           fullDate: d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-          revenue: baseRev,
-          ordersCount: baseOrders,
+          startOfDay,
+          revenue: 0,
+          ordersCount: 0,
         });
       }
 
       orders.forEach((o: any) => {
         if (!o.placedAt) return;
         const oDate = new Date(o.placedAt);
-        const diffDays = Math.floor((now.getTime() - oDate.getTime()) / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0 && diffDays <= 29) {
-          const targetIndex = 29 - diffDays;
-          if (days[targetIndex]) {
-            days[targetIndex].revenue += Number(o.total) || 0;
-            days[targetIndex].ordersCount += 1;
-          }
+        if (isNaN(oDate.getTime())) return;
+        const oStartOfDay = new Date(oDate.getFullYear(), oDate.getMonth(), oDate.getDate()).getTime();
+        const target = days.find((b) => b.startOfDay === oStartOfDay);
+        if (target) {
+          target.revenue += Number(o.total) || 0;
+          target.ordersCount += 1;
         }
       });
-      return days;
+
+      return days.map(d => ({
+        ...d,
+        revenue: Math.round(d.revenue * 100) / 100,
+      }));
     }
 
     if (chartTimeframe === "12M") {
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const base12Rev = [18400, 22600, 28400, 34200, 45800, 58900, 72400, 86300, 92000, 98400, 105000, 114000];
-      const base12Orders = [9, 11, 14, 19, 26, 31, 42, 56, 60, 64, 70, 76];
-      const buckets: { name: string; fullDate: string; revenue: number; ordersCount: number }[] = [];
+      const buckets: { name: string; fullDate: string; yearMonth: string; revenue: number; ordersCount: number }[] = [];
 
       for (let i = 11; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        const mIdx = (d.getMonth() + 12) % 12;
         buckets.push({
           name: months[d.getMonth()],
-          fullDate: `${months[d.getMonth()]} ${d.getFullYear()}`,
-          revenue: base12Rev[mIdx] || 45000,
-          ordersCount: base12Orders[mIdx] || 25,
+          fullDate: `${d.toLocaleDateString("en-US", { month: "long" })} ${d.getFullYear()}`,
+          yearMonth: `${d.getFullYear()}-${d.getMonth()}`,
+          revenue: 0,
+          ordersCount: 0,
         });
       }
 
       orders.forEach((o: any) => {
         if (!o.placedAt) return;
         const oDate = new Date(o.placedAt);
-        const monthDiff = (now.getFullYear() - oDate.getFullYear()) * 12 + (now.getMonth() - oDate.getMonth());
-        if (monthDiff >= 0 && monthDiff <= 11) {
-          const targetIndex = 11 - monthDiff;
-          if (buckets[targetIndex]) {
-            buckets[targetIndex].revenue += Number(o.total) || 0;
-            buckets[targetIndex].ordersCount += 1;
-          }
+        if (isNaN(oDate.getTime())) return;
+        const oYearMonth = `${oDate.getFullYear()}-${oDate.getMonth()}`;
+        const target = buckets.find((b) => b.yearMonth === oYearMonth);
+        if (target) {
+          target.revenue += Number(o.total) || 0;
+          target.ordersCount += 1;
         }
       });
-      return buckets;
-    }
 
-    // Default 6M: use server monthlyRevenueChart if populated
-    if (m.monthlyRevenueChart && m.monthlyRevenueChart.length > 0) {
-      return m.monthlyRevenueChart.map((b) => ({
-        name: b.name,
-        fullDate: `${b.name} ${now.getFullYear()}`,
-        revenue: b.revenue || 35000,
-        ordersCount: b.ordersCount || 20,
+      return buckets.map(b => ({
+        ...b,
+        revenue: Math.round(b.revenue * 100) / 100,
       }));
     }
 
+    // Default 6M (Last 6 Months strictly from real orders)
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const base6Rev = [28400, 34200, 45800, 58900, 72400, 86300];
-    const base6Orders = [14, 19, 26, 31, 42, 56];
-    const buckets: { name: string; fullDate: string; revenue: number; ordersCount: number }[] = [];
+    const buckets: { name: string; fullDate: string; yearMonth: string; revenue: number; ordersCount: number }[] = [];
 
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const slotIdx = 5 - i;
       buckets.push({
         name: months[d.getMonth()],
-        fullDate: `${months[d.getMonth()]} ${d.getFullYear()}`,
-        revenue: base6Rev[slotIdx] || 40000,
-        ordersCount: base6Orders[slotIdx] || 22,
+        fullDate: `${d.toLocaleDateString("en-US", { month: "long" })} ${d.getFullYear()}`,
+        yearMonth: `${d.getFullYear()}-${d.getMonth()}`,
+        revenue: 0,
+        ordersCount: 0,
       });
     }
 
-    return buckets;
-  }, [displayOrders, chartTimeframe, m.monthlyRevenueChart]);
+    orders.forEach((o: any) => {
+      if (!o.placedAt) return;
+      const oDate = new Date(o.placedAt);
+      if (isNaN(oDate.getTime())) return;
+      const oYearMonth = `${oDate.getFullYear()}-${oDate.getMonth()}`;
+      const target = buckets.find((b) => b.yearMonth === oYearMonth);
+      if (target) {
+        target.revenue += Number(o.total) || 0;
+        target.ordersCount += 1;
+      }
+    });
+
+    return buckets.map(b => ({
+      ...b,
+      revenue: Math.round(b.revenue * 100) / 100,
+    }));
+  }, [allOrders, chartTimeframe]);
 
   const chartSummary = useMemo(() => {
-    const totalRev = dynamicChartData.reduce((sum, p) => sum + p.revenue, 0);
-    const totalOrders = dynamicChartData.reduce((sum, p) => sum + p.ordersCount, 0);
-    const maxRev = Math.max(...dynamicChartData.map((p) => p.revenue), 0);
-    const maxOrders = Math.max(...dynamicChartData.map((p) => p.ordersCount), 0);
-    const avgOrder = totalOrders > 0 ? totalRev / totalOrders : 0;
+    const totalRev = Math.round(dynamicChartData.reduce((sum, p) => sum + (p.revenue || 0), 0) * 100) / 100;
+    const totalOrders = dynamicChartData.reduce((sum, p) => sum + (p.ordersCount || 0), 0);
+    const maxRev = Math.max(...dynamicChartData.map((p) => p.revenue || 0), 0);
+    const maxOrders = Math.max(...dynamicChartData.map((p) => p.ordersCount || 0), 0);
+    const avgOrder = totalOrders > 0 ? Math.round((totalRev / totalOrders) * 100) / 100 : 0;
     return { totalRev, totalOrders, maxRev, maxOrders, avgOrder };
   }, [dynamicChartData]);
 
@@ -616,20 +622,47 @@ function DashboardIndex() {
                 </p>
               </div>
 
-              {/* Timeframe Pill Switcher */}
-              <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl sm:rounded-2xl border border-slate-200/70 shrink-0 self-start sm:self-auto">
-                {(["7D", "30D", "6M", "12M"] as const).map((tf) => (
+              {/* Metric & Timeframe Controls */}
+              <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+                {/* Metric Toggle: Revenue vs Orders */}
+                <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl sm:rounded-2xl border border-slate-200/70 text-xs">
                   <button
-                    key={tf}
-                    onClick={() => setChartTimeframe(tf)}
-                    className={`px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${chartTimeframe === tf
-                        ? "bg-slate-900 text-white shadow-sm"
-                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/50"
-                      }`}
+                    onClick={() => setChartMetric("revenue")}
+                    className={`px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer ${
+                      chartMetric === "revenue"
+                        ? "bg-white text-cyan-800 shadow-xs font-black"
+                        : "text-slate-500 hover:text-slate-900"
+                    }`}
                   >
-                    {tf}
+                    Revenue ($)
                   </button>
-                ))}
+                  <button
+                    onClick={() => setChartMetric("orders")}
+                    className={`px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer ${
+                      chartMetric === "orders"
+                        ? "bg-white text-blue-800 shadow-xs font-black"
+                        : "text-slate-500 hover:text-slate-900"
+                    }`}
+                  >
+                    Orders (#)
+                  </button>
+                </div>
+
+                {/* Timeframe Pill Switcher */}
+                <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl sm:rounded-2xl border border-slate-200/70 shrink-0">
+                  {(["7D", "30D", "6M", "12M"] as const).map((tf) => (
+                    <button
+                      key={tf}
+                      onClick={() => setChartTimeframe(tf)}
+                      className={`px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${chartTimeframe === tf
+                          ? "bg-slate-900 text-white shadow-sm"
+                          : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/50"
+                        }`}
+                    >
+                      {tf}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -644,8 +677,12 @@ function DashboardIndex() {
                 <div className="text-xs sm:text-sm font-black text-slate-900 mt-0.5">{chartSummary.totalOrders} Units</div>
               </div>
               <div>
-                <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Peak Spike</div>
-                <div className="text-xs sm:text-sm font-black text-cyan-700 mt-0.5 truncate">{formatUSD(chartSummary.maxRev)}</div>
+                <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                  {chartMetric === "orders" ? "Peak Orders" : "Peak Spike"}
+                </div>
+                <div className="text-xs sm:text-sm font-black text-cyan-700 mt-0.5 truncate">
+                  {chartMetric === "orders" ? `${chartSummary.maxOrders} Orders` : formatUSD(chartSummary.maxRev)}
+                </div>
               </div>
               <div>
                 <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Avg Ticket</div>
@@ -676,24 +713,37 @@ function DashboardIndex() {
                     tickLine={false}
                     tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }}
                     tickFormatter={formatYAxis}
-                    domain={[0, (dataMax: number) => (dataMax > 0 ? dataMax * 1.15 : 10)]}
+                    domain={[0, (dataMax: number) => {
+                      if (chartMetric === "orders") return dataMax > 0 ? Math.ceil(dataMax * 1.3) : 5;
+                      return dataMax > 0 ? (dataMax < 10 ? Math.ceil(dataMax * 1.4 * 100) / 100 : Math.ceil(dataMax * 1.15)) : 10;
+                    }]}
                   />
                   <Tooltip
                     content={({ active, payload, label }) => {
                       if (active && payload && payload.length) {
                         const data = payload[0].payload;
                         return (
-                          <div className="bg-[#020b18]/95 backdrop-blur-md text-white p-3 sm:p-3.5 rounded-2xl shadow-2xl border border-cyan-500/30 text-xs space-y-1.5 min-w-[150px]">
+                          <div className="bg-[#020b18]/95 backdrop-blur-md text-white p-3 sm:p-3.5 rounded-2xl shadow-2xl border border-cyan-500/30 text-xs space-y-1.5 min-w-[160px]">
                             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                               {data.fullDate || label}
                             </div>
                             <div className="text-sm sm:text-base font-black text-[#00F0FF]">
-                              {formatUSD(data.revenue)}
+                              {chartMetric === "orders" ? `${data.ordersCount} Order${data.ordersCount === 1 ? "" : "s"}` : formatUSD(data.revenue)}
                             </div>
                             <div className="flex items-center justify-between text-[11px] text-slate-300 font-semibold pt-1 border-t border-white/10">
-                              <span>Volume:</span>
-                              <span className="font-bold text-white">{data.ordersCount} Order(s)</span>
+                              <span>{chartMetric === "orders" ? "Total Revenue:" : "Order Volume:"}</span>
+                              <span className="font-bold text-white">
+                                {chartMetric === "orders" ? formatUSD(data.revenue) : `${data.ordersCount} Order(s)`}
+                              </span>
                             </div>
+                            {data.ordersCount > 0 && chartMetric === "revenue" && (
+                              <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+                                <span>Avg Ticket:</span>
+                                <span className="text-emerald-400 font-mono font-bold">
+                                  {formatUSD(data.revenue / data.ordersCount)}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         );
                       }
@@ -702,7 +752,7 @@ function DashboardIndex() {
                   />
                   <Area
                     type="monotone"
-                    dataKey="revenue"
+                    dataKey={chartMetric === "orders" ? "ordersCount" : "revenue"}
                     stroke="#00B4D8"
                     strokeWidth={3}
                     fillOpacity={1}

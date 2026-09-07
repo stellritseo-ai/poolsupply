@@ -299,15 +299,12 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
           }
         });
 
-        // If no orders yet for older historical months, provide baseline so graph has dynamic curve
-        const baseRev = mRev > 0 ? mRev : Math.round((28000 + (5 - i) * 11500) * 100) / 100;
-        const baseOrders = mOrders > 0 ? mOrders : 14 + (5 - i) * 8;
-
+        // Real monthly aggregated revenue from MongoDB
         buckets.push({
           name: mName,
-          revenue: baseRev,
-          ordersCount: baseOrders,
-          target: 30000 + (5 - i) * 6000,
+          revenue: Math.round(mRev * 100) / 100,
+          ordersCount: mOrders,
+          target: Math.round(mRev * 1.2 * 100) / 100,
         });
       }
 
