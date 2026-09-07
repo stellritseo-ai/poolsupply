@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { verifyAdminAuth } from "./auth.functions";
 
 // SECURITY: Keys must ONLY come from environment variables — never hardcoded
 function getSecretKey(): string {
@@ -186,6 +187,9 @@ export const getStripeConfigDb = createServerFn({ method: "POST" })
 
 export const verifyStripeLiveConnectionDb = createServerFn({ method: "POST" })
   .handler(async () => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     const secretKey = getSecretKey();
     const isLive = secretKey.startsWith("sk_live_");
 

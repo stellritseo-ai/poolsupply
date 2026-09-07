@@ -238,18 +238,18 @@ export const getCustomerAccountDataDb = createServerFn({ method: "POST" })
 
       const profile = customerDoc
         ? {
-            id: customerDoc._id.toString(),
-            name: customerDoc.name || defaultProfile.name,
-            email: customerDoc.email || defaultProfile.email,
-            phone: customerDoc.phone || defaultProfile.phone,
-            avatar: customerDoc.avatar || "",
-            company: customerDoc.company || "",
-            contractorId: customerDoc.contractorId || "",
-            addresses: customerDoc.addresses || [],
-            cards: customerDoc.cards || [],
-            emailPrefs: customerDoc.emailPrefs || defaultProfile.emailPrefs,
-            wishlists: customerDoc.wishlists || defaultProfile.wishlists,
-          }
+          id: customerDoc._id.toString(),
+          name: customerDoc.name || defaultProfile.name,
+          email: customerDoc.email || defaultProfile.email,
+          phone: customerDoc.phone || defaultProfile.phone,
+          avatar: customerDoc.avatar || "",
+          company: customerDoc.company || "",
+          contractorId: customerDoc.contractorId || "",
+          addresses: customerDoc.addresses || [],
+          cards: customerDoc.cards || [],
+          emailPrefs: customerDoc.emailPrefs || defaultProfile.emailPrefs,
+          wishlists: customerDoc.wishlists || defaultProfile.wishlists,
+        }
         : defaultProfile;
 
       // Match orders
@@ -1270,7 +1270,7 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
         if (ObjectId.isValid(data.id)) {
           customerDoc = await customersCol.findOne({ _id: new ObjectId(data.id) });
         }
-      } catch {}
+      } catch { }
 
       if (!customerDoc) {
         customerDoc = await customersCol.findOne({

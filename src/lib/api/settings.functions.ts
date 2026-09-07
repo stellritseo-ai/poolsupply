@@ -141,8 +141,8 @@ export const getGlobalSettings = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       if (!db) {
-        return { 
-          success: true, 
+        return {
+          success: true,
           settings: DEFAULT_SETTINGS,
         };
       }
@@ -171,14 +171,14 @@ export const getGlobalSettings = createServerFn({ method: "POST" })
         };
       }
 
-      return { 
-        success: true, 
+      return {
+        success: true,
         settings: settings as GlobalSettingsType,
       };
     } catch (e: any) {
       console.error("Settings fetch error:", e);
-      return { 
-        success: true, 
+      return {
+        success: true,
         settings: DEFAULT_SETTINGS,
       };
     }
@@ -205,7 +205,7 @@ export const updateGlobalSettings = createServerFn({ method: "POST" })
         return { success: false, error: "Database connection unavailable." };
       }
       const settingsCol = db.collection("settings");
-      
+
       const updateData: any = { updatedAt: new Date() };
       if (typeof data.maintenanceMode === "boolean") updateData.maintenanceMode = data.maintenanceMode;
       if (typeof data.maintenanceNotice === "string") updateData.maintenanceNotice = data.maintenanceNotice;
@@ -247,7 +247,7 @@ export const testMongoPing = createServerFn({ method: "POST" })
       const adminDb = db.admin();
       const pingResult = await adminDb.ping();
       const latencyMs = Date.now() - startTime;
-      
+
       // Also get collection stats
       const collections = await db.listCollections().toArray();
 
@@ -278,7 +278,7 @@ export const sendTestEmail = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const nodemailer = (await import("nodemailer")).default;
-      
+
       const gmailUser = process.env.GMAIL_USER || "jitenksony@gmail.com";
       const gmailPass = (process.env.GMAIL_APP_PASSWORD || "").replace(/\s+/g, "");
       const yahooUser = process.env.YAHOO_USER || "pswelio@yahoo.com";

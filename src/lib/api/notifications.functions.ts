@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
+import { ObjectId } from "mongodb";
+import { verifyAdminAuth } from "./auth.functions";
 
 const DEFAULT_NOTIFICATIONS = [
   {
@@ -28,6 +30,10 @@ const DEFAULT_NOTIFICATIONS = [
 
 export const getNotifications = createServerFn({ method: "POST" })
   .handler(async () => {
+    // SECURITY: Admin session required
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, notifications: [], error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: true, notifications: [] };
@@ -59,14 +65,18 @@ export const getNotifications = createServerFn({ method: "POST" })
 export const markNotificationAsRead = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
+    // SECURITY: Admin session required
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database not connected." };
       const notifsCol = db.collection("notifications");
-      const { ObjectId } = await import("mongodb");
       
+      const query = ObjectId.isValid(data.id) ? { _id: new ObjectId(data.id) } : { _id: data.id as any };
       await notifsCol.updateOne(
-        { _id: new ObjectId(data.id) },
+        query,
         { $set: { read: true } }
       );
 
@@ -78,6 +88,10 @@ export const markNotificationAsRead = createServerFn({ method: "POST" })
 
 export const markAllNotificationsAsRead = createServerFn({ method: "POST" })
   .handler(async () => {
+    // SECURITY: Admin session required
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database not connected." };
@@ -97,13 +111,17 @@ export const markAllNotificationsAsRead = createServerFn({ method: "POST" })
 export const deleteNotification = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
+    // SECURITY: Admin session required
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database not connected." };
       const notifsCol = db.collection("notifications");
-      const { ObjectId } = await import("mongodb");
       
-      await notifsCol.deleteOne({ _id: new ObjectId(data.id) });
+      const query = ObjectId.isValid(data.id) ? { _id: new ObjectId(data.id) } : { _id: data.id as any };
+      await notifsCol.deleteOne(query);
 
       return { success: true };
     } catch (e: any) {

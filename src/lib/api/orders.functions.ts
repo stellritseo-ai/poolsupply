@@ -3,6 +3,7 @@ import { z } from "zod";
 import { connectDB } from "../db";
 import { ObjectId } from "mongodb";
 import { sendNewOrderAdminNotification } from "../mailer";
+import { verifyAdminAuth } from "./auth.functions";
 
 function toQueryId(id: string): any {
   try {
@@ -56,6 +57,9 @@ export type Order = z.infer<typeof OrderSchema>;
 
 export const getOrdersDb = createServerFn({ method: "POST" })
   .handler(async () => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: true, orders: [] };
@@ -124,6 +128,9 @@ export const getOrderByIdDb = createServerFn({ method: "POST" })
 export const updateOrderStatusDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string(), status: z.enum(["Pending", "Shipped", "Delivered", "Cancelled"]) }))
   .handler(async ({ data }) => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
@@ -144,6 +151,9 @@ export const updateOrderStatusDb = createServerFn({ method: "POST" })
 export const deleteOrderDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
@@ -161,6 +171,10 @@ export const deleteOrderDb = createServerFn({ method: "POST" })
 export const createOrderDb = createServerFn({ method: "POST" })
   .inputValidator(OrderSchema)
   .handler(async ({ data }) => {
+    if (data.total < 0 || data.subtotal < 0 || !data.items || data.items.length === 0) {
+      return { success: false, error: "Invalid order parameters or empty items list." };
+    }
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
@@ -195,6 +209,9 @@ export const createOrderDb = createServerFn({ method: "POST" })
 export const seedMockOrdersDb = createServerFn({ method: "POST" })
   .inputValidator(z.array(OrderSchema))
   .handler(async ({ data }) => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };

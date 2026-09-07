@@ -23,12 +23,18 @@ export const trackPageHitDb = createServerFn({ method: "POST" })
       const hitsCol = db.collection("site_telemetry");
       const today = new Date().toISOString().split("T")[0];
 
+      const cleanPath = (data.path || "").trim().slice(0, 120);
       await hitsCol.updateOne(
         { date: today },
         {
           $inc: { hits: 1 },
           $set: { updatedAt: new Date() },
-          $addToSet: { paths: data.path }
+          $push: {
+            paths: {
+              $each: [cleanPath],
+              $slice: -200,
+            },
+          } as any,
         },
         { upsert: true }
       );

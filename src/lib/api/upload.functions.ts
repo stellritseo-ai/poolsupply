@@ -32,6 +32,14 @@ export const uploadImage = createServerFn({ method: "POST" })
         );
       }
 
+      // SECURITY: Validate maximum payload size (5MB base64) and image MIME type
+      if (data.base64.length > 7 * 1024 * 1024) {
+        return { success: false, error: "Image file exceeds maximum 5MB size limit." };
+      }
+      if (data.base64.startsWith("data:") && !data.base64.startsWith("data:image/")) {
+        return { success: false, error: "Only valid image files (JPEG, PNG, WebP) are allowed." };
+      }
+
       // Ensure the base64 string includes the data URI prefix for Cloudinary
       const base64Data = data.base64.startsWith("data:")
         ? data.base64

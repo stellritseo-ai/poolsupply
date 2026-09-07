@@ -9,18 +9,18 @@ export const getUsers = createServerFn({ method: "POST" })
       if (!db) return { success: true, users: [] };
       const usersCol = db.collection("users");
       const users = await usersCol.find({}, { projection: { password: 0 } }).toArray();
-      
-      const formatted = users.map(u => ({ 
-        id: u._id.toString(), 
-        username: u.username, 
+
+      const formatted = users.map(u => ({
+        id: u._id.toString(),
+        username: u.username,
         fullName: u.fullName || u.name || u.username,
         email: u.email || `${u.username}@poolsupplywholesalers.com`,
-        role: u.role || "manager", 
+        role: u.role || "manager",
         status: u.status || "active",
         lastLoginAt: u.lastLoginAt ? new Date(u.lastLoginAt).toISOString() : null,
         createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
       }));
-      
+
       return { success: true, users: formatted };
     } catch (e: any) {
       console.error("Users fetch error:", e);
@@ -42,7 +42,7 @@ export const createUser = createServerFn({ method: "POST" })
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
       const usersCol = db.collection("users");
-      
+
       // Check if username already exists
       const existing = await usersCol.findOne({ username: data.username.toLowerCase().trim() });
       if (existing) {
@@ -51,7 +51,7 @@ export const createUser = createServerFn({ method: "POST" })
 
       const bcrypt = (await import("bcryptjs")).default;
       const hashedPassword = await bcrypt.hash(data.password, 10);
-      
+
       const newUserDoc = {
         username: data.username.toLowerCase().trim(),
         fullName: data.fullName || data.username,
@@ -65,17 +65,17 @@ export const createUser = createServerFn({ method: "POST" })
 
       const res = await usersCol.insertOne(newUserDoc);
 
-      return { 
-        success: true, 
-        user: { 
-          id: res.insertedId.toString(), 
-          username: newUserDoc.username, 
+      return {
+        success: true,
+        user: {
+          id: res.insertedId.toString(),
+          username: newUserDoc.username,
           fullName: newUserDoc.fullName,
           email: newUserDoc.email,
           role: newUserDoc.role,
           status: newUserDoc.status,
           createdAt: newUserDoc.createdAt.toISOString(),
-        } 
+        }
       };
     } catch (e: any) {
       return { success: false, error: "Failed to create staff account." };
@@ -126,8 +126,8 @@ export const updateUser = createServerFn({ method: "POST" })
 
       await usersCol.updateOne(query, { $set: updates });
 
-      return { 
-        success: true, 
+      return {
+        success: true,
         user: {
           id: user._id.toString(),
           username: updates.username || user.username,
@@ -151,7 +151,7 @@ export const deleteUser = createServerFn({ method: "POST" })
       if (!db) return { success: false, error: "Database unavailable." };
       const usersCol = db.collection("users");
       const { ObjectId } = await import("mongodb");
-      
+
       const query = ObjectId.isValid(data.id) ? { _id: new ObjectId(data.id) } : { _id: data.id as any };
       const user = await usersCol.findOne(query);
 
@@ -179,7 +179,7 @@ export const updateSuperAdmin = createServerFn({ method: "POST" })
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
       const usersCol = db.collection("users");
-      
+
       const user = await usersCol.findOne({ username: data.currentUsername });
       if (!user) return { success: false, error: "Authentication failed. User not found." };
 
@@ -195,7 +195,7 @@ export const updateSuperAdmin = createServerFn({ method: "POST" })
         if (existing) return { success: false, error: "New username is already taken." };
         updates.username = data.newUsername;
       }
-      
+
       if (data.newPassword) {
         updates.password = await bcrypt.hash(data.newPassword, 10);
       }

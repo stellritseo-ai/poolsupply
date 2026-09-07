@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
 import { ObjectId } from "mongodb";
+import { verifyAdminAuth } from "./auth.functions";
 
 function toObjectId(id: string): any {
   try {
@@ -159,6 +160,9 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
 // ── 2. Get All Return Requests (Admin) ────────────────────────────────────────
 export const getAdminReturnsDb = createServerFn({ method: "POST" })
   .handler(async () => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false as const, error: "Unauthorized. Admin session required.", returns: [] as ReturnRequest[] };
+
     try {
       const db = await connectDB();
       if (!db) return { success: true as const, returns: [] as ReturnRequest[] };
@@ -221,6 +225,9 @@ export const updateReturnStatusDb = createServerFn({ method: "POST" })
     })
   )
   .handler(async ({ data }) => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false as const, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false as const, error: "Database unavailable." };
@@ -287,6 +294,9 @@ export const toggleReturnResolvedDb = createServerFn({ method: "POST" })
     })
   )
   .handler(async ({ data }) => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false as const, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false as const, error: "Database unavailable." };
@@ -322,6 +332,9 @@ export const toggleReturnResolvedDb = createServerFn({ method: "POST" })
 export const deleteReturnDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false as const, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false as const, error: "Database unavailable." };

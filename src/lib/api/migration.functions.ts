@@ -23,7 +23,7 @@ export const getDatabaseStats = createServerFn({ method: "POST" })
           }
         };
       }
-      
+
       const [
         productsCount,
         ordersCount,
@@ -86,7 +86,7 @@ export const exportCollectionSnapshot = createServerFn({ method: "POST" })
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
       const col = db.collection(data.collectionName);
-      
+
       const docs = await col.find({}).limit(1000).toArray();
 
       // Cleanse sensitive data and ensure JSON serializable _id

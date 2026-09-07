@@ -1245,20 +1245,20 @@ export const deduplicateProductsDb = createServerFn({ method: "POST" })
       // 1. Deduplicate by SKU (case-insensitive)
       const skuGroups = await productsCol.aggregate([
         { $match: { sku: { $exists: true, $ne: "" } } },
-        { 
-          $group: { 
-            _id: { $toUpper: "$sku" }, 
-            count: { $sum: 1 }, 
-            docs: { 
-              $push: { 
-                _id: "$_id", 
+        {
+          $group: {
+            _id: { $toUpper: "$sku" },
+            count: { $sum: 1 },
+            docs: {
+              $push: {
+                _id: "$_id",
                 salePrice: "$salePrice",
                 price: "$price",
                 img: "$img",
                 hasReviews: { $cond: [{ $gt: [{ $size: { $ifNull: ["$reviews", []] } }, 0] }, 1, 0] }
-              } 
-            } 
-          } 
+              }
+            }
+          }
         },
         { $match: { count: { $gt: 1 } } }
       ]).toArray();
@@ -1312,11 +1312,11 @@ export const deduplicateProductsDb = createServerFn({ method: "POST" })
       }
 
       const remainingTotal = await productsCol.countDocuments();
-      return { 
-        success: true, 
+      return {
+        success: true,
         initialTotal,
-        removedCount, 
-        remainingTotal 
+        removedCount,
+        remainingTotal
       };
     } catch (e: any) {
       console.error("Deduplicate products error:", e);

@@ -1,13 +1,17 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getCookie, setCookie, deleteCookie, getRequestHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { connectDB } from "../db";
 import crypto from "node:crypto";
 
 const LOCK_DURATION_MS = 2 * 60 * 60 * 1000; // 2 Hours in milliseconds
 const MAX_FAILED_ATTEMPTS = 3;
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 Days in milliseconds
 
 // In-memory fallback lockout tracking
 const memoryLocks: Record<string, { attempts: number; lockedUntil: number | null }> = {};
+// In-memory fallback active sessions (when DB is temporarily offline)
+const memorySessions: Record<string, { username: string; role: string; expiresAt: number }> = {};
 
 export interface AuthResponse {
   success: boolean;
@@ -17,6 +21,91 @@ export interface AuthResponse {
   isLocked?: boolean;
   lockedUntil?: number;
   attemptsLeft?: number;
+}
+
+export interface AdminUserSession {
+  username: string;
+  role: string;
+}
+
+function hashToken(rawToken: string): string {
+  return crypto.createHash("sha256").update(rawToken).digest("hex");
+}
+
+/**
+ * Server-side authority verification helper.
+ * Validates the admin session from:
+ * 1. Explicit token argument
+ * 2. HTTP-only secure cookie 'psw_admin_session'
+ * 3. 'Authorization: Bearer <token>' or 'x-admin-token' request header
+ *
+ * Returns the authenticated admin user details or null if unauthenticated.
+ */
+export async function verifyAdminAuth(explicitToken?: string): Promise<AdminUserSession | null> {
+  try {
+    let token = explicitToken;
+
+    if (!token) {
+      try {
+        token = getCookie("psw_admin_session");
+      } catch {
+        // May fail in non-request contexts
+      }
+    }
+
+    if (!token) {
+      try {
+        const authHeader = getRequestHeader("authorization") || getRequestHeader("x-admin-token");
+        if (authHeader) {
+          token = authHeader.replace(/^Bearer\s+/i, "").trim();
+        }
+      } catch {
+        // Header lookup failed
+      }
+    }
+
+    if (!token || typeof token !== "string" || token.length < 16) {
+      return null;
+    }
+
+    const tHash = hashToken(token);
+    const now = Date.now();
+
+    // 1. Check database session
+    try {
+      const db = await connectDB();
+      if (db) {
+        const sessionsCol = db.collection("admin_sessions");
+        const session = await sessionsCol.findOne({
+          tokenHash: tHash,
+          expiresAt: { $gt: new Date(now) },
+        });
+
+        if (session) {
+          return {
+            username: session.username,
+            role: session.role || "admin",
+          };
+        }
+      }
+    } catch (dbErr) {
+      console.warn("[Auth] DB session lookup fallback to memory:", dbErr);
+    }
+
+    // 2. Check memory session fallback
+    const memSession = memorySessions[tHash];
+    if (memSession && memSession.expiresAt > now) {
+      return {
+        username: memSession.username,
+        role: memSession.role,
+      };
+    }
+
+    return null;
+  } catch (err) {
+    console.error("[Auth] Session verification error:", err);
+    return null;
+  }
 }
 
 // ── Check Lockout Status ──────────────────────────────────────────────────
@@ -33,13 +122,13 @@ export const getLockoutStatus = createServerFn({ method: "POST" })
           return {
             isLocked: true,
             lockedUntil: lockRecord.lockedUntil,
-            attemptsLeft: 0
+            attemptsLeft: 0,
           };
         }
         const attempts = lockRecord?.failedAttempts || 0;
         return {
           isLocked: false,
-          attemptsLeft: Math.max(0, MAX_FAILED_ATTEMPTS - attempts)
+          attemptsLeft: Math.max(0, MAX_FAILED_ATTEMPTS - attempts),
         };
       }
     } catch {
@@ -53,12 +142,61 @@ export const getLockoutStatus = createServerFn({ method: "POST" })
     return { isLocked: false, attemptsLeft: Math.max(0, MAX_FAILED_ATTEMPTS - (mem?.attempts || 0)) };
   });
 
-// ── Admin Login with 3-Strike 2-Hour Lockout ──────────────────────────────
+// ── Verify Admin Session (Client Mount Check) ──────────────────────────────
+export const verifyAdminSession = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ token: z.string().optional() }).optional())
+  .handler(async ({ data }): Promise<{ authenticated: boolean; user?: AdminUserSession }> => {
+    const user = await verifyAdminAuth(data?.token);
+    if (!user) {
+      return { authenticated: false };
+    }
+    return { authenticated: true, user };
+  });
+
+// ── Admin Logout ───────────────────────────────────────────────────────────
+export const logoutAdmin = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ token: z.string().optional() }).optional())
+  .handler(async ({ data }): Promise<{ success: boolean }> => {
+    try {
+      let token = data?.token;
+      if (!token) {
+        try {
+          token = getCookie("psw_admin_session");
+        } catch {}
+      }
+
+      if (token) {
+        const tHash = hashToken(token);
+        delete memorySessions[tHash];
+
+        try {
+          const db = await connectDB();
+          if (db) {
+            await db.collection("admin_sessions").deleteOne({ tokenHash: tHash });
+          }
+        } catch (dbErr) {
+          console.warn("[Auth] Error deleting session from DB:", dbErr);
+        }
+      }
+
+      try {
+        deleteCookie("psw_admin_session", { path: "/" });
+      } catch {}
+
+      return { success: true };
+    } catch {
+      return { success: true };
+    }
+  });
+
+// ── Admin Login with 3-Strike 2-Hour Lockout & Cryptographic Session ──────
 export const loginAdmin = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    username: z.string().min(1, "Username is required"),
-    password: z.string().min(1, "Password is required")
-  }))
+  .inputValidator(
+    z.object({
+      username: z.string().min(1, "Username is required"),
+      password: z.string().min(1, "Password is required"),
+    })
+  )
   .handler(async ({ data }): Promise<AuthResponse> => {
     const userKey = data.username.trim().toLowerCase();
     const now = Date.now();
@@ -82,7 +220,7 @@ export const loginAdmin = createServerFn({ method: "POST" })
             isLocked: true,
             lockedUntil: lockRecord.lockedUntil,
             attemptsLeft: 0,
-            error: `Security Lockout Active: Too many failed login attempts (3/3). Account is locked for ${timeStr}.`
+            error: `Security Lockout Active: Too many failed login attempts (3/3). Account is locked for ${timeStr}.`,
           };
         }
       } else {
@@ -95,13 +233,12 @@ export const loginAdmin = createServerFn({ method: "POST" })
             isLocked: true,
             lockedUntil: mem.lockedUntil,
             attemptsLeft: 0,
-            error: `Security Lockout Active: Account locked for 2 hours due to 3 failed login attempts.`
+            error: `Security Lockout Active: Account locked for 2 hours due to 3 failed login attempts.`,
           };
         }
       }
 
       // No DB connection — block login entirely for security
-      // Never allow hardcoded credential fallback
       if (!db) {
         const prevAttempts = (memoryLocks[userKey]?.attempts || 0) + 1;
         if (prevAttempts >= MAX_FAILED_ATTEMPTS) {
@@ -112,7 +249,7 @@ export const loginAdmin = createServerFn({ method: "POST" })
             isLocked: true,
             lockedUntil,
             attemptsLeft: 0,
-            error: `Security Alert: 3 failed attempts reached. Account locked for 2 hours.`
+            error: `Security Alert: 3 failed attempts reached. Account locked for 2 hours.`,
           };
         }
         memoryLocks[userKey] = { attempts: prevAttempts, lockedUntil: null };
@@ -120,7 +257,7 @@ export const loginAdmin = createServerFn({ method: "POST" })
         return {
           success: false,
           attemptsLeft: left,
-          error: `Database connection required for authentication. Please try again in a moment. ${left} attempt(s) remaining before lockout.`
+          error: `Database connection required for authentication. Please try again in a moment. ${left} attempt(s) remaining before lockout.`,
         };
       }
 
@@ -132,14 +269,13 @@ export const loginAdmin = createServerFn({ method: "POST" })
       const bcrypt = (await import("bcryptjs")).default;
 
       if (userCount === 0) {
-        // Use env var for the default admin password — never hardcode credentials
         const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || "pools12";
         const hashedPassword = await bcrypt.hash(defaultPassword, 12);
         await usersCol.insertOne({
           username: "pools",
           password: hashedPassword,
           role: "admin",
-          createdAt: new Date()
+          createdAt: new Date(),
         });
       }
 
@@ -147,7 +283,7 @@ export const loginAdmin = createServerFn({ method: "POST" })
 
       const handleFailedAttempt = async () => {
         const lockRecord = await locksCol.findOne({ username: userKey });
-        const failedAttempts = ((lockRecord?.failedAttempts) || 0) + 1;
+        const failedAttempts = (lockRecord?.failedAttempts || 0) + 1;
 
         if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
           const lockedUntil = now + LOCK_DURATION_MS;
@@ -164,7 +300,7 @@ export const loginAdmin = createServerFn({ method: "POST" })
             message: `Account "${data.username}" has been locked out for 2 hours after 3 failed login attempts.`,
             type: "system",
             read: false,
-            createdAt: new Date()
+            createdAt: new Date(),
           });
 
           return {
@@ -172,7 +308,7 @@ export const loginAdmin = createServerFn({ method: "POST" })
             isLocked: true,
             lockedUntil,
             attemptsLeft: 0,
-            error: `Security Lockout Triggered: 3 incorrect password attempts. Your access is locked for 2 hours.`
+            error: `Security Lockout Triggered: 3 incorrect password attempts. Your access is locked for 2 hours.`,
           };
         } else {
           await locksCol.updateOne(
@@ -185,7 +321,7 @@ export const loginAdmin = createServerFn({ method: "POST" })
           return {
             success: false,
             attemptsLeft: left,
-            error: `Invalid username or password. Warning: ${left} attempt(s) remaining before a 2-hour security lockout.`
+            error: `Invalid username or password. Warning: ${left} attempt(s) remaining before a 2-hour security lockout.`,
           };
         }
       };
@@ -215,12 +351,50 @@ export const loginAdmin = createServerFn({ method: "POST" })
       );
       delete memoryLocks[userKey];
 
-      const token = crypto.randomBytes(32).toString('hex');
+      // Generate cryptographically strong session token
+      const token = crypto.randomBytes(32).toString("hex");
+      const tokenHash = hashToken(token);
+      const expiresAt = new Date(now + SESSION_TTL_MS);
+
+      // Store in MongoDB sessions collection
+      try {
+        const sessionsCol = db.collection("admin_sessions");
+        await sessionsCol.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }).catch(() => {});
+        await sessionsCol.insertOne({
+          tokenHash,
+          username: user.username,
+          role: user.role || "admin",
+          createdAt: new Date(),
+          expiresAt,
+        });
+      } catch (sessionInsertErr) {
+        console.warn("[Auth] Failed to persist session to DB, using memory fallback:", sessionInsertErr);
+      }
+
+      // Store in memory session fallback
+      memorySessions[tokenHash] = {
+        username: user.username,
+        role: user.role || "admin",
+        expiresAt: now + SESSION_TTL_MS,
+      };
+
+      // Set secure HTTP-only cookie
+      try {
+        setCookie("psw_admin_session", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: Math.floor(SESSION_TTL_MS / 1000),
+        });
+      } catch (cookieErr) {
+        console.warn("[Auth] Could not set session cookie:", cookieErr);
+      }
 
       return {
         success: true,
         token,
-        user: { username: user.username, role: user.role }
+        user: { username: user.username, role: user.role || "admin" },
       };
     } catch (e: any) {
       console.error("Login Error:", e);

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
+import { verifyAdminAuth } from "./auth.functions";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -92,6 +93,12 @@ export const addChatMessageDb = createServerFn({ method: "POST" })
       if (!db) return { success: false, error: "Database error" };
       const chatsCol = db.collection("chats");
 
+      // SECURITY: Prevent unauthorized users from spoofing messages as admin
+      if (data.message.sender === "admin") {
+        const admin = await verifyAdminAuth();
+        if (!admin) return { success: false, error: "Unauthorized. Admin session required to send as admin." };
+      }
+
       const existingDoc = await chatsCol.findOne({ sessionId: data.sessionId });
       const isUser = data.message.sender === "user";
 
@@ -141,6 +148,9 @@ export const addChatMessageDb = createServerFn({ method: "POST" })
 
 export const getAdminChatSessionsDb = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; sessions: ChatSession[]; error?: string }> => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, sessions: [], error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: true, sessions: [] };
@@ -159,6 +169,9 @@ export const getAdminChatSessionsDb = createServerFn({ method: "POST" })
 export const resolveChatSessionDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ sessionId: z.string() }))
   .handler(async ({ data }): Promise<{ success: boolean; error?: string }> => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database error" };
@@ -175,6 +188,9 @@ export const resolveChatSessionDb = createServerFn({ method: "POST" })
 export const markAdminChatReadDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ sessionId: z.string() }))
   .handler(async ({ data }): Promise<{ success: boolean }> => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false };
@@ -191,6 +207,9 @@ export const markAdminChatReadDb = createServerFn({ method: "POST" })
 export const deleteChatSessionDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ sessionId: z.string() }))
   .handler(async ({ data }): Promise<{ success: boolean; error?: string }> => {
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database error" };

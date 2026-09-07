@@ -19,12 +19,8 @@ function getMongoUri(): string {
     return uri.trim();
   }
 
-  // SECURITY NOTICE: Set MONGODB_URI in your .env file.
-  // This direct replica set URI is the fallback for local dev only.
-  // It avoids SRV DNS lookup failures in the Vite SSR environment.
-  // DO NOT commit real credentials to source control.
-  console.warn("[DB] MONGODB_URI env var not found — using built-in connection. Set MONGODB_URI in .env for production.");
-  return "mongodb://Pools_database_db_user:pPH0aCfvACpdl0vR@ac-va6mgh5-shard-00-00.4nsntwy.mongodb.net:27017,ac-va6mgh5-shard-00-01.4nsntwy.mongodb.net:27017,ac-va6mgh5-shard-00-02.4nsntwy.mongodb.net:27017/?ssl=true&replicaSet=atlas-jbantw-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Pools";
+  console.warn("[DB] MONGODB_URI environment variable not found. Please set MONGODB_URI in your environment or .env file.");
+  return "";
 }
 
 let client: any = null;
@@ -41,6 +37,10 @@ export async function connectDB(): Promise<Db | null> {
   }
 
   const uri = getMongoUri();
+  if (!uri) {
+    console.error("[DB] Cannot connect to MongoDB: MONGODB_URI is not configured.");
+    return null;
+  }
 
   try {
     if (!client) {

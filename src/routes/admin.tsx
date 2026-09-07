@@ -166,8 +166,8 @@ function AdminLayout() {
                 key={item.label}
                 to={item.to}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${active
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-900/30"
-                    : "text-slate-300 hover:bg-white/5 hover:text-white"
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-900/30"
+                  : "text-slate-300 hover:bg-white/5 hover:text-white"
                   }`}
               >
                 <Icon className={`size-4 ${active ? "text-white" : "text-slate-400"}`} />
@@ -251,8 +251,8 @@ function AdminLayout() {
                       to={item.to}
                       onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${active
-                          ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
-                          : "text-slate-300 hover:bg-white/5 hover:text-white"
+                        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
+                        : "text-slate-300 hover:bg-white/5 hover:text-white"
                         }`}
                     >
                       <Icon className="size-4" />

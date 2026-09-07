@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
+import { verifyAdminAuth } from "./auth.functions";
 
 export const subscribeEmail = createServerFn({ method: "POST" })
   .inputValidator(z.object({ email: z.string().email() }))
@@ -32,6 +33,10 @@ export const subscribeEmail = createServerFn({ method: "POST" })
 
 export const getSubscribers = createServerFn({ method: "POST" })
   .handler(async () => {
+    // SECURITY: Admin session required
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required.", subscribers: [] };
+
     try {
       const db = await connectDB();
       if (!db) return { success: true, subscribers: [] };
@@ -55,6 +60,10 @@ export const getSubscribers = createServerFn({ method: "POST" })
 export const deleteSubscriber = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
+    // SECURITY: Admin session required
+    const admin = await verifyAdminAuth();
+    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
+
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };

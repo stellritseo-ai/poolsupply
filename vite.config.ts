@@ -20,13 +20,22 @@ const cjsRequireShimPlugin = {
   },
 };
 
-export default defineConfig({
+export default (defineConfig as any)({
   tanstackStart: {
     server: { entry: "server" },
   },
   nitro: {
     preset: "vercel",
-    // @ts-expect-error - rollupConfig is valid for nitro but missing in Lovable's types
+    routeRules: {
+      "/**": {
+        headers: {
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-XSS-Protection": "1; mode=block",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+        },
+      },
+    },
     rollupConfig: {
       plugins: [cjsRequireShimPlugin],
     },
