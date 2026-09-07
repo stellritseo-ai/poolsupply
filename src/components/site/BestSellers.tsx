@@ -178,7 +178,7 @@ export function BestSellers() {
 
     // "all": Curate target IDs with Auto Cleaners strictly at positions 1-4
     const byIdMap = new Map(allPoolProducts.map((p) => [p.id, p]));
-    const featured = CURATED_FEATURED_IDS.map((id) => byIdMap.get(id)).filter(Boolean);
+    const featured = CURATED_FEATURED_IDS.map((id) => byIdMap.get(id)).filter((p): p is Product => Boolean(p));
 
     // Backfill strictly from the 4 requested categories if needed
     if (featured.length < 10) {

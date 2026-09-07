@@ -953,36 +953,45 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
         quotesCol.find().sort({ createdAt: -1 }).toArray(),
       ]);
 
+      const matchedOrderIds = new Set<string>();
+
       const customersWithStats = customers.map((c) => {
         const emailClean = c.email?.toLowerCase().trim();
         const phoneClean = c.phone?.trim();
 
         // Match orders
         const customerOrders = orders.filter((o) => {
-          if (emailClean && o.email?.toLowerCase().trim() === emailClean) return true;
-          if (phoneClean && o.phone?.trim() === phoneClean) return true;
-          if (phoneClean && o.email?.trim() === phoneClean) return true;
+          const oEmail = o.email?.toLowerCase().trim();
+          const oPhone = o.phone?.trim();
+          if (emailClean && oEmail === emailClean) return true;
+          if (phoneClean && (oPhone === phoneClean || oEmail === phoneClean)) return true;
           return false;
-        }).map((o: any) => ({
-          id: o.id || o._id.toString(),
-          placedAt: o.placedAt || new Date().toISOString(),
-          email: o.email,
-          phone: o.phone,
-          name: o.name,
-          company: o.company,
-          address: o.address,
-          items: o.items || [],
-          subtotal: o.subtotal || 0,
-          shipping: o.shipping || 0,
-          tax: o.tax || 0,
-          total: o.total || 0,
-          discount: o.discount,
-          promoCode: o.promoCode,
-          paymentType: o.paymentType || "Card",
-          paymentStatus: o.paymentStatus || "Paid",
-          status: o.status || "Pending",
-          method: o.method || "standard",
-        }));
+        }).map((o: any) => {
+          const ordId = o.id || o._id.toString();
+          matchedOrderIds.add(ordId);
+          return {
+            id: ordId,
+            placedAt: o.placedAt || new Date().toISOString(),
+            email: o.email,
+            phone: o.phone,
+            name: o.name,
+            company: o.company,
+            address: o.address,
+            items: o.items || [],
+            subtotal: o.subtotal || 0,
+            shipping: o.shipping || 0,
+            tax: o.tax || 0,
+            total: o.total || 0,
+            discount: o.discount,
+            promoCode: o.promoCode,
+            paymentType: o.paymentType || "Card",
+            paymentStatus: o.paymentStatus || "Paid",
+            status: o.status || "Pending",
+            method: o.method || "standard",
+            trackingNumber: o.trackingNumber,
+            carrier: o.carrier,
+          };
+        });
 
         // Match returns
         const customerReturns = returns.filter((r) => {
@@ -1034,6 +1043,8 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           return sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0);
         }, 0);
 
+        const latestOrder = customerOrders[0];
+
         return {
           id: c._id.toString(),
           name: c.name || "Commercial Customer",
@@ -1042,6 +1053,9 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           avatar: c.avatar || undefined,
           company: c.company || undefined,
           contractorId: c.contractorId || undefined,
+          accountType: "portal" as const,
+          isGuest: false,
+          portalAccess: true,
           addresses: c.addresses || [],
           cards: c.cards || [],
           emailPrefs: c.emailPrefs || {
@@ -1054,6 +1068,8 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           wishlists: c.wishlists || {},
           createdAt: c.createdAt || new Date().toISOString(),
           updatedAt: c.updatedAt || c.createdAt || new Date().toISOString(),
+          lastOrderAt: latestOrder?.placedAt || undefined,
+          firstOrderAt: customerOrders[customerOrders.length - 1]?.placedAt || undefined,
           totalOrders: customerOrders.length,
           lifetimeValue: totalSpent,
           totalSpent,
@@ -1065,7 +1081,173 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
         };
       });
 
-      return { success: true, customers: customersWithStats };
+      // ── Group Guest Orders Who Ordered Without Logging Into Client Portal ──
+      const guestOrdersMap = new Map<string, any[]>();
+      for (const o of orders) {
+        const ordId = o.id || o._id?.toString();
+        if (matchedOrderIds.has(ordId)) continue;
+
+        const emailKey = o.email?.toLowerCase().trim();
+        const phoneKey = o.phone?.trim();
+        const nameKey = o.name?.trim().toLowerCase();
+        const groupKey = emailKey || phoneKey || nameKey || `guest_${ordId}`;
+
+        if (!guestOrdersMap.has(groupKey)) {
+          guestOrdersMap.set(groupKey, []);
+        }
+        guestOrdersMap.get(groupKey)!.push(o);
+      }
+
+      const guestCustomers = Array.from(guestOrdersMap.entries()).map(([groupKey, gOrders]) => {
+        gOrders.sort((a, b) => new Date(b.placedAt || 0).getTime() - new Date(a.placedAt || 0).getTime());
+        const latestOrder = gOrders[0];
+        const earliestOrder = gOrders[gOrders.length - 1];
+
+        const formattedOrders = gOrders.map((o: any) => ({
+          id: o.id || o._id.toString(),
+          placedAt: o.placedAt || new Date().toISOString(),
+          email: o.email,
+          phone: o.phone,
+          name: o.name,
+          company: o.company,
+          address: o.address,
+          items: o.items || [],
+          subtotal: o.subtotal || 0,
+          shipping: o.shipping || 0,
+          tax: o.tax || 0,
+          total: o.total || 0,
+          discount: o.discount,
+          promoCode: o.promoCode,
+          paymentType: o.paymentType || "Card",
+          paymentStatus: o.paymentStatus || "Paid",
+          status: o.status || "Pending",
+          method: o.method || "standard",
+          trackingNumber: o.trackingNumber,
+          carrier: o.carrier,
+        }));
+
+        const totalSpent = formattedOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+        const totalProductsPurchased = formattedOrders.reduce((sum, o) => {
+          return sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0);
+        }, 0);
+
+        // Deduplicate shipping addresses from their checkout history
+        const addressMap = new Map<string, any>();
+        formattedOrders.forEach((o, idx) => {
+          if (o.address) {
+            const a = o.address;
+            const aKey = `${a.line1 || a.street || ""}-${a.city || ""}-${a.zip || ""}`.toLowerCase().trim();
+            if (aKey && !addressMap.has(aKey)) {
+              addressMap.set(aKey, {
+                id: `addr_guest_${idx}`,
+                title: idx === 0 ? "Primary Delivery Destination" : `Destination #${idx + 1}`,
+                recipientName: o.name || latestOrder.name || "Customer",
+                line1: a.line1 || a.street || "",
+                line2: a.line2 || "",
+                city: a.city || "",
+                state: a.state || "",
+                zip: a.zip || "",
+                country: a.country || "USA",
+                isDefault: idx === 0,
+                type: "Shipping",
+              });
+            }
+          }
+        });
+
+        const guestOrderIds = new Set(formattedOrders.map(o => o.id));
+        const emailClean = latestOrder.email?.toLowerCase().trim();
+        const phoneClean = latestOrder.phone?.trim();
+
+        const guestReturns = returns.filter((r) => {
+          if (guestOrderIds.has(r.orderId)) return true;
+          if (emailClean && (r.customerEmail?.toLowerCase() === emailClean || r.customerIdentifier?.toLowerCase() === emailClean)) return true;
+          if (phoneClean && (r.customerPhone === phoneClean || r.customerIdentifier === phoneClean)) return true;
+          return false;
+        }).map((r: any) => ({
+          id: r._id.toString(),
+          rmaId: r.rmaId || `RMA-${r._id.toString().slice(-6)}`,
+          orderId: r.orderId,
+          reason: r.reason || "General Return",
+          notes: r.notes || "",
+          items: r.items || [],
+          preferredResolution: r.preferredResolution || "Replacement Unit",
+          status: r.status || "Under Review",
+          isResolved: typeof r.isResolved === "boolean" ? r.isResolved : r.status === "Resolved",
+          adminNotes: r.adminNotes || "",
+          adminResolution: r.adminResolution || "",
+          createdAt: r.createdAt || new Date().toISOString(),
+        }));
+
+        const guestQuotes = quotes.filter((q) => {
+          if (emailClean && (q.customerEmail?.toLowerCase() === emailClean || q.customerIdentifier?.toLowerCase() === emailClean)) return true;
+          if (phoneClean && (q.customerPhone === phoneClean || q.customerIdentifier === phoneClean)) return true;
+          return false;
+        }).map((q: any) => ({
+          id: q._id.toString(),
+          quoteId: q.quoteId || `Q-${q._id.toString().slice(-5)}`,
+          projectName: q.projectName || "Commercial Project",
+          projectLocation: q.projectLocation || "",
+          targetCompletionDate: q.targetCompletionDate || "Next 30 Days",
+          estimatedBudget: typeof q.estimatedBudget === "number" ? q.estimatedBudget : 0,
+          notes: q.notes || "",
+          items: q.items || [],
+          status: q.status || "Engineering Review",
+          isResolved: typeof q.isResolved === "boolean" ? q.isResolved : q.status === "Resolved" || q.status === "Accepted" || q.status === "Converted to Order",
+          quotedAmount: typeof q.quotedAmount === "number" ? q.quotedAmount : (typeof q.totalAmount === "number" ? q.totalAmount : 0),
+          adminLeadTime: q.adminLeadTime || "",
+          adminFreightTerms: q.adminFreightTerms || "",
+          adminNotes: q.adminNotes || "",
+          adminProposalNotes: q.adminProposalNotes || "",
+          createdAt: q.createdAt || new Date().toISOString(),
+        }));
+
+        return {
+          id: `guest_${groupKey.replace(/[^a-zA-Z0-9]/g, "_").slice(0, 36)}`,
+          name: latestOrder.name || "Guest Checkout Buyer",
+          email: latestOrder.email || undefined,
+          phone: latestOrder.phone || undefined,
+          avatar: undefined,
+          company: latestOrder.company || undefined,
+          contractorId: undefined,
+          accountType: "guest" as const,
+          isGuest: true,
+          portalAccess: false,
+          addresses: Array.from(addressMap.values()),
+          cards: [],
+          emailPrefs: {
+            orderUpdates: true,
+            freightTracking: true,
+            promoAlerts: false,
+            catalogDigest: false,
+            invoiceReceipts: true,
+          },
+          wishlists: {},
+          createdAt: earliestOrder.placedAt || new Date().toISOString(),
+          updatedAt: latestOrder.placedAt || new Date().toISOString(),
+          lastOrderAt: latestOrder.placedAt || earliestOrder.placedAt,
+          firstOrderAt: earliestOrder.placedAt,
+          totalOrders: formattedOrders.length,
+          lifetimeValue: totalSpent,
+          totalSpent,
+          totalItems: totalProductsPurchased,
+          totalProductsPurchased,
+          orders: formattedOrders,
+          returns: guestReturns,
+          quotes: guestQuotes,
+        };
+      });
+
+      // Unified customer feed
+      const allCustomers = [...customersWithStats, ...guestCustomers];
+
+      allCustomers.sort((a: any, b: any) => {
+        const timeA = new Date(a.lastOrderAt || a.updatedAt || a.createdAt).getTime();
+        const timeB = new Date(b.lastOrderAt || b.updatedAt || b.createdAt).getTime();
+        return timeB - timeA;
+      });
+
+      return { success: true, customers: allCustomers };
     } catch (e: any) {
       console.error("Fetch Customers Error:", e);
       return { success: false, error: "Failed to fetch customers data.", customers: [] };
@@ -1094,6 +1276,34 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
         customerDoc = await customersCol.findOne({
           $or: [{ email: data.id }, { phone: data.id }, { name: data.id }],
         });
+      }
+
+      // If not in registered customers collection, check if it is a guest checkout customer
+      if (!customerDoc) {
+        const cleanKey = data.id.replace(/^guest_/, "").replace(/_/g, " ").trim();
+        const guestOrders = await ordersCol.find({
+          $or: [
+            { email: { $regex: new RegExp(`^${cleanKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } },
+            { phone: cleanKey },
+            { name: { $regex: new RegExp(`^${cleanKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } },
+            { id: data.id.replace(/^guest_/, "") },
+          ]
+        }).sort({ placedAt: -1 }).toArray();
+
+        if (guestOrders.length > 0) {
+          const latest = guestOrders[0];
+          customerDoc = {
+            _id: data.id,
+            name: latest.name || "Guest Checkout Buyer",
+            email: latest.email,
+            phone: latest.phone,
+            company: latest.company,
+            accountType: "guest",
+            isGuest: true,
+            portalAccess: false,
+            createdAt: guestOrders[guestOrders.length - 1].placedAt || new Date().toISOString(),
+          };
+        }
       }
 
       if (!customerDoc) {

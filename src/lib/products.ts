@@ -20,6 +20,7 @@ export type Product = {
   brand: string;
   price: number;
   salePrice?: number;
+  wholesalePrice?: number;
   msrp: number; // For retail comparison
   rating: number;
   img: string;

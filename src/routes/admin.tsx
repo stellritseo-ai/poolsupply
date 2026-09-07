@@ -111,7 +111,7 @@ function AdminLayout() {
     { label: "Customer Orders", to: "/admin/orders", icon: ShoppingBag },
     { label: "Returns & RMA", to: "/admin/returns", icon: RotateCcw },
     { label: "Quotes & Bids", to: "/admin/quotes", icon: FileText },
-    { label: "Trade Customers", to: "/admin/customers", icon: User },
+    { label: "Total Customers", to: "/admin/customers", icon: Users },
     { label: "Web Email Inbox", to: "/admin/emails", icon: Mail },
     { label: "Customer Reviews", to: "/admin/reviews", icon: MessageSquare },
     { label: "Live Support Chat", to: "/admin/chat", icon: MessageCircle },
