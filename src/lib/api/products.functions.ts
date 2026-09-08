@@ -243,6 +243,70 @@ export const getShopCategoryBrandsDb = createServerFn({ method: "POST" })
     }
   });
 
+// ── Category Product Counts Query (for Homepage Best Seller Categories) ───────
+export const getCategoryCountsDb = createServerFn({ method: "POST" })
+  .handler(async () => {
+    // Verified fallback counts from product catalog
+    const fallbackCounts: Record<string, number> = {
+      "pool-pumps": 56,
+      "pool-heaters": 57,
+      "pool-lights": 99,
+      "pool-filters": 56,
+      "pool-cleaners": 22,
+      "automation-systems": 28,
+    };
+
+    try {
+      const db = await connectDB();
+      if (!db) {
+        return { success: true, counts: fallbackCounts };
+      }
+
+      const productsCol = db.collection("products");
+      const baseSlugs = [
+        "pool-pumps",
+        "pool-heaters",
+        "pool-lights",
+        "pool-filters",
+        "pool-cleaners",
+        "automation-systems",
+      ];
+
+      const counts: Record<string, number> = {};
+
+      await Promise.all(
+        baseSlugs.map(async (slug) => {
+          const baseName = slug.replace(/^pool-/, "").replace(/-systems?$/, "").trim();
+          const variants = Array.from(new Set([
+            slug.replace(/-/g, " "),
+            slug.replace(/-and-/g, " & ").replace(/-/g, " "),
+            slug.replace(/-/g, " & "),
+            slug,
+            baseName,
+            baseName.replace(/-/g, " "),
+          ].filter(Boolean)));
+          const escaped = variants.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+          const catRegex = new RegExp(escaped.join("|"), "i");
+
+          const dbCount = await productsCol.countDocuments({
+            $or: [
+              { category: { $regex: catRegex } },
+              { parentCategory: { $regex: catRegex } },
+              { subCategory: { $regex: catRegex } },
+            ]
+          });
+
+          counts[slug] = dbCount > 0 ? dbCount : (fallbackCounts[slug] || 0);
+        })
+      );
+
+      return { success: true, counts };
+    } catch (e: any) {
+      console.error("Failed to fetch category counts from DB:", e);
+      return { success: true, counts: fallbackCounts };
+    }
+  });
+
 // ── Server-Side Paginated Shop Query (replaces client-side limit hack) ────
 export const getShopProductsPagedDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({

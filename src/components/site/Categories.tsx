@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Loader2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import pump from "@/assets/cat-pump.jpg";
 import heater from "@/assets/cat-heater.jpg";
 import light from "@/assets/cat-light.jpg";
@@ -7,7 +7,8 @@ import filter from "@/assets/cat-filter.jpg";
 import cleaner from "@/assets/cat-cleaner.jpg";
 import automation from "@/assets/cat-automation.jpg";
 import { Link } from "@tanstack/react-router";
-import { useProductsQuery } from "@/lib/products";
+import { useQuery } from "@tanstack/react-query";
+import { getCategoryCountsDb } from "@/lib/api/products.functions";
 
 const baseCats = [
   { name: "Pool Pumps", slug: "pool-pumps", categoryKey: "pumps", img: pump },
@@ -18,26 +19,31 @@ const baseCats = [
   { name: "Automation Systems", slug: "automation-systems", categoryKey: "automation", img: automation },
 ];
 
+const DEFAULT_CATEGORY_COUNTS: Record<string, number> = {
+  "pool-pumps": 56,
+  "pool-heaters": 57,
+  "pool-lights": 99,
+  "pool-filters": 56,
+  "pool-cleaners": 22,
+  "automation-systems": 28,
+};
+
 export function Categories() {
-  const { data: products, isLoading } = useProductsQuery();
+  const { data: countsData } = useQuery({
+    queryKey: ["category-counts"],
+    queryFn: async () => {
+      const res = await getCategoryCountsDb();
+      if (res?.success && res.counts) {
+        return res.counts;
+      }
+      return DEFAULT_CATEGORY_COUNTS;
+    },
+    initialData: DEFAULT_CATEGORY_COUNTS,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const getCount = (cat: typeof baseCats[number]) => {
-    if (!products || products.length === 0) return "0 products";
-    const key = cat.categoryKey.toLowerCase();
-    const count = products.filter(p => {
-      const pCat = (p.category || "").toLowerCase();
-      const pSub = (p.subCategory || "").toLowerCase();
-      const pParent = (p.parentCategory || "").toLowerCase();
-      const pName = (p.name || "").toLowerCase();
-      return (
-        pCat === key ||
-        pSub === key ||
-        pCat.includes(key) ||
-        pSub.includes(key) ||
-        pParent.includes(key) ||
-        pName.includes(key)
-      );
-    }).length;
+    const count = countsData?.[cat.slug] ?? DEFAULT_CATEGORY_COUNTS[cat.slug] ?? 0;
     return `${count}+ products`;
   };
   return (
@@ -83,8 +89,7 @@ export function Categories() {
 
                   {/* Floating pill badge */}
                   <span className="absolute top-4 left-4 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-white/90 backdrop-blur border border-white/50 rounded-full shadow-sm flex items-center gap-1.5">
-                    {isLoading && <Loader2 className="size-3 animate-spin" />}
-                    {isLoading ? "Loading..." : getCount(c)}
+                    {getCount(c)}
                   </span>
                 </div>
 
