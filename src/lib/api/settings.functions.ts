@@ -70,7 +70,8 @@ export interface GlobalSettingsType {
 const DEFAULT_SETTINGS: GlobalSettingsType = {
   _id: "global",
   maintenanceMode: false,
-  maintenanceNotice: "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates.",
+  maintenanceNotice:
+    "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates.",
   store: {
     name: "Pool Supply Wholesalers",
     tagline: "Commercial Grade Pool Equipment & Supplies",
@@ -96,7 +97,8 @@ const DEFAULT_SETTINGS: GlobalSettingsType = {
       id: "stripe",
       name: "Stripe Live Payments",
       active: true,
-      publicKey: "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2",
+      publicKey:
+        "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2",
       mode: "Live Production (256-bit SSL)",
     },
     { id: "paypal", name: "PayPal Wholesale", active: false, mode: "Standard B2B" },
@@ -104,7 +106,8 @@ const DEFAULT_SETTINGS: GlobalSettingsType = {
   ],
   stripe: {
     mode: "live",
-    publishableKey: "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2",
+    publishableKey:
+      "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2",
     secretKey: "sk_live_••••••••••••••••••••••••9xK2",
     webhookSecret: "whsec_••••••••••••••••••••••••7Fp1",
   },
@@ -131,73 +134,75 @@ const DEFAULT_SETTINGS: GlobalSettingsType = {
   },
   securityPolicy: {
     sessionTimeoutMinutes: 60,
-    maxFailedAttempts: 5,
-    lockoutDurationMinutes: 15,
+    maxFailedAttempts: 3,
+    lockoutDurationMinutes: 180,
   },
 };
 
-export const getGlobalSettings = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) {
-        return {
-          success: true,
-          settings: DEFAULT_SETTINGS,
-        };
-      }
-      const settingsCol = db.collection("settings");
-      let settings = await settingsCol.findOne({ _id: "global" as any }) as any;
-
-      if (!settings) {
-        await settingsCol.insertOne(DEFAULT_SETTINGS as any);
-        settings = DEFAULT_SETTINGS;
-      } else {
-        // Deep merge with defaults to ensure all nested keys exist
-        settings = {
-          ...DEFAULT_SETTINGS,
-          ...settings,
-          store: { ...DEFAULT_SETTINGS.store, ...(settings.store || {}) },
-          logistics: { ...DEFAULT_SETTINGS.logistics, ...(settings.logistics || {}) },
-          compliance: { ...DEFAULT_SETTINGS.compliance, ...(settings.compliance || {}) },
-          stripe: { ...DEFAULT_SETTINGS.stripe, ...(settings.stripe || {}) },
-          smtp: { ...DEFAULT_SETTINGS.smtp, ...(settings.smtp || {}) },
-          analytics: { ...DEFAULT_SETTINGS.analytics, ...(settings.analytics || {}) },
-          notifications: { ...DEFAULT_SETTINGS.notifications, ...(settings.notifications || {}) },
-          securityPolicy: { ...DEFAULT_SETTINGS.securityPolicy, ...(settings.securityPolicy || {}) },
-          paymentMethods: Array.isArray(settings.paymentMethods) && settings.paymentMethods.length > 0
-            ? settings.paymentMethods
-            : DEFAULT_SETTINGS.paymentMethods,
-        };
-      }
-
-      return {
-        success: true,
-        settings: settings as GlobalSettingsType,
-      };
-    } catch (e: any) {
-      console.error("Settings fetch error:", e);
+export const getGlobalSettings = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) {
       return {
         success: true,
         settings: DEFAULT_SETTINGS,
       };
     }
-  });
+    const settingsCol = db.collection("settings");
+    let settings = (await settingsCol.findOne({ _id: "global" as any })) as any;
+
+    if (!settings) {
+      await settingsCol.insertOne(DEFAULT_SETTINGS as any);
+      settings = DEFAULT_SETTINGS;
+    } else {
+      // Deep merge with defaults to ensure all nested keys exist
+      settings = {
+        ...DEFAULT_SETTINGS,
+        ...settings,
+        store: { ...DEFAULT_SETTINGS.store, ...(settings.store || {}) },
+        logistics: { ...DEFAULT_SETTINGS.logistics, ...(settings.logistics || {}) },
+        compliance: { ...DEFAULT_SETTINGS.compliance, ...(settings.compliance || {}) },
+        stripe: { ...DEFAULT_SETTINGS.stripe, ...(settings.stripe || {}) },
+        smtp: { ...DEFAULT_SETTINGS.smtp, ...(settings.smtp || {}) },
+        analytics: { ...DEFAULT_SETTINGS.analytics, ...(settings.analytics || {}) },
+        notifications: { ...DEFAULT_SETTINGS.notifications, ...(settings.notifications || {}) },
+        securityPolicy: { ...DEFAULT_SETTINGS.securityPolicy, ...(settings.securityPolicy || {}) },
+        paymentMethods:
+          Array.isArray(settings.paymentMethods) && settings.paymentMethods.length > 0
+            ? settings.paymentMethods
+            : DEFAULT_SETTINGS.paymentMethods,
+      };
+    }
+
+    return {
+      success: true,
+      settings: settings as GlobalSettingsType,
+    };
+  } catch (e: any) {
+    console.error("Settings fetch error:", e);
+    return {
+      success: true,
+      settings: DEFAULT_SETTINGS,
+    };
+  }
+});
 
 export const updateGlobalSettings = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    maintenanceMode: z.boolean().optional(),
-    maintenanceNotice: z.string().optional(),
-    store: z.record(z.any()).optional(),
-    logistics: z.record(z.any()).optional(),
-    compliance: z.record(z.any()).optional(),
-    paymentMethods: z.array(z.any()).optional(),
-    stripe: z.record(z.any()).optional(),
-    smtp: z.record(z.any()).optional(),
-    analytics: z.record(z.any()).optional(),
-    notifications: z.record(z.any()).optional(),
-    securityPolicy: z.record(z.any()).optional(),
-  }))
+  .inputValidator(
+    z.object({
+      maintenanceMode: z.boolean().optional(),
+      maintenanceNotice: z.string().optional(),
+      store: z.record(z.any()).optional(),
+      logistics: z.record(z.any()).optional(),
+      compliance: z.record(z.any()).optional(),
+      paymentMethods: z.array(z.any()).optional(),
+      stripe: z.record(z.any()).optional(),
+      smtp: z.record(z.any()).optional(),
+      analytics: z.record(z.any()).optional(),
+      notifications: z.record(z.any()).optional(),
+      securityPolicy: z.record(z.any()).optional(),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -207,8 +212,10 @@ export const updateGlobalSettings = createServerFn({ method: "POST" })
       const settingsCol = db.collection("settings");
 
       const updateData: any = { updatedAt: new Date() };
-      if (typeof data.maintenanceMode === "boolean") updateData.maintenanceMode = data.maintenanceMode;
-      if (typeof data.maintenanceNotice === "string") updateData.maintenanceNotice = data.maintenanceNotice;
+      if (typeof data.maintenanceMode === "boolean")
+        updateData.maintenanceMode = data.maintenanceMode;
+      if (typeof data.maintenanceNotice === "string")
+        updateData.maintenanceNotice = data.maintenanceNotice;
       if (data.store) updateData.store = data.store;
       if (data.logistics) updateData.logistics = data.logistics;
       if (data.compliance) updateData.compliance = data.compliance;
@@ -219,11 +226,7 @@ export const updateGlobalSettings = createServerFn({ method: "POST" })
       if (data.notifications) updateData.notifications = data.notifications;
       if (data.securityPolicy) updateData.securityPolicy = data.securityPolicy;
 
-      await settingsCol.updateOne(
-        { _id: "global" as any },
-        { $set: updateData },
-        { upsert: true }
-      );
+      await settingsCol.updateOne({ _id: "global" as any }, { $set: updateData }, { upsert: true });
 
       return { success: true };
     } catch (e: any) {
@@ -235,46 +238,47 @@ export const updateGlobalSettings = createServerFn({ method: "POST" })
 /**
  * Interactive MongoDB Atlas Roundtrip Ping Latency Test
  */
-export const testMongoPing = createServerFn({ method: "POST" })
-  .handler(async () => {
-    const startTime = Date.now();
-    try {
-      const db = await connectDB();
-      if (!db) {
-        return { success: false, latencyMs: 0, error: "Database client connection offline." };
-      }
-      // Execute ping command
-      const adminDb = db.admin();
-      const pingResult = await adminDb.ping();
-      const latencyMs = Date.now() - startTime;
-
-      // Also get collection stats
-      const collections = await db.listCollections().toArray();
-
-      return {
-        success: true,
-        latencyMs,
-        collectionsCount: collections.length,
-        status: latencyMs < 100 ? "Optimal (Fast)" : latencyMs < 300 ? "Good" : "Degraded",
-        timestamp: new Date().toISOString(),
-        pingResult,
-      };
-    } catch (err: any) {
-      return {
-        success: false,
-        latencyMs: Date.now() - startTime,
-        error: err.message || "Failed to ping database",
-      };
+export const testMongoPing = createServerFn({ method: "POST" }).handler(async () => {
+  const startTime = Date.now();
+  try {
+    const db = await connectDB();
+    if (!db) {
+      return { success: false, latencyMs: 0, error: "Database client connection offline." };
     }
-  });
+    // Execute ping command
+    const adminDb = db.admin();
+    const pingResult = await adminDb.ping();
+    const latencyMs = Date.now() - startTime;
+
+    // Also get collection stats
+    const collections = await db.listCollections().toArray();
+
+    return {
+      success: true,
+      latencyMs,
+      collectionsCount: collections.length,
+      status: latencyMs < 100 ? "Optimal (Fast)" : latencyMs < 300 ? "Good" : "Degraded",
+      timestamp: new Date().toISOString(),
+      pingResult,
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      latencyMs: Date.now() - startTime,
+      error: err.message || "Failed to ping database",
+    };
+  }
+});
 
 /**
  * Interactive SMTP Verification - Dispatches a live test email to recipient
  */
 export const sendTestEmail = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    recipientEmail: z.string().email(),
-  }))
+  .inputValidator(
+    z.object({
+      recipientEmail: z.string().email(),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const nodemailer = (await import("nodemailer")).default;
@@ -303,7 +307,8 @@ export const sendTestEmail = createServerFn({ method: "POST" })
       if (!transporter) {
         return {
           success: false,
-          error: "No SMTP credentials configured in server environment. Configure GMAIL_USER/GMAIL_APP_PASSWORD.",
+          error:
+            "No SMTP credentials configured in server environment. Configure GMAIL_USER/GMAIL_APP_PASSWORD.",
         };
       }
 
@@ -353,68 +358,75 @@ export const sendTestEmail = createServerFn({ method: "POST" })
 /**
  * Security Audit & Lockout Management
  */
-export const getSecurityAuditLogs = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true, logs: [], locks: [] };
+export const getSecurityAuditLogs = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: true, logs: [], locks: [] };
 
-      // 1. Get recent security locks
-      const locksCol = db.collection("admin_security_locks");
-      const activeLocks = await locksCol.find({}).sort({ lockedUntil: -1 }).limit(20).toArray();
+    // 1. Get recent security locks
+    const locksCol = db.collection("admin_security_locks");
+    const activeLocks = await locksCol.find({}).sort({ lockedUntil: -1 }).limit(20).toArray();
 
-      // 2. Format locks
-      const formattedLocks = activeLocks.map(l => ({
-        id: l._id.toString(),
-        key: l.key || l.identifier || "Unknown",
-        failedAttempts: l.failedAttempts || 0,
-        lockedUntil: l.lockedUntil ? new Date(l.lockedUntil).toISOString() : null,
-        isLocked: l.lockedUntil ? new Date(l.lockedUntil) > new Date() : false,
-        lastAttempt: l.lastAttempt ? new Date(l.lastAttempt).toISOString() : null,
-      }));
+    // 2. Format locks
+    const formattedLocks = activeLocks.map((l) => ({
+      id: l._id.toString(),
+      key: l.key || l.identifier || "Unknown",
+      failedAttempts: l.failedAttempts || 0,
+      lockedUntil: l.lockedUntil ? new Date(l.lockedUntil).toISOString() : null,
+      isLocked: l.lockedUntil ? new Date(l.lockedUntil) > new Date() : false,
+      lastAttempt: l.lastAttempt ? new Date(l.lastAttempt).toISOString() : null,
+    }));
 
-      // 3. Get recent staff logins
-      const usersCol = db.collection("users");
-      const staffMembers = await usersCol.find({}, { projection: { password: 0 } }).limit(20).toArray();
-      const loginLogs = staffMembers.map(u => ({
-        id: u._id.toString(),
-        username: u.username,
-        role: u.role,
-        lastLoginAt: u.lastLoginAt ? new Date(u.lastLoginAt).toISOString() : null,
-        status: u.status || "active",
-        createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
-      }));
+    // 3. Get recent staff logins
+    const usersCol = db.collection("users");
+    const staffMembers = await usersCol
+      .find({}, { projection: { password: 0 } })
+      .limit(20)
+      .toArray();
+    const loginLogs = staffMembers.map((u) => ({
+      id: u._id.toString(),
+      username: u.username,
+      role: u.role,
+      lastLoginAt: u.lastLoginAt ? new Date(u.lastLoginAt).toISOString() : null,
+      status: u.status || "active",
+      createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
+    }));
 
-      return {
-        success: true,
-        locks: formattedLocks,
-        logins: loginLogs,
-      };
-    } catch (err: any) {
-      console.error("Failed to load security audit logs:", err);
-      return { success: false, error: "Failed to retrieve security audit logs." };
-    }
-  });
+    return {
+      success: true,
+      locks: formattedLocks,
+      logins: loginLogs,
+    };
+  } catch (err: any) {
+    console.error("Failed to load security audit logs:", err);
+    return { success: false, error: "Failed to retrieve security audit logs." };
+  }
+});
 
 /**
  * Clear a security lockout for an IP or username
  */
 export const clearSecurityLockout = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    key: z.string(),
-  }))
+  .inputValidator(
+    z.object({
+      key: z.string(),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database offline." };
       const locksCol = db.collection("admin_security_locks");
       await locksCol.deleteMany({
-        $or: [
-          { key: data.key },
-          { identifier: data.key },
-          { _id: data.key as any },
-        ]
+        $or: [{ key: data.key }, { identifier: data.key }, { _id: data.key as any }],
       });
+
+      // Also clear admin_lockouts collection
+      const adminLocksCol = db.collection("admin_lockouts");
+      await adminLocksCol.deleteMany({
+        $or: [{ username: data.key }, { username: data.key.toLowerCase() }],
+      });
+
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err.message || "Failed to clear lockout." };

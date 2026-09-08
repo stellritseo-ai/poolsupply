@@ -1,29 +1,36 @@
-import type { Db } from 'mongodb';
-import dns from 'node:dns';
+import type { Db, MongoClient } from "mongodb";
+import dns from "node:dns";
 
 // Configure high-reliability public DNS resolvers for MongoDB Atlas SRV lookup
 try {
-  if (typeof dns?.setServers === 'function') {
-    dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4', '1.0.0.1']);
+  if (typeof dns?.setServers === "function") {
+    dns.setServers(["8.8.8.8", "1.1.1.1", "8.8.4.4", "1.0.0.1"]);
   }
-} catch (e) {
+} catch {
   // Ignore in browser or edge contexts
 }
 
 function getMongoUri(): string {
+  const globalProc = (
+    globalThis as unknown as {
+      process?: { env?: Record<string, string | undefined> };
+    }
+  ).process;
+
   const uri =
     process.env.MONGODB_URI ||
-    (typeof (globalThis as any).process !== "undefined" ? (globalThis as any).process?.env?.MONGODB_URI : undefined);
+    process.env.DATABASE_URL ||
+    globalProc?.env?.MONGODB_URI ||
+    globalProc?.env?.DATABASE_URL;
 
   if (typeof uri === "string" && uri.trim()) {
     return uri.trim();
   }
 
-  console.warn("[DB] MONGODB_URI environment variable not found. Please set MONGODB_URI in your environment or .env file.");
   return "";
 }
 
-let client: any = null;
+let client: MongoClient | null = null;
 let dbConnection: Db | null = null;
 
 /**
@@ -38,25 +45,26 @@ export async function connectDB(): Promise<Db | null> {
 
   const uri = getMongoUri();
   if (!uri) {
-    console.error("[DB] Cannot connect to MongoDB: MONGODB_URI is not configured.");
+    console.warn("[DB] MONGODB_URI environment variable is not defined in environment.");
     return null;
   }
 
   try {
     if (!client) {
-      const { MongoClient } = await import('mongodb');
-      client = new MongoClient(uri, {
+      const { MongoClient: MongoCls } = await import("mongodb");
+      client = new MongoCls(uri, {
         serverSelectionTimeoutMS: 10000,
         connectTimeoutMS: 10000,
       });
     }
     await client.connect();
     // Defaulting database name to 'aquapro' which fits the application context
-    dbConnection = client.db('aquapro');
+    dbConnection = client.db("aquapro");
     console.log("Successfully connected to MongoDB (aquapro)");
     return dbConnection;
-  } catch (error: any) {
-    console.error("MongoDB connection error:", error.message);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("MongoDB connection error:", message);
     client = null;
     dbConnection = null;
     return null;
@@ -66,6 +74,6 @@ export async function connectDB(): Promise<Db | null> {
 /**
  * Returns the underlying MongoClient instance.
  */
-export function getClient(): any {
+export function getClient(): MongoClient | null {
   return client;
 }

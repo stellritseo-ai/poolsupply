@@ -25,7 +25,7 @@ import { formatUSD, useCart } from "@/components/site/cart-context";
 import { computeShipping, computeShippingAsync, type ShippingResult } from "@/lib/shipping";
 import { useAuth } from "@/components/site/auth-context";
 import { createOrderDb } from "@/lib/api/orders.functions";
-import { createStripePaymentIntentDb, getStripeConfigDb } from "@/lib/api/stripe.functions";
+import { createStripePaymentIntentDb } from "@/lib/api/stripe.functions";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -69,20 +69,9 @@ let _stripePromise: Promise<any> | null = null;
 function getStripePromise() {
   if (typeof window === "undefined") return Promise.resolve(null);
   if (!_stripePromise) {
-    _stripePromise = (async () => {
-      let pk = (import.meta as any).env?.VITE_STRIPE_PUBLISHABLE_KEY;
-      if (!pk) {
-        try {
-          const cfg = await getStripeConfigDb();
-          pk = cfg?.publishableKey;
-        } catch {}
-      }
-      if (!pk) {
-        console.error("[Stripe] Publishable key is not configured.");
-        return null;
-      }
-      return loadStripe(pk);
-    })();
+    _stripePromise = loadStripe(
+      "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2"
+    );
   }
   return _stripePromise;
 }

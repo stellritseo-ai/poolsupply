@@ -41,17 +41,33 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
 
   // Check initial lockout status
   useEffect(() => {
-    getLockoutStatus({ data: { username: "pools" } }).then((res) => {
+    if (typeof window !== "undefined") {
+      const localLock = window.localStorage.getItem("psw_admin_lockout_until");
+      if (localLock) {
+        const until = parseInt(localLock, 10);
+        if (until > Date.now()) {
+          setIsLocked(true);
+          setLockedUntil(until);
+        } else {
+          window.localStorage.removeItem("psw_admin_lockout_until");
+        }
+      }
+    }
+
+    getLockoutStatus({ data: { username: username.trim() || "pools" } }).then((res) => {
       if (res.isLocked && res.lockedUntil) {
         setIsLocked(true);
         setLockedUntil(res.lockedUntil);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("psw_admin_lockout_until", res.lockedUntil.toString());
+        }
       } else if (res.attemptsLeft !== undefined) {
         setAttemptsLeft(res.attemptsLeft);
       }
     });
-  }, []);
+  }, [username]);
 
-  // Live countdown timer for 2-hour lockout
+  // Live countdown timer for 3-hour lockout
   useEffect(() => {
     if (!isLocked || !lockedUntil) return;
 
@@ -62,6 +78,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         setLockedUntil(null);
         setError("");
         setAttemptsLeft(3);
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem("psw_admin_lockout_until");
+        }
         return;
       }
 
@@ -90,6 +109,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
       const res = await loginAdmin({ data: { username, password } });
 
       if (res.success && res.token) {
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem("psw_admin_lockout_until");
+        }
         localStorage.setItem("aquapro_admin_token", res.token);
         setTimeout(() => {
           onSuccess();
@@ -98,6 +120,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         if (res.isLocked && res.lockedUntil) {
           setIsLocked(true);
           setLockedUntil(res.lockedUntil);
+          if (typeof window !== "undefined") {
+            window.localStorage.setItem("psw_admin_lockout_until", res.lockedUntil.toString());
+          }
         }
         if (res.attemptsLeft !== undefined) {
           setAttemptsLeft(res.attemptsLeft);
@@ -174,7 +199,8 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               </span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed font-medium max-w-xl">
-              Enterprise administrative gateway for managing multi-hub inventory, wholesale dealer accounts, high-frequency freight dispatch, and catalog pricing.
+              Enterprise administrative gateway for managing multi-hub inventory, wholesale dealer
+              accounts, high-frequency freight dispatch, and catalog pricing.
             </p>
           </div>
 
@@ -256,15 +282,13 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 Authorized Access Only
               </div>
 
-              <h2 className="text-2xl font-black text-white tracking-tight">
-                Account Sign In
-              </h2>
+              <h2 className="text-2xl font-black text-white tracking-tight">Account Sign In</h2>
               <p className="text-xs text-slate-300 font-medium">
                 Enter your administrative credentials to continue.
               </p>
             </div>
 
-            {/* 2-HOUR LOCKOUT WARNING BANNER */}
+            {/* 3-HOUR LOCKOUT WARNING BANNER */}
             <AnimatePresence>
               {isLocked ? (
                 <motion.div
@@ -278,10 +302,14 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                     Security Lockout Active
                   </div>
                   <p className="text-xs text-rose-200/90 font-medium leading-relaxed">
-                    Too many incorrect password attempts (3/3). Account temporarily locked for 2 hours for security.
+                    Too many incorrect password attempts (3/3). Account temporarily locked for 3
+                    hours for security.
                   </p>
                   <div className="pt-2 border-t border-rose-500/20 flex items-center justify-center gap-2 text-sm font-black text-white font-mono">
-                    <Clock className="size-4 text-rose-400 animate-spin" style={{ animationDuration: "6s" }} />
+                    <Clock
+                      className="size-4 text-rose-400 animate-spin"
+                      style={{ animationDuration: "6s" }}
+                    />
                     {remainingTimeStr || "Calculating time..."}
                   </div>
                 </motion.div>
@@ -306,7 +334,8 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               <div className="mb-4 text-center">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-extrabold">
                   <AlertTriangle className="size-3.5" />
-                  {attemptsLeft} Attempt{attemptsLeft === 1 ? "" : "s"} Remaining Before Lockout
+                  {attemptsLeft} Attempt{attemptsLeft === 1 ? "" : "s"} Remaining Before 3-Hour
+                  Lockout
                 </span>
               </div>
             )}
@@ -377,7 +406,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 ) : isLocked ? (
                   <>
                     <Lock className="size-4" />
-                    <span>Account Locked (2 Hours)</span>
+                    <span>Account Locked (3 Hours)</span>
                   </>
                 ) : (
                   <>

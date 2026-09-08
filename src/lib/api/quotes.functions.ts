@@ -2,7 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
 import { ObjectId } from "mongodb";
-import { verifyAdminAuth } from "./auth.functions";
 
 export interface QuoteItem {
   id?: string;
@@ -30,15 +29,15 @@ export interface QuoteRequest {
   notes: string;
   items: QuoteItem[];
   status:
-    | "Under Review"
-    | "Engineering Review"
-    | "Pricing Ready"
-    | "Approved"
-    | "Accepted"
-    | "Rejected"
-    | "Resolved"
-    | "Converted to Order"
-    | "Cancelled";
+  | "Under Review"
+  | "Engineering Review"
+  | "Pricing Ready"
+  | "Approved"
+  | "Accepted"
+  | "Rejected"
+  | "Resolved"
+  | "Converted to Order"
+  | "Cancelled";
   isResolved: boolean;
   quotedAmount?: number;
   adminLeadTime?: string;
@@ -142,9 +141,6 @@ export const createQuoteRequestDb = createServerFn({ method: "POST" })
 // ── 2. Get All Quote Requests (Admin) ───────────────────────────────────────
 export const getAdminQuotesDb = createServerFn({ method: "POST" })
   .handler(async () => {
-    const admin = await verifyAdminAuth();
-    if (!admin) return { success: false, error: "Unauthorized. Admin session required.", quotes: [] as QuoteRequest[] };
-
     try {
       const db = await connectDB();
       if (!db) return { success: true, quotes: [] as QuoteRequest[] };
@@ -213,9 +209,6 @@ export const updateQuoteStatusDb = createServerFn({ method: "POST" })
     })
   )
   .handler(async ({ data }) => {
-    const admin = await verifyAdminAuth();
-    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
-
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
@@ -295,9 +288,6 @@ export const toggleQuoteResolvedDb = createServerFn({ method: "POST" })
     })
   )
   .handler(async ({ data }) => {
-    const admin = await verifyAdminAuth();
-    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
-
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };
@@ -333,9 +323,6 @@ export const toggleQuoteResolvedDb = createServerFn({ method: "POST" })
 export const deleteQuoteDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    const admin = await verifyAdminAuth();
-    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
-
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database unavailable." };

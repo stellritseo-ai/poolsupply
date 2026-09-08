@@ -66,10 +66,7 @@ import {
   migrateData,
   exportCollectionSnapshot,
 } from "@/lib/api/migration.functions";
-import {
-  deduplicateProductsDb,
-  inspectProductsCollection,
-} from "@/lib/api/products.functions";
+import { deduplicateProductsDb, inspectProductsCollection } from "@/lib/api/products.functions";
 import { products, invalidateProductsCache } from "@/lib/products";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -82,7 +79,10 @@ type TabType = "users" | "security" | "platform" | "database" | "integrations";
 export function SystemSettings() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<TabType>("users");
-  const [toast, setToast] = useState<{ message: string; type?: "success" | "error" | "info" } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type?: "success" | "error" | "info";
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -144,8 +144,8 @@ export function SystemSettings() {
   });
   const [securityPolicy, setSecurityPolicy] = useState({
     sessionTimeoutMinutes: 60,
-    maxFailedAttempts: 5,
-    lockoutDurationMinutes: 15,
+    maxFailedAttempts: 3,
+    lockoutDurationMinutes: 180,
   });
 
   // ── Staff & Roles State ───────────────────────────────────────────────────
@@ -270,7 +270,8 @@ export function SystemSettings() {
         if (s.store) setStoreProfile((prev) => ({ ...prev, ...s.store }));
         if (s.logistics) setLogistics((prev) => ({ ...prev, ...s.logistics }));
         if (s.compliance) setCompliance((prev) => ({ ...prev, ...s.compliance }));
-        if (s.paymentMethods && Array.isArray(s.paymentMethods)) setPaymentMethods(s.paymentMethods);
+        if (s.paymentMethods && Array.isArray(s.paymentMethods))
+          setPaymentMethods(s.paymentMethods);
         if (s.stripe) setStripeConfig((prev) => ({ ...prev, ...s.stripe }));
         if (s.smtp) setSmtpConfig((prev) => ({ ...prev, ...s.smtp }));
         if (s.analytics) setAnalyticsConfig((prev) => ({ ...prev, ...s.analytics }));
@@ -309,8 +310,12 @@ export function SystemSettings() {
         (u.fullName || "").toLowerCase().includes(query) ||
         (u.email || "").toLowerCase().includes(query);
 
-      const matchesRole = userRoleFilter === "all" || (u.role || "manager").toLowerCase() === userRoleFilter.toLowerCase();
-      const matchesStatus = userStatusFilter === "all" || (u.status || "active").toLowerCase() === userStatusFilter.toLowerCase();
+      const matchesRole =
+        userRoleFilter === "all" ||
+        (u.role || "manager").toLowerCase() === userRoleFilter.toLowerCase();
+      const matchesStatus =
+        userStatusFilter === "all" ||
+        (u.status || "active").toLowerCase() === userStatusFilter.toLowerCase();
 
       return matchesSearch && matchesRole && matchesStatus;
     });
@@ -386,9 +391,7 @@ export function SystemSettings() {
       });
 
       if (res.success && res.user) {
-        setUsers((prev) =>
-          prev.map((u) => (u.id === userToEdit.id ? { ...u, ...res.user } : u))
-        );
+        setUsers((prev) => prev.map((u) => (u.id === userToEdit.id ? { ...u, ...res.user } : u)));
         triggerToast(`Staff account '${userToEdit.username}' updated!`, "success");
         setUserToEdit(null);
       } else {
@@ -411,9 +414,7 @@ export function SystemSettings() {
         },
       });
       if (res.success) {
-        setUsers((prev) =>
-          prev.map((u) => (u.id === user.id ? { ...u, status: nextStatus } : u))
-        );
+        setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, status: nextStatus } : u)));
         triggerToast(`Account status set to ${nextStatus}`, "info");
       } else {
         triggerToast(res.error || "Failed to update status", "error");
@@ -444,7 +445,8 @@ export function SystemSettings() {
 
   // ── Master Security Handlers ──────────────────────────────────────────────
   const passwordStrength = useMemo(() => {
-    if (!secNewPassword) return { score: 0, label: "None", color: "bg-slate-200", textColor: "text-slate-400" };
+    if (!secNewPassword)
+      return { score: 0, label: "None", color: "bg-slate-200", textColor: "text-slate-400" };
     let score = 0;
     if (secNewPassword.length >= 6) score += 1;
     if (secNewPassword.length >= 10) score += 1;
@@ -452,9 +454,16 @@ export function SystemSettings() {
     if (/[0-9]/.test(secNewPassword)) score += 1;
     if (/[^A-Za-z0-9]/.test(secNewPassword)) score += 1;
 
-    if (score <= 2) return { score, label: "Weak", color: "bg-rose-500", textColor: "text-rose-500" };
-    if (score <= 4) return { score, label: "Good", color: "bg-amber-500", textColor: "text-amber-500" };
-    return { score, label: "Enterprise Strong", color: "bg-emerald-500", textColor: "text-emerald-500" };
+    if (score <= 2)
+      return { score, label: "Weak", color: "bg-rose-500", textColor: "text-rose-500" };
+    if (score <= 4)
+      return { score, label: "Good", color: "bg-amber-500", textColor: "text-amber-500" };
+    return {
+      score,
+      label: "Enterprise Strong",
+      color: "bg-emerald-500",
+      textColor: "text-emerald-500",
+    };
   }, [secNewPassword]);
 
   const handleUpdateSecurity = async (e: React.FormEvent) => {
@@ -549,7 +558,7 @@ export function SystemSettings() {
   // ── Platform & Storefront Handlers ────────────────────────────────────────
   const handleTogglePaymentMethod = (methodId: string) => {
     setPaymentMethods((prev) =>
-      prev.map((m) => (m.id === methodId ? { ...m, active: !m.active } : m))
+      prev.map((m) => (m.id === methodId ? { ...m, active: !m.active } : m)),
     );
   };
 
@@ -613,7 +622,10 @@ export function SystemSettings() {
     try {
       const res = await sendTestEmail({ data: { recipientEmail: testEmailRecipient.trim() } });
       if (res.success) {
-        triggerToast(`Test email dispatched successfully to ${testEmailRecipient}! (MessageId: ${res.messageId})`, "success");
+        triggerToast(
+          `Test email dispatched successfully to ${testEmailRecipient}! (MessageId: ${res.messageId})`,
+          "success",
+        );
       } else {
         triggerToast(res.error || "Failed to dispatch test email", "error");
       }
@@ -653,7 +665,10 @@ export function SystemSettings() {
     try {
       const res = await migrateData({ data: { products, orders: [], reviews: [] } });
       if (res.success && res.stats) {
-        triggerToast(`Catalog Seed Successful: ${res.stats.products} products synchronized`, "success");
+        triggerToast(
+          `Catalog Seed Successful: ${res.stats.products} products synchronized`,
+          "success",
+        );
         invalidateProductsCache(queryClient);
         setDbStats(res.stats);
       } else {
@@ -694,7 +709,10 @@ export function SystemSettings() {
     try {
       const res = await deduplicateProductsDb();
       if (res && res.success) {
-        triggerToast(`Catalog Deduplication Complete: Removed ${res.removedCount} duplicate documents. Current inventory: ${res.remainingTotal} products.`, "success");
+        triggerToast(
+          `Catalog Deduplication Complete: Removed ${res.removedCount} duplicate documents. Current inventory: ${res.remainingTotal} products.`,
+          "success",
+        );
         setIsDeduplicateModalOpen(false);
         invalidateProductsCache(queryClient);
         const statsRes = await getDatabaseStats();
@@ -714,7 +732,9 @@ export function SystemSettings() {
   const handleExportSnapshot = async () => {
     setIsExporting(true);
     try {
-      const res = (await exportCollectionSnapshot({ data: { collectionName: exportCollection } })) as any;
+      const res = (await exportCollectionSnapshot({
+        data: { collectionName: exportCollection },
+      })) as any;
       if (res && res.success && res.data) {
         const jsonStr = JSON.stringify(res.data, null, 2);
         const blob = new Blob([jsonStr], { type: "application/json" });
@@ -737,13 +757,24 @@ export function SystemSettings() {
     }
   };
 
-  const tabs: { id: TabType; label: string; icon: any; count?: number | string; badge?: string }[] = [
-    { id: "users", label: "Staff & Roles", icon: Users, count: users.length },
-    { id: "security", label: "Security & Master Auth", icon: Lock, badge: "Bcrypt Salt 10" },
-    { id: "platform", label: "Storefront & Platform", icon: Sliders, badge: maintenanceMode ? "Maintenance" : "Live" },
-    { id: "database", label: "Database Telemetry", icon: Database, count: dbStats?.products ?? "Atlas" },
-    { id: "integrations", label: "API & Integrations", icon: Key, badge: "Stripe & SMTP" },
-  ];
+  const tabs: { id: TabType; label: string; icon: any; count?: number | string; badge?: string }[] =
+    [
+      { id: "users", label: "Staff & Roles", icon: Users, count: users.length },
+      { id: "security", label: "Security & Master Auth", icon: Lock, badge: "Bcrypt Salt 10" },
+      {
+        id: "platform",
+        label: "Storefront & Platform",
+        icon: Sliders,
+        badge: maintenanceMode ? "Maintenance" : "Live",
+      },
+      {
+        id: "database",
+        label: "Database Telemetry",
+        icon: Database,
+        count: dbStats?.products ?? "Atlas",
+      },
+      { id: "integrations", label: "API & Integrations", icon: Key, badge: "Stripe & SMTP" },
+    ];
 
   return (
     <div className="space-y-7 max-w-[1400px] mx-auto w-full pb-20">
@@ -758,8 +789,8 @@ export function SystemSettings() {
               toast.type === "error"
                 ? "bg-rose-950/90 text-rose-200 border-rose-800"
                 : toast.type === "info"
-                ? "bg-sky-950/90 text-sky-200 border-sky-800"
-                : "bg-slate-900/95 text-white border-slate-700/80"
+                  ? "bg-sky-950/90 text-sky-200 border-sky-800"
+                  : "bg-slate-900/95 text-white border-slate-700/80"
             }`}
           >
             {toast.type === "error" ? (
@@ -807,7 +838,8 @@ export function SystemSettings() {
               <span>System & Operations Center</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm max-w-2xl font-normal leading-relaxed">
-              Full-spectrum management suite for staff access control, cryptographic authentication, dynamic checkout rules, real-time database telemetry, and payment gateways.
+              Full-spectrum management suite for staff access control, cryptographic authentication,
+              dynamic checkout rules, real-time database telemetry, and payment gateways.
             </p>
           </div>
 
@@ -817,7 +849,9 @@ export function SystemSettings() {
               disabled={isRefreshing}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 hover:border-slate-600 transition shadow-sm cursor-pointer disabled:opacity-50"
             >
-              <RefreshCw className={`size-3.5 ${isRefreshing ? "animate-spin text-cyan-400" : "text-slate-400"}`} />
+              <RefreshCw
+                className={`size-3.5 ${isRefreshing ? "animate-spin text-cyan-400" : "text-slate-400"}`}
+              />
               <span>{isRefreshing ? "Synchronizing..." : "Refresh Live Feed"}</span>
             </button>
 
@@ -828,7 +862,13 @@ export function SystemSettings() {
               title="Ping MongoDB cluster for roundtrip latency"
             >
               <Activity className={`size-3.5 ${isPingingDb ? "animate-spin" : "text-cyan-400"}`} />
-              <span>{isPingingDb ? "Pinging..." : lastPingResult ? `${lastPingResult.latencyMs}ms` : "Test DB Ping"}</span>
+              <span>
+                {isPingingDb
+                  ? "Pinging..."
+                  : lastPingResult
+                    ? `${lastPingResult.latencyMs}ms`
+                    : "Test DB Ping"}
+              </span>
             </button>
           </div>
         </div>
@@ -840,7 +880,9 @@ export function SystemSettings() {
               <span>Super Admin</span>
               <Shield className="size-3.5 text-cyan-400" />
             </div>
-            <div className="mt-1 text-base sm:text-lg font-black text-white truncate">{currentUsername} (Master)</div>
+            <div className="mt-1 text-base sm:text-lg font-black text-white truncate">
+              {currentUsername} (Master)
+            </div>
             <div className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5 truncate">
               <CheckCircle className="size-2.5" /> Bcrypt Salt 10 Active
             </div>
@@ -851,9 +893,12 @@ export function SystemSettings() {
               <span>Staff Accounts</span>
               <Users className="size-3.5 text-blue-400" />
             </div>
-            <div className="mt-1 text-base sm:text-lg font-black text-white">{users.length} Team Members</div>
+            <div className="mt-1 text-base sm:text-lg font-black text-white">
+              {users.length} Team Members
+            </div>
             <div className="text-[10px] text-slate-400 font-semibold mt-0.5 truncate">
-              {users.filter((u) => u.role === "admin").length} Admins · {users.filter((u) => u.status === "active").length} Active
+              {users.filter((u) => u.role === "admin").length} Admins ·{" "}
+              {users.filter((u) => u.status === "active").length} Active
             </div>
           </div>
 
@@ -876,7 +921,10 @@ export function SystemSettings() {
               <Database className="size-3.5 text-purple-400" />
             </div>
             <div className="mt-1 text-base sm:text-lg font-black text-white">
-              {dbStats ? (dbStats.products || 0) + (dbStats.orders || 0) + (dbStats.customers || 0) : "Loading..."} Docs
+              {dbStats
+                ? (dbStats.products || 0) + (dbStats.orders || 0) + (dbStats.customers || 0)
+                : "Loading..."}{" "}
+              Docs
             </div>
             <div className="text-[10px] text-cyan-400 font-semibold mt-0.5 truncate">
               10 Managed Collections
@@ -903,16 +951,22 @@ export function SystemSettings() {
               <Icon className={`size-4 ${isActive ? "text-cyan-600" : "text-slate-400"}`} />
               <span>{tab.label}</span>
               {tab.badge && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
-                  isActive ? "bg-cyan-50 text-cyan-700 border border-cyan-200" : "bg-slate-200 text-slate-600"
-                }`}>
+                <span
+                  className={`px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                    isActive
+                      ? "bg-cyan-50 text-cyan-700 border border-cyan-200"
+                      : "bg-slate-200 text-slate-600"
+                  }`}
+                >
                   {tab.badge}
                 </span>
               )}
               {tab.count !== undefined && !tab.badge && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold font-mono ${
-                  isActive ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-600"
-                }`}>
+                <span
+                  className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold font-mono ${
+                    isActive ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-600"
+                  }`}
+                >
                   {tab.count}
                 </span>
               )}
@@ -926,7 +980,9 @@ export function SystemSettings() {
         {isLoading && !isRefreshing ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
             <Loader2 className="size-8 animate-spin text-cyan-500" />
-            <p className="text-xs font-bold uppercase tracking-wider">Connecting to MongoDB & Loading Settings...</p>
+            <p className="text-xs font-bold uppercase tracking-wider">
+              Connecting to MongoDB & Loading Settings...
+            </p>
           </div>
         ) : null}
 
@@ -947,7 +1003,8 @@ export function SystemSettings() {
                   <span>Staff & Access Roles</span>
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Manage administrative permissions, team member credentials, and active portal accounts.
+                  Manage administrative permissions, team member credentials, and active portal
+                  accounts.
                 </p>
               </div>
 
@@ -975,7 +1032,9 @@ export function SystemSettings() {
 
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">
-                  <span className="px-2 text-[10px] uppercase font-black text-slate-400">Role:</span>
+                  <span className="px-2 text-[10px] uppercase font-black text-slate-400">
+                    Role:
+                  </span>
                   {(["all", "admin", "manager", "viewer"] as const).map((r) => (
                     <button
                       key={r}
@@ -992,7 +1051,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">
-                  <span className="px-2 text-[10px] uppercase font-black text-slate-400">Status:</span>
+                  <span className="px-2 text-[10px] uppercase font-black text-slate-400">
+                    Status:
+                  </span>
                   {(["all", "active", "inactive"] as const).map((s) => (
                     <button
                       key={s}
@@ -1030,7 +1091,9 @@ export function SystemSettings() {
                         <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
                           <Users className="size-8 mx-auto mb-2 opacity-40" />
                           <p className="font-bold">No staff accounts match the filter criteria</p>
-                          <p className="text-[11px] text-slate-400 mt-1">Try resetting search or filters</p>
+                          <p className="text-[11px] text-slate-400 mt-1">
+                            Try resetting search or filters
+                          </p>
                         </td>
                       </tr>
                     ) : (
@@ -1040,13 +1103,15 @@ export function SystemSettings() {
                           <tr key={u.id || u.username} className="hover:bg-slate-50/70 transition">
                             <td className="px-4 py-3.5">
                               <div className="flex items-center gap-3">
-                                <div className={`size-9 rounded-xl flex items-center justify-center font-black text-xs uppercase ${
-                                  u.role === "admin"
-                                    ? "bg-purple-100 text-purple-700"
-                                    : u.role === "manager"
-                                    ? "bg-cyan-100 text-cyan-700"
-                                    : "bg-slate-100 text-slate-700"
-                                }`}>
+                                <div
+                                  className={`size-9 rounded-xl flex items-center justify-center font-black text-xs uppercase ${
+                                    u.role === "admin"
+                                      ? "bg-purple-100 text-purple-700"
+                                      : u.role === "manager"
+                                        ? "bg-cyan-100 text-cyan-700"
+                                        : "bg-slate-100 text-slate-700"
+                                  }`}
+                                >
                                   {(u.fullName || u.username).slice(0, 2)}
                                 </div>
                                 <div>
@@ -1067,13 +1132,15 @@ export function SystemSettings() {
                             </td>
 
                             <td className="px-4 py-3.5">
-                              <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                                u.role === "admin"
-                                  ? "bg-purple-50 text-purple-700 border border-purple-200"
-                                  : u.role === "manager"
-                                  ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                  : "bg-slate-100 text-slate-700 border border-slate-200"
-                              }`}>
+                              <span
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                  u.role === "admin"
+                                    ? "bg-purple-50 text-purple-700 border border-purple-200"
+                                    : u.role === "manager"
+                                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                      : "bg-slate-100 text-slate-700 border border-slate-200"
+                                }`}
+                              >
                                 <Shield className="size-3" />
                                 {u.role}
                               </span>
@@ -1088,15 +1155,23 @@ export function SystemSettings() {
                                     ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                                     : "bg-slate-100 text-slate-500 border border-slate-200"
                                 } ${!isPrimaryAdmin ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
-                                title={!isPrimaryAdmin ? "Click to toggle active/inactive" : "Primary account is always active"}
+                                title={
+                                  !isPrimaryAdmin
+                                    ? "Click to toggle active/inactive"
+                                    : "Primary account is always active"
+                                }
                               >
-                                <span className={`size-1.5 rounded-full ${u.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`} />
+                                <span
+                                  className={`size-1.5 rounded-full ${u.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`}
+                                />
                                 {u.status || "active"}
                               </button>
                             </td>
 
                             <td className="px-4 py-3.5 text-slate-500 text-[11px]">
-                              {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString() : "Never logged in"}
+                              {u.lastLoginAt
+                                ? new Date(u.lastLoginAt).toLocaleString()
+                                : "Never logged in"}
                             </td>
 
                             <td className="px-4 py-3.5 text-slate-500 text-[11px]">
@@ -1151,7 +1226,8 @@ export function SystemSettings() {
                 <span>Security & Master Authentication</span>
               </h2>
               <p className="text-xs text-slate-500 mt-1">
-                Cryptographic authentication safeguards, brute-force lockout thresholds, and master executive credentials.
+                Cryptographic authentication safeguards, brute-force lockout thresholds, and master
+                executive credentials.
               </p>
             </div>
 
@@ -1172,7 +1248,9 @@ export function SystemSettings() {
                   <form onSubmit={handleUpdateSecurity} className="space-y-4">
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Current Username</label>
+                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                          Current Username
+                        </label>
                         <input
                           type="text"
                           readOnly
@@ -1182,7 +1260,9 @@ export function SystemSettings() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">New Username (Optional)</label>
+                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                          New Username (Optional)
+                        </label>
                         <input
                           type="text"
                           value={newMasterUsername}
@@ -1196,7 +1276,9 @@ export function SystemSettings() {
                     <div className="space-y-1.5">
                       <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
                         <span>Current Master Password *</span>
-                        <span className="text-[10px] text-slate-400 font-normal">Required for verification</span>
+                        <span className="text-[10px] text-slate-400 font-normal">
+                          Required for verification
+                        </span>
                       </label>
                       <div className="relative">
                         <input
@@ -1212,14 +1294,20 @@ export function SystemSettings() {
                           onClick={() => setShowCurrentPwd(!showCurrentPwd)}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                         >
-                          {showCurrentPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                          {showCurrentPwd ? (
+                            <EyeOff className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
                         </button>
                       </div>
                     </div>
 
                     <div className="grid sm:grid-cols-2 gap-4 pt-2">
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">New Master Password</label>
+                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                          New Master Password
+                        </label>
                         <div className="relative">
                           <input
                             type={showNewPwd ? "text" : "password"}
@@ -1233,13 +1321,19 @@ export function SystemSettings() {
                             onClick={() => setShowNewPwd(!showNewPwd)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                           >
-                            {showNewPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                            {showNewPwd ? (
+                              <EyeOff className="size-4" />
+                            ) : (
+                              <Eye className="size-4" />
+                            )}
                           </button>
                         </div>
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Confirm New Password</label>
+                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                          Confirm New Password
+                        </label>
                         <div className="relative">
                           <input
                             type={showConfirmPwd ? "text" : "password"}
@@ -1253,7 +1347,11 @@ export function SystemSettings() {
                             onClick={() => setShowConfirmPwd(!showConfirmPwd)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                           >
-                            {showConfirmPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                            {showConfirmPwd ? (
+                              <EyeOff className="size-4" />
+                            ) : (
+                              <Eye className="size-4" />
+                            )}
                           </button>
                         </div>
                       </div>
@@ -1264,7 +1362,9 @@ export function SystemSettings() {
                       <div className="space-y-1.5 pt-1">
                         <div className="flex items-center justify-between text-[11px] font-bold">
                           <span className="text-slate-500">Password Strength:</span>
-                          <span className={passwordStrength.textColor}>{passwordStrength.label}</span>
+                          <span className={passwordStrength.textColor}>
+                            {passwordStrength.label}
+                          </span>
                         </div>
                         <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
                           <div
@@ -1305,7 +1405,9 @@ export function SystemSettings() {
                         <Clock className="size-4 text-cyan-600" />
                         <span>Security & Lockout Governance</span>
                       </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">Control brute-force rate limits and idle session lifetimes.</p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Control brute-force rate limits and idle session lifetimes.
+                      </p>
                     </div>
 
                     <button
@@ -1313,44 +1415,69 @@ export function SystemSettings() {
                       disabled={isSavingSecurityPolicy}
                       className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                     >
-                      {isSavingSecurityPolicy ? <Loader2 className="size-3 animate-spin" /> : <Check className="size-3" />}
+                      {isSavingSecurityPolicy ? (
+                        <Loader2 className="size-3 animate-spin" />
+                      ) : (
+                        <Check className="size-3" />
+                      )}
                       <span>Save Policy</span>
                     </button>
                   </div>
 
                   <div className="grid sm:grid-cols-3 gap-4 pt-1">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-slate-500">Session Inactivity (Min)</label>
+                      <label className="text-[10px] font-black uppercase text-slate-500">
+                        Session Inactivity (Min)
+                      </label>
                       <input
                         type="number"
                         min={5}
                         max={480}
                         value={securityPolicy.sessionTimeoutMinutes}
-                        onChange={(e) => setSecurityPolicy({ ...securityPolicy, sessionTimeoutMinutes: Number(e.target.value) || 60 })}
+                        onChange={(e) =>
+                          setSecurityPolicy({
+                            ...securityPolicy,
+                            sessionTimeoutMinutes: Number(e.target.value) || 60,
+                          })
+                        }
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold font-mono text-slate-900"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-slate-500">Max Failed Logins</label>
+                      <label className="text-[10px] font-black uppercase text-slate-500">
+                        Max Failed Logins
+                      </label>
                       <input
                         type="number"
                         min={3}
                         max={20}
                         value={securityPolicy.maxFailedAttempts}
-                        onChange={(e) => setSecurityPolicy({ ...securityPolicy, maxFailedAttempts: Number(e.target.value) || 5 })}
+                        onChange={(e) =>
+                          setSecurityPolicy({
+                            ...securityPolicy,
+                            maxFailedAttempts: Number(e.target.value) || 5,
+                          })
+                        }
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold font-mono text-slate-900"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-slate-500">Lockout Duration (Min)</label>
+                      <label className="text-[10px] font-black uppercase text-slate-500">
+                        Lockout Duration (Min)
+                      </label>
                       <input
                         type="number"
                         min={5}
                         max={1440}
                         value={securityPolicy.lockoutDurationMinutes}
-                        onChange={(e) => setSecurityPolicy({ ...securityPolicy, lockoutDurationMinutes: Number(e.target.value) || 15 })}
+                        onChange={(e) =>
+                          setSecurityPolicy({
+                            ...securityPolicy,
+                            lockoutDurationMinutes: Number(e.target.value) || 15,
+                          })
+                        }
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold font-mono text-slate-900"
                       />
                     </div>
@@ -1364,7 +1491,9 @@ export function SystemSettings() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <ShieldAlert className="size-4.5 text-cyan-400" />
-                      <h4 className="font-black text-sm uppercase tracking-wider text-white">Active Lockouts & IP Guards</h4>
+                      <h4 className="font-black text-sm uppercase tracking-wider text-white">
+                        Active Lockouts & IP Guards
+                      </h4>
                     </div>
 
                     <button
@@ -1373,7 +1502,9 @@ export function SystemSettings() {
                       className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
                       title="Refresh Audit Logs"
                     >
-                      <RefreshCw className={`size-3.5 ${isLoadingAuditLogs ? "animate-spin text-cyan-400" : ""}`} />
+                      <RefreshCw
+                        className={`size-3.5 ${isLoadingAuditLogs ? "animate-spin text-cyan-400" : ""}`}
+                      />
                     </button>
                   </div>
 
@@ -1381,19 +1512,27 @@ export function SystemSettings() {
                     <div className="py-8 text-center text-slate-400 text-xs">
                       <ShieldCheck className="size-8 text-emerald-400 mx-auto mb-2 opacity-80" />
                       <p className="font-bold text-white">No Active Security Lockouts</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">All administrative IP gates and user accounts are clear.</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        All administrative IP gates and user accounts are clear.
+                      </p>
                     </div>
                   ) : (
                     <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
                       {securityLocks.map((lock) => (
-                        <div key={lock.id || lock.key} className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-between gap-3 text-xs">
+                        <div
+                          key={lock.id || lock.key}
+                          className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-between gap-3 text-xs"
+                        >
                           <div>
                             <div className="font-mono font-bold text-white flex items-center gap-1.5">
                               <span className="size-1.5 rounded-full bg-rose-400 animate-pulse" />
                               <span>{lock.key}</span>
                             </div>
                             <div className="text-[10px] text-slate-400 mt-0.5">
-                              {lock.failedAttempts} Failed Attempts · Locked until {lock.lockedUntil ? new Date(lock.lockedUntil).toLocaleTimeString() : "Indefinite"}
+                              {lock.failedAttempts} Failed Attempts · Locked until{" "}
+                              {lock.lockedUntil
+                                ? new Date(lock.lockedUntil).toLocaleTimeString()
+                                : "Indefinite"}
                             </div>
                           </div>
 
@@ -1419,14 +1558,19 @@ export function SystemSettings() {
 
                   <div className="space-y-2 text-xs">
                     {securityLogins.slice(0, 4).map((staff) => (
-                      <div key={staff.id} className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200/60">
+                      <div
+                        key={staff.id}
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200/60"
+                      >
                         <div className="flex items-center gap-2">
                           <span className="size-2 rounded-full bg-emerald-500" />
                           <span className="font-bold text-slate-900">{staff.username}</span>
                           <span className="text-[10px] text-slate-400">({staff.role})</span>
                         </div>
                         <span className="text-[10px] font-mono text-slate-500">
-                          {staff.lastLoginAt ? new Date(staff.lastLoginAt).toLocaleTimeString() : "Never"}
+                          {staff.lastLoginAt
+                            ? new Date(staff.lastLoginAt).toLocaleTimeString()
+                            : "Never"}
                         </span>
                       </div>
                     ))}
@@ -1454,7 +1598,8 @@ export function SystemSettings() {
                   <span>Storefront & Platform Configuration</span>
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Manage live checkout rules, maintenance downtime messages, store identity, freight logistics, and payment methods.
+                  Manage live checkout rules, maintenance downtime messages, store identity, freight
+                  logistics, and payment methods.
                 </p>
               </div>
 
@@ -1478,21 +1623,26 @@ export function SystemSettings() {
             </div>
 
             {/* Maintenance Mode Card & Banner Customizer */}
-            <div className={`p-6 rounded-3xl border transition-all space-y-4 ${
-              maintenanceMode
-                ? "bg-amber-50/90 border-amber-300"
-                : "bg-slate-50/80 border-slate-200/80"
-            }`}>
+            <div
+              className={`p-6 rounded-3xl border transition-all space-y-4 ${
+                maintenanceMode
+                  ? "bg-amber-50/90 border-amber-300"
+                  : "bg-slate-50/80 border-slate-200/80"
+              }`}
+            >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <div className={`size-3 rounded-full ${maintenanceMode ? "bg-amber-500 animate-pulse" : "bg-emerald-500"}`} />
+                    <div
+                      className={`size-3 rounded-full ${maintenanceMode ? "bg-amber-500 animate-pulse" : "bg-emerald-500"}`}
+                    />
                     <h3 className="font-extrabold text-sm text-slate-900">
                       Storefront Maintenance Mode
                     </h3>
                   </div>
                   <p className="text-xs text-slate-500 max-w-xl">
-                    When enabled, public storefront visitors will see a graceful system upgrade screen. The admin panel remains 100% accessible.
+                    When enabled, public storefront visitors will see a graceful system upgrade
+                    screen. The admin panel remains 100% accessible.
                   </p>
                 </div>
 
@@ -1512,7 +1662,9 @@ export function SystemSettings() {
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-black uppercase text-slate-700 flex items-center justify-between">
                     <span>Custom Maintenance Notice</span>
-                    <span className="text-[10px] text-slate-400 font-normal">Displayed on public screen</span>
+                    <span className="text-[10px] text-slate-400 font-normal">
+                      Displayed on public screen
+                    </span>
                   </label>
                   <textarea
                     rows={3}
@@ -1524,7 +1676,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase text-slate-500">Visitor Screen Preview</label>
+                  <label className="text-[11px] font-black uppercase text-slate-500">
+                    Visitor Screen Preview
+                  </label>
                   <div className="p-3.5 rounded-xl bg-slate-900 text-white text-xs space-y-1.5 border border-slate-800">
                     <div className="flex items-center gap-1.5 text-[10px] text-amber-400 font-bold uppercase">
                       <span className="size-1.5 rounded-full bg-amber-400 animate-ping" />
@@ -1532,7 +1686,8 @@ export function SystemSettings() {
                     </div>
                     <div className="font-bold text-white text-sm">System Upgrade</div>
                     <p className="text-slate-300 text-[11px] line-clamp-2">
-                      {maintenanceNotice || "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates."}
+                      {maintenanceNotice ||
+                        "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates."}
                     </p>
                   </div>
                 </div>
@@ -1546,12 +1701,16 @@ export function SystemSettings() {
                   <Globe className="size-4 text-cyan-600" />
                   <span>Wholesale Storefront Profile</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">Physical warehouse details, corporate contact channels, and currency standard.</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Physical warehouse details, corporate contact channels, and currency standard.
+                </p>
               </div>
 
               <div className="grid sm:grid-cols-3 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">Store Brand Name</label>
+                  <label className="text-[10px] font-black uppercase text-slate-500">
+                    Store Brand Name
+                  </label>
                   <input
                     type="text"
                     value={storeProfile.name}
@@ -1561,7 +1720,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">Support Phone</label>
+                  <label className="text-[10px] font-black uppercase text-slate-500">
+                    Support Phone
+                  </label>
                   <input
                     type="text"
                     value={storeProfile.phone}
@@ -1571,17 +1732,23 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">Support Email</label>
+                  <label className="text-[10px] font-black uppercase text-slate-500">
+                    Support Email
+                  </label>
                   <input
                     type="email"
                     value={storeProfile.supportEmail}
-                    onChange={(e) => setStoreProfile({ ...storeProfile, supportEmail: e.target.value })}
+                    onChange={(e) =>
+                      setStoreProfile({ ...storeProfile, supportEmail: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-900"
                   />
                 </div>
 
                 <div className="sm:col-span-2 space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">Physical Warehouse / Fulfillment Address</label>
+                  <label className="text-[10px] font-black uppercase text-slate-500">
+                    Physical Warehouse / Fulfillment Address
+                  </label>
                   <input
                     type="text"
                     value={storeProfile.address}
@@ -1591,11 +1758,15 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">Support Operating Hours</label>
+                  <label className="text-[10px] font-black uppercase text-slate-500">
+                    Support Operating Hours
+                  </label>
                   <input
                     type="text"
                     value={storeProfile.supportHours}
-                    onChange={(e) => setStoreProfile({ ...storeProfile, supportHours: e.target.value })}
+                    onChange={(e) =>
+                      setStoreProfile({ ...storeProfile, supportHours: e.target.value })
+                    }
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-900"
                   />
                 </div>
@@ -1610,38 +1781,60 @@ export function SystemSettings() {
                     <ShoppingBag className="size-4 text-cyan-600" />
                     <span>Freight & Logistics Policy</span>
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Automated calculations applied at checkout.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Automated calculations applied at checkout.
+                  </p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Free Freight Threshold ($)</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Free Freight Threshold ($)
+                    </label>
                     <input
                       type="number"
                       value={logistics.freeShippingThreshold}
-                      onChange={(e) => setLogistics({ ...logistics, freeShippingThreshold: Number(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setLogistics({
+                          ...logistics,
+                          freeShippingThreshold: Number(e.target.value) || 0,
+                        })
+                      }
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold font-mono text-slate-900"
                     />
-                    <span className="text-[10px] text-slate-400">Orders above this amount receive free freight.</span>
+                    <span className="text-[10px] text-slate-400">
+                      Orders above this amount receive free freight.
+                    </span>
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Standard Freight Rate (%)</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Standard Freight Rate (%)
+                    </label>
                     <input
                       type="number"
                       step="0.5"
                       value={logistics.standardFreightRatePercent}
-                      onChange={(e) => setLogistics({ ...logistics, standardFreightRatePercent: Number(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setLogistics({
+                          ...logistics,
+                          standardFreightRatePercent: Number(e.target.value) || 0,
+                        })
+                      }
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold font-mono text-slate-900"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Estimated Delivery Timeline</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Estimated Delivery Timeline
+                    </label>
                     <input
                       type="text"
                       value={logistics.estimatedDeliveryDays}
-                      onChange={(e) => setLogistics({ ...logistics, estimatedDeliveryDays: e.target.value })}
+                      onChange={(e) =>
+                        setLogistics({ ...logistics, estimatedDeliveryDays: e.target.value })
+                      }
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-900"
                     />
                   </div>
@@ -1655,31 +1848,46 @@ export function SystemSettings() {
                     <FileText className="size-4 text-cyan-600" />
                     <span>Tax & Resale Compliance</span>
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Commercial tax calculation and contractor exemptions.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Commercial tax calculation and contractor exemptions.
+                  </p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Standard Sales Tax Rate (%)</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Standard Sales Tax Rate (%)
+                    </label>
                     <input
                       type="number"
                       step="0.01"
                       value={compliance.taxRatePercent}
-                      onChange={(e) => setCompliance({ ...compliance, taxRatePercent: Number(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setCompliance({
+                          ...compliance,
+                          taxRatePercent: Number(e.target.value) || 0,
+                        })
+                      }
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold font-mono text-slate-900"
                     />
                   </div>
 
                   <div className="pt-2 flex items-center justify-between border-t border-slate-200/60">
                     <div>
-                      <div className="font-bold text-xs text-slate-800">Resale Certificate Exemption</div>
-                      <div className="text-[10px] text-slate-400">Permit tax waiver for contractors with valid EIN</div>
+                      <div className="font-bold text-xs text-slate-800">
+                        Resale Certificate Exemption
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        Permit tax waiver for contractors with valid EIN
+                      </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={compliance.taxExemptionEnabled}
-                        onChange={(e) => setCompliance({ ...compliance, taxExemptionEnabled: e.target.checked })}
+                        onChange={(e) =>
+                          setCompliance({ ...compliance, taxExemptionEnabled: e.target.checked })
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
@@ -1688,14 +1896,20 @@ export function SystemSettings() {
 
                   <div className="pt-2 flex items-center justify-between border-t border-slate-200/60">
                     <div>
-                      <div className="font-bold text-xs text-slate-800">Require Business Tax ID</div>
-                      <div className="text-[10px] text-slate-400">Mandate company EIN during guest order submission</div>
+                      <div className="font-bold text-xs text-slate-800">
+                        Require Business Tax ID
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        Mandate company EIN during guest order submission
+                      </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={compliance.requireBusinessTaxId}
-                        onChange={(e) => setCompliance({ ...compliance, requireBusinessTaxId: e.target.checked })}
+                        onChange={(e) =>
+                          setCompliance({ ...compliance, requireBusinessTaxId: e.target.checked })
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
@@ -1712,7 +1926,9 @@ export function SystemSettings() {
                   <CreditCard className="size-4 text-cyan-600" />
                   <span>Wholesale Payment Gateways</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">Toggle active payment methods available to contractors and wholesale buyers.</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Toggle active payment methods available to contractors and wholesale buyers.
+                </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
@@ -1728,9 +1944,13 @@ export function SystemSettings() {
                     <div>
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-black text-sm text-slate-900">{pm.name}</span>
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${
-                          pm.active ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-slate-200 text-slate-500"
-                        }`}>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                            pm.active
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-slate-200 text-slate-500"
+                          }`}
+                        >
                           {pm.active ? "Enabled" : "Disabled"}
                         </span>
                       </div>
@@ -1775,7 +1995,8 @@ export function SystemSettings() {
                   <span>MongoDB Atlas Telemetry & Backups</span>
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  10 real-time collection metrics, roundtrip ping diagnostic test, catalog seeder, and JSON backup snapshot exporter.
+                  10 real-time collection metrics, roundtrip ping diagnostic test, catalog seeder,
+                  and JSON backup snapshot exporter.
                 </p>
               </div>
 
@@ -1785,7 +2006,9 @@ export function SystemSettings() {
                   disabled={isPingingDb}
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase tracking-wider transition cursor-pointer disabled:opacity-50"
                 >
-                  <Activity className={`size-3.5 ${isPingingDb ? "animate-spin" : "text-cyan-400"}`} />
+                  <Activity
+                    className={`size-3.5 ${isPingingDb ? "animate-spin" : "text-cyan-400"}`}
+                  />
                   <span>{isPingingDb ? "Testing Latency..." : "Test Connection Latency"}</span>
                 </button>
 
@@ -1794,8 +2017,12 @@ export function SystemSettings() {
                   disabled={isInspectingDuplicates || isDeduplicating}
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-black uppercase tracking-wider transition cursor-pointer disabled:opacity-50"
                 >
-                  <Sparkles className={`size-3.5 ${isInspectingDuplicates ? "animate-spin" : "text-amber-500"}`} />
-                  <span>{isInspectingDuplicates ? "Auditing Catalog..." : "Clean Duplicate Products"}</span>
+                  <Sparkles
+                    className={`size-3.5 ${isInspectingDuplicates ? "animate-spin" : "text-amber-500"}`}
+                  />
+                  <span>
+                    {isInspectingDuplicates ? "Auditing Catalog..." : "Clean Duplicate Products"}
+                  </span>
                 </button>
 
                 <button
@@ -1819,13 +2046,16 @@ export function SystemSettings() {
                   <div>
                     <div className="font-bold flex items-center gap-2">
                       <span>Cluster Response Time:</span>
-                      <span className="font-mono text-cyan-300 text-sm font-black">{lastPingResult.latencyMs}ms</span>
+                      <span className="font-mono text-cyan-300 text-sm font-black">
+                        {lastPingResult.latencyMs}ms
+                      </span>
                       <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500/20 text-emerald-300">
                         {lastPingResult.status}
                       </span>
                     </div>
                     <div className="text-[11px] text-slate-400 mt-0.5">
-                      {lastPingResult.collectionsCount} collections accessible · Checked at {lastPingResult.timestamp}
+                      {lastPingResult.collectionsCount} collections accessible · Checked at{" "}
+                      {lastPingResult.timestamp}
                     </div>
                   </div>
                 </div>
@@ -1845,21 +2075,84 @@ export function SystemSettings() {
 
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
                 {[
-                  { name: "Products", key: "products", icon: ShoppingBag, col: "db.products", color: "text-cyan-600 bg-cyan-50" },
-                  { name: "Orders", key: "orders", icon: FileText, col: "db.orders", color: "text-blue-600 bg-blue-50" },
-                  { name: "Customers", key: "customers", icon: Users, col: "db.customers", color: "text-indigo-600 bg-indigo-50" },
-                  { name: "Reviews", key: "reviews", icon: MessageSquare, col: "db.reviews", color: "text-amber-600 bg-amber-50" },
-                  { name: "Staff Users", key: "users", icon: Shield, col: "db.users", color: "text-purple-600 bg-purple-50" },
-                  { name: "Categories", key: "categories", icon: Layers, col: "db.categories", color: "text-emerald-600 bg-emerald-50" },
-                  { name: "Cart Items", key: "cart_items", icon: ShoppingBag, col: "db.cart_items", color: "text-sky-600 bg-sky-50" },
-                  { name: "Inquiries", key: "inquiries", icon: Mail, col: "db.inquiries", color: "text-rose-600 bg-rose-50" },
-                  { name: "Security Locks", key: "admin_security_locks", icon: Lock, col: "db.admin_security_locks", color: "text-orange-600 bg-orange-50" },
-                  { name: "Settings", key: "settings", icon: Sliders, col: "db.settings", color: "text-teal-600 bg-teal-50" },
+                  {
+                    name: "Products",
+                    key: "products",
+                    icon: ShoppingBag,
+                    col: "db.products",
+                    color: "text-cyan-600 bg-cyan-50",
+                  },
+                  {
+                    name: "Orders",
+                    key: "orders",
+                    icon: FileText,
+                    col: "db.orders",
+                    color: "text-blue-600 bg-blue-50",
+                  },
+                  {
+                    name: "Customers",
+                    key: "customers",
+                    icon: Users,
+                    col: "db.customers",
+                    color: "text-indigo-600 bg-indigo-50",
+                  },
+                  {
+                    name: "Reviews",
+                    key: "reviews",
+                    icon: MessageSquare,
+                    col: "db.reviews",
+                    color: "text-amber-600 bg-amber-50",
+                  },
+                  {
+                    name: "Staff Users",
+                    key: "users",
+                    icon: Shield,
+                    col: "db.users",
+                    color: "text-purple-600 bg-purple-50",
+                  },
+                  {
+                    name: "Categories",
+                    key: "categories",
+                    icon: Layers,
+                    col: "db.categories",
+                    color: "text-emerald-600 bg-emerald-50",
+                  },
+                  {
+                    name: "Cart Items",
+                    key: "cart_items",
+                    icon: ShoppingBag,
+                    col: "db.cart_items",
+                    color: "text-sky-600 bg-sky-50",
+                  },
+                  {
+                    name: "Inquiries",
+                    key: "inquiries",
+                    icon: Mail,
+                    col: "db.inquiries",
+                    color: "text-rose-600 bg-rose-50",
+                  },
+                  {
+                    name: "Security Locks",
+                    key: "admin_security_locks",
+                    icon: Lock,
+                    col: "db.admin_security_locks",
+                    color: "text-orange-600 bg-orange-50",
+                  },
+                  {
+                    name: "Settings",
+                    key: "settings",
+                    icon: Sliders,
+                    col: "db.settings",
+                    color: "text-teal-600 bg-teal-50",
+                  },
                 ].map((c) => {
                   const Icon = c.icon;
-                  const count = dbStats ? dbStats[c.key] ?? 0 : "...";
+                  const count = dbStats ? (dbStats[c.key] ?? 0) : "...";
                   return (
-                    <div key={c.key} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition">
+                    <div
+                      key={c.key}
+                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition"
+                    >
                       <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
                         <span>{c.name}</span>
                         <div className={`p-1.5 rounded-lg ${c.color}`}>
@@ -1887,7 +2180,8 @@ export function SystemSettings() {
                     <span>Disaster Recovery & Collection Snapshot Exporter</span>
                   </h4>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Download sanitized JSON backups of your product catalog, orders, customers, or inquiries for offline archiving.
+                    Download sanitized JSON backups of your product catalog, orders, customers, or
+                    inquiries for offline archiving.
                   </p>
                 </div>
 
@@ -1910,7 +2204,11 @@ export function SystemSettings() {
                     disabled={isExporting}
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer disabled:opacity-50"
                   >
-                    {isExporting ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />}
+                    {isExporting ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <Download className="size-3.5" />
+                    )}
                     <span>{isExporting ? "Exporting..." : "Download JSON"}</span>
                   </button>
                 </div>
@@ -1921,7 +2219,9 @@ export function SystemSettings() {
             <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <h4 className="text-sm font-extrabold text-slate-900">Query Cache Invalidation</h4>
-                <p className="text-xs text-slate-500">Purge client-side memory cache across all product catalogs and detail routes.</p>
+                <p className="text-xs text-slate-500">
+                  Purge client-side memory cache across all product catalogs and detail routes.
+                </p>
               </div>
               <button
                 onClick={() => {
@@ -1953,7 +2253,8 @@ export function SystemSettings() {
                   <span>API Keys & Service Integrations</span>
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Configure live Stripe gateways, transactional SMTP dispatch with interactive tester, GA4 telemetry, and alert webhooks.
+                  Configure live Stripe gateways, transactional SMTP dispatch with interactive
+                  tester, GA4 telemetry, and alert webhooks.
                 </p>
               </div>
 
@@ -1990,7 +2291,9 @@ export function SystemSettings() {
                       type="button"
                       onClick={() => setStripeConfig({ ...stripeConfig, mode: "test" })}
                       className={`px-2 py-0.5 rounded transition cursor-pointer ${
-                        stripeConfig.mode === "test" ? "bg-amber-500 text-white font-black" : "text-slate-600"
+                        stripeConfig.mode === "test"
+                          ? "bg-amber-500 text-white font-black"
+                          : "text-slate-600"
                       }`}
                     >
                       Test Sandbox
@@ -1999,7 +2302,9 @@ export function SystemSettings() {
                       type="button"
                       onClick={() => setStripeConfig({ ...stripeConfig, mode: "live" })}
                       className={`px-2 py-0.5 rounded transition cursor-pointer ${
-                        stripeConfig.mode === "live" ? "bg-emerald-600 text-white font-black" : "text-slate-600"
+                        stripeConfig.mode === "live"
+                          ? "bg-emerald-600 text-white font-black"
+                          : "text-slate-600"
                       }`}
                     >
                       Live Production
@@ -2008,33 +2313,47 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">Publishable API Key</label>
+                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                    Publishable API Key
+                  </label>
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
                       value={stripeConfig.publishableKey}
-                      onChange={(e) => setStripeConfig({ ...stripeConfig, publishableKey: e.target.value })}
+                      onChange={(e) =>
+                        setStripeConfig({ ...stripeConfig, publishableKey: e.target.value })
+                      }
                       placeholder="pk_live_..."
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-[11px] text-slate-700"
                     />
                     <button
                       type="button"
-                      onClick={() => copyToClipboard(stripeConfig.publishableKey, "Stripe Public Key")}
+                      onClick={() =>
+                        copyToClipboard(stripeConfig.publishableKey, "Stripe Public Key")
+                      }
                       className="p-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 transition cursor-pointer"
                       title="Copy key"
                     >
-                      {copiedKey === "Stripe Public Key" ? <Check className="size-4 text-emerald-600" /> : <Copy className="size-4" />}
+                      {copiedKey === "Stripe Public Key" ? (
+                        <Check className="size-4 text-emerald-600" />
+                      ) : (
+                        <Copy className="size-4" />
+                      )}
                     </button>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">Secret API Key</label>
+                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                    Secret API Key
+                  </label>
                   <div className="flex items-center gap-2">
                     <input
                       type={showStripeSecret ? "text" : "password"}
                       value={stripeConfig.secretKey}
-                      onChange={(e) => setStripeConfig({ ...stripeConfig, secretKey: e.target.value })}
+                      onChange={(e) =>
+                        setStripeConfig({ ...stripeConfig, secretKey: e.target.value })
+                      }
                       placeholder="sk_live_..."
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-[11px] text-slate-700"
                     />
@@ -2044,18 +2363,26 @@ export function SystemSettings() {
                       className="p-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 transition cursor-pointer"
                       title={showStripeSecret ? "Hide key" : "Show key"}
                     >
-                      {showStripeSecret ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                      {showStripeSecret ? (
+                        <EyeOff className="size-4" />
+                      ) : (
+                        <Eye className="size-4" />
+                      )}
                     </button>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">Webhook Secret Key</label>
+                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                    Webhook Secret Key
+                  </label>
                   <div className="flex items-center gap-2">
                     <input
                       type={showStripeWebhookSecret ? "text" : "password"}
                       value={stripeConfig.webhookSecret}
-                      onChange={(e) => setStripeConfig({ ...stripeConfig, webhookSecret: e.target.value })}
+                      onChange={(e) =>
+                        setStripeConfig({ ...stripeConfig, webhookSecret: e.target.value })
+                      }
                       placeholder="whsec_..."
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-[11px] text-slate-700"
                     />
@@ -2065,13 +2392,19 @@ export function SystemSettings() {
                       className="p-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 transition cursor-pointer"
                       title={showStripeWebhookSecret ? "Hide" : "Show"}
                     >
-                      {showStripeWebhookSecret ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                      {showStripeWebhookSecret ? (
+                        <EyeOff className="size-4" />
+                      ) : (
+                        <Eye className="size-4" />
+                      )}
                     </button>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">Endpoint URL (Copy for Stripe Dashboard)</label>
+                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                    Endpoint URL (Copy for Stripe Dashboard)
+                  </label>
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
@@ -2081,11 +2414,20 @@ export function SystemSettings() {
                     />
                     <button
                       type="button"
-                      onClick={() => copyToClipboard("https://poolsupplywholesalers.com/api/stripe/webhook", "Webhook URL")}
+                      onClick={() =>
+                        copyToClipboard(
+                          "https://poolsupplywholesalers.com/api/stripe/webhook",
+                          "Webhook URL",
+                        )
+                      }
                       className="p-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 transition cursor-pointer"
                       title="Copy webhook URL"
                     >
-                      {copiedKey === "Webhook URL" ? <Check className="size-4 text-emerald-600" /> : <Copy className="size-4" />}
+                      {copiedKey === "Webhook URL" ? (
+                        <Check className="size-4 text-emerald-600" />
+                      ) : (
+                        <Copy className="size-4" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -2105,7 +2447,9 @@ export function SystemSettings() {
 
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">SMTP Host Server</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      SMTP Host Server
+                    </label>
                     <input
                       type="text"
                       value={smtpConfig.host}
@@ -2115,17 +2459,23 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Port & Security</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Port & Security
+                    </label>
                     <input
                       type="number"
                       value={smtpConfig.port}
-                      onChange={(e) => setSmtpConfig({ ...smtpConfig, port: Number(e.target.value) || 465 })}
+                      onChange={(e) =>
+                        setSmtpConfig({ ...smtpConfig, port: Number(e.target.value) || 465 })
+                      }
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-800"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Authenticated User</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Authenticated User
+                    </label>
                     <input
                       type="text"
                       value={smtpConfig.user}
@@ -2135,7 +2485,9 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Sender Display Name</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Sender Display Name
+                    </label>
                     <input
                       type="text"
                       value={smtpConfig.fromName}
@@ -2145,14 +2497,20 @@ export function SystemSettings() {
                   </div>
 
                   <div className="sm:col-span-2 space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Admin Notification Alert Recipients</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Admin Notification Alert Recipients
+                    </label>
                     <input
                       type="text"
                       value={smtpConfig.adminAlertEmail}
-                      onChange={(e) => setSmtpConfig({ ...smtpConfig, adminAlertEmail: e.target.value })}
+                      onChange={(e) =>
+                        setSmtpConfig({ ...smtpConfig, adminAlertEmail: e.target.value })
+                      }
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800"
                     />
-                    <span className="text-[10px] text-slate-400">Comma-separated emails that receive real-time order alerts.</span>
+                    <span className="text-[10px] text-slate-400">
+                      Comma-separated emails that receive real-time order alerts.
+                    </span>
                   </div>
                 </div>
 
@@ -2177,7 +2535,11 @@ export function SystemSettings() {
                       disabled={isSendingTestEmail}
                       className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer disabled:opacity-50 shrink-0 flex items-center gap-1.5"
                     >
-                      {isSendingTestEmail ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
+                      {isSendingTestEmail ? (
+                        <Loader2 className="size-3.5 animate-spin" />
+                      ) : (
+                        <Send className="size-3.5" />
+                      )}
                       <span>{isSendingTestEmail ? "Sending..." : "Test Dispatch"}</span>
                     </button>
                   </div>
@@ -2191,38 +2553,52 @@ export function SystemSettings() {
                     <Activity className="size-4 text-cyan-600" />
                     <span>Analytics & Telemetry Identifiers</span>
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Commercial audience insight tracking IDs.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Commercial audience insight tracking IDs.
+                  </p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Google Analytics 4 Measurement ID</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Google Analytics 4 Measurement ID
+                    </label>
                     <input
                       type="text"
                       value={analyticsConfig.ga4Id}
-                      onChange={(e) => setAnalyticsConfig({ ...analyticsConfig, ga4Id: e.target.value })}
+                      onChange={(e) =>
+                        setAnalyticsConfig({ ...analyticsConfig, ga4Id: e.target.value })
+                      }
                       placeholder="G-XXXXXXXXXX"
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-800"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Google Tag Manager Container ID</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Google Tag Manager Container ID
+                    </label>
                     <input
                       type="text"
                       value={analyticsConfig.gtmId}
-                      onChange={(e) => setAnalyticsConfig({ ...analyticsConfig, gtmId: e.target.value })}
+                      onChange={(e) =>
+                        setAnalyticsConfig({ ...analyticsConfig, gtmId: e.target.value })
+                      }
                       placeholder="GTM-XXXXXXX"
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-800"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Meta / Facebook Pixel ID</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Meta / Facebook Pixel ID
+                    </label>
                     <input
                       type="text"
                       value={analyticsConfig.metaPixelId}
-                      onChange={(e) => setAnalyticsConfig({ ...analyticsConfig, metaPixelId: e.target.value })}
+                      onChange={(e) =>
+                        setAnalyticsConfig({ ...analyticsConfig, metaPixelId: e.target.value })
+                      }
                       placeholder="e.g. 982341908234"
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-800"
                     />
@@ -2237,27 +2613,43 @@ export function SystemSettings() {
                     <Radio className="size-4 text-cyan-600" />
                     <span>Real-time Alert Webhooks</span>
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Stream new purchase notifications to external team chatrooms.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Stream new purchase notifications to external team chatrooms.
+                  </p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Slack Incoming Webhook URL</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Slack Incoming Webhook URL
+                    </label>
                     <input
                       type="text"
                       value={notificationsConfig.slackWebhookUrl}
-                      onChange={(e) => setNotificationsConfig({ ...notificationsConfig, slackWebhookUrl: e.target.value })}
+                      onChange={(e) =>
+                        setNotificationsConfig({
+                          ...notificationsConfig,
+                          slackWebhookUrl: e.target.value,
+                        })
+                      }
                       placeholder="https://hooks.slack.com/services/..."
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-800"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Discord Channel Webhook URL</label>
+                    <label className="text-[10px] font-black uppercase text-slate-500">
+                      Discord Channel Webhook URL
+                    </label>
                     <input
                       type="text"
                       value={notificationsConfig.discordWebhookUrl}
-                      onChange={(e) => setNotificationsConfig({ ...notificationsConfig, discordWebhookUrl: e.target.value })}
+                      onChange={(e) =>
+                        setNotificationsConfig({
+                          ...notificationsConfig,
+                          discordWebhookUrl: e.target.value,
+                        })
+                      }
                       placeholder="https://discord.com/api/webhooks/..."
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-800"
                     />
@@ -2265,14 +2657,23 @@ export function SystemSettings() {
 
                   <div className="pt-2 flex items-center justify-between border-t border-slate-200/60">
                     <div>
-                      <div className="font-bold text-xs text-slate-800">Dispatch Instant Order Webhooks</div>
-                      <div className="text-[10px] text-slate-400">Trigger on each successful checkout completion</div>
+                      <div className="font-bold text-xs text-slate-800">
+                        Dispatch Instant Order Webhooks
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        Trigger on each successful checkout completion
+                      </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={notificationsConfig.orderAlerts}
-                        onChange={(e) => setNotificationsConfig({ ...notificationsConfig, orderAlerts: e.target.checked })}
+                        onChange={(e) =>
+                          setNotificationsConfig({
+                            ...notificationsConfig,
+                            orderAlerts: e.target.checked,
+                          })
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
@@ -2302,7 +2703,9 @@ export function SystemSettings() {
                   </div>
                   <div>
                     <h3 className="text-base font-black text-slate-900">Add Staff Account</h3>
-                    <p className="text-[11px] text-slate-400">Authorize a new team member with specific role rights.</p>
+                    <p className="text-[11px] text-slate-400">
+                      Authorize a new team member with specific role rights.
+                    </p>
                   </div>
                 </div>
 
@@ -2316,7 +2719,9 @@ export function SystemSettings() {
 
               <form onSubmit={handleAddUser} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Username *</label>
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    Username *
+                  </label>
                   <input
                     type="text"
                     required
@@ -2328,7 +2733,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Full Name</label>
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     value={newFullName}
@@ -2339,7 +2746,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Email Address</label>
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     value={newEmail}
@@ -2350,7 +2759,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Password *</label>
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    Password *
+                  </label>
                   <input
                     type="password"
                     required
@@ -2363,7 +2774,9 @@ export function SystemSettings() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Access Role</label>
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                      Access Role
+                    </label>
                     <select
                       value={newRole}
                       onChange={(e) => setNewRole(e.target.value as any)}
@@ -2376,7 +2789,9 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Initial Status</label>
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                      Initial Status
+                    </label>
                     <select
                       value={newStatus}
                       onChange={(e) => setNewStatus(e.target.value as any)}
@@ -2451,7 +2866,9 @@ export function SystemSettings() {
 
               <form onSubmit={handleUpdateUserSubmit} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Full Name</label>
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     value={editFullName}
@@ -2461,7 +2878,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Email Address</label>
+                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     value={editEmail}
@@ -2472,7 +2891,9 @@ export function SystemSettings() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Role</label>
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                      Role
+                    </label>
                     <select
                       value={editRole}
                       onChange={(e) => setEditRole(e.target.value as any)}
@@ -2485,7 +2906,9 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">Status</label>
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                      Status
+                    </label>
                     <select
                       value={editStatus}
                       onChange={(e) => setEditStatus(e.target.value as any)}
@@ -2500,7 +2923,9 @@ export function SystemSettings() {
                 <div className="space-y-1.5 pt-1">
                   <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
                     <span>Reset Password</span>
-                    <span className="text-[10px] text-slate-400 font-normal">Leave blank to keep current</span>
+                    <span className="text-[10px] text-slate-400 font-normal">
+                      Leave blank to keep current
+                    </span>
                   </label>
                   <input
                     type="password"
@@ -2560,7 +2985,9 @@ export function SystemSettings() {
               <div>
                 <h3 className="text-base font-black text-slate-900">Delete Staff Account?</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Are you sure you want to revoke access for <strong className="text-slate-800">'{userToDelete.username}'</strong>? This action is immediate.
+                  Are you sure you want to revoke access for{" "}
+                  <strong className="text-slate-800">'{userToDelete.username}'</strong>? This action
+                  is immediate.
                 </p>
               </div>
 
@@ -2602,13 +3029,19 @@ export function SystemSettings() {
                   <Database className="size-6" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-900">Seed Default Wholesale Catalog</h3>
-                  <p className="text-xs text-slate-400">Synchronize commercial pool catalog into MongoDB.</p>
+                  <h3 className="text-base font-black text-slate-900">
+                    Seed Default Wholesale Catalog
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Synchronize commercial pool catalog into MongoDB.
+                  </p>
                 </div>
               </div>
 
               <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                This process will populate your live database with the complete commercial product database ({products.length} master SKU items). Existing product IDs will be safely updated without deleting customer order records.
+                This process will populate your live database with the complete commercial product
+                database ({products.length} master SKU items). Existing product IDs will be safely
+                updated without deleting customer order records.
               </p>
 
               <div className="pt-2 flex items-center justify-end gap-2.5">
@@ -2648,8 +3081,12 @@ export function SystemSettings() {
                     <Sparkles className="size-6" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-slate-900">Catalog Deduplication & Cleanup</h3>
-                    <p className="text-xs text-slate-400">Optimize MongoDB products and prune duplicate SKU records.</p>
+                    <h3 className="text-base font-black text-slate-900">
+                      Catalog Deduplication & Cleanup
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Optimize MongoDB products and prune duplicate SKU records.
+                    </p>
                   </div>
                 </div>
                 <button
@@ -2665,16 +3102,28 @@ export function SystemSettings() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-3 gap-3">
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Current in DB</div>
-                      <div className="text-lg font-black text-slate-800 mt-0.5">{duplicateAuditInfo.total.toLocaleString()}</div>
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        Current in DB
+                      </div>
+                      <div className="text-lg font-black text-slate-800 mt-0.5">
+                        {duplicateAuditInfo.total.toLocaleString()}
+                      </div>
                     </div>
                     <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-100 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-rose-500">Duplicate Clones</div>
-                      <div className="text-lg font-black text-rose-600 mt-0.5">-{duplicateAuditInfo.excessDuplicates.toLocaleString()}</div>
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-rose-500">
+                        Duplicate Clones
+                      </div>
+                      <div className="text-lg font-black text-rose-600 mt-0.5">
+                        -{duplicateAuditInfo.excessDuplicates.toLocaleString()}
+                      </div>
                     </div>
                     <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Clean Inventory</div>
-                      <div className="text-lg font-black text-emerald-700 mt-0.5">{duplicateAuditInfo.cleanTotal.toLocaleString()}</div>
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">
+                        Clean Inventory
+                      </div>
+                      <div className="text-lg font-black text-emerald-700 mt-0.5">
+                        {duplicateAuditInfo.cleanTotal.toLocaleString()}
+                      </div>
                     </div>
                   </div>
 
@@ -2684,23 +3133,32 @@ export function SystemSettings() {
                       <span>Why did the product count increase?</span>
                     </div>
                     <p className="text-[11px] text-amber-800/90">
-                      When a wholesale catalog or backup sync runs, documents with differing ID types can create new records alongside existing ones. Running clean deduplication preserves the primary items (with verified images, review ratings, and sale prices) and purges the duplicate clones.
+                      When a wholesale catalog or backup sync runs, documents with differing ID
+                      types can create new records alongside existing ones. Running clean
+                      deduplication preserves the primary items (with verified images, review
+                      ratings, and sale prices) and purges the duplicate clones.
                     </p>
                   </div>
 
-                  {duplicateAuditInfo.sampleDuplicates && duplicateAuditInfo.sampleDuplicates.length > 0 && (
-                    <div className="space-y-1.5">
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sample Duplicate SKUs Detected</div>
-                      <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto p-2 rounded-xl bg-slate-50 border border-slate-100">
-                        {duplicateAuditInfo.sampleDuplicates.map((s: any, idx: number) => (
-                          <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-mono font-bold text-slate-700">
-                            <span>{s.sku}</span>
-                            <span className="text-rose-500 font-semibold">({s.count}x)</span>
-                          </span>
-                        ))}
+                  {duplicateAuditInfo.sampleDuplicates &&
+                    duplicateAuditInfo.sampleDuplicates.length > 0 && (
+                      <div className="space-y-1.5">
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                          Sample Duplicate SKUs Detected
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto p-2 rounded-xl bg-slate-50 border border-slate-100">
+                          {duplicateAuditInfo.sampleDuplicates.map((s: any, idx: number) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-mono font-bold text-slate-700"
+                            >
+                              <span>{s.sku}</span>
+                              <span className="text-rose-500 font-semibold">({s.count}x)</span>
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               )}
 

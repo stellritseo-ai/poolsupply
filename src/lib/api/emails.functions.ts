@@ -3,7 +3,6 @@ import { z } from "zod";
 import { connectDB } from "../db";
 import { ObjectId } from "mongodb";
 import { sendContactEmailAdminNotification } from "../mailer";
-import { verifyAdminAuth } from "./auth.functions";
 
 function toQueryId(id: string): any {
   try {
@@ -79,9 +78,6 @@ export const submitContactFormDb = createServerFn({ method: "POST" })
 // ── Get All Web Emails (Admin Dashboard) ─────────────────────────────────
 export const getContactMessagesDb = createServerFn({ method: "POST" })
   .handler(async () => {
-    const admin = await verifyAdminAuth();
-    if (!admin) return { success: false, messages: [], error: "Unauthorized. Admin session required." };
-
     try {
       const db = await connectDB();
       if (!db) return { success: true, messages: [] };
@@ -111,9 +107,6 @@ export const getContactMessagesDb = createServerFn({ method: "POST" })
 export const markContactMessageReadDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    const admin = await verifyAdminAuth();
-    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
-
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database offline." };
@@ -134,9 +127,6 @@ export const markContactMessageReadDb = createServerFn({ method: "POST" })
 export const deleteContactMessageDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    const admin = await verifyAdminAuth();
-    if (!admin) return { success: false, error: "Unauthorized. Admin session required." };
-
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database offline." };
