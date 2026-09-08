@@ -144,6 +144,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "keywords", content: "wholesale to retail pool supplies, wholesale to retail pool equipment, buy wholesale pool equipment at retail, wholesale pool supply distributor, retail pool supplies wholesale prices, commercial pool pumps, variable speed pool pumps, gas pool heaters, pool cartridge filters, salt chlorinators, pentair intelliflo, hayward tristar, jandy pro series, raypak pool heaters, pool automation systems, pool contractor trade pricing, pool supply Nashville TN, pool equipment distributor Los Angeles CA, wholesale pool supplies Dallas TX, commercial pool equipment Orlando FL" },
       { name: "author", content: "Pool Supply Wholesalers" },
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { name: "google-site-verification", content: "CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" },
 
       { name: "theme-color", content: "#020617" },
       { property: "og:site_name", content: "Pool Supply Wholesalers" },
@@ -339,6 +340,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="google-site-verification" content="CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" />
         <HeadContent />
         <script
           type="application/ld+json"
