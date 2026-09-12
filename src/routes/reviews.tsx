@@ -43,7 +43,7 @@ export const Route = createFileRoute("/reviews")({
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
-        "reviewCount": "5420",
+        "reviewCount": "5000",
         "bestRating": "5",
         "worstRating": "1"
       }
@@ -66,8 +66,16 @@ export const Route = createFileRoute("/reviews")({
         },
         { property: "og:url", content: pageUrl },
         { property: "og:type", content: "website" },
+        { property: "og:site_name", content: "Pool Supply Wholesalers" },
         { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: "Pool Supply Wholesalers Customer Reviews — 4.9 Stars" },
+        { property: "og:locale", content: "en_US" },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:site", content: "@poolsupplywholesalers" },
+        { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: "Customer Reviews — Pool Supply Wholesalers" },
         { name: "twitter:description", content: "Rated 4.9/5.0 by verified pool builders and trade contractors nationwide." },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },

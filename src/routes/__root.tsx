@@ -146,6 +146,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { name: "google-site-verification", content: "CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" },
 
+      // Local SEO geo tags (Nashville HQ)
+      { name: "geo.region", content: "US-TN" },
+      { name: "geo.placename", content: "Nashville, Tennessee" },
+      { name: "geo.position", content: "36.1627;-86.7816" },
+      { name: "ICBM", content: "36.1627, -86.7816" },
+
+      // Prevent iOS auto-linking of phone numbers
+      { name: "format-detection", content: "telephone=no" },
+
       { name: "theme-color", content: "#020617" },
       { property: "og:site_name", content: "Pool Supply Wholesalers" },
       { property: "og:title", content: "Pool Supply Wholesalers — Direct Wholesale to Retail Pool Equipment" },
@@ -153,21 +162,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://poolsupplywholesalers.com/" },
       { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: "Pool Supply Wholesalers — Commercial Pool Equipment" },
       { property: "og:locale", content: "en_US" },
 
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@poolsupplywholesalers" },
+      { name: "twitter:creator", content: "@poolsupplywholesalers" },
       { name: "twitter:title", content: "Pool Supply Wholesalers — Wholesale to Retail Pool Supplies" },
       { name: "twitter:description", content: "Wholesale to retail distributor for pool builders, service pros, and homeowners. Fast shipping from TN, CA, TX, and FL hubs." },
       { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
     ],
     links: [
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
-      { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32.png" },
+      { rel: "icon", type: "image/png", sizes: "512x512", href: "/favicon.png" },
+      { rel: "apple-touch-icon", sizes: "512x512", href: "/favicon.png" },
       { rel: "manifest", href: "/manifest.json" },
       { rel: "stylesheet", href: appCss },
+      // Preload hero image for faster LCP — WebP first, PNG fallback
+      { rel: "preload", as: "image", href: "/about-hero.webp", type: "image/webp" },
+      { rel: "preload", as: "image", href: "/about-hero.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://js.stripe.com" },
@@ -176,6 +192,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "dns-prefetch", href: "https://www.googletagmanager.com" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" },
       { rel: "canonical", href: "https://poolsupplywholesalers.com/" },
+      // hreflang for US English targeting
+      { rel: "alternate", hrefLang: "en-US", href: "https://poolsupplywholesalers.com/" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://poolsupplywholesalers.com/" },
     ],
   }),
   shellComponent: RootShell,
@@ -197,14 +216,11 @@ function RootShell({ children }: { children: ReactNode }) {
         "@type": "Organization",
         "name": "Pool Supply Wholesalers",
         "url": "https://poolsupplywholesalers.com",
-        "logo": "https://poolsupplywholesalers.com/assets/logo.png"
+        "logo": "https://poolsupplywholesalers.com/logo.png"
       },
       "potentialAction": {
         "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://poolsupplywholesalers.com/shop/all?q={search_term_string}"
-        },
+        "target": "https://poolsupplywholesalers.com/shop/all?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     },
@@ -214,7 +230,7 @@ function RootShell({ children }: { children: ReactNode }) {
       "name": "Pool Supply Wholesalers",
       "alternateName": ["Pool Supply Wholesalers LLC", "PSW Wholesale"],
       "url": "https://poolsupplywholesalers.com",
-      "logo": "https://poolsupplywholesalers.com/assets/logo.png",
+      "logo": "https://poolsupplywholesalers.com/logo.png",
       "image": "https://poolsupplywholesalers.com/about-hero.png",
       "telephone": "+1-615-477-0407",
       "email": "sales@poolsupplywholesalers.com",
@@ -287,6 +303,43 @@ function RootShell({ children }: { children: ReactNode }) {
     },
     {
       "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Pool Supply Wholesalers",
+      "image": "https://poolsupplywholesalers.com/about-hero.png",
+      "url": "https://poolsupplywholesalers.com",
+      "telephone": "+1-615-477-0407",
+      "email": "sales@poolsupplywholesalers.com",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "410 Scott Pike",
+        "addressLocality": "Nashville",
+        "addressRegion": "TN",
+        "postalCode": "37207",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.1627,
+        "longitude": -86.7816
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "08:00",
+          "closes": "17:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/poolsupplywholesalers",
+        "https://www.instagram.com/poolsupplywholesalers",
+        "https://www.linkedin.com/company/pool-supply-wholesalers",
+        "https://www.youtube.com/@poolsupplywholesalers"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "FAQPage",
       "speakable": {
         "@type": "SpeakableSpecification",
@@ -340,6 +393,13 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* ── Google Tag Manager ── Replace GTM-XXXXXXX with your real ID from tagmanager.google.com ── */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');`,
+          }}
+        />
+        {/* ── End GTM ── */}
         <meta name="google-site-verification" content="CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" />
         <HeadContent />
         <script
@@ -365,6 +425,15 @@ function RootShell({ children }: { children: ReactNode }) {
         />
       </head>
       <body suppressHydrationWarning>
+        {/* GTM noscript fallback */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         {children}
         <Scripts />
       </body>

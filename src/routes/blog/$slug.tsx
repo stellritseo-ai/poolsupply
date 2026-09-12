@@ -38,6 +38,14 @@ export const Route = createFileRoute("/blog/$slug")({
 
     const pageUrl = `https://poolsupplywholesalers.com/blog/${article.slug}`;
 
+    // Compute real word count from article content blocks
+    const wordCount = article.content.reduce((acc, block) => {
+      if ("text" in block) return acc + block.text.split(/\s+/).length;
+      if ("items" in block) return acc + block.items.join(" ").split(/\s+/).length;
+      if ("rows" in block) return acc + block.rows.flat().join(" ").split(/\s+/).length;
+      return acc;
+    }, 0);
+
     const articleLd = {
       "@context": "https://schema.org",
       "@type": "Article",
@@ -48,9 +56,15 @@ export const Route = createFileRoute("/blog/$slug")({
       datePublished: article.date,
       dateModified: article.dateModified,
       author: {
-        "@type": "Organization",
+        "@type": "Person",
         name: article.author,
-        url: "https://poolsupplywholesalers.com",
+        jobTitle: article.authorTitle || "Pool Equipment Expert",
+        url: "https://poolsupplywholesalers.com/about",
+        worksFor: {
+          "@type": "Organization",
+          name: "Pool Supply Wholesalers",
+          url: "https://poolsupplywholesalers.com",
+        },
       },
       publisher: {
         "@type": "Organization",
@@ -58,13 +72,13 @@ export const Route = createFileRoute("/blog/$slug")({
         url: "https://poolsupplywholesalers.com",
         logo: {
           "@type": "ImageObject",
-          url: "https://poolsupplywholesalers.com/assets/logo.png",
+          url: "https://poolsupplywholesalers.com/logo.png",
         },
       },
       mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
       keywords: article.keywords.join(", "),
       articleSection: article.categoryLabel,
-      wordCount: 900,
+      wordCount,
     };
 
     const breadcrumbLd = {
@@ -100,17 +114,22 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:title", content: article.metaTitle },
         { property: "og:description", content: article.metaDescription },
         { property: "og:image", content: article.image },
+        { property: "og:image:type", content: "image/jpeg" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: article.metaTitle },
         { property: "og:url", content: pageUrl },
         { property: "og:type", content: "article" },
         { property: "og:site_name", content: "Pool Supply Wholesalers" },
+        { property: "og:locale", content: "en_US" },
         { property: "article:published_time", content: article.date },
         { property: "article:modified_time", content: article.dateModified },
         { property: "article:author", content: article.author },
         { property: "article:section", content: article.categoryLabel },
         ...(article.tags.map(tag => ({ property: "article:tag", content: tag }))),
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:site", content: "@poolsupplywholesalers" },
+        { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: article.metaTitle },
         { name: "twitter:description", content: article.metaDescription },
         { name: "twitter:image", content: article.image },

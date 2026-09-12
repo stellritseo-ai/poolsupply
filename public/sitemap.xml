@@ -375,57 +375,5 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- ══════════════════════════════════════════
-       BLOG & ARTICLES
-  ══════════════════════════════════════════ -->
-
-  <url>
-    <loc>https://poolsupplywholesalers.com/blog#how-to-choose-variable-speed-pool-pump-commercial</loc>
-    <lastmod>2026-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://poolsupplywholesalers.com/blog#pentair-vs-hayward-vs-jandy-pool-heater-comparison-2026</loc>
-    <lastmod>2026-08-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://poolsupplywholesalers.com/blog#cartridge-filter-vs-sand-filter-pool-contractor-guide</loc>
-    <lastmod>2026-08-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://poolsupplywholesalers.com/blog#pool-automation-systems-explained-2026</loc>
-    <lastmod>2026-08-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://poolsupplywholesalers.com/blog#how-to-size-pool-salt-chlorinator</loc>
-    <lastmod>2026-08-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://poolsupplywholesalers.com/blog#top-10-signs-pool-pump-motor-needs-replacement</loc>
-    <lastmod>2026-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://poolsupplywholesalers.com/blog#commercial-pool-equipment-checklist-complete-build-supply-list</loc>
-    <lastmod>2026-07-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
 
 </urlset>

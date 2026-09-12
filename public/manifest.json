@@ -6,16 +6,35 @@
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#0089C9",
+  "lang": "en-US",
+  "categories": ["shopping", "business"],
   "icons": [
     {
       "src": "/favicon.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/favicon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/about-hero.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Pool Supply Wholesalers — Commercial Pool Equipment"
     }
   ]
 }
