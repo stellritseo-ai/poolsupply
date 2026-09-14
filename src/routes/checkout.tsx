@@ -161,13 +161,18 @@ function CheckoutPage() {
   }, [form.zip, form.state]);
 
   const discountedSubtotal = Math.max(0, subtotal - discount);
+  // isPending = address not yet entered; treat shipping as 0 until address is known
+  const isShippingPending = form.method === "standard" && shippingResult.isPending;
   const shipping =
     discountedSubtotal === 0
       ? 0
       : form.method === "pickup"
         ? 0
-        : shippingResult.amount;
+        : isShippingPending
+          ? 0
+          : shippingResult.amount;
   const tax = +(discountedSubtotal * TAX_RATE).toFixed(2);
+  // Total excludes shipping until address is entered
   const total = +(discountedSubtotal + shipping + tax).toFixed(2);
 
   const taxLabel = "Sales Tax (9.25%)";
