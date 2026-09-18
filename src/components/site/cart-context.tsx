@@ -42,32 +42,46 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!hydrated) return;
-    try { window.localStorage.setItem(KEY, JSON.stringify(items)); } catch {}
+    try {
+      window.localStorage.setItem(KEY, JSON.stringify(items));
+    } catch {}
   }, [items, hydrated]);
 
-  const value = useMemo<CartCtx>(() => ({
-    items,
-    add: (item, qty = 1) => {
-      const effectivePrice = (item as any).salePrice && Number((item as any).salePrice) > 0 ? Number((item as any).salePrice) : item.price;
-      const normalizedItem = { ...item, price: effectivePrice };
-      setItems((prev) => {
-        const ex = prev.find((p) => p.id === item.id);
-        if (ex) return prev.map((p) => p.id === item.id ? { ...p, price: effectivePrice, qty: p.qty + qty } : p);
-        return [...prev, { ...normalizedItem, qty }];
-      });
-      setIsOpen(true);
-    },
-    remove: (id) => setItems((prev) => prev.filter((p) => p.id !== id)),
-    setQty: (id, qty) => setItems((prev) =>
-      qty <= 0 ? prev.filter((p) => p.id !== id) : prev.map((p) => p.id === id ? { ...p, qty } : p)
-    ),
-    clear: () => setItems([]),
-    count: items.reduce((n, i) => n + i.qty, 0),
-    subtotal: items.reduce((n, i) => n + i.qty * i.price, 0),
-    isOpen,
-    open: () => setIsOpen(true),
-    close: () => setIsOpen(false),
-  }), [items, isOpen]);
+  const value = useMemo<CartCtx>(
+    () => ({
+      items,
+      add: (item, qty = 1) => {
+        const effectivePrice =
+          (item as any).salePrice && Number((item as any).salePrice) > 0
+            ? Number((item as any).salePrice)
+            : item.price;
+        const normalizedItem = { ...item, price: effectivePrice };
+        setItems((prev) => {
+          const ex = prev.find((p) => p.id === item.id);
+          if (ex)
+            return prev.map((p) =>
+              p.id === item.id ? { ...p, price: effectivePrice, qty: p.qty + qty } : p,
+            );
+          return [...prev, { ...normalizedItem, qty }];
+        });
+        setIsOpen(true);
+      },
+      remove: (id) => setItems((prev) => prev.filter((p) => p.id !== id)),
+      setQty: (id, qty) =>
+        setItems((prev) =>
+          qty <= 0
+            ? prev.filter((p) => p.id !== id)
+            : prev.map((p) => (p.id === id ? { ...p, qty } : p)),
+        ),
+      clear: () => setItems([]),
+      count: items.reduce((n, i) => n + i.qty, 0),
+      subtotal: items.reduce((n, i) => n + i.qty * i.price, 0),
+      isOpen,
+      open: () => setIsOpen(true),
+      close: () => setIsOpen(false),
+    }),
+    [items, isOpen],
+  );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
@@ -86,11 +100,7 @@ export const TAX_RATE = 0.0925; // 9.25% fixed TN sales tax
  * zip and state are optional — when omitted the cart drawer shows a
  * zone-4 estimate ("Regional Ground" ~$X estimated).
  */
-export function computeTotals(
-  items: CartItem[],
-  zip?: string,
-  state?: string
-) {
+export function computeTotals(items: CartItem[], zip?: string, state?: string) {
   const result = computeShipping(items, zip ?? "", state ?? "");
   const subtotal = items.reduce((n, i) => n + i.qty * i.price, 0);
   const shipping = result.amount;

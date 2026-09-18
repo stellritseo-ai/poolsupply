@@ -14,9 +14,16 @@ function toQueryId(id: string): any {
   }
 }
 
-
 export const getProductsDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ limit: z.number().optional(), category: z.string().optional(), ids: z.array(z.string()).optional() }).optional())
+  .inputValidator(
+    z
+      .object({
+        limit: z.number().optional(),
+        category: z.string().optional(),
+        ids: z.array(z.string()).optional(),
+      })
+      .optional(),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -32,35 +39,36 @@ export const getProductsDb = createServerFn({ method: "POST" })
         const queryIds = data.ids.map(toQueryId);
         const skus = data.ids.map((s) => s.replace(/^p-/, "").toUpperCase());
         query = {
-          $or: [
-            { id: { $in: data.ids } },
-            { _id: { $in: queryIds } },
-            { sku: { $in: skus } }
-          ]
+          $or: [{ id: { $in: data.ids } }, { _id: { $in: queryIds } }, { sku: { $in: skus } }],
         };
       } else if (data?.category && data.category !== "all") {
         // Build multiple slug variants to match DB values like "Ladders & Rails", "Pumps", "Pool & Spa", etc.
         const slug = data.category.toLowerCase();
-        const baseName = slug.replace(/^pool-/, "").replace(/-systems?$/, "").trim();
+        const baseName = slug
+          .replace(/^pool-/, "")
+          .replace(/-systems?$/, "")
+          .trim();
         const variants = [
-          slug.replace(/-/g, " "),                          // "pool pumps", "parts hardware"
+          slug.replace(/-/g, " "), // "pool pumps", "parts hardware"
           slug.replace(/-and-/g, " & ").replace(/-/g, " "), // "ladders & rails"
-          slug.replace(/-/g, " & "),                        // "parts & hardware", "pool & spa"
-          slug.replace(/-or-/g, " / ").replace(/-/g, " "),  // for slash variants
-          slug,                                              // "pool-pumps"
-          baseName,                                          // "pumps", "heaters", "automation"
+          slug.replace(/-/g, " & "), // "parts & hardware", "pool & spa"
+          slug.replace(/-or-/g, " / ").replace(/-/g, " "), // for slash variants
+          slug, // "pool-pumps"
+          baseName, // "pumps", "heaters", "automation"
           baseName.replace(/-/g, " "),
         ];
         // Escape regex special chars then join as alternation
-        const escapedVariants = Array.from(new Set(variants.filter(Boolean))).map(v => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+        const escapedVariants = Array.from(new Set(variants.filter(Boolean))).map((v) =>
+          v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        );
         const combinedPattern = escapedVariants.join("|");
         const catRegex = new RegExp(combinedPattern, "i");
         query = {
           $or: [
             { category: { $regex: catRegex } },
             { parentCategory: { $regex: catRegex } },
-            { subCategory: { $regex: catRegex } }
-          ]
+            { subCategory: { $regex: catRegex } },
+          ],
         };
       }
 
@@ -73,7 +81,8 @@ export const getProductsDb = createServerFn({ method: "POST" })
           item.img = "/assets/commingsoon.png";
         }
         const rawPrice = Number(item.price) || 0;
-        const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+        const rawSale =
+          item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
         if (rawSale) {
           item.wholesalePrice = rawPrice;
           item.salePrice = rawSale;
@@ -109,11 +118,7 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
         if (db) {
           const productsCol = db.collection("products");
 
-          const orConditions: any[] = [
-            { id: cleanId },
-            { _id: cleanId as any },
-            { sku: cleanId },
-          ];
+          const orConditions: any[] = [{ id: cleanId }, { _id: cleanId as any }, { sku: cleanId }];
 
           if (ObjectId.isValid(cleanId) && String(new ObjectId(cleanId)) === cleanId) {
             orConditions.push({ _id: new ObjectId(cleanId) });
@@ -147,7 +152,10 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
               item.img = "/assets/commingsoon.png";
             }
             const rawPrice = Number(item.price) || 0;
-            const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+            const rawSale =
+              item.salePrice != null && Number(item.salePrice) > 0
+                ? Number(item.salePrice)
+                : undefined;
             if (rawSale) {
               item.wholesalePrice = rawPrice;
               item.salePrice = rawSale;
@@ -179,7 +187,8 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
           item.img = "/assets/commingsoon.png";
         }
         const rawPrice = Number(item.price) || 0;
-        const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+        const rawSale =
+          item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
         if (rawSale) {
           item.wholesalePrice = rawPrice;
           item.salePrice = rawSale;
@@ -197,9 +206,13 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
 
 // ── Get Category Brands for Filter Sidebar ───────────────────────────────
 export const getShopCategoryBrandsDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    category: z.string().optional(),
-  }).optional())
+  .inputValidator(
+    z
+      .object({
+        category: z.string().optional(),
+      })
+      .optional(),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -210,30 +223,40 @@ export const getShopCategoryBrandsDb = createServerFn({ method: "POST" })
 
       if (data?.category && data.category.toLowerCase() !== "all") {
         const slug = data.category.toLowerCase();
-        const baseName = slug.replace(/^pool-/, "").replace(/-systems?$/, "").trim();
-        const variants = Array.from(new Set([
-          slug.replace(/-/g, " "),
-          slug.replace(/-and-/g, " & ").replace(/-/g, " "),
-          slug.replace(/-/g, " & "),
-          slug,
-          baseName,
-          baseName.replace(/-/g, " "),
-        ].filter(Boolean)));
-        const escaped = variants.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+        const baseName = slug
+          .replace(/^pool-/, "")
+          .replace(/-systems?$/, "")
+          .trim();
+        const variants = Array.from(
+          new Set(
+            [
+              slug.replace(/-/g, " "),
+              slug.replace(/-and-/g, " & ").replace(/-/g, " "),
+              slug.replace(/-/g, " & "),
+              slug,
+              baseName,
+              baseName.replace(/-/g, " "),
+            ].filter(Boolean),
+          ),
+        );
+        const escaped = variants.map((v) => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
         const catRegex = new RegExp(escaped.join("|"), "i");
         query = {
           $or: [
             { category: { $regex: catRegex } },
             { parentCategory: { $regex: catRegex } },
             { subCategory: { $regex: catRegex } },
-          ]
+          ],
         };
       }
 
       const distinctBrands = await productsCol.distinct("brand", query);
       const cleanBrands = distinctBrands
-        .filter((b): b is string => typeof b === "string" && b.trim().length > 0 && b.toLowerCase() !== "generic")
-        .map(b => b.trim())
+        .filter(
+          (b): b is string =>
+            typeof b === "string" && b.trim().length > 0 && b.toLowerCase() !== "generic",
+        )
+        .map((b) => b.trim())
         .sort((a, b) => a.localeCompare(b));
 
       return { success: true, brands: cleanBrands };
@@ -244,81 +267,91 @@ export const getShopCategoryBrandsDb = createServerFn({ method: "POST" })
   });
 
 // ── Category Product Counts Query (for Homepage Best Seller Categories) ───────
-export const getCategoryCountsDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    // Verified fallback counts from product catalog
-    const fallbackCounts: Record<string, number> = {
-      "pool-pumps": 56,
-      "pool-heaters": 57,
-      "pool-lights": 99,
-      "pool-filters": 56,
-      "pool-cleaners": 22,
-      "automation-systems": 28,
-    };
+export const getCategoryCountsDb = createServerFn({ method: "POST" }).handler(async () => {
+  // Verified fallback counts from product catalog
+  const fallbackCounts: Record<string, number> = {
+    "pool-pumps": 56,
+    "pool-heaters": 57,
+    "pool-lights": 99,
+    "pool-filters": 56,
+    "pool-cleaners": 22,
+    "automation-systems": 28,
+  };
 
-    try {
-      const db = await connectDB();
-      if (!db) {
-        return { success: true, counts: fallbackCounts };
-      }
-
-      const productsCol = db.collection("products");
-      const baseSlugs = [
-        "pool-pumps",
-        "pool-heaters",
-        "pool-lights",
-        "pool-filters",
-        "pool-cleaners",
-        "automation-systems",
-      ];
-
-      const counts: Record<string, number> = {};
-
-      await Promise.all(
-        baseSlugs.map(async (slug) => {
-          const baseName = slug.replace(/^pool-/, "").replace(/-systems?$/, "").trim();
-          const variants = Array.from(new Set([
-            slug.replace(/-/g, " "),
-            slug.replace(/-and-/g, " & ").replace(/-/g, " "),
-            slug.replace(/-/g, " & "),
-            slug,
-            baseName,
-            baseName.replace(/-/g, " "),
-          ].filter(Boolean)));
-          const escaped = variants.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-          const catRegex = new RegExp(escaped.join("|"), "i");
-
-          const dbCount = await productsCol.countDocuments({
-            $or: [
-              { category: { $regex: catRegex } },
-              { parentCategory: { $regex: catRegex } },
-              { subCategory: { $regex: catRegex } },
-            ]
-          });
-
-          counts[slug] = dbCount > 0 ? dbCount : (fallbackCounts[slug] || 0);
-        })
-      );
-
-      return { success: true, counts };
-    } catch (e: any) {
-      console.error("Failed to fetch category counts from DB:", e);
+  try {
+    const db = await connectDB();
+    if (!db) {
       return { success: true, counts: fallbackCounts };
     }
-  });
+
+    const productsCol = db.collection("products");
+    const baseSlugs = [
+      "pool-pumps",
+      "pool-heaters",
+      "pool-lights",
+      "pool-filters",
+      "pool-cleaners",
+      "automation-systems",
+    ];
+
+    const counts: Record<string, number> = {};
+
+    await Promise.all(
+      baseSlugs.map(async (slug) => {
+        const baseName = slug
+          .replace(/^pool-/, "")
+          .replace(/-systems?$/, "")
+          .trim();
+        const variants = Array.from(
+          new Set(
+            [
+              slug.replace(/-/g, " "),
+              slug.replace(/-and-/g, " & ").replace(/-/g, " "),
+              slug.replace(/-/g, " & "),
+              slug,
+              baseName,
+              baseName.replace(/-/g, " "),
+            ].filter(Boolean),
+          ),
+        );
+        const escaped = variants.map((v) => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+        const catRegex = new RegExp(escaped.join("|"), "i");
+
+        const dbCount = await productsCol.countDocuments({
+          $or: [
+            { category: { $regex: catRegex } },
+            { parentCategory: { $regex: catRegex } },
+            { subCategory: { $regex: catRegex } },
+          ],
+        });
+
+        counts[slug] = dbCount > 0 ? dbCount : fallbackCounts[slug] || 0;
+      }),
+    );
+
+    return { success: true, counts };
+  } catch (e: any) {
+    console.error("Failed to fetch category counts from DB:", e);
+    return { success: true, counts: fallbackCounts };
+  }
+});
 
 // ── Server-Side Paginated Shop Query (replaces client-side limit hack) ────
 export const getShopProductsPagedDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    page: z.number().optional(),
-    limit: z.number().optional(),
-    category: z.string().optional(),
-    search: z.string().optional(),
-    sort: z.enum(["rating-desc", "price-asc", "price-desc", "name-asc"]).optional(),
-    brand: z.string().optional(),
-    brands: z.array(z.string()).optional(),
-    inStockOnly: z.boolean().optional(),
-  }).optional())
+  .inputValidator(
+    z
+      .object({
+        page: z.number().optional(),
+        limit: z.number().optional(),
+        category: z.string().optional(),
+        search: z.string().optional(),
+        sort: z.enum(["rating-desc", "price-asc", "price-desc", "name-asc"]).optional(),
+        brand: z.string().optional(),
+        brands: z.array(z.string()).optional(),
+        inStockOnly: z.boolean().optional(),
+      })
+      .optional(),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -335,23 +368,30 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
       // Category filter
       if (data?.category && data.category.toLowerCase() !== "all") {
         const slug = data.category.toLowerCase();
-        const baseName = slug.replace(/^pool-/, "").replace(/-systems?$/, "").trim();
-        const variants = Array.from(new Set([
-          slug.replace(/-/g, " "),
-          slug.replace(/-and-/g, " & ").replace(/-/g, " "),
-          slug.replace(/-/g, " & "),
-          slug,
-          baseName,
-          baseName.replace(/-/g, " "),
-        ].filter(Boolean)));
-        const escaped = variants.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+        const baseName = slug
+          .replace(/^pool-/, "")
+          .replace(/-systems?$/, "")
+          .trim();
+        const variants = Array.from(
+          new Set(
+            [
+              slug.replace(/-/g, " "),
+              slug.replace(/-and-/g, " & ").replace(/-/g, " "),
+              slug.replace(/-/g, " & "),
+              slug,
+              baseName,
+              baseName.replace(/-/g, " "),
+            ].filter(Boolean),
+          ),
+        );
+        const escaped = variants.map((v) => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
         const catRegex = new RegExp(escaped.join("|"), "i");
         conditions.push({
           $or: [
             { category: { $regex: catRegex } },
             { parentCategory: { $regex: catRegex } },
             { subCategory: { $regex: catRegex } },
-          ]
+          ],
         });
       }
 
@@ -369,17 +409,22 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
               { description: { $regex: tReg } },
               { details: { $regex: tReg } },
               { seoKeywords: { $regex: tReg } },
-            ]
+            ],
           });
         }
       }
 
       // Brand filter (supports array of brands or single brand)
       if (data?.brands && data.brands.length > 0) {
-        const brandRegexes = data.brands.map(b => new RegExp(`^${b.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i"));
+        const brandRegexes = data.brands.map(
+          (b) => new RegExp(`^${b.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i"),
+        );
         conditions.push({ brand: { $in: brandRegexes } });
       } else if (data?.brand && data.brand.trim()) {
-        const bReg = new RegExp(`^${data.brand.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i");
+        const bReg = new RegExp(
+          `^${data.brand.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+          "i",
+        );
         conditions.push({ brand: { $regex: bReg } });
       }
 
@@ -398,9 +443,21 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
 
       // ── Projection: only fields needed by ProductCard ─────────────────
       const projection = {
-        name: 1, sku: 1, brand: 1, price: 1, salePrice: 1, msrp: 1, rating: 1,
-        img: 1, category: 1, parentCategory: 1, subCategory: 1,
-        stock: 1, id: 1, seoKeywords: 1, productSize: 1,
+        name: 1,
+        sku: 1,
+        brand: 1,
+        price: 1,
+        salePrice: 1,
+        msrp: 1,
+        rating: 1,
+        img: 1,
+        category: 1,
+        parentCategory: 1,
+        subCategory: 1,
+        stock: 1,
+        id: 1,
+        seoKeywords: 1,
+        productSize: 1,
       };
 
       const [rawProducts, total] = await Promise.all([
@@ -415,7 +472,8 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
           item.img = "/assets/commingsoon.png";
         }
         const rawPrice = Number(item.price) || 0;
-        const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+        const rawSale =
+          item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
         if (rawSale) {
           item.wholesalePrice = rawPrice;
           item.salePrice = rawSale;
@@ -439,7 +497,16 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
   });
 
 export const getAllProductsAdminDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ page: z.number().optional(), limit: z.number().optional(), search: z.string().optional(), category: z.string().optional() }).optional())
+  .inputValidator(
+    z
+      .object({
+        page: z.number().optional(),
+        limit: z.number().optional(),
+        search: z.string().optional(),
+        category: z.string().optional(),
+      })
+      .optional(),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -462,7 +529,7 @@ export const getAllProductsAdminDb = createServerFn({ method: "POST" })
             { sku: { $regex: regex } },
             { brand: { $regex: regex } },
             { category: { $regex: regex } },
-          ]
+          ],
         };
       }
       if (data?.category && data.category !== "all") {
@@ -473,13 +540,30 @@ export const getAllProductsAdminDb = createServerFn({ method: "POST" })
             { category: { $regex: catRegex } },
             { parentCategory: { $regex: catRegex } },
             { subCategory: { $regex: catRegex } },
-          ]
+          ],
         };
       }
 
       const [rawProducts, total] = await Promise.all([
         productsCol
-          .find(query, { projection: { name: 1, sku: 1, brand: 1, price: 1, salePrice: 1, msrp: 1, stock: 1, img: 1, image: 1, category: 1, parentCategory: 1, subCategory: 1, id: 1, productSize: 1 } })
+          .find(query, {
+            projection: {
+              name: 1,
+              sku: 1,
+              brand: 1,
+              price: 1,
+              salePrice: 1,
+              msrp: 1,
+              stock: 1,
+              img: 1,
+              image: 1,
+              category: 1,
+              parentCategory: 1,
+              subCategory: 1,
+              id: 1,
+              productSize: 1,
+            },
+          })
           .sort({ name: 1 })
           .skip(skip)
           .limit(limit)
@@ -496,42 +580,53 @@ export const getAllProductsAdminDb = createServerFn({ method: "POST" })
         return item as unknown as Product;
       });
 
-      return { success: true, products: formatted, total, page, limit, pages: Math.ceil(total / limit) };
+      return {
+        success: true,
+        products: formatted,
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit),
+      };
     } catch (e: any) {
       console.error("Failed to fetch all admin products from DB:", e);
-      return { success: false, error: "Failed to load all admin products from database.", products: [], total: 0 };
+      return {
+        success: false,
+        error: "Failed to load all admin products from database.",
+        products: [],
+        total: 0,
+      };
     }
   });
 
-export const getAllProductsForExportDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) {
-        return { success: true, products: defaultProducts };
-      }
-      const productsCol = db.collection("products");
-      const rawProducts = await productsCol.find({}).sort({ name: 1 }).toArray();
-
-      if (!rawProducts || rawProducts.length === 0) {
-        return { success: true, products: defaultProducts };
-      }
-
-      const formatted = rawProducts.map((p: any) => {
-        const { _id, ...rest } = p;
-        const item = { ...rest, id: p.id || _id?.toString() };
-        if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
-          item.img = "/assets/commingsoon.png";
-        }
-        return item as unknown as Product;
-      });
-
-      return { success: true, products: formatted };
-    } catch (e: any) {
-      console.error("Failed to fetch all products for export from DB:", e);
+export const getAllProductsForExportDb = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) {
       return { success: true, products: defaultProducts };
     }
-  });
+    const productsCol = db.collection("products");
+    const rawProducts = await productsCol.find({}).sort({ name: 1 }).toArray();
+
+    if (!rawProducts || rawProducts.length === 0) {
+      return { success: true, products: defaultProducts };
+    }
+
+    const formatted = rawProducts.map((p: any) => {
+      const { _id, ...rest } = p;
+      const item = { ...rest, id: p.id || _id?.toString() };
+      if (!item.img || typeof item.img !== "string" || !item.img.startsWith("http")) {
+        item.img = "/assets/commingsoon.png";
+      }
+      return item as unknown as Product;
+    });
+
+    return { success: true, products: formatted };
+  } catch (e: any) {
+    console.error("Failed to fetch all products for export from DB:", e);
+    return { success: true, products: defaultProducts };
+  }
+});
 
 export const searchProductsDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ query: z.string() }))
@@ -543,7 +638,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
       }
 
       const terms = queryStr.split(/\s+/).filter(Boolean);
-      const escapedTerms = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const escapedTerms = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
 
       let formatted: Product[] = [];
 
@@ -552,7 +647,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
         if (!db) return { success: true, products: [] };
         const productsCol = db.collection("products");
 
-        const andConditions = escapedTerms.map(term => {
+        const andConditions = escapedTerms.map((term) => {
           const regex = new RegExp(term, "i");
           return {
             $or: [
@@ -576,7 +671,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
               { "specs.Capacity (BTU)": { $regex: regex } },
               { "specs.Voltage": { $regex: regex } },
               { "specs.Filter Area": { $regex: regex } },
-            ]
+            ],
           };
         });
 
@@ -589,7 +684,10 @@ export const searchProductsDb = createServerFn({ method: "POST" })
             item.img = "/assets/commingsoon.png";
           }
           const rawPrice = Number(item.price) || 0;
-          const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+          const rawSale =
+            item.salePrice != null && Number(item.salePrice) > 0
+              ? Number(item.salePrice)
+              : undefined;
           if (rawSale) {
             item.wholesalePrice = rawPrice;
             item.salePrice = rawSale;
@@ -603,26 +701,33 @@ export const searchProductsDb = createServerFn({ method: "POST" })
 
       // If DB returned 0 results (e.g. database empty or no matches in DB), search in default products catalog
       if (formatted.length === 0) {
-        const defaultMatched = defaultProducts.filter(p => {
-          const name = (p.name || "").toLowerCase();
-          const brand = (p.brand || "").toLowerCase();
-          const sku = (p.sku || "").toLowerCase();
-          const category = (p.category || "").toLowerCase();
-          const parentCategory = (p.parentCategory || "").toLowerCase();
-          const description = (p.description || "").toLowerCase();
-          const details = (p.details || "").toLowerCase();
-          const seoKeywords = (p.seoKeywords || "").toLowerCase();
-          const specsStr = p.specs ? Object.values(p.specs).filter(Boolean).join(" ").toLowerCase() : "";
+        const defaultMatched = defaultProducts
+          .filter((p) => {
+            const name = (p.name || "").toLowerCase();
+            const brand = (p.brand || "").toLowerCase();
+            const sku = (p.sku || "").toLowerCase();
+            const category = (p.category || "").toLowerCase();
+            const parentCategory = (p.parentCategory || "").toLowerCase();
+            const description = (p.description || "").toLowerCase();
+            const details = (p.details || "").toLowerCase();
+            const seoKeywords = (p.seoKeywords || "").toLowerCase();
+            const specsStr = p.specs
+              ? Object.values(p.specs).filter(Boolean).join(" ").toLowerCase()
+              : "";
 
-          const fullText = `${name} ${brand} ${sku} ${category} ${parentCategory} ${description} ${details} ${seoKeywords} ${specsStr}`;
+            const fullText = `${name} ${brand} ${sku} ${category} ${parentCategory} ${description} ${details} ${seoKeywords} ${specsStr}`;
 
-          return terms.every(term => fullText.includes(term.toLowerCase()));
-        }).slice(0, 24);
+            return terms.every((term) => fullText.includes(term.toLowerCase()));
+          })
+          .slice(0, 24);
 
         formatted = defaultMatched.map((p: any) => {
           const item = { ...p };
           const rawPrice = Number(item.price) || 0;
-          const rawSale = item.salePrice != null && Number(item.salePrice) > 0 ? Number(item.salePrice) : undefined;
+          const rawSale =
+            item.salePrice != null && Number(item.salePrice) > 0
+              ? Number(item.salePrice)
+              : undefined;
           if (rawSale) {
             item.wholesalePrice = rawPrice;
             item.salePrice = rawSale;
@@ -644,7 +749,8 @@ export const saveProductDb = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
-      if (!db) return { success: false, error: "Database unavailable. Please check MongoDB connection." };
+      if (!db)
+        return { success: false, error: "Database unavailable. Please check MongoDB connection." };
       const productsCol = db.collection("products");
 
       const product = { ...data.product };
@@ -652,7 +758,11 @@ export const saveProductDb = createServerFn({ method: "POST" })
         product.id = `p-${(product.sku || "prod").toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now()}`;
       }
       product.price = Number(product.price) || 0;
-      if (product.salePrice !== undefined && product.salePrice !== null && product.salePrice !== "") {
+      if (
+        product.salePrice !== undefined &&
+        product.salePrice !== null &&
+        product.salePrice !== ""
+      ) {
         product.salePrice = Number(product.salePrice);
       } else {
         delete product.salePrice;
@@ -667,14 +777,11 @@ export const saveProductDb = createServerFn({ method: "POST" })
 
       // Look up existing product by queryId or id or sku
       const existing = await productsCol.findOne({
-        $or: [{ _id: queryId }, { id: product.id }, { _id: product.id as any }]
+        $or: [{ _id: queryId }, { id: product.id }, { _id: product.id as any }],
       });
 
       if (existing) {
-        await productsCol.replaceOne(
-          { _id: existing._id },
-          { ...product, _id: existing._id }
-        );
+        await productsCol.replaceOne({ _id: existing._id }, { ...product, _id: existing._id });
       } else {
         await productsCol.insertOne(doc);
       }
@@ -700,7 +807,11 @@ export const bulkSaveProductsDb = createServerFn({ method: "POST" })
           product.id = `p-${(product.sku || "prod").toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now()}`;
         }
         product.productSize = product.productSize ? String(product.productSize).trim() : "";
-        if (product.salePrice !== undefined && product.salePrice !== null && product.salePrice !== "") {
+        if (
+          product.salePrice !== undefined &&
+          product.salePrice !== null &&
+          product.salePrice !== ""
+        ) {
           product.salePrice = Number(product.salePrice);
         }
         const queryId = toQueryId(product.id);
@@ -709,8 +820,8 @@ export const bulkSaveProductsDb = createServerFn({ method: "POST" })
           replaceOne: {
             filter: { _id: queryId },
             replacement: doc,
-            upsert: true
-          }
+            upsert: true,
+          },
         };
       });
 
@@ -723,14 +834,16 @@ export const bulkSaveProductsDb = createServerFn({ method: "POST" })
   });
 
 export const bulkAdjustPricesDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    scope: z.enum(["all", "category", "selected"]),
-    category: z.string().optional(),
-    selectedIds: z.array(z.string()).optional(),
-    mode: z.enum(["percent_increase", "percent_decrease", "fixed_increase", "fixed_decrease"]),
-    value: z.number().min(0),
-    adjustMsrp: z.boolean().default(true),
-  }))
+  .inputValidator(
+    z.object({
+      scope: z.enum(["all", "category", "selected"]),
+      category: z.string().optional(),
+      selectedIds: z.array(z.string()).optional(),
+      mode: z.enum(["percent_increase", "percent_decrease", "fixed_increase", "fixed_decrease"]),
+      value: z.number().min(0),
+      adjustMsrp: z.boolean().default(true),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -741,19 +854,19 @@ export const bulkAdjustPricesDb = createServerFn({ method: "POST" })
       if (data.scope === "selected" && data.selectedIds && data.selectedIds.length > 0) {
         const queryIds = data.selectedIds.map(toQueryId);
         filter = {
-          $or: [
-            { _id: { $in: queryIds } },
-            { id: { $in: data.selectedIds } }
-          ]
+          $or: [{ _id: { $in: queryIds } }, { id: { $in: data.selectedIds } }],
         };
       } else if (data.scope === "category" && data.category && data.category !== "all") {
-        const catRegex = new RegExp(`^${data.category.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i");
+        const catRegex = new RegExp(
+          `^${data.category.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+          "i",
+        );
         filter = {
           $or: [
             { category: { $regex: catRegex } },
             { parentCategory: { $regex: catRegex } },
             { subCategory: { $regex: catRegex } },
-          ]
+          ],
         };
       }
 
@@ -798,8 +911,8 @@ export const bulkAdjustPricesDb = createServerFn({ method: "POST" })
         return {
           updateOne: {
             filter: { _id: p._id },
-            update: { $set: updateDoc }
-          }
+            update: { $set: updateDoc },
+          },
         };
       });
 
@@ -808,7 +921,7 @@ export const bulkAdjustPricesDb = createServerFn({ method: "POST" })
       for (let i = 0; i < operations.length; i += BATCH_SIZE) {
         const batch = operations.slice(i, i + BATCH_SIZE);
         const res = await productsCol.bulkWrite(batch, { ordered: false });
-        modifiedTotal += (res.modifiedCount || 0);
+        modifiedTotal += res.modifiedCount || 0;
       }
 
       return { success: true, count: modifiedTotal };
@@ -828,7 +941,7 @@ export const deleteProductDb = createServerFn({ method: "POST" })
 
       const queryId = toQueryId(data.id);
       await productsCol.deleteOne({
-        $or: [{ _id: queryId }, { id: data.id }, { _id: data.id as any }]
+        $or: [{ _id: queryId }, { id: data.id }, { _id: data.id as any }],
       });
       return { success: true };
     } catch (e: any) {
@@ -854,19 +967,18 @@ export const bulkDeleteProductsDb = createServerFn({ method: "POST" })
     }
   });
 
-export const deleteAllProductsDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: false, error: "Database unavailable" };
-      const productsCol = db.collection("products");
-      const res = await productsCol.deleteMany({});
-      return { success: true, count: res.deletedCount };
-    } catch (e: any) {
-      console.error("Failed to delete all products from DB:", e);
-      return { success: false, error: "Failed to delete all products from database." };
-    }
-  });
+export const deleteAllProductsDb = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: false, error: "Database unavailable" };
+    const productsCol = db.collection("products");
+    const res = await productsCol.deleteMany({});
+    return { success: true, count: res.deletedCount };
+  } catch (e: any) {
+    console.error("Failed to delete all products from DB:", e);
+    return { success: false, error: "Failed to delete all products from database." };
+  }
+});
 
 export const addReviewDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ productId: z.string(), review: z.any() }))
@@ -884,17 +996,17 @@ export const addReviewDb = createServerFn({ method: "POST" })
           $push: {
             reviews: {
               $each: [data.review],
-              $position: 0
-            }
-          } as any
-        }
+              $position: 0,
+            },
+          } as any,
+        },
       );
 
       const reviewsCol = db.collection("reviews");
       const standaloneReview = {
         ...data.review,
         productId: data.productId,
-        _id: toQueryId(data.review.id)
+        _id: toQueryId(data.review.id),
       };
       await reviewsCol.insertOne(standaloneReview);
       return { success: true };
@@ -932,14 +1044,16 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
         productName: "Pentair IntelliFlo3 VSF 3.0HP Variable Speed Pump with Touchscreen",
         productSku: "011075",
         productBrand: "Pentair",
-        productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/011075_main.default.jpeg",
+        productImg:
+          "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/011075_main.default.jpeg",
         author: "Robert Patterson",
         authorEmail: "robert@bluewavepools.com",
         role: "Commercial Pool Builder",
         rating: 5,
         date: "2026-05-28",
         title: "Saves us thousands on every commercial build",
-        content: "The wholesale pricing here is unparalleled. We order all of our Pentair IntelliFlo3 pumps and Hayward commercial heaters through this portal. Delivery is consistently on time, which is critical for construction milestones.",
+        content:
+          "The wholesale pricing here is unparalleled. We order all of our Pentair IntelliFlo3 pumps and Hayward commercial heaters through this portal. Delivery is consistently on time, which is critical for construction milestones.",
         status: "Published",
         verifiedPurchase: true,
       },
@@ -949,14 +1063,16 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
         productName: "Hayward TriStar VS 950 2.7HP Variable Speed Commercial Pump",
         productSku: "SP32950VSP",
         productBrand: "Hayward",
-        productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP32950VSP_main.default.jpeg",
+        productImg:
+          "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP32950VSP_main.default.jpeg",
         author: "Elena Martinez",
         authorEmail: "elena@aqualuxpools.com",
         role: "Pool Service Contractor",
         rating: 5,
         date: "2026-05-15",
         title: "Best logistics operation in the pool business",
-        content: "With three service trucks on the road, we need parts fast — zero exceptions. Having localized shipping out of their TN warehouse means standard delivery reaches us in 24 hours.",
+        content:
+          "With three service trucks on the road, we need parts fast — zero exceptions. Having localized shipping out of their TN warehouse means standard delivery reaches us in 24 hours.",
         status: "Published",
         verifiedPurchase: true,
       },
@@ -966,14 +1082,16 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
         productName: "Raypak 406A ASME Digital Gas Pool Heater 399k BTU",
         productSku: "014941",
         productBrand: "Raypak",
-        productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014941_main.default.jpeg",
+        productImg:
+          "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014941_main.default.jpeg",
         author: "Gary Lindqvist",
         authorEmail: "gary@summitresortfacilities.com",
         role: "Resort Facilities Manager",
         rating: 5,
         date: "2026-04-20",
         title: "Technical team caught a $12K sizing error",
-        content: "Sizing a commercial pool filtration system is complex. The technical team here audited our pump head loss calculations before we submitted the PO and caught a sizing error that would have cost us $12,000 to fix post-install.",
+        content:
+          "Sizing a commercial pool filtration system is complex. The technical team here audited our pump head loss calculations before we submitted the PO and caught a sizing error that would have cost us $12,000 to fix post-install.",
         status: "Published",
         verifiedPurchase: true,
       },
@@ -983,14 +1101,16 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
         productName: "Hayward SwimClear 425 Sq Ft Large Capacity Cartridge Filter",
         productSku: "C4030",
         productBrand: "Hayward",
-        productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/C4030_main.default.jpeg",
+        productImg:
+          "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/C4030_main.default.jpeg",
         author: "Jessica Sterling",
         authorEmail: "jessica@clearwatercare.com",
         role: "Commercial Service Pro",
         rating: 5,
         date: "2026-04-10",
         title: "Genuine factory-sealed parts, full warranties",
-        content: "I've dealt with liquidated suppliers before and had serial numbers rejected for factory warranties. Pool Supply Wholesalers is a direct authorized dealer for every brand they carry.",
+        content:
+          "I've dealt with liquidated suppliers before and had serial numbers rejected for factory warranties. Pool Supply Wholesalers is a direct authorized dealer for every brand they carry.",
         status: "Published",
         verifiedPurchase: true,
       },
@@ -1000,14 +1120,16 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
         productName: "Jandy JXi 400k BTU Natural Gas Ultra-Compact Pool Heater",
         productSku: "JXI400N",
         productBrand: "Jandy",
-        productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/JXI400N_main.default.jpeg",
+        productImg:
+          "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/JXI400N_main.default.jpeg",
         author: "Marcus Vance",
         authorEmail: "marcus@desertsuncp.com",
         role: "Fleet Operations Lead",
         rating: 5,
         date: "2026-03-18",
         title: "Switched our entire contractor fleet to this supplier",
-        content: "We run 8 service vehicles and used to split orders between three suppliers. Moving everything to Pool Supply Wholesalers simplified our operations massively. One account, one invoice, one shipping relationship.",
+        content:
+          "We run 8 service vehicles and used to split orders between three suppliers. Moving everything to Pool Supply Wholesalers simplified our operations massively. One account, one invoice, one shipping relationship.",
         status: "Published",
         verifiedPurchase: true,
       },
@@ -1032,7 +1154,7 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
         matchedProducts = await productsCol
           .find(
             { $or: [{ _id: { $in: queryIds } }, { id: { $in: prodIds } }] },
-            { projection: { name: 1, sku: 1, brand: 1, img: 1, image: 1, id: 1 } }
+            { projection: { name: 1, sku: 1, brand: 1, img: 1, image: 1, id: 1 } },
           )
           .toArray();
       }
@@ -1048,7 +1170,10 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
       const reviewMap = new Map<string, AdminReview>();
 
       // 2. Known Equipment Mappings for legacy reviews
-      const knownEquipmentMap: Record<string, { name: string; sku: string; brand: string; img: string }> = {
+      const knownEquipmentMap: Record<
+        string,
+        { name: string; sku: string; brand: string; img: string }
+      > = {
         r2: {
           name: "Pentair IntelliFlo3 VSF 3.0HP Variable Speed Pump",
           sku: "011075",
@@ -1149,10 +1274,16 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
         reviewMap.set(revId, {
           id: revId,
           productId: String(r.productId || p?.id || p?._id || known?.sku || `prod-${revId}`),
-          productName: String(p?.name || known?.name || r.productName || r.targetName || "Commercial Pool Equipment"),
+          productName: String(
+            p?.name || known?.name || r.productName || r.targetName || "Commercial Pool Equipment",
+          ),
           productSku: String(p?.sku || known?.sku || r.productSku || r.sku || "PRO-SKU"),
-          productBrand: String(p?.brand || known?.brand || r.productBrand || r.brand || "Commercial"),
-          productImg: String(p?.img || p?.image || known?.img || r.productImg || r.img || "/assets/commingsoon.png"),
+          productBrand: String(
+            p?.brand || known?.brand || r.productBrand || r.brand || "Commercial",
+          ),
+          productImg: String(
+            p?.img || p?.image || known?.img || r.productImg || r.img || "/assets/commingsoon.png",
+          ),
           author: String(r.author || "Verified Commercial Buyer"),
           authorEmail: String(r.email || r.authorEmail || ""),
           role: String(r.role || "Verified Contractor"),
@@ -1174,7 +1305,7 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
       });
 
       const reviewsList = Array.from(reviewMap.values()).sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
 
       return { success: true, reviews: reviewsList };
@@ -1182,7 +1313,7 @@ export const getAdminReviewsDb = createServerFn({ method: "POST" }).handler(
       console.error("Get Admin Reviews Error:", e);
       return { success: true, reviews: seedContractorReviews };
     }
-  }
+  },
 );
 
 export const deleteReviewDb = createServerFn({ method: "POST" })
@@ -1199,13 +1330,15 @@ export const deleteReviewDb = createServerFn({ method: "POST" })
         { _id: queryId },
         {
           $pull: {
-            reviews: { id: data.reviewId }
-          } as any
-        }
+            reviews: { id: data.reviewId },
+          } as any,
+        },
       );
 
       const reviewsCol = db.collection("reviews");
-      await reviewsCol.deleteOne({ $or: [{ id: data.reviewId }, { _id: toQueryId(data.reviewId) }] });
+      await reviewsCol.deleteOne({
+        $or: [{ id: data.reviewId }, { _id: toQueryId(data.reviewId) }],
+      });
       return { success: true };
     } catch (e: any) {
       console.error("Failed to delete review from DB:", e);
@@ -1219,7 +1352,7 @@ export const updateReviewStatusDb = createServerFn({ method: "POST" })
       productId: z.string(),
       reviewId: z.string(),
       status: z.enum(["Published", "Pending", "Flagged"]),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -1236,12 +1369,12 @@ export const updateReviewStatusDb = createServerFn({ method: "POST" })
           $set: {
             "reviews.$.status": data.status,
           } as any,
-        }
+        },
       );
 
       await reviewsCol.updateOne(
         { $or: [{ id: data.reviewId }, { _id: toQueryId(data.reviewId) }] },
-        { $set: { status: data.status } }
+        { $set: { status: data.status } },
       );
 
       return { success: true };
@@ -1251,63 +1384,66 @@ export const updateReviewStatusDb = createServerFn({ method: "POST" })
     }
   });
 
-export const inspectProductsCollection = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: false, error: "Database offline" };
-      const productsCol = db.collection("products");
-      const total = await productsCol.countDocuments();
+export const inspectProductsCollection = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: false, error: "Database offline" };
+    const productsCol = db.collection("products");
+    const total = await productsCol.countDocuments();
 
-      // Duplicate SKUs
-      const skuDupes = await productsCol.aggregate([
+    // Duplicate SKUs
+    const skuDupes = await productsCol
+      .aggregate([
         { $match: { sku: { $exists: true, $ne: "" } } },
         { $group: { _id: { $toUpper: "$sku" }, count: { $sum: 1 }, ids: { $push: "$_id" } } },
         { $match: { count: { $gt: 1 } } },
         { $sort: { count: -1 } },
-        { $limit: 20 }
-      ]).toArray();
+        { $limit: 20 },
+      ])
+      .toArray();
 
-      const allSkuDupes = await productsCol.aggregate([
+    const allSkuDupes = await productsCol
+      .aggregate([
         { $match: { sku: { $exists: true, $ne: "" } } },
         { $group: { _id: { $toUpper: "$sku" }, count: { $sum: 1 } } },
-        { $match: { count: { $gt: 1 } } }
-      ]).toArray();
+        { $match: { count: { $gt: 1 } } },
+      ])
+      .toArray();
 
-      const excessDuplicates = allSkuDupes.reduce((sum, d) => sum + (d.count - 1), 0);
+    const excessDuplicates = allSkuDupes.reduce((sum, d) => sum + (d.count - 1), 0);
 
-      const serializedSamples = skuDupes.slice(0, 5).map((s: any) => ({
-        sku: String(s._id || ""),
-        count: Number(s.count) || 0,
-        ids: (s.ids || []).map((id: any) => id?.toString ? id.toString() : String(id)),
-      }));
+    const serializedSamples = skuDupes.slice(0, 5).map((s: any) => ({
+      sku: String(s._id || ""),
+      count: Number(s.count) || 0,
+      ids: (s.ids || []).map((id: any) => (id?.toString ? id.toString() : String(id))),
+    }));
 
-      return {
-        success: true,
-        total,
-        uniqueDuplicateSkusCount: allSkuDupes.length,
-        excessDuplicates,
-        cleanTotal: total - excessDuplicates,
-        sampleDuplicates: serializedSamples,
-      };
-    } catch (e: any) {
-      console.error("Inspect products collection error:", e);
-      return { success: false, error: e.message };
-    }
-  });
+    return {
+      success: true,
+      total,
+      uniqueDuplicateSkusCount: allSkuDupes.length,
+      excessDuplicates,
+      cleanTotal: total - excessDuplicates,
+      sampleDuplicates: serializedSamples,
+    };
+  } catch (e: any) {
+    console.error("Inspect products collection error:", e);
+    return { success: false, error: e.message };
+  }
+});
 
-export const deduplicateProductsDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: false, error: "Database offline" };
-      const productsCol = db.collection("products");
+export const deduplicateProductsDb = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: false, error: "Database offline" };
+    const productsCol = db.collection("products");
 
-      const initialTotal = await productsCol.countDocuments();
-      const allIdsToDelete = new Set<any>();
+    const initialTotal = await productsCol.countDocuments();
+    const allIdsToDelete = new Set<any>();
 
-      // 1. Deduplicate by SKU (case-insensitive)
-      const skuGroups = await productsCol.aggregate([
+    // 1. Deduplicate by SKU (case-insensitive)
+    const skuGroups = await productsCol
+      .aggregate([
         { $match: { sku: { $exists: true, $ne: "" } } },
         {
           $group: {
@@ -1319,73 +1455,125 @@ export const deduplicateProductsDb = createServerFn({ method: "POST" })
                 salePrice: "$salePrice",
                 price: "$price",
                 img: "$img",
-                hasReviews: { $cond: [{ $gt: [{ $size: { $ifNull: ["$reviews", []] } }, 0] }, 1, 0] }
-              }
-            }
-          }
+                hasReviews: {
+                  $cond: [{ $gt: [{ $size: { $ifNull: ["$reviews", []] } }, 0] }, 1, 0],
+                },
+              },
+            },
+          },
         },
-        { $match: { count: { $gt: 1 } } }
-      ]).toArray();
+        { $match: { count: { $gt: 1 } } },
+      ])
+      .toArray();
 
-      for (const group of skuGroups) {
-        const docs = group.docs || [];
-        // Sort docs so the most complete one stays at index 0
-        docs.sort((a: any, b: any) => {
-          if (b.hasReviews !== a.hasReviews) return b.hasReviews - a.hasReviews;
-          const aHasSale = a.salePrice != null && Number(a.salePrice) > 0 ? 1 : 0;
-          const bHasSale = b.salePrice != null && Number(b.salePrice) > 0 ? 1 : 0;
-          if (bHasSale !== aHasSale) return bHasSale - aHasSale;
-          const aHasHttpImg = typeof a.img === "string" && a.img.startsWith("http") ? 1 : 0;
-          const bHasHttpImg = typeof b.img === "string" && b.img.startsWith("http") ? 1 : 0;
-          if (bHasHttpImg !== aHasHttpImg) return bHasHttpImg - aHasHttpImg;
-          return 0;
-        });
+    for (const group of skuGroups) {
+      const docs = group.docs || [];
+      // Sort docs so the most complete one stays at index 0
+      docs.sort((a: any, b: any) => {
+        if (b.hasReviews !== a.hasReviews) return b.hasReviews - a.hasReviews;
+        const aHasSale = a.salePrice != null && Number(a.salePrice) > 0 ? 1 : 0;
+        const bHasSale = b.salePrice != null && Number(b.salePrice) > 0 ? 1 : 0;
+        if (bHasSale !== aHasSale) return bHasSale - aHasSale;
+        const aHasHttpImg = typeof a.img === "string" && a.img.startsWith("http") ? 1 : 0;
+        const bHasHttpImg = typeof b.img === "string" && b.img.startsWith("http") ? 1 : 0;
+        if (bHasHttpImg !== aHasHttpImg) return bHasHttpImg - aHasHttpImg;
+        return 0;
+      });
 
-        // Keep index 0, mark the remaining duplicates for deletion
-        for (let i = 1; i < docs.length; i++) {
-          allIdsToDelete.add(docs[i]._id);
-        }
+      // Keep index 0, mark the remaining duplicates for deletion
+      for (let i = 1; i < docs.length; i++) {
+        allIdsToDelete.add(docs[i]._id);
       }
+    }
 
-      // 2. Deduplicate by Product ID
-      const idGroups = await productsCol.aggregate([
+    // 2. Deduplicate by Product ID
+    const idGroups = await productsCol
+      .aggregate([
         { $match: { id: { $exists: true, $ne: "" } } },
         { $group: { _id: "$id", count: { $sum: 1 }, ids: { $push: "$_id" } } },
-        { $match: { count: { $gt: 1 } } }
-      ]).toArray();
+        { $match: { count: { $gt: 1 } } },
+      ])
+      .toArray();
 
-      for (const group of idGroups) {
-        const remaining = (group.ids || []).filter((id: any) => !allIdsToDelete.has(id));
-        if (remaining.length > 1) {
-          for (let i = 1; i < remaining.length; i++) {
-            allIdsToDelete.add(remaining[i]);
-          }
+    for (const group of idGroups) {
+      const remaining = (group.ids || []).filter((id: any) => !allIdsToDelete.has(id));
+      if (remaining.length > 1) {
+        for (let i = 1; i < remaining.length; i++) {
+          allIdsToDelete.add(remaining[i]);
         }
       }
-
-      const toDeleteArray = Array.from(allIdsToDelete);
-      let removedCount = 0;
-
-      if (toDeleteArray.length > 0) {
-        // Execute batch deletion in chunks of 1000
-        for (let i = 0; i < toDeleteArray.length; i += 1000) {
-          const batch = toDeleteArray.slice(i, i + 1000);
-          const res = await productsCol.deleteMany({ _id: { $in: batch } });
-          removedCount += res.deletedCount || 0;
-        }
-      }
-
-      const remainingTotal = await productsCol.countDocuments();
-      return {
-        success: true,
-        initialTotal,
-        removedCount,
-        remainingTotal
-      };
-    } catch (e: any) {
-      console.error("Deduplicate products error:", e);
-      return { success: false, error: e.message };
     }
-  });
 
+    const toDeleteArray = Array.from(allIdsToDelete);
+    let removedCount = 0;
 
+    if (toDeleteArray.length > 0) {
+      // Execute batch deletion in chunks of 1000
+      for (let i = 0; i < toDeleteArray.length; i += 1000) {
+        const batch = toDeleteArray.slice(i, i + 1000);
+        const res = await productsCol.deleteMany({ _id: { $in: batch } });
+        removedCount += res.deletedCount || 0;
+      }
+    }
+
+    const remainingTotal = await productsCol.countDocuments();
+    return {
+      success: true,
+      initialTotal,
+      removedCount,
+      remainingTotal,
+    };
+  } catch (e: any) {
+    console.error("Deduplicate products error:", e);
+    return { success: false, error: e.message };
+  }
+});
+
+export const getSeoHealthStatsDb = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) {
+      return {
+        success: false,
+        stats: { totalProducts: 0, missingMpn: 0, missingDescription: 0, seoScore: 0 },
+      };
+    }
+    const productsCol = db.collection("products");
+
+    const totalProducts = await productsCol.countDocuments();
+
+    const missingMpn = await productsCol.countDocuments({
+      $or: [{ "specs.MPN": { $exists: false } }, { "specs.MPN": null }, { "specs.MPN": "" }],
+    });
+
+    const missingDescription = await productsCol.countDocuments({
+      $or: [
+        { details: { $exists: false } },
+        { details: null },
+        { details: "" }
+      ]
+    });
+
+    const denominator = totalProducts * 2;
+    const seoScore =
+      denominator > 0
+        ? Math.round(((totalProducts * 2 - missingMpn - missingDescription) / denominator) * 100)
+        : 0;
+
+    return {
+      success: true,
+      stats: {
+        totalProducts,
+        missingMpn,
+        missingDescription,
+        seoScore,
+      },
+    };
+  } catch (e) {
+    console.error("Failed to fetch SEO stats from DB:", e);
+    return {
+      success: false,
+      stats: { totalProducts: 0, missingMpn: 0, missingDescription: 0, seoScore: 0 },
+    };
+  }
+});

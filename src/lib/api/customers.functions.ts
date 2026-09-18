@@ -44,13 +44,16 @@ export const registerCustomer = createServerFn({ method: "POST" })
       name: z.string().min(2, "Name must be at least 2 characters"),
       identifier: z.string().min(3, "Valid Email or Mobile Number required"),
       password: z.string().min(6, "Password must be at least 6 characters"),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
       if (!db) {
-        return { success: false, error: "Database connection temporarily unavailable. Please try again." };
+        return {
+          success: false,
+          error: "Database connection temporarily unavailable. Please try again.",
+        };
       }
       const customersCol = db.collection("customers");
 
@@ -59,7 +62,10 @@ export const registerCustomer = createServerFn({ method: "POST" })
 
       const existing = await customersCol.findOne(searchCriteria);
       if (existing) {
-        return { success: false, error: "An account with this email or phone number already exists." };
+        return {
+          success: false,
+          error: "An account with this email or phone number already exists.",
+        };
       }
 
       const b = await getBcrypt();
@@ -133,13 +139,16 @@ export const loginCustomer = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string().min(3, "Email or Mobile Number is required"),
       password: z.string().min(1, "Password is required"),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
       if (!db) {
-        return { success: false, error: "Database connection temporarily unavailable. Please try again." };
+        return {
+          success: false,
+          error: "Database connection temporarily unavailable. Please try again.",
+        };
       }
       const customersCol = db.collection("customers");
 
@@ -238,25 +247,27 @@ export const getCustomerAccountDataDb = createServerFn({ method: "POST" })
 
       const profile = customerDoc
         ? {
-          id: customerDoc._id.toString(),
-          name: customerDoc.name || defaultProfile.name,
-          email: customerDoc.email || defaultProfile.email,
-          phone: customerDoc.phone || defaultProfile.phone,
-          avatar: customerDoc.avatar || "",
-          company: customerDoc.company || "",
-          contractorId: customerDoc.contractorId || "",
-          addresses: customerDoc.addresses || [],
-          cards: customerDoc.cards || [],
-          emailPrefs: customerDoc.emailPrefs || defaultProfile.emailPrefs,
-          wishlists: customerDoc.wishlists || defaultProfile.wishlists,
-        }
+            id: customerDoc._id.toString(),
+            name: customerDoc.name || defaultProfile.name,
+            email: customerDoc.email || defaultProfile.email,
+            phone: customerDoc.phone || defaultProfile.phone,
+            avatar: customerDoc.avatar || "",
+            company: customerDoc.company || "",
+            contractorId: customerDoc.contractorId || "",
+            addresses: customerDoc.addresses || [],
+            cards: customerDoc.cards || [],
+            emailPrefs: customerDoc.emailPrefs || defaultProfile.emailPrefs,
+            wishlists: customerDoc.wishlists || defaultProfile.wishlists,
+          }
         : defaultProfile;
 
       // Match orders
       const orderSearch: any = {
         $or: [
           { email: clean },
-          { email: { $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } },
+          {
+            email: { $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") },
+          },
           { phone: clean },
         ],
       };
@@ -289,9 +300,17 @@ export const getCustomerAccountDataDb = createServerFn({ method: "POST" })
       const orderIds = orders.map((o: any) => o.id).filter(Boolean);
       const returnOrList: any[] = [
         { customerIdentifier: clean },
-        { customerIdentifier: { $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i") } },
+        {
+          customerIdentifier: {
+            $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i"),
+          },
+        },
         { customerEmail: clean },
-        { customerEmail: { $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i") } },
+        {
+          customerEmail: {
+            $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i"),
+          },
+        },
         { customerPhone: clean },
         { email: clean },
         { phone: clean },
@@ -308,7 +327,10 @@ export const getCustomerAccountDataDb = createServerFn({ method: "POST" })
         returnOrList.push({ orderId: { $in: orderIds } });
       }
 
-      const rawReturns = await returnsCol.find({ $or: returnOrList }).sort({ createdAt: -1 }).toArray();
+      const rawReturns = await returnsCol
+        .find({ $or: returnOrList })
+        .sort({ createdAt: -1 })
+        .toArray();
       const returns = rawReturns.map((r: any) => ({
         id: r._id.toString(),
         rmaId: r.rmaId || `RMA-${r._id.toString().slice(-6)}`,
@@ -327,9 +349,17 @@ export const getCustomerAccountDataDb = createServerFn({ method: "POST" })
       // Match quotes
       const quoteOrList: any[] = [
         { customerIdentifier: clean },
-        { customerIdentifier: { $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i") } },
+        {
+          customerIdentifier: {
+            $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i"),
+          },
+        },
         { customerEmail: clean },
-        { customerEmail: { $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i") } },
+        {
+          customerEmail: {
+            $regex: new RegExp(`^${clean.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}$`, "i"),
+          },
+        },
         { customerPhone: clean },
         { email: clean },
         { phone: clean },
@@ -343,7 +373,10 @@ export const getCustomerAccountDataDb = createServerFn({ method: "POST" })
         quoteOrList.push({ customerPhone: profile.phone });
       }
 
-      const rawQuotes = await quotesCol.find({ $or: quoteOrList }).sort({ createdAt: -1 }).toArray();
+      const rawQuotes = await quotesCol
+        .find({ $or: quoteOrList })
+        .sort({ createdAt: -1 })
+        .toArray();
       const quotes = rawQuotes.map((q: any) => ({
         id: q._id.toString(),
         quoteId: q.quoteId || `Q-${q._id.toString().slice(-5)}`,
@@ -354,9 +387,24 @@ export const getCustomerAccountDataDb = createServerFn({ method: "POST" })
         notes: q.notes || "",
         items: q.items || [],
         status: q.status || "Engineering Review",
-        isResolved: typeof q.isResolved === "boolean" ? q.isResolved : q.status === "Resolved" || q.status === "Accepted" || q.status === "Converted to Order",
-        quotedAmount: typeof q.quotedAmount === "number" ? q.quotedAmount : (typeof q.totalAmount === "number" ? q.totalAmount : 0),
-        totalAmount: typeof q.quotedAmount === "number" ? q.quotedAmount : (typeof q.totalAmount === "number" ? q.totalAmount : 0),
+        isResolved:
+          typeof q.isResolved === "boolean"
+            ? q.isResolved
+            : q.status === "Resolved" ||
+              q.status === "Accepted" ||
+              q.status === "Converted to Order",
+        quotedAmount:
+          typeof q.quotedAmount === "number"
+            ? q.quotedAmount
+            : typeof q.totalAmount === "number"
+              ? q.totalAmount
+              : 0,
+        totalAmount:
+          typeof q.quotedAmount === "number"
+            ? q.quotedAmount
+            : typeof q.totalAmount === "number"
+              ? q.totalAmount
+              : 0,
         adminLeadTime: q.adminLeadTime || "",
         adminFreightTerms: q.adminFreightTerms || "",
         adminNotes: q.adminNotes || "",
@@ -391,7 +439,7 @@ export const updateCustomerProfileDb = createServerFn({ method: "POST" })
       email: z.string().optional(),
       contractorId: z.string().optional(),
       avatar: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -425,12 +473,16 @@ export const uploadCustomerAvatarDb = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string(),
       fileData: z.string(), // base64 or remote URL
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
-      const cloudName = process.env.CLOUDINARY_CLOUD_NAME || process.env.VITE_CLOUDINARY_CLOUD_NAME || "dmanafb84";
-      const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET || process.env.VITE_CLOUDINARY_UPLOAD_PRESET || "pool_uploads";
+      const cloudName =
+        process.env.CLOUDINARY_CLOUD_NAME || process.env.VITE_CLOUDINARY_CLOUD_NAME || "dmanafb84";
+      const uploadPreset =
+        process.env.CLOUDINARY_UPLOAD_PRESET ||
+        process.env.VITE_CLOUDINARY_UPLOAD_PRESET ||
+        "pool_uploads";
 
       const formData = new URLSearchParams();
       formData.append("file", data.fileData);
@@ -464,7 +516,7 @@ export const uploadCustomerAvatarDb = createServerFn({ method: "POST" })
         await customersCol.updateOne(
           searchCriteria,
           { $set: { avatar: avatarUrl, updatedAt: new Date() } },
-          { upsert: true }
+          { upsert: true },
         );
       }
 
@@ -488,7 +540,7 @@ export const updateCustomerPasswordDb = createServerFn({ method: "POST" })
       identifier: z.string(),
       currentPassword: z.string().min(1),
       newPassword: z.string().min(6),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -522,7 +574,7 @@ export const updateCustomerPasswordDb = createServerFn({ method: "POST" })
       const hashedPassword = await b.hash(data.newPassword, 10);
       await customersCol.updateOne(
         { _id: user._id },
-        { $set: { password: hashedPassword, updatedAt: new Date() } }
+        { $set: { password: hashedPassword, updatedAt: new Date() } },
       );
 
       return { success: true };
@@ -538,7 +590,7 @@ export const saveCustomerAddressDb = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string(),
       address: z.any(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -574,7 +626,7 @@ export const saveCustomerAddressDb = createServerFn({ method: "POST" })
 
       await customersCol.updateOne(
         { _id: user._id },
-        { $set: { addresses: updatedAddresses, updatedAt: new Date() } }
+        { $set: { addresses: updatedAddresses, updatedAt: new Date() } },
       );
 
       return { success: true };
@@ -589,7 +641,7 @@ export const deleteCustomerAddressDb = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string(),
       addressId: z.string(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -618,7 +670,7 @@ export const saveCustomerCardDb = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string(),
       card: z.any(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -654,7 +706,7 @@ export const saveCustomerCardDb = createServerFn({ method: "POST" })
 
       await customersCol.updateOne(
         { _id: user._id },
-        { $set: { cards: updatedCards, updatedAt: new Date() } }
+        { $set: { cards: updatedCards, updatedAt: new Date() } },
       );
 
       return { success: true };
@@ -669,7 +721,7 @@ export const deleteCustomerCardDb = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string(),
       cardId: z.string(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -698,7 +750,7 @@ export const updateCustomerEmailPrefsDb = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string(),
       prefs: z.any(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -712,7 +764,7 @@ export const updateCustomerEmailPrefsDb = createServerFn({ method: "POST" })
       await customersCol.updateOne(
         searchCriteria,
         { $set: { emailPrefs: data.prefs, updatedAt: new Date() } },
-        { upsert: true }
+        { upsert: true },
       );
 
       return { success: true };
@@ -728,7 +780,7 @@ export const updateCustomerWishlistsDb = createServerFn({ method: "POST" })
     z.object({
       identifier: z.string(),
       wishlists: z.any(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -742,7 +794,7 @@ export const updateCustomerWishlistsDb = createServerFn({ method: "POST" })
       await customersCol.updateOne(
         searchCriteria,
         { $set: { wishlists: data.wishlists, updatedAt: new Date() } },
-        { upsert: true }
+        { upsert: true },
       );
 
       return { success: true };
@@ -768,7 +820,7 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
       notes: z.string().optional(),
       items: z.array(z.any()).optional(),
       preferredResolution: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -788,8 +840,15 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
           const orderDoc = await ordersCol.findOne({
             $or: [
               { id: cleanOrderId },
-              { id: { $regex: new RegExp(`^${cleanOrderId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } }
-            ]
+              {
+                id: {
+                  $regex: new RegExp(
+                    `^${cleanOrderId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+                    "i",
+                  ),
+                },
+              },
+            ],
           });
           if (orderDoc) {
             orderTotal = orderTotal ?? orderDoc.total;
@@ -810,8 +869,12 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
         rmaId,
         customerIdentifier: data.customerIdentifier.trim(),
         customerName: data.customerName?.trim() || "Commercial Client",
-        customerEmail: data.customerEmail?.trim() || (data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
-        customerPhone: data.customerPhone?.trim() || (!data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
+        customerEmail:
+          data.customerEmail?.trim() ||
+          (data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
+        customerPhone:
+          data.customerPhone?.trim() ||
+          (!data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
         customerCompany: data.customerCompany?.trim() || "",
         orderId: data.orderId.trim(),
         orderTotal: orderTotal || 0,
@@ -858,7 +921,7 @@ export const createQuoteRequestDb = createServerFn({ method: "POST" })
       targetCompletionDate: z.string().optional(),
       notes: z.string().optional(),
       items: z.array(z.any()).optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -936,37 +999,38 @@ export const getCustomerOrders = createServerFn({ method: "POST" })
     }
   });
 
-export const getAdminCustomers = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true, customers: [] };
-      const customersCol = db.collection("customers");
-      const ordersCol = db.collection("orders");
-      const returnsCol = db.collection("returns");
-      const quotesCol = db.collection("quotes");
+export const getAdminCustomers = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: true, customers: [] };
+    const customersCol = db.collection("customers");
+    const ordersCol = db.collection("orders");
+    const returnsCol = db.collection("returns");
+    const quotesCol = db.collection("quotes");
 
-      const [customers, orders, returns, quotes] = await Promise.all([
-        customersCol.find().sort({ createdAt: -1 }).toArray(),
-        ordersCol.find().sort({ placedAt: -1 }).toArray(),
-        returnsCol.find().sort({ createdAt: -1 }).toArray(),
-        quotesCol.find().sort({ createdAt: -1 }).toArray(),
-      ]);
+    const [customers, orders, returns, quotes] = await Promise.all([
+      customersCol.find().sort({ createdAt: -1 }).toArray(),
+      ordersCol.find().sort({ placedAt: -1 }).toArray(),
+      returnsCol.find().sort({ createdAt: -1 }).toArray(),
+      quotesCol.find().sort({ createdAt: -1 }).toArray(),
+    ]);
 
-      const matchedOrderIds = new Set<string>();
+    const matchedOrderIds = new Set<string>();
 
-      const customersWithStats = customers.map((c) => {
-        const emailClean = c.email?.toLowerCase().trim();
-        const phoneClean = c.phone?.trim();
+    const customersWithStats = customers.map((c) => {
+      const emailClean = c.email?.toLowerCase().trim();
+      const phoneClean = c.phone?.trim();
 
-        // Match orders
-        const customerOrders = orders.filter((o) => {
+      // Match orders
+      const customerOrders = orders
+        .filter((o) => {
           const oEmail = o.email?.toLowerCase().trim();
           const oPhone = o.phone?.trim();
           if (emailClean && oEmail === emailClean) return true;
           if (phoneClean && (oPhone === phoneClean || oEmail === phoneClean)) return true;
           return false;
-        }).map((o: any) => {
+        })
+        .map((o: any) => {
           const ordId = o.id || o._id.toString();
           matchedOrderIds.add(ordId);
           return {
@@ -993,13 +1057,21 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           };
         });
 
-        // Match returns
-        const customerReturns = returns.filter((r) => {
-          if (emailClean && (r.customerEmail?.toLowerCase() === emailClean || r.customerIdentifier?.toLowerCase() === emailClean)) return true;
-          if (phoneClean && (r.customerPhone === phoneClean || r.customerIdentifier === phoneClean)) return true;
+      // Match returns
+      const customerReturns = returns
+        .filter((r) => {
+          if (
+            emailClean &&
+            (r.customerEmail?.toLowerCase() === emailClean ||
+              r.customerIdentifier?.toLowerCase() === emailClean)
+          )
+            return true;
+          if (phoneClean && (r.customerPhone === phoneClean || r.customerIdentifier === phoneClean))
+            return true;
           if (customerOrders.some((o) => o.id === r.orderId)) return true;
           return false;
-        }).map((r: any) => ({
+        })
+        .map((r: any) => ({
           id: r._id.toString(),
           rmaId: r.rmaId || `RMA-${r._id.toString().slice(-6)}`,
           orderId: r.orderId,
@@ -1014,12 +1086,20 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           createdAt: r.createdAt || new Date().toISOString(),
         }));
 
-        // Match quotes
-        const customerQuotes = quotes.filter((q) => {
-          if (emailClean && (q.customerEmail?.toLowerCase() === emailClean || q.customerIdentifier?.toLowerCase() === emailClean)) return true;
-          if (phoneClean && (q.customerPhone === phoneClean || q.customerIdentifier === phoneClean)) return true;
+      // Match quotes
+      const customerQuotes = quotes
+        .filter((q) => {
+          if (
+            emailClean &&
+            (q.customerEmail?.toLowerCase() === emailClean ||
+              q.customerIdentifier?.toLowerCase() === emailClean)
+          )
+            return true;
+          if (phoneClean && (q.customerPhone === phoneClean || q.customerIdentifier === phoneClean))
+            return true;
           return false;
-        }).map((q: any) => ({
+        })
+        .map((q: any) => ({
           id: q._id.toString(),
           quoteId: q.quoteId || `Q-${q._id.toString().slice(-5)}`,
           projectName: q.projectName || "Commercial Project",
@@ -1029,8 +1109,18 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           notes: q.notes || "",
           items: q.items || [],
           status: q.status || "Engineering Review",
-          isResolved: typeof q.isResolved === "boolean" ? q.isResolved : q.status === "Resolved" || q.status === "Accepted" || q.status === "Converted to Order",
-          quotedAmount: typeof q.quotedAmount === "number" ? q.quotedAmount : (typeof q.totalAmount === "number" ? q.totalAmount : 0),
+          isResolved:
+            typeof q.isResolved === "boolean"
+              ? q.isResolved
+              : q.status === "Resolved" ||
+                q.status === "Accepted" ||
+                q.status === "Converted to Order",
+          quotedAmount:
+            typeof q.quotedAmount === "number"
+              ? q.quotedAmount
+              : typeof q.totalAmount === "number"
+                ? q.totalAmount
+                : 0,
           adminLeadTime: q.adminLeadTime || "",
           adminFreightTerms: q.adminFreightTerms || "",
           adminNotes: q.adminNotes || "",
@@ -1038,133 +1128,149 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           createdAt: q.createdAt || new Date().toISOString(),
         }));
 
-        const totalSpent = customerOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-        const totalProductsPurchased = customerOrders.reduce((sum, o) => {
-          return sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0);
-        }, 0);
+      const totalSpent = customerOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+      const totalProductsPurchased = customerOrders.reduce((sum, o) => {
+        return (
+          sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0)
+        );
+      }, 0);
 
-        const latestOrder = customerOrders[0];
+      const latestOrder = customerOrders[0];
 
-        return {
-          id: c._id.toString(),
-          name: c.name || "Commercial Customer",
-          email: c.email || undefined,
-          phone: c.phone || undefined,
-          avatar: c.avatar || undefined,
-          company: c.company || undefined,
-          contractorId: c.contractorId || undefined,
-          accountType: "portal" as const,
-          isGuest: false,
-          portalAccess: true,
-          addresses: c.addresses || [],
-          cards: c.cards || [],
-          emailPrefs: c.emailPrefs || {
-            orderUpdates: true,
-            freightTracking: true,
-            promoAlerts: true,
-            catalogDigest: false,
-            invoiceReceipts: true,
-          },
-          wishlists: c.wishlists || {},
-          createdAt: c.createdAt || new Date().toISOString(),
-          updatedAt: c.updatedAt || c.createdAt || new Date().toISOString(),
-          lastOrderAt: latestOrder?.placedAt || undefined,
-          firstOrderAt: customerOrders[customerOrders.length - 1]?.placedAt || undefined,
-          totalOrders: customerOrders.length,
-          lifetimeValue: totalSpent,
-          totalSpent,
-          totalItems: totalProductsPurchased,
-          totalProductsPurchased,
-          orders: customerOrders,
-          returns: customerReturns,
-          quotes: customerQuotes,
-        };
-      });
+      return {
+        id: c._id.toString(),
+        name: c.name || "Commercial Customer",
+        email: c.email || undefined,
+        phone: c.phone || undefined,
+        avatar: c.avatar || undefined,
+        company: c.company || undefined,
+        contractorId: c.contractorId || undefined,
+        accountType: "portal" as const,
+        isGuest: false,
+        portalAccess: true,
+        addresses: c.addresses || [],
+        cards: c.cards || [],
+        emailPrefs: c.emailPrefs || {
+          orderUpdates: true,
+          freightTracking: true,
+          promoAlerts: true,
+          catalogDigest: false,
+          invoiceReceipts: true,
+        },
+        wishlists: c.wishlists || {},
+        createdAt: c.createdAt || new Date().toISOString(),
+        updatedAt: c.updatedAt || c.createdAt || new Date().toISOString(),
+        lastOrderAt: latestOrder?.placedAt || undefined,
+        firstOrderAt: customerOrders[customerOrders.length - 1]?.placedAt || undefined,
+        totalOrders: customerOrders.length,
+        lifetimeValue: totalSpent,
+        totalSpent,
+        totalItems: totalProductsPurchased,
+        totalProductsPurchased,
+        orders: customerOrders,
+        returns: customerReturns,
+        quotes: customerQuotes,
+      };
+    });
 
-      // ── Group Guest Orders Who Ordered Without Logging Into Client Portal ──
-      const guestOrdersMap = new Map<string, any[]>();
-      for (const o of orders) {
-        const ordId = o.id || o._id?.toString();
-        if (matchedOrderIds.has(ordId)) continue;
+    // ── Group Guest Orders Who Ordered Without Logging Into Client Portal ──
+    const guestOrdersMap = new Map<string, any[]>();
+    for (const o of orders) {
+      const ordId = o.id || o._id?.toString();
+      if (matchedOrderIds.has(ordId)) continue;
 
-        const emailKey = o.email?.toLowerCase().trim();
-        const phoneKey = o.phone?.trim();
-        const nameKey = o.name?.trim().toLowerCase();
-        const groupKey = emailKey || phoneKey || nameKey || `guest_${ordId}`;
+      const emailKey = o.email?.toLowerCase().trim();
+      const phoneKey = o.phone?.trim();
+      const nameKey = o.name?.trim().toLowerCase();
+      const groupKey = emailKey || phoneKey || nameKey || `guest_${ordId}`;
 
-        if (!guestOrdersMap.has(groupKey)) {
-          guestOrdersMap.set(groupKey, []);
-        }
-        guestOrdersMap.get(groupKey)!.push(o);
+      if (!guestOrdersMap.has(groupKey)) {
+        guestOrdersMap.set(groupKey, []);
       }
+      guestOrdersMap.get(groupKey)!.push(o);
+    }
 
-      const guestCustomers = Array.from(guestOrdersMap.entries()).map(([groupKey, gOrders]) => {
-        gOrders.sort((a, b) => new Date(b.placedAt || 0).getTime() - new Date(a.placedAt || 0).getTime());
-        const latestOrder = gOrders[0];
-        const earliestOrder = gOrders[gOrders.length - 1];
+    const guestCustomers = Array.from(guestOrdersMap.entries()).map(([groupKey, gOrders]) => {
+      gOrders.sort(
+        (a, b) => new Date(b.placedAt || 0).getTime() - new Date(a.placedAt || 0).getTime(),
+      );
+      const latestOrder = gOrders[0];
+      const earliestOrder = gOrders[gOrders.length - 1];
 
-        const formattedOrders = gOrders.map((o: any) => ({
-          id: o.id || o._id.toString(),
-          placedAt: o.placedAt || new Date().toISOString(),
-          email: o.email,
-          phone: o.phone,
-          name: o.name,
-          company: o.company,
-          address: o.address,
-          items: o.items || [],
-          subtotal: o.subtotal || 0,
-          shipping: o.shipping || 0,
-          tax: o.tax || 0,
-          total: o.total || 0,
-          discount: o.discount,
-          promoCode: o.promoCode,
-          paymentType: o.paymentType || "Card",
-          paymentStatus: o.paymentStatus || "Paid",
-          status: o.status || "Pending",
-          method: o.method || "standard",
-          trackingNumber: o.trackingNumber,
-          carrier: o.carrier,
-        }));
+      const formattedOrders = gOrders.map((o: any) => ({
+        id: o.id || o._id.toString(),
+        placedAt: o.placedAt || new Date().toISOString(),
+        email: o.email,
+        phone: o.phone,
+        name: o.name,
+        company: o.company,
+        address: o.address,
+        items: o.items || [],
+        subtotal: o.subtotal || 0,
+        shipping: o.shipping || 0,
+        tax: o.tax || 0,
+        total: o.total || 0,
+        discount: o.discount,
+        promoCode: o.promoCode,
+        paymentType: o.paymentType || "Card",
+        paymentStatus: o.paymentStatus || "Paid",
+        status: o.status || "Pending",
+        method: o.method || "standard",
+        trackingNumber: o.trackingNumber,
+        carrier: o.carrier,
+      }));
 
-        const totalSpent = formattedOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-        const totalProductsPurchased = formattedOrders.reduce((sum, o) => {
-          return sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0);
-        }, 0);
+      const totalSpent = formattedOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+      const totalProductsPurchased = formattedOrders.reduce((sum, o) => {
+        return (
+          sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0)
+        );
+      }, 0);
 
-        // Deduplicate shipping addresses from their checkout history
-        const addressMap = new Map<string, any>();
-        formattedOrders.forEach((o, idx) => {
-          if (o.address) {
-            const a = o.address;
-            const aKey = `${a.line1 || a.street || ""}-${a.city || ""}-${a.zip || ""}`.toLowerCase().trim();
-            if (aKey && !addressMap.has(aKey)) {
-              addressMap.set(aKey, {
-                id: `addr_guest_${idx}`,
-                title: idx === 0 ? "Primary Delivery Destination" : `Destination #${idx + 1}`,
-                recipientName: o.name || latestOrder.name || "Customer",
-                line1: a.line1 || a.street || "",
-                line2: a.line2 || "",
-                city: a.city || "",
-                state: a.state || "",
-                zip: a.zip || "",
-                country: a.country || "USA",
-                isDefault: idx === 0,
-                type: "Shipping",
-              });
-            }
+      // Deduplicate shipping addresses from their checkout history
+      const addressMap = new Map<string, any>();
+      formattedOrders.forEach((o, idx) => {
+        if (o.address) {
+          const a = o.address;
+          const aKey = `${a.line1 || a.street || ""}-${a.city || ""}-${a.zip || ""}`
+            .toLowerCase()
+            .trim();
+          if (aKey && !addressMap.has(aKey)) {
+            addressMap.set(aKey, {
+              id: `addr_guest_${idx}`,
+              title: idx === 0 ? "Primary Delivery Destination" : `Destination #${idx + 1}`,
+              recipientName: o.name || latestOrder.name || "Customer",
+              line1: a.line1 || a.street || "",
+              line2: a.line2 || "",
+              city: a.city || "",
+              state: a.state || "",
+              zip: a.zip || "",
+              country: a.country || "USA",
+              isDefault: idx === 0,
+              type: "Shipping",
+            });
           }
-        });
+        }
+      });
 
-        const guestOrderIds = new Set(formattedOrders.map(o => o.id));
-        const emailClean = latestOrder.email?.toLowerCase().trim();
-        const phoneClean = latestOrder.phone?.trim();
+      const guestOrderIds = new Set(formattedOrders.map((o) => o.id));
+      const emailClean = latestOrder.email?.toLowerCase().trim();
+      const phoneClean = latestOrder.phone?.trim();
 
-        const guestReturns = returns.filter((r) => {
+      const guestReturns = returns
+        .filter((r) => {
           if (guestOrderIds.has(r.orderId)) return true;
-          if (emailClean && (r.customerEmail?.toLowerCase() === emailClean || r.customerIdentifier?.toLowerCase() === emailClean)) return true;
-          if (phoneClean && (r.customerPhone === phoneClean || r.customerIdentifier === phoneClean)) return true;
+          if (
+            emailClean &&
+            (r.customerEmail?.toLowerCase() === emailClean ||
+              r.customerIdentifier?.toLowerCase() === emailClean)
+          )
+            return true;
+          if (phoneClean && (r.customerPhone === phoneClean || r.customerIdentifier === phoneClean))
+            return true;
           return false;
-        }).map((r: any) => ({
+        })
+        .map((r: any) => ({
           id: r._id.toString(),
           rmaId: r.rmaId || `RMA-${r._id.toString().slice(-6)}`,
           orderId: r.orderId,
@@ -1179,11 +1285,19 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           createdAt: r.createdAt || new Date().toISOString(),
         }));
 
-        const guestQuotes = quotes.filter((q) => {
-          if (emailClean && (q.customerEmail?.toLowerCase() === emailClean || q.customerIdentifier?.toLowerCase() === emailClean)) return true;
-          if (phoneClean && (q.customerPhone === phoneClean || q.customerIdentifier === phoneClean)) return true;
+      const guestQuotes = quotes
+        .filter((q) => {
+          if (
+            emailClean &&
+            (q.customerEmail?.toLowerCase() === emailClean ||
+              q.customerIdentifier?.toLowerCase() === emailClean)
+          )
+            return true;
+          if (phoneClean && (q.customerPhone === phoneClean || q.customerIdentifier === phoneClean))
+            return true;
           return false;
-        }).map((q: any) => ({
+        })
+        .map((q: any) => ({
           id: q._id.toString(),
           quoteId: q.quoteId || `Q-${q._id.toString().slice(-5)}`,
           projectName: q.projectName || "Commercial Project",
@@ -1193,8 +1307,18 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           notes: q.notes || "",
           items: q.items || [],
           status: q.status || "Engineering Review",
-          isResolved: typeof q.isResolved === "boolean" ? q.isResolved : q.status === "Resolved" || q.status === "Accepted" || q.status === "Converted to Order",
-          quotedAmount: typeof q.quotedAmount === "number" ? q.quotedAmount : (typeof q.totalAmount === "number" ? q.totalAmount : 0),
+          isResolved:
+            typeof q.isResolved === "boolean"
+              ? q.isResolved
+              : q.status === "Resolved" ||
+                q.status === "Accepted" ||
+                q.status === "Converted to Order",
+          quotedAmount:
+            typeof q.quotedAmount === "number"
+              ? q.quotedAmount
+              : typeof q.totalAmount === "number"
+                ? q.totalAmount
+                : 0,
           adminLeadTime: q.adminLeadTime || "",
           adminFreightTerms: q.adminFreightTerms || "",
           adminNotes: q.adminNotes || "",
@@ -1202,57 +1326,57 @@ export const getAdminCustomers = createServerFn({ method: "POST" })
           createdAt: q.createdAt || new Date().toISOString(),
         }));
 
-        return {
-          id: `guest_${groupKey.replace(/[^a-zA-Z0-9]/g, "_").slice(0, 36)}`,
-          name: latestOrder.name || "Guest Checkout Buyer",
-          email: latestOrder.email || undefined,
-          phone: latestOrder.phone || undefined,
-          avatar: undefined,
-          company: latestOrder.company || undefined,
-          contractorId: undefined,
-          accountType: "guest" as const,
-          isGuest: true,
-          portalAccess: false,
-          addresses: Array.from(addressMap.values()),
-          cards: [],
-          emailPrefs: {
-            orderUpdates: true,
-            freightTracking: true,
-            promoAlerts: false,
-            catalogDigest: false,
-            invoiceReceipts: true,
-          },
-          wishlists: {},
-          createdAt: earliestOrder.placedAt || new Date().toISOString(),
-          updatedAt: latestOrder.placedAt || new Date().toISOString(),
-          lastOrderAt: latestOrder.placedAt || earliestOrder.placedAt,
-          firstOrderAt: earliestOrder.placedAt,
-          totalOrders: formattedOrders.length,
-          lifetimeValue: totalSpent,
-          totalSpent,
-          totalItems: totalProductsPurchased,
-          totalProductsPurchased,
-          orders: formattedOrders,
-          returns: guestReturns,
-          quotes: guestQuotes,
-        };
-      });
+      return {
+        id: `guest_${groupKey.replace(/[^a-zA-Z0-9]/g, "_").slice(0, 36)}`,
+        name: latestOrder.name || "Guest Checkout Buyer",
+        email: latestOrder.email || undefined,
+        phone: latestOrder.phone || undefined,
+        avatar: undefined,
+        company: latestOrder.company || undefined,
+        contractorId: undefined,
+        accountType: "guest" as const,
+        isGuest: true,
+        portalAccess: false,
+        addresses: Array.from(addressMap.values()),
+        cards: [],
+        emailPrefs: {
+          orderUpdates: true,
+          freightTracking: true,
+          promoAlerts: false,
+          catalogDigest: false,
+          invoiceReceipts: true,
+        },
+        wishlists: {},
+        createdAt: earliestOrder.placedAt || new Date().toISOString(),
+        updatedAt: latestOrder.placedAt || new Date().toISOString(),
+        lastOrderAt: latestOrder.placedAt || earliestOrder.placedAt,
+        firstOrderAt: earliestOrder.placedAt,
+        totalOrders: formattedOrders.length,
+        lifetimeValue: totalSpent,
+        totalSpent,
+        totalItems: totalProductsPurchased,
+        totalProductsPurchased,
+        orders: formattedOrders,
+        returns: guestReturns,
+        quotes: guestQuotes,
+      };
+    });
 
-      // Unified customer feed
-      const allCustomers = [...customersWithStats, ...guestCustomers];
+    // Unified customer feed
+    const allCustomers = [...customersWithStats, ...guestCustomers];
 
-      allCustomers.sort((a: any, b: any) => {
-        const timeA = new Date(a.lastOrderAt || a.updatedAt || a.createdAt).getTime();
-        const timeB = new Date(b.lastOrderAt || b.updatedAt || b.createdAt).getTime();
-        return timeB - timeA;
-      });
+    allCustomers.sort((a: any, b: any) => {
+      const timeA = new Date(a.lastOrderAt || a.updatedAt || a.createdAt).getTime();
+      const timeB = new Date(b.lastOrderAt || b.updatedAt || b.createdAt).getTime();
+      return timeB - timeA;
+    });
 
-      return { success: true, customers: allCustomers };
-    } catch (e: any) {
-      console.error("Fetch Customers Error:", e);
-      return { success: false, error: "Failed to fetch customers data.", customers: [] };
-    }
-  });
+    return { success: true, customers: allCustomers };
+  } catch (e: any) {
+    console.error("Fetch Customers Error:", e);
+    return { success: false, error: "Failed to fetch customers data.", customers: [] };
+  }
+});
 
 export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
@@ -1270,7 +1394,7 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
         if (ObjectId.isValid(data.id)) {
           customerDoc = await customersCol.findOne({ _id: new ObjectId(data.id) });
         }
-      } catch { }
+      } catch {}
 
       if (!customerDoc) {
         customerDoc = await customersCol.findOne({
@@ -1280,15 +1404,29 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
 
       // If not in registered customers collection, check if it is a guest checkout customer
       if (!customerDoc) {
-        const cleanKey = data.id.replace(/^guest_/, "").replace(/_/g, " ").trim();
-        const guestOrders = await ordersCol.find({
-          $or: [
-            { email: { $regex: new RegExp(`^${cleanKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } },
-            { phone: cleanKey },
-            { name: { $regex: new RegExp(`^${cleanKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } },
-            { id: data.id.replace(/^guest_/, "") },
-          ]
-        }).sort({ placedAt: -1 }).toArray();
+        const cleanKey = data.id
+          .replace(/^guest_/, "")
+          .replace(/_/g, " ")
+          .trim();
+        const guestOrders = await ordersCol
+          .find({
+            $or: [
+              {
+                email: {
+                  $regex: new RegExp(`^${cleanKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i"),
+                },
+              },
+              { phone: cleanKey },
+              {
+                name: {
+                  $regex: new RegExp(`^${cleanKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i"),
+                },
+              },
+              { id: data.id.replace(/^guest_/, "") },
+            ],
+          })
+          .sort({ placedAt: -1 })
+          .toArray();
 
         if (guestOrders.length > 0) {
           const latest = guestOrders[0];
@@ -1347,8 +1485,14 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
 
       const customerReturns = returns
         .filter((r) => {
-          if (emailClean && (r.customerEmail?.toLowerCase() === emailClean || r.customerIdentifier?.toLowerCase() === emailClean)) return true;
-          if (phoneClean && (r.customerPhone === phoneClean || r.customerIdentifier === phoneClean)) return true;
+          if (
+            emailClean &&
+            (r.customerEmail?.toLowerCase() === emailClean ||
+              r.customerIdentifier?.toLowerCase() === emailClean)
+          )
+            return true;
+          if (phoneClean && (r.customerPhone === phoneClean || r.customerIdentifier === phoneClean))
+            return true;
           if (customerOrders.some((o) => o.id === r.orderId)) return true;
           return false;
         })
@@ -1372,8 +1516,14 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
 
       const customerQuotes = quotes
         .filter((q) => {
-          if (emailClean && (q.customerEmail?.toLowerCase() === emailClean || q.customerIdentifier?.toLowerCase() === emailClean)) return true;
-          if (phoneClean && (q.customerPhone === phoneClean || q.customerIdentifier === phoneClean)) return true;
+          if (
+            emailClean &&
+            (q.customerEmail?.toLowerCase() === emailClean ||
+              q.customerIdentifier?.toLowerCase() === emailClean)
+          )
+            return true;
+          if (phoneClean && (q.customerPhone === phoneClean || q.customerIdentifier === phoneClean))
+            return true;
           return false;
         })
         .map((q: any) => ({
@@ -1400,7 +1550,9 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
 
       const totalSpent = customerOrders.reduce((sum, o) => sum + (o.total || 0), 0);
       const totalProductsPurchased = customerOrders.reduce((sum, o) => {
-        return sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0);
+        return (
+          sum + (o.items || []).reduce((itemSum: number, item: any) => itemSum + (item.qty || 1), 0)
+        );
       }, 0);
 
       return {
@@ -1431,4 +1583,3 @@ export const getAdminCustomerDetailsDb = createServerFn({ method: "POST" })
       return { success: false, error: "Failed to fetch customer details." };
     }
   });
-

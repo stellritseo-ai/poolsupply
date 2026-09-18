@@ -148,7 +148,9 @@ function ReturnsManagerPage() {
     },
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: ["admin_returns"] });
-      showToast(vars.resolved ? "Request marked as Resolved." : "Request marked as Unresolved / Reopened.");
+      showToast(
+        vars.resolved ? "Request marked as Resolved." : "Request marked as Unresolved / Reopened.",
+      );
     },
   });
 
@@ -201,7 +203,7 @@ function ReturnsManagerPage() {
         <td style="padding:10px 12px;text-align:center;font-weight:700;font-size:12px;">${it.qty || 1}</td>
         <td style="padding:10px 12px;text-align:right;font-weight:700;font-size:12px;">$${(it.price || 0).toFixed(2)}</td>
       </tr>
-    `
+    `,
       )
       .join("");
 
@@ -315,7 +317,7 @@ function ReturnsManagerPage() {
   const metrics = useMemo(() => {
     const total = returnsList.length;
     const underReview = returnsList.filter(
-      (r) => r.status === "Under Review" || r.status === "Processing Return"
+      (r) => r.status === "Under Review" || r.status === "Processing Return",
     ).length;
     const resolved = returnsList.filter((r) => r.isResolved || r.status === "Resolved").length;
     const unresolved = returnsList.filter((r) => !r.isResolved && r.status !== "Resolved").length;
@@ -330,10 +332,16 @@ function ReturnsManagerPage() {
     return returnsList.filter((r) => {
       // Status filter
       if (statusFilter !== "all") {
-        if (statusFilter === "under_review" && r.status !== "Under Review" && r.status !== "Processing Return") return false;
+        if (
+          statusFilter === "under_review" &&
+          r.status !== "Under Review" &&
+          r.status !== "Processing Return"
+        )
+          return false;
         if (statusFilter === "approved" && r.status !== "Approved") return false;
-        if (statusFilter === "resolved" && (!r.isResolved && r.status !== "Resolved")) return false;
-        if (statusFilter === "unresolved" && (r.isResolved || r.status === "Resolved")) return false;
+        if (statusFilter === "resolved" && !r.isResolved && r.status !== "Resolved") return false;
+        if (statusFilter === "unresolved" && (r.isResolved || r.status === "Resolved"))
+          return false;
         if (statusFilter === "refund" && r.status !== "Refund Issued") return false;
         if (statusFilter === "rejected" && r.status !== "Rejected") return false;
       }
@@ -354,7 +362,16 @@ function ReturnsManagerPage() {
         const notesMatch = r.notes?.toLowerCase().includes(q);
         const itemMatch = (r.items || []).some((it) => it.name?.toLowerCase().includes(q));
 
-        if (!rmaMatch && !orderMatch && !nameMatch && !emailMatch && !phoneMatch && !reasonMatch && !notesMatch && !itemMatch) {
+        if (
+          !rmaMatch &&
+          !orderMatch &&
+          !nameMatch &&
+          !emailMatch &&
+          !phoneMatch &&
+          !reasonMatch &&
+          !notesMatch &&
+          !itemMatch
+        ) {
           return false;
         }
       }
@@ -388,7 +405,9 @@ function ReturnsManagerPage() {
           </div>
           <div>
             <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-              <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">Returns & RMA Management</h1>
+              <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
+                Returns & RMA Management
+              </h1>
               <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-amber-100 text-amber-900 border border-amber-200">
                 {metrics.total} Requests
               </span>
@@ -415,9 +434,13 @@ function ReturnsManagerPage() {
       {/* ── Metric KPI Cards ── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5">
         <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Total Returns</div>
+          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            Total Returns
+          </div>
           <div className="text-xl sm:text-2xl font-black text-slate-900">{metrics.total}</div>
-          <div className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">All time claims</div>
+          <div className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">
+            All time claims
+          </div>
         </div>
 
         <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 shadow-2xs">
@@ -426,7 +449,9 @@ function ReturnsManagerPage() {
             <span>Under Review</span>
           </div>
           <div className="text-xl sm:text-2xl font-black text-amber-900">{metrics.underReview}</div>
-          <div className="text-[10px] sm:text-[11px] text-amber-700 font-medium mt-0.5 truncate">Needs action</div>
+          <div className="text-[10px] sm:text-[11px] text-amber-700 font-medium mt-0.5 truncate">
+            Needs action
+          </div>
         </div>
 
         <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 shadow-2xs">
@@ -435,7 +460,9 @@ function ReturnsManagerPage() {
             <span>Resolved</span>
           </div>
           <div className="text-xl sm:text-2xl font-black text-emerald-900">{metrics.resolved}</div>
-          <div className="text-[10px] sm:text-[11px] text-emerald-700 font-medium mt-0.5 truncate">Case closed</div>
+          <div className="text-[10px] sm:text-[11px] text-emerald-700 font-medium mt-0.5 truncate">
+            Case closed
+          </div>
         </div>
 
         <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 shadow-2xs">
@@ -444,13 +471,21 @@ function ReturnsManagerPage() {
             <span>Unresolved</span>
           </div>
           <div className="text-xl sm:text-2xl font-black text-rose-900">{metrics.unresolved}</div>
-          <div className="text-[10px] sm:text-[11px] text-rose-700 font-medium mt-0.5 truncate">Open cases</div>
+          <div className="text-[10px] sm:text-[11px] text-rose-700 font-medium mt-0.5 truncate">
+            Open cases
+          </div>
         </div>
 
         <div className="col-span-2 sm:col-span-1 p-3.5 sm:p-4 rounded-2xl bg-blue-50/70 border border-blue-200/80 shadow-2xs">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-700 mb-1">RMA Total Value</div>
-          <div className="text-lg sm:text-2xl font-black text-blue-950 truncate">{formatUSD(metrics.totalValue)}</div>
-          <div className="text-[10px] sm:text-[11px] text-blue-700 font-medium mt-0.5 truncate">Claim volume</div>
+          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-700 mb-1">
+            RMA Total Value
+          </div>
+          <div className="text-lg sm:text-2xl font-black text-blue-950 truncate">
+            {formatUSD(metrics.totalValue)}
+          </div>
+          <div className="text-[10px] sm:text-[11px] text-blue-700 font-medium mt-0.5 truncate">
+            Claim volume
+          </div>
         </div>
       </div>
 
@@ -482,7 +517,9 @@ function ReturnsManagerPage() {
             <button
               onClick={() => setResolutionFilter("all")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer shrink-0 ${
-                resolutionFilter === "all" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                resolutionFilter === "all"
+                  ? "bg-white text-slate-900 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
               All
@@ -550,7 +587,9 @@ function ReturnsManagerPage() {
             <div className="font-bold text-xs text-slate-700">
               Showing {filteredReturns.length} of {returnsList.length} Returns
             </div>
-            {isRefetching && <span className="text-[11px] text-cyan-600 font-bold">Refreshing...</span>}
+            {isRefetching && (
+              <span className="text-[11px] text-cyan-600 font-bold">Refreshing...</span>
+            )}
           </div>
 
           <div className="divide-y divide-slate-100 max-h-[720px] overflow-y-auto">
@@ -563,7 +602,9 @@ function ReturnsManagerPage() {
               <div className="p-12 text-center text-slate-400 space-y-2">
                 <RotateCcw className="size-10 mx-auto text-slate-300 stroke-1" />
                 <p className="text-xs font-bold text-slate-700">No returns found</p>
-                <p className="text-xs text-slate-400">Try adjusting your filters or search keywords.</p>
+                <p className="text-xs text-slate-400">
+                  Try adjusting your filters or search keywords.
+                </p>
               </div>
             ) : (
               filteredReturns.map((ret) => {
@@ -583,8 +624,12 @@ function ReturnsManagerPage() {
                     {/* Top row: RMA ID + Status */}
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-1.5 sm:gap-2">
-                        <span className="font-mono font-black text-xs text-slate-900">{ret.rmaId}</span>
-                        <span className="text-[11px] font-semibold text-slate-500">Order #{ret.orderId}</span>
+                        <span className="font-mono font-black text-xs text-slate-900">
+                          {ret.rmaId}
+                        </span>
+                        <span className="text-[11px] font-semibold text-slate-500">
+                          Order #{ret.orderId}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         {isResolved ? (
@@ -607,7 +652,9 @@ function ReturnsManagerPage() {
                         <User className="size-3 text-slate-400 shrink-0" />
                         <span className="truncate">{ret.customerName || "Trade Customer"}</span>
                         {ret.customerCompany && (
-                          <span className="text-slate-400 font-normal text-[11px] truncate">({ret.customerCompany})</span>
+                          <span className="text-slate-400 font-normal text-[11px] truncate">
+                            ({ret.customerCompany})
+                          </span>
                         )}
                       </div>
                       <div className="text-xs text-slate-600 line-clamp-1 mt-0.5">
@@ -617,8 +664,16 @@ function ReturnsManagerPage() {
 
                     {/* Footer row: Date + Amount */}
                     <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-100/60">
-                      <span>{new Date(ret.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                      <span className="font-bold text-slate-700">{formatUSD(ret.orderTotal || 0)}</span>
+                      <span>
+                        {new Date(ret.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                      <span className="font-bold text-slate-700">
+                        {formatUSD(ret.orderTotal || 0)}
+                      </span>
                     </div>
                   </button>
                 );
@@ -635,7 +690,9 @@ function ReturnsManagerPage() {
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-slate-100">
                 <div>
                   <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-mono tracking-tight">{selectedReturn.rmaId}</h2>
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-mono tracking-tight">
+                      {selectedReturn.rmaId}
+                    </h2>
                     {selectedReturn.isResolved || selectedReturn.status === "Resolved" ? (
                       <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5 shadow-2xs">
                         <CheckCircle2 className="size-3.5" />
@@ -709,7 +766,9 @@ function ReturnsManagerPage() {
                 <div className="shrink-0">
                   {selectedReturn.isResolved || selectedReturn.status === "Resolved" ? (
                     <button
-                      onClick={() => toggleResolvedMutation.mutate({ id: selectedReturn.id, resolved: false })}
+                      onClick={() =>
+                        toggleResolvedMutation.mutate({ id: selectedReturn.id, resolved: false })
+                      }
                       disabled={toggleResolvedMutation.isPending}
                       className="px-4 py-2 rounded-xl bg-white border border-amber-300 hover:bg-amber-50 text-amber-900 font-black text-xs transition cursor-pointer shadow-xs"
                     >
@@ -717,7 +776,9 @@ function ReturnsManagerPage() {
                     </button>
                   ) : (
                     <button
-                      onClick={() => toggleResolvedMutation.mutate({ id: selectedReturn.id, resolved: true })}
+                      onClick={() =>
+                        toggleResolvedMutation.mutate({ id: selectedReturn.id, resolved: true })
+                      }
                       disabled={toggleResolvedMutation.isPending}
                       className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs transition cursor-pointer shadow-md flex items-center gap-1.5"
                     >
@@ -778,7 +839,9 @@ function ReturnsManagerPage() {
                     <span>Customer Details</span>
                   </div>
                   <div className="space-y-1 text-xs">
-                    <div className="font-bold text-slate-900 text-sm">{selectedReturn.customerName || "Trade Client"}</div>
+                    <div className="font-bold text-slate-900 text-sm">
+                      {selectedReturn.customerName || "Trade Client"}
+                    </div>
                     {selectedReturn.customerCompany && (
                       <div className="text-slate-600 font-medium flex items-center gap-1">
                         <Building className="size-3 text-slate-400" />
@@ -788,7 +851,10 @@ function ReturnsManagerPage() {
                     {selectedReturn.customerEmail && (
                       <div className="text-slate-600 flex items-center gap-1">
                         <Mail className="size-3 text-slate-400" />
-                        <a href={`mailto:${selectedReturn.customerEmail}`} className="hover:underline text-cyan-700">
+                        <a
+                          href={`mailto:${selectedReturn.customerEmail}`}
+                          className="hover:underline text-cyan-700"
+                        >
                           {selectedReturn.customerEmail}
                         </a>
                       </div>
@@ -796,7 +862,10 @@ function ReturnsManagerPage() {
                     {selectedReturn.customerPhone && (
                       <div className="text-slate-600 flex items-center gap-1">
                         <Phone className="size-3 text-slate-400" />
-                        <a href={`tel:${selectedReturn.customerPhone}`} className="hover:underline text-cyan-700">
+                        <a
+                          href={`tel:${selectedReturn.customerPhone}`}
+                          className="hover:underline text-cyan-700"
+                        >
                           {selectedReturn.customerPhone}
                         </a>
                       </div>
@@ -811,16 +880,22 @@ function ReturnsManagerPage() {
                     <span>Order Reference</span>
                   </div>
                   <div className="space-y-1 text-xs">
-                    <div className="font-mono font-black text-slate-900 text-sm">#{selectedReturn.orderId}</div>
+                    <div className="font-mono font-black text-slate-900 text-sm">
+                      #{selectedReturn.orderId}
+                    </div>
                     <div className="text-slate-600">
                       Placed:{" "}
                       <span className="font-semibold text-slate-800">
-                        {new Date(selectedReturn.orderPlacedAt || selectedReturn.createdAt).toLocaleDateString()}
+                        {new Date(
+                          selectedReturn.orderPlacedAt || selectedReturn.createdAt,
+                        ).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="text-slate-600">
                       Total:{" "}
-                      <span className="font-black text-cyan-700">{formatUSD(selectedReturn.orderTotal || 0)}</span>
+                      <span className="font-black text-cyan-700">
+                        {formatUSD(selectedReturn.orderTotal || 0)}
+                      </span>
                     </div>
                     <div className="pt-1">
                       <Link
@@ -884,11 +959,19 @@ function ReturnsManagerPage() {
                               )}
                               <div>
                                 <div>{it.name || "Commercial Equipment Unit"}</div>
-                                {it.brand && <div className="text-[10px] text-slate-400 font-normal">{it.brand}</div>}
+                                {it.brand && (
+                                  <div className="text-[10px] text-slate-400 font-normal">
+                                    {it.brand}
+                                  </div>
+                                )}
                               </div>
                             </td>
-                            <td className="px-4 py-3 text-center font-bold text-slate-800">{it.qty || 1}</td>
-                            <td className="px-4 py-3 text-right text-slate-600">{formatUSD(it.price || 0)}</td>
+                            <td className="px-4 py-3 text-center font-bold text-slate-800">
+                              {it.qty || 1}
+                            </td>
+                            <td className="px-4 py-3 text-right text-slate-600">
+                              {formatUSD(it.price || 0)}
+                            </td>
                             <td className="px-4 py-3 text-right font-bold text-slate-900">
                               {formatUSD((it.price || 0) * (it.qty || 1))}
                             </td>
@@ -897,7 +980,8 @@ function ReturnsManagerPage() {
                       ) : (
                         <tr>
                           <td colSpan={4} className="px-4 py-6 text-center text-slate-400">
-                            Entire Order #{selectedReturn.orderId} returned ({formatUSD(selectedReturn.orderTotal || 0)})
+                            Entire Order #{selectedReturn.orderId} returned (
+                            {formatUSD(selectedReturn.orderTotal || 0)})
                           </td>
                         </tr>
                       )}
@@ -913,7 +997,9 @@ function ReturnsManagerPage() {
                     <ShieldCheck className="size-4 text-cyan-400" />
                     <span>Admin Resolution & Internal Remarks</span>
                   </div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Internal Audit Log</span>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                    Internal Audit Log
+                  </span>
                 </div>
 
                 <div className="space-y-3">
@@ -961,7 +1047,8 @@ function ReturnsManagerPage() {
               <RotateCcw className="size-12 mx-auto text-slate-300 stroke-1" />
               <p className="text-sm font-bold text-slate-700">Select a Return Request</p>
               <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                Choose an RMA case from the left list to review customer claims, update resolution state, or print packing slips.
+                Choose an RMA case from the left list to review customer claims, update resolution
+                state, or print packing slips.
               </p>
             </div>
           )}

@@ -38,9 +38,9 @@ export const BASE_DISTANCE_MILES = 50; // Distance at which full base rate is re
 // ---------------------------------------------------------------------------
 
 export const SHIPPING_BASE_RATES = {
-  small: 50,    // < $100
-  medium: 150,  // $100–$500
-  large: 400,   // > $500
+  small: 50, // < $100
+  medium: 150, // $100–$500
+  large: 400, // > $500
 } as const;
 
 export type ShippingClass = keyof typeof SHIPPING_BASE_RATES;
@@ -55,7 +55,7 @@ export function classifyProductByNameAndPrice(
   name: string,
   price: number,
   category?: string,
-  details?: string
+  details?: string,
 ): "Small" | "Medium" | "Large" {
   const text = `${name || ""} ${category || ""} ${details || ""}`.toLowerCase();
   const lowerName = (name || "").toLowerCase();
@@ -83,8 +83,12 @@ export function classifyProductByNameAndPrice(
 
   // 2. Heavy chemicals / dry goods sold in bags (salt, sand, DE, granular chemicals):
   //    These are always heavy freight regardless of their cheap unit price.
-  const isHeavyBulkMaterial = /\b(salt|sand\s+filter|de powder|diatomaceous|granular|shock granules?|hybrid base|plaster|aggregate|glass beads?|pebble|stucco|mortar|marcite|stabilizer|cyanuric|muriatic|algaecide|mineral spring|sequa-sol|natural chemistry)\b/.test(lowerName) ||
-    lowerCat === "plaster" || lowerCat === "chemicals";
+  const isHeavyBulkMaterial =
+    /\b(salt|sand\s+filter|de powder|diatomaceous|granular|shock granules?|hybrid base|plaster|aggregate|glass beads?|pebble|stucco|mortar|marcite|stabilizer|cyanuric|muriatic|algaecide|mineral spring|sequa-sol|natural chemistry)\b/.test(
+      lowerName,
+    ) ||
+    lowerCat === "plaster" ||
+    lowerCat === "chemicals";
 
   // Direct weight triggers (highest priority):
   // Any item >= 35 lbs is Large (heavy freight: 80 lb plaster, 50 lb salt, 40 lb shock)
@@ -100,7 +104,10 @@ export function classifyProductByNameAndPrice(
   }
 
   // Plaster, aggregates, sand, beads, pebbles, mortar (explicit fallback)
-  if (/\b(plaster|aggregate|glass beads|pebble|stucco|mortar|marcite)\b/.test(lowerName) || lowerCat === "plaster") {
+  if (
+    /\b(plaster|aggregate|glass beads|pebble|stucco|mortar|marcite)\b/.test(lowerName) ||
+    lowerCat === "plaster"
+  ) {
     if (totalWeight >= 35 || /\b(80|50|40)\s*lb\b/.test(lowerName) || numPrice > 25) {
       return "Large";
     }
@@ -109,65 +116,140 @@ export function classifyProductByNameAndPrice(
 
   // Major Heavy Freight items:
   // Liners (above ground & inground liners are 50-100 lbs of heavy vinyl)
-  if (/\b(liner|overlap liner|beaded liner|unibead|ez clip|ag liner|inground liner)\b/.test(lowerName) && numPrice > 100) {
+  if (
+    /\b(liner|overlap liner|beaded liner|unibead|ez clip|ag liner|inground liner)\b/.test(
+      lowerName,
+    ) &&
+    numPrice > 100
+  ) {
     return "Large";
   }
 
   // Covers (safety covers, winter covers, solid covers, mesh covers)
-  if (/\b(safety cover|winter cover|solid cover|mesh cover|aquacover|solar cover)\b/.test(lowerName) && numPrice > 50) {
+  if (
+    /\b(safety cover|winter cover|solid cover|mesh cover|aquacover|solar cover)\b/.test(
+      lowerName,
+    ) &&
+    numPrice > 50
+  ) {
     return "Large";
   }
 
   // Complete Pool Kits / Pools / Tanning Ledges
-  if (/\b(pool kit|swimming pool|above ground pool|inground pool|tanning ledge|ag kit|resin ag|pool package)\b/.test(lowerName) || lowerCat === "pool kits") {
-    if (numPrice > 120 || !/\b(screw|bolt|gasket|patch|tape|fitting|plug|adaptor)\b/.test(lowerName)) {
+  if (
+    /\b(pool kit|swimming pool|above ground pool|inground pool|tanning ledge|ag kit|resin ag|pool package)\b/.test(
+      lowerName,
+    ) ||
+    lowerCat === "pool kits"
+  ) {
+    if (
+      numPrice > 120 ||
+      !/\b(screw|bolt|gasket|patch|tape|fitting|plug|adaptor)\b/.test(lowerName)
+    ) {
       if (numPrice > 60) return "Large";
     }
   }
 
   // Complete Pumps (e.g. "1 HP SUPER PUMP", "WhisperFlo", "IntelliFlo", "TriStar")
-  const isCompletePump = /\b(super pump|whisperflo|intelliflo|tristar|ecostar|maxflo|challenger|supermax|champion|variable speed pump)\b/.test(lowerName) ||
-    (/\b(\d+(?:\.\d+)?\s*hp)\b/.test(lowerName) && /\bpump\b/.test(lowerName) && !/\b(seal|gasket|impeller|basket|lid|diffuser|o-ring)\b/.test(lowerName));
+  const isCompletePump =
+    /\b(super pump|whisperflo|intelliflo|tristar|ecostar|maxflo|challenger|supermax|champion|variable speed pump)\b/.test(
+      lowerName,
+    ) ||
+    (/\b(\d+(?:\.\d+)?\s*hp)\b/.test(lowerName) &&
+      /\bpump\b/.test(lowerName) &&
+      !/\b(seal|gasket|impeller|basket|lid|diffuser|o-ring)\b/.test(lowerName));
   if (isCompletePump && numPrice > 150) {
     return "Large";
   }
 
   // Complete Heaters & Heat Pumps
-  const isCompleteHeater = /\b(heat pump|gas heater|jxi heater|mastertemp|max-e-therm|e3t|low ambient)\b/.test(lowerName) ||
-    (/\bheater\b/.test(lowerName) && /\bbtu\b/.test(lowerName) && !/\b(sensor|limit|igniter|pilot|lead wire|fuse)\b/.test(lowerName));
+  const isCompleteHeater =
+    /\b(heat pump|gas heater|jxi heater|mastertemp|max-e-therm|e3t|low ambient)\b/.test(
+      lowerName,
+    ) ||
+    (/\bheater\b/.test(lowerName) &&
+      /\bbtu\b/.test(lowerName) &&
+      !/\b(sensor|limit|igniter|pilot|lead wire|fuse)\b/.test(lowerName));
   if (isCompleteHeater && numPrice > 150) {
     return "Large";
   }
 
   // Filter Tanks (complete filter units, not cartridges)
-  const isFilterTank = /\b(sand filter|de filter|triton|tagelus|clean & clear plus|system 3|swimclear)\b/.test(lowerName) &&
-    !/\b(cartridge element|replacement cartridge|filter grid|o-ring|drain plug|gauge)\b/.test(lowerName);
+  const isFilterTank =
+    /\b(sand filter|de filter|triton|tagelus|clean & clear plus|system 3|swimclear)\b/.test(
+      lowerName,
+    ) &&
+    !/\b(cartridge element|replacement cartridge|filter grid|o-ring|drain plug|gauge)\b/.test(
+      lowerName,
+    );
   if (isFilterTank && numPrice > 150) {
     return "Large";
   }
 
   // Heavy Deck Structures (ladders, steps, slides, diving boards, 20ft rebar)
-  if (/\b(diving board|jump board|slide|ladder|handrail|stair|step system|drop-in step|lifeguard chair|rebar 20|20ft rebar|20' rebar)\b/.test(lowerName) && numPrice > 50) {
+  if (
+    /\b(diving board|jump board|slide|ladder|handrail|stair|step system|drop-in step|lifeguard chair|rebar 20|20ft rebar|20' rebar)\b/.test(
+      lowerName,
+    ) &&
+    numPrice > 50
+  ) {
     return "Large";
   }
 
   // Robotic Cleaners
-  if (/\b(robotic cleaner|dolphin|polaris 280|polaris 380|polaris 3900|tigershark|aquabot)\b/.test(lowerName) && numPrice > 200) {
+  if (
+    /\b(robotic cleaner|dolphin|polaris 280|polaris 380|polaris 3900|tigershark|aquabot)\b/.test(
+      lowerName,
+    ) &&
+    numPrice > 200
+  ) {
     return "Large";
   }
 
   // Medium equipment
-  if (/\b(motor|century motor|square flange|c-face|ao smith)\b/.test(lowerName) && numPrice > 60) return "Medium";
-  if (/\b(multiport valve|backwash valve|slide valve|actuator|diverter valve|2-way valve|3-way valve)\b/.test(lowerName) && numPrice > 40) return "Medium";
-  if (/\b(salt cell|t-cell|chlorinator cell|turbocell|intellichlor|replace cell)\b/.test(lowerName) && numPrice > 80) return "Medium";
-  if (/\b(intellibrite|colorlogic|globrite|amerlite|pool light|spa light)\b/.test(lowerName) && numPrice > 80) return "Medium";
-  if (/\b(filter grid|cartridge element|replacement cartridge|filter cartridge)\b/.test(lowerName) && numPrice > 35) return "Medium";
-  if (/\b(chlorinator|chemical feeder|rainbow feeder|erosion feeder)\b/.test(lowerName) && numPrice > 40) return "Medium";
+  if (/\b(motor|century motor|square flange|c-face|ao smith)\b/.test(lowerName) && numPrice > 60)
+    return "Medium";
+  if (
+    /\b(multiport valve|backwash valve|slide valve|actuator|diverter valve|2-way valve|3-way valve)\b/.test(
+      lowerName,
+    ) &&
+    numPrice > 40
+  )
+    return "Medium";
+  if (
+    /\b(salt cell|t-cell|chlorinator cell|turbocell|intellichlor|replace cell)\b/.test(lowerName) &&
+    numPrice > 80
+  )
+    return "Medium";
+  if (
+    /\b(intellibrite|colorlogic|globrite|amerlite|pool light|spa light)\b/.test(lowerName) &&
+    numPrice > 80
+  )
+    return "Medium";
+  if (
+    /\b(filter grid|cartridge element|replacement cartridge|filter cartridge)\b/.test(lowerName) &&
+    numPrice > 35
+  )
+    return "Medium";
+  if (
+    /\b(chlorinator|chemical feeder|rainbow feeder|erosion feeder)\b/.test(lowerName) &&
+    numPrice > 40
+  )
+    return "Medium";
   if (/\b(vacuum hose|vac hose)\b/.test(lowerName) && numPrice > 25) return "Medium";
-  if (/\b(power center|load center|control board|pcb board|motherboard|sub panel)\b/.test(lowerName) && numPrice > 100) return "Medium";
+  if (
+    /\b(power center|load center|control board|pcb board|motherboard|sub panel)\b/.test(
+      lowerName,
+    ) &&
+    numPrice > 100
+  )
+    return "Medium";
 
   // Small parts indicators
-  const isPart = /\b(o-ring|oring|gasket|seal|screws?|bolts?|nuts?|washer|spring|clip|pin|latch|thermistor|fuse|gauge|thermometer|plug|fitting|union|adapter|bushing|nipple|coupling|elbow|tee|reagent|test strip|test kit|adhesive|glue|cement|primer|silicone|lube|lubricant|knob|bracket|drain plug|impeller|diffuser|basket|weir|eyeball|orifice|igniter|pilot|lead wire)\b/.test(lowerName);
+  const isPart =
+    /\b(o-ring|oring|gasket|seal|screws?|bolts?|nuts?|washer|spring|clip|pin|latch|thermistor|fuse|gauge|thermometer|plug|fitting|union|adapter|bushing|nipple|coupling|elbow|tee|reagent|test strip|test kit|adhesive|glue|cement|primer|silicone|lube|lubricant|knob|bracket|drain plug|impeller|diffuser|basket|weir|eyeball|orifice|igniter|pilot|lead wire)\b/.test(
+      lowerName,
+    );
   if (isPart) return "Small";
 
   // Specific small switches / sensors
@@ -185,7 +267,7 @@ export function classifyProductByNameAndPrice(
 export function getShippingClass(
   price: number,
   productSize?: string,
-  name?: string
+  name?: string,
 ): ShippingClass {
   const size = (productSize || "").trim().toLowerCase();
   if (size.includes("small") || size === "s") return "small";
@@ -208,10 +290,7 @@ export function getShippingClass(
  * - Inside TN: miles / 50 (capped at 1.0)
  * - Outside TN: 2.0 (double the full base rate)
  */
-export function getDistanceMultiplier(
-  miles: number,
-  isOutsideTN: boolean
-): number {
+export function getDistanceMultiplier(miles: number, isOutsideTN: boolean): number {
   if (isOutsideTN) return 2.0;
   return +Math.min(Math.max(miles, 0) / BASE_DISTANCE_MILES, 1.0).toFixed(4);
 }
@@ -219,10 +298,7 @@ export function getDistanceMultiplier(
 /**
  * Compute the shipping cost for a single item line.
  */
-export function lineItemShipping(
-  cls: ShippingClass,
-  multiplier: number
-): number {
+export function lineItemShipping(cls: ShippingClass, multiplier: number): number {
   const baseRate = SHIPPING_BASE_RATES[cls];
   return +(baseRate * multiplier).toFixed(2);
 }
@@ -245,27 +321,27 @@ export function getZoneFromDistanceMiles(miles: number): number {
 
 /** Representative distance in miles for static fallback zones */
 export const ZONE_ESTIMATED_MILES: Record<number, number> = {
-  1: 3,     // 0–5 mi (Nashville Local)
-  2: 7.5,   // 5–10 mi
-  3: 15,    // 10–20 mi
-  4: 25,    // 20–30 mi (Regional Ground)
-  5: 40,    // 30–50 mi
-  6: 50,    // 50–70 mi (capped at full base rate)
-  7: 50,    // 70–100 mi (capped at full base rate)
-  8: 50,    // 100+ mi (TN, capped at full base rate)
-  9: 100,   // Outside TN (double full base rate)
+  1: 3, // 0–5 mi (Nashville Local)
+  2: 7.5, // 5–10 mi
+  3: 15, // 10–20 mi
+  4: 25, // 20–30 mi (Regional Ground)
+  5: 40, // 30–50 mi
+  6: 50, // 50–70 mi (capped at full base rate)
+  7: 50, // 70–100 mi (capped at full base rate)
+  8: 50, // 100+ mi (TN, capped at full base rate)
+  9: 100, // Outside TN (double full base rate)
 };
 
 export const ZONE_MULTIPLIERS: Record<number, number> = {
-  1: 3 / 50,     // 0.06
-  2: 7.5 / 50,   // 0.15
-  3: 15 / 50,    // 0.30
-  4: 25 / 50,    // 0.50
-  5: 40 / 50,    // 0.80
-  6: 1.0,        // 1.00
-  7: 1.0,        // 1.00
-  8: 1.0,        // 1.00
-  9: 2.0,        // 2.00 (Outside TN)
+  1: 3 / 50, // 0.06
+  2: 7.5 / 50, // 0.15
+  3: 15 / 50, // 0.30
+  4: 25 / 50, // 0.50
+  5: 40 / 50, // 0.80
+  6: 1.0, // 1.00
+  7: 1.0, // 1.00
+  8: 1.0, // 1.00
+  9: 2.0, // 2.00 (Outside TN)
 };
 
 export const ZONE_LABELS: Record<number, string> = {
@@ -292,9 +368,7 @@ const _geoCache = new Map<string, { lat: number; lon: number } | null>();
  * Returns the centroid lat/lon of that ZIP area, or null on failure.
  * Results are cached for the lifetime of the page.
  */
-export async function geocodeZip(
-  zip: string
-): Promise<{ lat: number; lon: number } | null> {
+export async function geocodeZip(zip: string): Promise<{ lat: number; lon: number } | null> {
   const key = zip.trim().slice(0, 5);
   if (key.length < 5) return null;
   if (_geoCache.has(key)) return _geoCache.get(key) ?? null;
@@ -343,16 +417,14 @@ export function haversineDistanceMiles(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
   const R = 3958.8; // Earth radius in miles
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
     Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) ** 2;
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
@@ -361,60 +433,171 @@ export function haversineDistanceMiles(
 // ---------------------------------------------------------------------------
 
 const ZONE_1_ZIPS = new Set([
-  "37211", "37217", "37220", "37221",
-  "37210", "37212", "37213", "37214", "37216",
+  "37211",
+  "37217",
+  "37220",
+  "37221",
+  "37210",
+  "37212",
+  "37213",
+  "37214",
+  "37216",
 ]);
 
 const ZONE_2_ZIPS = new Set([
-  "37201", "37203", "37204", "37205",
-  "37206", "37207", "37208", "37209",
-  "37215", "37218", "37219", "37228",
+  "37201",
+  "37203",
+  "37204",
+  "37205",
+  "37206",
+  "37207",
+  "37208",
+  "37209",
+  "37215",
+  "37218",
+  "37219",
+  "37228",
   "37115",
 ]);
 
 const ZONE_3_ZIPS = new Set([
-  "37013", "37027", "37072", "37076", "37080",
-  "37138", "37189", "37232", "37234", "37235",
-  "37236", "37238", "37240", "37241", "37242",
-  "37243", "37244", "37246", "37248", "37250",
+  "37013",
+  "37027",
+  "37072",
+  "37076",
+  "37080",
+  "37138",
+  "37189",
+  "37232",
+  "37234",
+  "37235",
+  "37236",
+  "37238",
+  "37240",
+  "37241",
+  "37242",
+  "37243",
+  "37244",
+  "37246",
+  "37248",
+  "37250",
 ]);
 
 const ZONE_4_ZIPS = new Set([
-  "37064", "37067", "37069", "37075", "37086",
-  "37087", "37090", "37122", "37129", "37130",
-  "37132", "37135",
+  "37064",
+  "37067",
+  "37069",
+  "37075",
+  "37086",
+  "37087",
+  "37090",
+  "37122",
+  "37129",
+  "37130",
+  "37132",
+  "37135",
 ]);
 
 const ZONE_5_ZIPS = new Set([
-  "37014", "37037", "37046", "37048", "37059",
-  "37066", "37073", "37118", "37146", "37153",
-  "37160", "37174", "37179", "37180",
+  "37014",
+  "37037",
+  "37046",
+  "37048",
+  "37059",
+  "37066",
+  "37073",
+  "37118",
+  "37146",
+  "37153",
+  "37160",
+  "37174",
+  "37179",
+  "37180",
 ]);
 
 const ZONE_6_ZIPS = new Set([
-  "37010", "37015", "37016", "37022", "37025", "37028",
-  "37032", "37033", "37040", "37041", "37042", "37043",
-  "37044", "37049", "37052", "37055", "37057", "37061",
-  "37062", "37074", "37082", "37083", "37101", "37110",
-  "37140", "37143", "37148", "37150", "37151", "37152",
-  "37165", "37167", "37171", "37172", "37175", "37178",
-  "37181", "37183", "37186", "37187", "37188", "37190",
+  "37010",
+  "37015",
+  "37016",
+  "37022",
+  "37025",
+  "37028",
+  "37032",
+  "37033",
+  "37040",
+  "37041",
+  "37042",
+  "37043",
+  "37044",
+  "37049",
+  "37052",
+  "37055",
+  "37057",
+  "37061",
+  "37062",
+  "37074",
+  "37082",
+  "37083",
+  "37101",
+  "37110",
+  "37140",
+  "37143",
+  "37148",
+  "37150",
+  "37151",
+  "37152",
+  "37165",
+  "37167",
+  "37171",
+  "37172",
+  "37175",
+  "37178",
+  "37181",
+  "37183",
+  "37186",
+  "37187",
+  "37188",
+  "37190",
   "37191",
 ]);
 
 const ZONE_7_ZIPS = new Set([
-  "37011", "37020", "37311", "37312", "37315",
-  "37316", "37321", "37323", "37329",
-  "38401", "38402", "38451", "38452", "38461",
-  "38462", "38483", "38487",
+  "37011",
+  "37020",
+  "37311",
+  "37312",
+  "37315",
+  "37316",
+  "37321",
+  "37323",
+  "37329",
+  "38401",
+  "38402",
+  "38451",
+  "38452",
+  "38461",
+  "38462",
+  "38483",
+  "38487",
 ]);
 
 const TN_ZONE_BY_3DIG_PREFIX: Record<string, number> = {
-  "370": 5, "371": 6, "372": 4,
-  "373": 8, "374": 8, "375": 8,
-  "376": 8, "377": 8, "378": 8,
-  "379": 8, "380": 8, "381": 8,
-  "382": 8, "383": 8, "384": 8, "385": 8,
+  "370": 5,
+  "371": 6,
+  "372": 4,
+  "373": 8,
+  "374": 8,
+  "375": 8,
+  "376": 8,
+  "377": 8,
+  "378": 8,
+  "379": 8,
+  "380": 8,
+  "381": 8,
+  "382": 8,
+  "383": 8,
+  "384": 8,
+  "385": 8,
 };
 
 /**
@@ -423,8 +606,7 @@ const TN_ZONE_BY_3DIG_PREFIX: Record<string, number> = {
 export function getZoneFromZip(zip: string, state: string): number {
   const cleanZip = (zip || "").trim().slice(0, 5);
   const cleanState = (state || "").trim().toUpperCase();
-  const stateTN =
-    cleanState === "TN" || cleanState === "TENNESSEE" || cleanState === "TENN";
+  const stateTN = cleanState === "TN" || cleanState === "TENNESSEE" || cleanState === "TENN";
 
   if (!stateTN) return 9;
 
@@ -498,13 +680,11 @@ function _buildResult(
     distanceMiles?: number;
     geocoded?: boolean;
     isOutsideTN?: boolean;
-  } = {}
+  } = {},
 ): ShippingResult {
   const isOutsideTN = zone === 9 || !!opts.isOutsideTN;
   const miles =
-    opts.distanceMiles !== undefined
-      ? opts.distanceMiles
-      : ZONE_ESTIMATED_MILES[zone] ?? 25;
+    opts.distanceMiles !== undefined ? opts.distanceMiles : (ZONE_ESTIMATED_MILES[zone] ?? 25);
 
   const multiplier = getDistanceMultiplier(miles, isOutsideTN);
   // Eligible for Free Local Warehouse Pickup if address is within 5 miles in TN
@@ -596,11 +776,7 @@ function _buildResult(
  * Synchronous shipping calculation using static TN ZIP table.
  * Used for CartDrawer and instant initial display in checkout.
  */
-export function computeShipping(
-  items: CartItem[],
-  zip: string,
-  state: string
-): ShippingResult {
+export function computeShipping(items: CartItem[], zip: string, state: string): ShippingResult {
   const cleanZip = (zip || "").trim();
   const cleanState = (state || "").trim();
   const isPending = cleanZip.length < 5 || cleanState.length === 0;
@@ -628,7 +804,7 @@ export function computeShipping(
 export async function computeShippingAsync(
   items: CartItem[],
   zip: string,
-  state: string
+  state: string,
 ): Promise<ShippingResult> {
   const cleanZip = (zip || "").trim().slice(0, 5);
   const cleanState = (state || "").trim().toUpperCase();
@@ -643,18 +819,16 @@ export async function computeShippingAsync(
     });
   }
 
-  const stateTN =
-    cleanState === "TN" || cleanState === "TENNESSEE" || cleanState === "TENN";
+  const stateTN = cleanState === "TN" || cleanState === "TENNESSEE" || cleanState === "TENN";
 
   // Business rule: outside Tennessee → Zone 9 (2.0 multiplier)
   if (!stateTN) {
     const coords = await geocodeZip(cleanZip);
     let miles: number | undefined;
     if (coords) {
-      miles = +haversineDistanceMiles(
-        WAREHOUSE_LAT, WAREHOUSE_LNG,
-        coords.lat, coords.lon
-      ).toFixed(1);
+      miles = +haversineDistanceMiles(WAREHOUSE_LAT, WAREHOUSE_LNG, coords.lat, coords.lon).toFixed(
+        1,
+      );
     }
     return _buildResult(items, 9, {
       distanceMiles: miles ?? 100,
@@ -668,8 +842,10 @@ export async function computeShippingAsync(
 
   if (coords) {
     const miles = +haversineDistanceMiles(
-      WAREHOUSE_LAT, WAREHOUSE_LNG,
-      coords.lat, coords.lon
+      WAREHOUSE_LAT,
+      WAREHOUSE_LNG,
+      coords.lat,
+      coords.lon,
     ).toFixed(1);
     const zone = getZoneFromDistanceMiles(miles);
     return _buildResult(items, zone, {

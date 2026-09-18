@@ -40,7 +40,14 @@ export type Product = {
 export const products = defaultProducts;
 
 export function getProductImage(imgUrl?: string): string {
-  if (!imgUrl || typeof imgUrl !== "string" || imgUrl.trim() === "" || imgUrl.includes("placeholder") || imgUrl.includes("undefined") || imgUrl.includes("null")) {
+  if (
+    !imgUrl ||
+    typeof imgUrl !== "string" ||
+    imgUrl.trim() === "" ||
+    imgUrl.includes("placeholder") ||
+    imgUrl.includes("undefined") ||
+    imgUrl.includes("null")
+  ) {
     return comingSoonImg;
   }
   let clean = imgUrl.trim();
@@ -67,11 +74,11 @@ export function getProductsList(): Product[] {
 
 export function getProductById(id: string, customList?: Product[]): Product | undefined {
   if (!id) return undefined;
-  
+
   // Combine customList, localStorage cached products, and default products for full coverage
   const primaryList = customList && customList.length > 0 ? customList : getProductsList();
   const combinedList = Array.from(new Set([...primaryList, ...products]));
-  
+
   let cleanId = "";
   try {
     cleanId = decodeURIComponent(id).toLowerCase().trim();
@@ -80,9 +87,8 @@ export function getProductById(id: string, customList?: Product[]): Product | un
   }
 
   // Stage 1: Exact ID or SKU match
-  let found = combinedList.find((p) => 
-    (p.id && p.id.toLowerCase() === cleanId) || 
-    (p.sku && p.sku.toLowerCase() === cleanId)
+  let found = combinedList.find(
+    (p) => (p.id && p.id.toLowerCase() === cleanId) || (p.sku && p.sku.toLowerCase() === cleanId),
   );
   if (found) return found;
 
@@ -99,15 +105,23 @@ export function getProductById(id: string, customList?: Product[]): Product | un
     const pId = p.id ? p.id.toLowerCase() : "";
     const pSku = p.sku ? p.sku.toLowerCase() : "";
     return (
-      (pId && pId.length >= 4 && (cleanId.includes(pId) || (cleanId.length >= 4 && pId.includes(cleanId)))) ||
-      (pSku && pSku.length >= 4 && (cleanId.includes(pSku) || (cleanId.length >= 4 && pSku.includes(cleanId))))
+      (pId &&
+        pId.length >= 4 &&
+        (cleanId.includes(pId) || (cleanId.length >= 4 && pId.includes(cleanId)))) ||
+      (pSku &&
+        pSku.length >= 4 &&
+        (cleanId.includes(pSku) || (cleanId.length >= 4 && pSku.includes(cleanId))))
     );
   });
-  
+
   return found;
 }
 
-export function getRelatedProducts(product: Product, limit = 4, productList?: Product[]): Product[] {
+export function getRelatedProducts(
+  product: Product,
+  limit = 4,
+  productList?: Product[],
+): Product[] {
   const list = productList || products;
   const targetCat = (product.category || "").toLowerCase().trim();
   const targetSub = (product.subCategory || "").toLowerCase().trim();
@@ -126,8 +140,10 @@ export function getRelatedProducts(product: Product, limit = 4, productList?: Pr
   });
 
   const sorted = sameCategoryProducts.sort((a, b) => {
-    const aBrandMatch = a.brand && product.brand && a.brand.toLowerCase() === product.brand.toLowerCase();
-    const bBrandMatch = b.brand && product.brand && b.brand.toLowerCase() === product.brand.toLowerCase();
+    const aBrandMatch =
+      a.brand && product.brand && a.brand.toLowerCase() === product.brand.toLowerCase();
+    const bBrandMatch =
+      b.brand && product.brand && b.brand.toLowerCase() === product.brand.toLowerCase();
     if (aBrandMatch && !bBrandMatch) return -1;
     if (!aBrandMatch && bBrandMatch) return 1;
     return (b.rating || 5) - (a.rating || 5);
@@ -210,4 +226,3 @@ export function syncLocalProducts(updatedProducts: Product[]) {
     }
   }
 }
-

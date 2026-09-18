@@ -31,7 +31,8 @@ const row1Reviews = [
     role: "Owner, BlueWave Pools",
     location: "Miami, FL",
     date: "2 days ago",
-    quote: "Pool Supply Wholesalers has been our primary equipment source for 5+ years. OEM Pentair and Hayward gear arrives palletized next day. Wholesale pricing saves our business $30k+ annually.",
+    quote:
+      "Pool Supply Wholesalers has been our primary equipment source for 5+ years. OEM Pentair and Hayward gear arrives palletized next day. Wholesale pricing saves our business $30k+ annually.",
     verified: "Verified Google Trade Review",
     rating: 5,
     product: "Pentair IntelliFlo3 VSF 3.0HP",
@@ -42,7 +43,8 @@ const row1Reviews = [
     role: "Lead Tech, Sunset Pool Service",
     location: "Phoenix, AZ",
     date: "4 days ago",
-    quote: "Their automation tech specialists helped us size 40 commercial heat pump installs last season. Direct warranty registration with factory backing gives us complete peace of mind.",
+    quote:
+      "Their automation tech specialists helped us size 40 commercial heat pump installs last season. Direct warranty registration with factory backing gives us complete peace of mind.",
     verified: "Verified Google Contractor",
     rating: 5,
     product: "Raypak 406A Natural Gas Heater",
@@ -53,7 +55,8 @@ const row1Reviews = [
     role: "Founder, Crystal Clear Pools",
     location: "Austin, TX",
     date: "1 week ago",
-    quote: "100% genuine factory sealed OEM parts every single time. Whenever we have complex hydraulic questions, a certified master pool technician answers on the first ring.",
+    quote:
+      "100% genuine factory sealed OEM parts every single time. Whenever we have complex hydraulic questions, a certified master pool technician answers on the first ring.",
     verified: "Verified Google Trade Review",
     rating: 5,
     product: "Hayward SwimClear 425 Sq Ft",
@@ -64,7 +67,8 @@ const row1Reviews = [
     role: "Operations Mgr, Aquapro Service",
     location: "Las Vegas, NV",
     date: "1 week ago",
-    quote: "We order variable speed pumps and saltwater systems in bulk every month. The wholesale trade margins allow us to win commercial builder contracts consistently.",
+    quote:
+      "We order variable speed pumps and saltwater systems in bulk every month. The wholesale trade margins allow us to win commercial builder contracts consistently.",
     verified: "Verified Google Buyer",
     rating: 5,
     product: "Jandy FloPro 2.0 HP VS Pump",
@@ -75,7 +79,8 @@ const row1Reviews = [
     role: "Director, Vance Pool & Spa",
     location: "Nashville, TN",
     date: "2 weeks ago",
-    quote: "Same-day dispatch for orders placed before 2 PM has saved our job schedules countless times. Outstanding customer support and genuine manufacturer warranties.",
+    quote:
+      "Same-day dispatch for orders placed before 2 PM has saved our job schedules countless times. Outstanding customer support and genuine manufacturer warranties.",
     verified: "Verified Google Trade Review",
     rating: 5,
     product: "Pentair MasterTemp 400K BTU",
@@ -86,7 +91,8 @@ const row1Reviews = [
     role: "Chief Tech, Sunbelt Aquatics",
     location: "Tampa, FL",
     date: "2 weeks ago",
-    quote: "The contractor portal makes recurring bulk orders completely effortless. Zero backorder delays, authentic OEM serials, and real-time pallet freight tracking.",
+    quote:
+      "The contractor portal makes recurring bulk orders completely effortless. Zero backorder delays, authentic OEM serials, and real-time pallet freight tracking.",
     verified: "Verified Google Contractor",
     rating: 5,
     product: "Pentair Clean & Clear Plus 520",
@@ -101,7 +107,8 @@ const row2Reviews = [
     role: "Director of Operations, Desert Oasis",
     location: "Scottsdale, AZ",
     date: "3 days ago",
-    quote: "Switched from local branch distributors 2 years ago. Better inventory availability, true wholesale pricing, and spotless packaging on sensitive automation control boards.",
+    quote:
+      "Switched from local branch distributors 2 years ago. Better inventory availability, true wholesale pricing, and spotless packaging on sensitive automation control boards.",
     verified: "Verified Google Trade Review",
     rating: 5,
     product: "Pentair IntelliCenter Automation",
@@ -112,7 +119,8 @@ const row2Reviews = [
     role: "Owner, Premier Pool Works",
     location: "San Diego, CA",
     date: "5 days ago",
-    quote: "The most dependable commercial pool supply partner in the country. Every pump and filter is fresh factory inventory with intact manufacturer serials for warranty validation.",
+    quote:
+      "The most dependable commercial pool supply partner in the country. Every pump and filter is fresh factory inventory with intact manufacturer serials for warranty validation.",
     verified: "Verified Google Contractor",
     rating: 5,
     product: "Hayward TriStar VS 900",
@@ -123,7 +131,8 @@ const row2Reviews = [
     role: "Master Electrician, Aqua Tech Solutions",
     location: "Orlando, FL",
     date: "1 week ago",
-    quote: "Their LED lighting and underwater transformer catalog is top-notch. Fast LTL freight with liftgate service delivered straight to our shop floor.",
+    quote:
+      "Their LED lighting and underwater transformer catalog is top-notch. Fast LTL freight with liftgate service delivered straight to our shop floor.",
     verified: "Verified Google Trade Review",
     rating: 5,
     product: "Pentair MicroBrite Color LED 100ft",
@@ -134,7 +143,8 @@ const row2Reviews = [
     role: "Facilities Lead, Blue Lagoon Resorts",
     location: "Myrtle Beach, SC",
     date: "2 weeks ago",
-    quote: "Managing 18 commercial resort pools requires zero downtime. They overnighted dual high-capacity chlorinators that arrived at our resort gate before 9 AM.",
+    quote:
+      "Managing 18 commercial resort pools requires zero downtime. They overnighted dual high-capacity chlorinators that arrived at our resort gate before 9 AM.",
     verified: "Verified Google Buyer",
     rating: 5,
     product: "AutoPilot Pool Pilot Digital 75003",
@@ -145,7 +155,8 @@ const row2Reviews = [
     role: "Lead Contractor, Hoffmann Aquatics",
     location: "Dallas, TX",
     date: "3 weeks ago",
-    quote: "Top-tier technical support. You get connected to experienced pool hydraulic specialists who know pump flow curves and electrical specs inside and out.",
+    quote:
+      "Top-tier technical support. You get connected to experienced pool hydraulic specialists who know pump flow curves and electrical specs inside and out.",
     verified: "Verified Google Contractor",
     rating: 5,
     product: "Pentair WhisperFloXF VS 5.0HP",
@@ -156,7 +167,8 @@ const row2Reviews = [
     role: "Owner, Apex Pool & Spa",
     location: "Atlanta, GA",
     date: "3 weeks ago",
-    quote: "Unbeatable wholesale trade tiering. Ordering 5+ pumps unlocked additional volume rebates that directly impacted our bottom-line business profitability.",
+    quote:
+      "Unbeatable wholesale trade tiering. Ordering 5+ pumps unlocked additional volume rebates that directly impacted our bottom-line business profitability.",
     verified: "Verified Google Trade Review",
     rating: 5,
     product: "Hayward Super Pump VS 700",
@@ -208,7 +220,9 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
             ))}
             <span className="text-[10px] sm:text-[11px] font-black text-slate-800 ml-1">5.0</span>
           </div>
-          <span className="text-[9.5px] sm:text-[10.5px] font-semibold text-slate-400">{review.date}</span>
+          <span className="text-[9.5px] sm:text-[10.5px] font-semibold text-slate-400">
+            {review.date}
+          </span>
         </div>
 
         {/* Review Quote */}
@@ -234,7 +248,10 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden font-sans relative border-y border-slate-200/60">
+    <section
+      id="testimonials"
+      className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden font-sans relative border-y border-slate-200/60"
+    >
       {/* Background Subtle Ambient Glows */}
       <div className="absolute top-1/2 left-1/4 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
       <div className="absolute bottom-0 right-1/4 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
@@ -257,11 +274,13 @@ export function Testimonials() {
             </div>
 
             <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-slate-900 tracking-tight leading-tight">
-              Rated 4.9 / 5.0 by <span className="text-gradient">5,000+ Pool Professionals</span> Nationwide
+              Rated 4.9 / 5.0 by <span className="text-gradient">5,000+ Pool Professionals</span>{" "}
+              Nationwide
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-2xl font-medium">
-              Real reviews from licensed pool contractors, commercial resort operators, and service technicians who rely on our wholesale pricing and same-day dispatch.
+              Real reviews from licensed pool contractors, commercial resort operators, and service
+              technicians who rely on our wholesale pricing and same-day dispatch.
             </p>
           </div>
 

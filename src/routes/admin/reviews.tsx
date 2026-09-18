@@ -50,14 +50,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Pentair IntelliFlo3 VSF 3.0HP Variable Speed Pump with Touchscreen",
     productSku: "011075",
     productBrand: "Pentair",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/011075_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/011075_main.default.jpeg",
     author: "Robert Patterson",
     authorEmail: "robert@bluewavepools.com",
     role: "Commercial Pool Builder",
     rating: 5,
     date: "2026-05-28",
     title: "Saves us thousands on every commercial build",
-    content: "The wholesale pricing here is unparalleled. We order all of our Pentair IntelliFlo3 pumps and Hayward commercial heaters through this portal. Delivery is consistently on time, which is critical for construction milestones.",
+    content:
+      "The wholesale pricing here is unparalleled. We order all of our Pentair IntelliFlo3 pumps and Hayward commercial heaters through this portal. Delivery is consistently on time, which is critical for construction milestones.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -67,14 +69,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Hayward TriStar VS 950 2.7HP Variable Speed Commercial Pump",
     productSku: "SP32950VSP",
     productBrand: "Hayward",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP32950VSP_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP32950VSP_main.default.jpeg",
     author: "Elena Martinez",
     authorEmail: "elena@aqualuxpools.com",
     role: "Pool Service Contractor",
     rating: 5,
     date: "2026-05-15",
     title: "Best logistics operation in the pool business",
-    content: "With three service trucks on the road, we need parts fast — zero exceptions. Having localized shipping out of their TN warehouse means standard delivery reaches us in 24 hours.",
+    content:
+      "With three service trucks on the road, we need parts fast — zero exceptions. Having localized shipping out of their TN warehouse means standard delivery reaches us in 24 hours.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -84,14 +88,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Raypak 406A ASME Digital Gas Pool Heater 399k BTU",
     productSku: "014941",
     productBrand: "Raypak",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014941_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014941_main.default.jpeg",
     author: "Gary Lindqvist",
     authorEmail: "gary@summitresortfacilities.com",
     role: "Resort Facilities Manager",
     rating: 5,
     date: "2026-04-20",
     title: "Technical team caught a $12K sizing error",
-    content: "Sizing a commercial pool filtration system is complex. The technical team here audited our pump head loss calculations before we submitted the PO and caught a sizing error that would have cost us $12,000 to fix post-install.",
+    content:
+      "Sizing a commercial pool filtration system is complex. The technical team here audited our pump head loss calculations before we submitted the PO and caught a sizing error that would have cost us $12,000 to fix post-install.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -101,14 +107,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Pentair Clean & Clear Plus 420 Cartridge Filter 420 Sq Ft",
     productSku: "160340",
     productBrand: "Pentair",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/160340_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/160340_main.default.jpeg",
     author: "Frank W., Pool Tech",
     authorEmail: "frank@aquaclear.com",
     role: "Certified Pool Operator",
     rating: 5,
     date: "2026-06-03",
     title: "Crystal clear water",
-    content: "Hands down the best cartridge filter on the market. Plumbing is clean, pressure gauge is accurate, and the water clarity is unmatched.",
+    content:
+      "Hands down the best cartridge filter on the market. Plumbing is clean, pressure gauge is accurate, and the water clarity is unmatched.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -118,14 +126,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Pentair IntelliCenter Load Center with i8PS Personality Kit",
     productSku: "521905",
     productBrand: "Pentair",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/521905_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/521905_main.default.jpeg",
     author: "Leo P., Pool Automation Specialist",
     authorEmail: "leo@smartpools.com",
     role: "Pool Automation Specialist",
     rating: 5,
     date: "2026-06-02",
     title: "Next-gen control system",
-    content: "The IntelliCenter is a massive step up from EasyTouch. The touchscreen is responsive, and setting up schedules and groups is incredibly simple. Clients love the app.",
+    content:
+      "The IntelliCenter is a massive step up from EasyTouch. The touchscreen is responsive, and setting up schedules and groups is incredibly simple. Clients love the app.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -135,14 +145,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Hayward ColorLogic 4.0 LED Pool Light 120V 100ft Cord",
     productSku: "SP0527LED100",
     productBrand: "Hayward",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP0527LED100_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP0527LED100_main.default.jpeg",
     author: "Pete M., Lighting Installer",
     authorEmail: "pete@brightpools.com",
     role: "Lighting Installer",
     rating: 5,
     date: "2026-06-01",
     title: "Vibrant and easy to seal",
-    content: "Hayward did a great job with the design. It seals perfectly in the niche, and the colors are much brighter than older generations.",
+    content:
+      "Hayward did a great job with the design. It seals perfectly in the niche, and the colors are much brighter than older generations.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -152,14 +164,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Raypak 406A ASME Digital Gas Pool Heater 399k BTU",
     productSku: "014941",
     productBrand: "Raypak",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014941_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014941_main.default.jpeg",
     author: "Dave K., AquaTech Services",
     authorEmail: "dave@aquatech.com",
     role: "Master Technician",
     rating: 5,
     date: "2026-05-22",
     title: "Superb heating capacity",
-    content: "This heater is a beast. Warms up a 25,000 gallon pool in no time. The electronic controls are solid and user friendly.",
+    content:
+      "This heater is a beast. Warms up a 25,000 gallon pool in no time. The electronic controls are solid and user friendly.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -169,14 +183,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Polaris 9650iQ Sport 4WD Robotic In-Ground Pool Cleaner",
     productSku: "F9650IQ",
     productBrand: "Polaris",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/F9650IQ_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/F9650IQ_main.default.jpeg",
     author: "Ray V.",
     authorEmail: "ray@poolclean.com",
     role: "Service Fleet Manager",
     rating: 5,
     date: "2026-05-19",
     title: "Unbelievable cleaning power",
-    content: "Love the Wi-Fi connectivity. I can start it from my phone while at work and come home to a clean pool. The canister lift system pushes out water so it's light when pulling it out.",
+    content:
+      "Love the Wi-Fi connectivity. I can start it from my phone while at work and come home to a clean pool. The canister lift system pushes out water so it's light when pulling it out.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -186,14 +202,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Hayward AquaVac 650 Robotic Pool Cleaner with Wi-Fi",
     productSku: "RCH651CUY",
     productBrand: "Hayward",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/RCH651CUY_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/RCH651CUY_main.default.jpeg",
     author: "Brian G.",
     authorEmail: "brian@cleanpools.com",
     role: "Commercial Operator",
     rating: 4,
     date: "2026-05-18",
     title: "Excellent scrub performance",
-    content: "Climbs walls like a champ. Scrubbing brushes actually remove the waterline dirt line. Deducted one star because the canister fills up quickly if there are lots of leaves.",
+    content:
+      "Climbs walls like a champ. Scrubbing brushes actually remove the waterline dirt line. Deducted one star because the canister fills up quickly if there are lots of leaves.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -203,14 +221,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Jandy Pro Series JE3000T Ultra-Efficient Pool Heat Pump",
     productSku: "JE3000T",
     productBrand: "Jandy",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/JE3000T_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/JE3000T_main.default.jpeg",
     author: "Sarah W.",
     authorEmail: "sarah@flpoolcare.com",
     role: "Commercial Buyer",
     rating: 5,
     date: "2026-05-12",
     title: "Remarkably efficient",
-    content: "We live in Florida and run this heat pump year round. It keeps our pool at a perfect 84 degrees, and our electric bill is barely affected. The titanium construction gives peace of mind.",
+    content:
+      "We live in Florida and run this heat pump year round. It keeps our pool at a perfect 84 degrees, and our electric bill is barely affected. The titanium construction gives peace of mind.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -220,14 +240,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Pentair IntelliBrite 5G Color LED Pool Light 120V 100ft",
     productSku: "601002",
     productBrand: "Pentair",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/601002_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/601002_main.default.jpeg",
     author: "Nate D.",
     authorEmail: "nate@poolpros.com",
     role: "Custom Builder",
     rating: 5,
     date: "2026-05-05",
     title: "Pentair quality shines",
-    content: "Syncs perfectly with my Pentair automation system. The green and blue tones are incredibly vibrant in our white plaster pool.",
+    content:
+      "Syncs perfectly with my Pentair automation system. The green and blue tones are incredibly vibrant in our white plaster pool.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -237,14 +259,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Raypak 266A Digital Natural Gas Pool Heater 266k BTU",
     productSku: "014939",
     productBrand: "Raypak",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014939_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/014939_main.default.jpeg",
     author: "Elena R.",
     authorEmail: "elena@poolservice.com",
     role: "Service Tech",
     rating: 4,
     date: "2026-05-02",
     title: "Works great, runs a bit loud",
-    content: "Heats the pool beautifully, but there's a noticeable hum when running. Still, it works fast and lets us swim in late October.",
+    content:
+      "Heats the pool beautifully, but there's a noticeable hum when running. Still, it works fast and lets us swim in late October.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -254,14 +278,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Hayward SwimClear 525 Sq Ft Multi-Cartridge Pool Filter",
     productSku: "C5030",
     productBrand: "Hayward",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/C5030_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/C5030_main.default.jpeg",
     author: "Tiffany O.",
     authorEmail: "tiffany@poolmaint.com",
     role: "Commercial Buyer",
     rating: 4,
     date: "2026-04-28",
     title: "Excellent filtration, heavy to clean",
-    content: "Water is absolutely spotless! The cartridges are large and hold a lot of debris. Cleaning all four cartridges takes about an hour, but you only have to do it twice a season.",
+    content:
+      "Water is absolutely spotless! The cartridges are large and hold a lot of debris. Cleaning all four cartridges takes about an hour, but you only have to do it twice a season.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -271,14 +297,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Pentair IntelliFlo3 VSF 3.0HP Variable Speed Pump with Touchscreen",
     productSku: "011075",
     productBrand: "Pentair",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/011075_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/011075_main.default.jpeg",
     author: "Sarah J., Homeowner",
     authorEmail: "sarah@homeowner.com",
     role: "Verified Buyer",
     rating: 5,
     date: "2026-04-20",
     title: "Electric bill dropped immediately",
-    content: "Replaced an old single speed pump with this IntelliFlo. My electric bill dropped by almost $70 a month! Extremely quiet too.",
+    content:
+      "Replaced an old single speed pump with this IntelliFlo. My electric bill dropped by almost $70 a month! Extremely quiet too.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -288,14 +316,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Jandy AquaLink RS-PS8 Pool and Spa Combination System",
     productSku: "RS-PS8",
     productBrand: "Jandy",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/RS-PS8_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/RS-PS8_main.default.jpeg",
     author: "Timothy H.",
     authorEmail: "tim@poolautomation.com",
     role: "Automation Specialist",
     rating: 4,
     date: "2026-04-15",
     title: "Solid, dependable automation",
-    content: "AquaLink is very dependable. Setup requires some basic technical knowledge, but once configured, it runs without a hitch year-round.",
+    content:
+      "AquaLink is very dependable. Setup requires some basic technical knowledge, but once configured, it runs without a hitch year-round.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -305,14 +335,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Hayward Super Pump VS 1.65HP Variable Speed Pump",
     productSku: "SP26115VSP",
     productBrand: "Hayward",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP26115VSP_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/SP26115VSP_main.default.jpeg",
     author: "Alex C.",
     authorEmail: "alex@poolcontractors.com",
     role: "Service Tech",
     rating: 5,
     date: "2026-04-11",
     title: "Perfect replacement pump",
-    content: "Swapped my old single-speed 1.5HP pump. Perfect fit, didn't have to adjust plumbing too much. It runs extremely quiet.",
+    content:
+      "Swapped my old single-speed 1.5HP pump. Perfect fit, didn't have to adjust plumbing too much. It runs extremely quiet.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -322,14 +354,16 @@ const FALLBACK_REVIEWS: AdminReview[] = [
     productName: "Hayward Universal H-Series 400k BTU Low NOx Gas Heater",
     productSku: "H400FDN",
     productBrand: "Hayward",
-    productImg: "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/H400FDN_main.default.jpeg",
+    productImg:
+      "https://www.swimmingpooldistributors.com/site/Product Images/Upload_1/H400FDN_main.default.jpeg",
     author: "Gregory S.",
     authorEmail: "greg@resortpools.com",
     role: "Facilities Director",
     rating: 5,
     date: "2026-03-30",
     title: "Heats fast, durable build",
-    content: "I've had this heater for a year now. The salt water hasn't corroded it at all thanks to the cupro-nickel design. Heats my spa in 10 minutes.",
+    content:
+      "I've had this heater for a year now. The salt water hasn't corroded it at all thanks to the cupro-nickel design. Heats my spa in 10 minutes.",
     status: "Published",
     verifiedPurchase: true,
   },
@@ -339,7 +373,8 @@ export const Route = createFileRoute("/admin/reviews")({
   loader: async () => {
     try {
       const res = await getAdminReviewsDb();
-      const list = Array.isArray(res?.reviews) && res.reviews.length > 0 ? res.reviews : FALLBACK_REVIEWS;
+      const list =
+        Array.isArray(res?.reviews) && res.reviews.length > 0 ? res.reviews : FALLBACK_REVIEWS;
       return list;
     } catch {
       return FALLBACK_REVIEWS;
@@ -370,7 +405,10 @@ function ReviewsModerator() {
       const res = await getAdminReviewsDb();
       return Array.isArray(res?.reviews) && res.reviews.length > 0 ? res.reviews : FALLBACK_REVIEWS;
     },
-    initialData: Array.isArray(initialReviews) && initialReviews.length > 0 ? initialReviews : FALLBACK_REVIEWS,
+    initialData:
+      Array.isArray(initialReviews) && initialReviews.length > 0
+        ? initialReviews
+        : FALLBACK_REVIEWS,
     refetchInterval: 8000,
   });
 
@@ -483,16 +521,16 @@ function ReviewsModerator() {
         ratingFilter === "all"
           ? true
           : ratingFilter === "critical"
-          ? rRating <= 2
-          : rRating === Number(ratingFilter);
+            ? rRating <= 2
+            : rRating === Number(ratingFilter);
 
       const rStatus = String(r.status || "Published").toLowerCase();
       const matchStatus =
         statusFilter === "all"
           ? true
           : statusFilter === "verified"
-          ? Boolean(r.verifiedPurchase)
-          : rStatus === statusFilter.toLowerCase();
+            ? Boolean(r.verifiedPurchase)
+            : rStatus === statusFilter.toLowerCase();
 
       return matchSearch && matchRating && matchStatus;
     });
@@ -528,7 +566,8 @@ function ReviewsModerator() {
         <div
           className="absolute -top-24 right-1/4 w-[500px] h-[350px] rounded-full pointer-events-none opacity-40"
           style={{
-            background: "radial-gradient(circle, rgba(6,182,212,0.3) 0%, rgba(2,132,199,0.1) 50%, transparent 80%)",
+            background:
+              "radial-gradient(circle, rgba(6,182,212,0.3) 0%, rgba(2,132,199,0.1) 50%, transparent 80%)",
             filter: "blur(60px)",
           }}
         />
@@ -543,7 +582,8 @@ function ReviewsModerator() {
               Product Reviews <span className="text-[#00F0FF]">Moderation</span>
             </h1>
             <p className="text-slate-400 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
-              Real-time audit of contractor star ratings, verified commercial buyer testimonials, and storefront product scores.
+              Real-time audit of contractor star ratings, verified commercial buyer testimonials,
+              and storefront product scores.
             </p>
           </div>
 
@@ -553,7 +593,9 @@ function ReviewsModerator() {
               className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-black text-xs transition cursor-pointer backdrop-blur-md shadow-md"
               title="Refresh Review Feeds"
             >
-              <RefreshCw className={`size-3.5 text-cyan-400 ${isRefetching ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`size-3.5 text-cyan-400 ${isRefetching ? "animate-spin" : ""}`}
+              />
               <span>Sync DB</span>
             </button>
 
@@ -574,12 +616,16 @@ function ReviewsModerator() {
         {/* Metric 1: Total Reviews */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Published</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Total Published
+            </span>
             <div className="size-7 sm:size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center group-hover:scale-110 transition">
               <MessageSquare className="size-3.5 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{stats.total}</div>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            {stats.total}
+          </div>
           <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-slate-400 truncate">
             <span className="text-emerald-600 font-extrabold flex items-center gap-0.5 shrink-0">
               <TrendingUp className="size-3" /> Live Feed
@@ -591,7 +637,9 @@ function ReviewsModerator() {
         {/* Metric 2: Average Score */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Catalog Score</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Catalog Score
+            </span>
             <div className="size-7 sm:size-9 rounded-xl bg-amber-50 text-amber-600 grid place-items-center group-hover:scale-110 transition">
               <Star className="size-3.5 sm:size-4.5 fill-amber-400 text-amber-400" />
             </div>
@@ -609,12 +657,16 @@ function ReviewsModerator() {
         {/* Metric 3: Verified Contractors */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Verified Pros</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Verified Pros
+            </span>
             <div className="size-7 sm:size-9 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center group-hover:scale-110 transition">
               <ShieldCheck className="size-3.5 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{stats.verifiedCount}</div>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            {stats.verifiedCount}
+          </div>
           <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold text-emerald-700 truncate">
             <span>Verified Buyers</span>
           </div>
@@ -623,7 +675,9 @@ function ReviewsModerator() {
         {/* Metric 4: Moderation Status */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Moderation Queue</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Moderation Queue
+            </span>
             <div className="size-7 sm:size-9 rounded-xl bg-indigo-50 text-indigo-700 grid place-items-center group-hover:scale-110 transition">
               <Award className="size-3.5 sm:size-4.5" />
             </div>
@@ -699,8 +753,12 @@ function ReviewsModerator() {
         {isLoading ? (
           <div className="py-20 text-center space-y-3">
             <RefreshCw className="size-8 mx-auto text-cyan-600 animate-spin" />
-            <div className="text-sm font-black text-slate-900">Loading Product Feedback Telemetry...</div>
-            <div className="text-xs text-slate-400">Syncing verified buyer reviews from database.</div>
+            <div className="text-sm font-black text-slate-900">
+              Loading Product Feedback Telemetry...
+            </div>
+            <div className="text-xs text-slate-400">
+              Syncing verified buyer reviews from database.
+            </div>
           </div>
         ) : (
           <>
@@ -726,8 +784,12 @@ function ReviewsModerator() {
                           />
                         </div>
                         <div className="min-w-0">
-                          <div className="font-extrabold text-xs text-slate-900 line-clamp-1">{r.productName}</div>
-                          <div className="text-[10px] font-mono text-slate-400">SKU: {r.productSku}</div>
+                          <div className="font-extrabold text-xs text-slate-900 line-clamp-1">
+                            {r.productName}
+                          </div>
+                          <div className="text-[10px] font-mono text-slate-400">
+                            SKU: {r.productSku}
+                          </div>
                         </div>
                       </div>
 
@@ -736,8 +798,8 @@ function ReviewsModerator() {
                           r.status === "Published"
                             ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                             : r.status === "Pending"
-                            ? "bg-amber-50 text-amber-800 border-amber-200"
-                            : "bg-rose-50 text-rose-800 border-rose-200"
+                              ? "bg-amber-50 text-amber-800 border-amber-200"
+                              : "bg-rose-50 text-rose-800 border-rose-200"
                         }`}
                       >
                         {r.status || "Published"}
@@ -747,8 +809,12 @@ function ReviewsModerator() {
                     <div className="flex items-center justify-between gap-2 text-xs">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <span className="font-bold text-slate-900 truncate">{r.author}</span>
-                        {r.verifiedPurchase && <ShieldCheck className="size-3 text-cyan-600 shrink-0" />}
-                        <span className="text-[10px] text-slate-400 truncate">({r.role || "Buyer"})</span>
+                        {r.verifiedPurchase && (
+                          <ShieldCheck className="size-3 text-cyan-600 shrink-0" />
+                        )}
+                        <span className="text-[10px] text-slate-400 truncate">
+                          ({r.role || "Buyer"})
+                        </span>
                       </div>
 
                       <div className="flex items-center gap-0.5 shrink-0">
@@ -756,7 +822,9 @@ function ReviewsModerator() {
                           <Star
                             key={i}
                             className={`size-3 ${
-                              i < r.rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"
+                              i < r.rating
+                                ? "fill-amber-400 text-amber-400"
+                                : "fill-slate-200 text-slate-200"
                             }`}
                           />
                         ))}
@@ -800,7 +868,9 @@ function ReviewsModerator() {
               ) : (
                 <div className="p-12 text-center text-slate-400 space-y-2">
                   <MessageSquare className="size-8 mx-auto text-slate-300 stroke-1" />
-                  <div className="text-slate-700 font-bold text-xs">No reviews match your filters</div>
+                  <div className="text-slate-700 font-bold text-xs">
+                    No reviews match your filters
+                  </div>
                 </div>
               )}
             </div>
@@ -885,18 +955,24 @@ function ReviewsModerator() {
                                 <Star
                                   key={i}
                                   className={`size-3.5 ${
-                                    i < r.rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"
+                                    i < r.rating
+                                      ? "fill-amber-400 text-amber-400"
+                                      : "fill-slate-200 text-slate-200"
                                   }`}
                                 />
                               ))}
                             </div>
-                            <span className="text-xs font-black text-slate-900 ml-1">{r.rating}.0</span>
+                            <span className="text-xs font-black text-slate-900 ml-1">
+                              {r.rating}.0
+                            </span>
                           </div>
                         </td>
 
                         {/* Col 4: Review Snippet */}
                         <td className="p-4 sm:px-6 max-w-sm">
-                          <div className="font-black text-slate-900 text-xs truncate">{r.title}</div>
+                          <div className="font-black text-slate-900 text-xs truncate">
+                            {r.title}
+                          </div>
                           <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 font-medium leading-relaxed">
                             {r.content || "No detailed review body submitted."}
                           </p>
@@ -907,7 +983,9 @@ function ReviewsModerator() {
                           <div className="font-bold text-slate-900 text-xs">
                             {formatReviewDate(r.date)}
                           </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Verified Timestamp</div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">
+                            Verified Timestamp
+                          </div>
                         </td>
 
                         {/* Col 6: Moderation Status Pill */}
@@ -917,8 +995,8 @@ function ReviewsModerator() {
                               r.status === "Published"
                                 ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                                 : r.status === "Pending"
-                                ? "bg-amber-50 text-amber-800 border-amber-200"
-                                : "bg-rose-50 text-rose-800 border-rose-200"
+                                  ? "bg-amber-50 text-amber-800 border-amber-200"
+                                  : "bg-rose-50 text-rose-800 border-rose-200"
                             }`}
                           >
                             {r.status === "Published" && <CheckCircle2 className="size-3" />}
@@ -958,10 +1036,17 @@ function ReviewsModerator() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={7} className="text-center py-20 text-slate-400 font-bold text-xs space-y-2">
+                      <td
+                        colSpan={7}
+                        className="text-center py-20 text-slate-400 font-bold text-xs space-y-2"
+                      >
                         <MessageSquare className="size-10 mx-auto text-slate-300 stroke-1" />
-                        <div className="text-slate-700 font-black text-sm">No product reviews found</div>
-                        <div className="text-slate-400 text-xs">Try adjusting your search query or rating filter above.</div>
+                        <div className="text-slate-700 font-black text-sm">
+                          No product reviews found
+                        </div>
+                        <div className="text-slate-400 text-xs">
+                          Try adjusting your search query or rating filter above.
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -998,7 +1083,9 @@ function ReviewsModerator() {
                     <Sparkles className="size-3 text-cyan-600" />
                     <span>Review Audit & Moderation</span>
                   </div>
-                  <h2 className="text-base sm:text-lg font-black text-slate-900 mt-0.5">Customer Testimonial Details</h2>
+                  <h2 className="text-base sm:text-lg font-black text-slate-900 mt-0.5">
+                    Customer Testimonial Details
+                  </h2>
                 </div>
 
                 <button
@@ -1013,7 +1100,9 @@ function ReviewsModerator() {
               <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
                 {/* 1. Target Equipment Card */}
                 <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Target Product</div>
+                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                    Target Product
+                  </div>
                   <div className="flex items-center gap-3">
                     <div className="size-12 sm:size-14 rounded-2xl bg-white border border-slate-200 p-1.5 grid place-items-center shrink-0 shadow-sm">
                       <img
@@ -1026,10 +1115,14 @@ function ReviewsModerator() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-black text-slate-900 text-xs sm:text-sm leading-snug truncate">{selectedReview.productName}</div>
+                      <div className="font-black text-slate-900 text-xs sm:text-sm leading-snug truncate">
+                        {selectedReview.productName}
+                      </div>
                       <div className="text-[11px] text-slate-500 font-medium mt-0.5 flex items-center gap-2 truncate">
                         <span>SKU: {selectedReview.productSku}</span>
-                        {selectedReview.productBrand && <span>· {selectedReview.productBrand}</span>}
+                        {selectedReview.productBrand && (
+                          <span>· {selectedReview.productBrand}</span>
+                        )}
                       </div>
                     </div>
                     {selectedReview.productId && (
@@ -1048,7 +1141,9 @@ function ReviewsModerator() {
 
                 {/* 2. Reviewer Profile */}
                 <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Trade Reviewer</div>
+                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                    Trade Reviewer
+                  </div>
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <div className="font-black text-slate-900 text-sm flex items-center gap-1.5 truncate">
@@ -1067,15 +1162,21 @@ function ReviewsModerator() {
 
                     <div className="flex items-center gap-1 bg-amber-50 px-2.5 sm:px-3 py-1.5 rounded-xl border border-amber-200 text-amber-900 shrink-0">
                       <Star className="size-3.5 sm:size-4 fill-amber-400 text-amber-400" />
-                      <span className="font-black text-xs sm:text-sm">{selectedReview.rating}.0</span>
+                      <span className="font-black text-xs sm:text-sm">
+                        {selectedReview.rating}.0
+                      </span>
                     </div>
                   </div>
                 </div>
 
                 {/* 3. Review Content */}
                 <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 text-white space-y-2 sm:space-y-3 shadow-md">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-cyan-400">Published Review</div>
-                  <div className="text-sm sm:text-base font-black text-white">{selectedReview.title}</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-cyan-400">
+                    Published Review
+                  </div>
+                  <div className="text-sm sm:text-base font-black text-white">
+                    {selectedReview.title}
+                  </div>
                   <p className="text-xs text-slate-300 leading-relaxed font-medium">
                     {selectedReview.content || "No extended review commentary provided."}
                   </p>

@@ -44,11 +44,11 @@ const CATEGORY_COLORS: Record<string, string> = {
   "Pool Filters": "#004A7C",
   "Pool Cleaners": "#00B4D8",
   "Automation & Chlorinators": "#48CAE4",
-  "Pumps": "#0089C9",
-  "Heaters": "#59D2F3",
-  "Lighting": "#006DAB",
-  "Filters": "#004A7C",
-  "Cleaners": "#00B4D8",
+  Pumps: "#0089C9",
+  Heaters: "#59D2F3",
+  Lighting: "#006DAB",
+  Filters: "#004A7C",
+  Cleaners: "#00B4D8",
 };
 
 // ── Fast 4-Card KPI Fetch (Strictly Real Orders & Fast DB Counts) ──────────────
@@ -74,18 +74,20 @@ export const getQuickDashboardStatsDb = createServerFn({ method: "POST" }).handl
       const db = await connectDB();
       if (!db) return { success: true, stats: defaults };
 
-      const [orders, totalProducts, lowStockCount, totalCustomers, emailsCount, telemetry] = await Promise.all([
-        db.collection("orders").find().sort({ placedAt: -1 }).toArray(),
-        db.collection("products").countDocuments(),
-        db.collection("products").countDocuments({ stock: { $lt: 10 } }),
-        db.collection("customers").countDocuments(),
-        db.collection("contact_emails").countDocuments({ read: false }),
-        db.collection("site_telemetry").find().toArray(),
-      ]);
+      const [orders, totalProducts, lowStockCount, totalCustomers, emailsCount, telemetry] =
+        await Promise.all([
+          db.collection("orders").find().sort({ placedAt: -1 }).toArray(),
+          db.collection("products").countDocuments(),
+          db.collection("products").countDocuments({ stock: { $lt: 10 } }),
+          db.collection("customers").countDocuments(),
+          db.collection("contact_emails").countDocuments({ read: false }),
+          db.collection("site_telemetry").find().toArray(),
+        ]);
 
       const totalRevenue = orders.reduce((s, o) => s + (Number(o.total) || 0), 0);
       const totalOrders = orders.length;
-      const avgOrderValue = totalOrders > 0 ? Math.round((totalRevenue / totalOrders) * 100) / 100 : 0;
+      const avgOrderValue =
+        totalOrders > 0 ? Math.round((totalRevenue / totalOrders) * 100) / 100 : 0;
 
       const now = new Date();
       const firstThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -102,7 +104,9 @@ export const getQuickDashboardStatsDb = createServerFn({ method: "POST" }).handl
       const revenueMoMChange =
         lastMonthRev > 0
           ? Math.round(((thisMonthRev - lastMonthRev) / lastMonthRev) * 1000) / 10
-          : totalOrders > 0 ? 18.4 : 14.8;
+          : totalOrders > 0
+            ? 18.4
+            : 14.8;
       const revenueMoMDelta = thisMonthRev - lastMonthRev;
 
       const totalPageHitsRaw = telemetry.reduce((s, h) => s + (Number(h.hits) || 0), 0);
@@ -116,7 +120,8 @@ export const getQuickDashboardStatsDb = createServerFn({ method: "POST" }).handl
       return {
         success: true,
         stats: {
-          totalRevenue: totalOrders > 0 ? Math.round(totalRevenue * 100) / 100 : defaults.totalRevenue,
+          totalRevenue:
+            totalOrders > 0 ? Math.round(totalRevenue * 100) / 100 : defaults.totalRevenue,
           totalOrders: totalOrders > 0 ? totalOrders : defaults.totalOrders,
           totalProducts: totalProducts > 0 ? totalProducts : 8312,
           totalCustomers: totalCustomers > 0 ? totalCustomers : 3,
@@ -134,7 +139,7 @@ export const getQuickDashboardStatsDb = createServerFn({ method: "POST" }).handl
       console.error("Quick dashboard stats error:", e);
       return { success: true, stats: defaults };
     }
-  }
+  },
 );
 
 // ── Full Dashboard Metrics (Real Orders & Fast DB Aggregations) ──────────────
@@ -207,7 +212,9 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
               $group: {
                 _id: { $ifNull: ["$category", "$parentCategory"] },
                 count: { $sum: 1 },
-                totalRev: { $sum: { $multiply: [{ $ifNull: ["$price", 100] }, { $ifNull: ["$stock", 5] }] } },
+                totalRev: {
+                  $sum: { $multiply: [{ $ifNull: ["$price", 100] }, { $ifNull: ["$stock", 5] }] },
+                },
               },
             },
             { $sort: { count: -1 } },
@@ -219,14 +226,29 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
         emailsCol.countDocuments({ read: false }),
         chatsCol.countDocuments({ status: "active" }),
         productsCol
-          .find({}, { projection: { name: 1, sku: 1, brand: 1, price: 1, stock: 1, img: 1, image: 1, id: 1 } })
+          .find(
+            {},
+            {
+              projection: {
+                name: 1,
+                sku: 1,
+                brand: 1,
+                price: 1,
+                stock: 1,
+                img: 1,
+                image: 1,
+                id: 1,
+              },
+            },
+          )
           .limit(8)
           .toArray(),
       ]);
 
       const totalRevenueFromDb = dbOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
       const totalOrdersCount = dbOrders.length;
-      const avgOrder = totalOrdersCount > 0 ? Math.round((totalRevenueFromDb / totalOrdersCount) * 100) / 100 : 0;
+      const avgOrder =
+        totalOrdersCount > 0 ? Math.round((totalRevenueFromDb / totalOrdersCount) * 100) / 100 : 0;
 
       const now = new Date();
       const firstDayThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -252,12 +274,16 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
       const revenueMoMChange =
         lastMonthRev > 0
           ? Math.round(((thisMonthRev - lastMonthRev) / lastMonthRev) * 1000) / 10
-          : totalOrdersCount > 0 ? 18.4 : 0;
+          : totalOrdersCount > 0
+            ? 18.4
+            : 0;
       const revenueMoMDelta = thisMonthRev - lastMonthRev;
       const ordersMoMChange =
         lastMonthOrders > 0
           ? Math.round(((thisMonthOrders - lastMonthOrders) / lastMonthOrders) * 1000) / 10
-          : totalOrdersCount > 0 ? 15.2 : 0;
+          : totalOrdersCount > 0
+            ? 15.2
+            : 0;
 
       const dynamicCategoryDistribution = categoryAgg.map((cat: any, idx: number) => {
         const catName = String(cat._id || "Pool Supplies");
@@ -267,7 +293,16 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
           revenue: Math.round((cat.totalRev || 0) * 100) / 100,
           color:
             CATEGORY_COLORS[catName] ||
-            ["#0089C9", "#59D2F3", "#006DAB", "#004A7C", "#00B4D8", "#48CAE4", "#F59E0B", "#10B981"][idx % 8],
+            [
+              "#0089C9",
+              "#59D2F3",
+              "#006DAB",
+              "#004A7C",
+              "#00B4D8",
+              "#48CAE4",
+              "#F59E0B",
+              "#10B981",
+            ][idx % 8],
         };
       });
 
@@ -281,7 +316,20 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
       const dbTodayHits = dbTodayHitsRaw > 0 ? dbTodayHitsRaw : 428;
 
       // Monthly Chart Buckets
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
       const buckets: { name: string; revenue: number; ordersCount: number; target: number }[] = [];
       for (let i = 5; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -324,7 +372,9 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
         unreadEmails: unreadEmailsCount,
         activeChats: activeChatsCount > 0 ? activeChatsCount : 1,
         categoryDistribution:
-          dynamicCategoryDistribution.length > 0 ? dynamicCategoryDistribution : defaultMetrics.categoryDistribution,
+          dynamicCategoryDistribution.length > 0
+            ? dynamicCategoryDistribution
+            : defaultMetrics.categoryDistribution,
         monthlyRevenueChart: buckets,
         recentOrders: dbOrders.slice(0, 10).map((o) => {
           const { _id, ...rest } = o;
@@ -347,5 +397,5 @@ export const getFullDashboardMetricsDb = createServerFn({ method: "POST" }).hand
       console.error("Dashboard metrics error:", e);
       return { success: true, metrics: defaultMetrics };
     }
-  }
+  },
 );

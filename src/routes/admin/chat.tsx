@@ -113,8 +113,14 @@ function AdminChat() {
 
   const sessions: ChatSession[] = data?.sessions ?? initialSessions;
 
-  const activeCount = useMemo(() => sessions.filter((s) => s.status === "active").length, [sessions]);
-  const unreadCount = useMemo(() => sessions.filter((s) => (s.unreadAdmin ?? 0) > 0).length, [sessions]);
+  const activeCount = useMemo(
+    () => sessions.filter((s) => s.status === "active").length,
+    [sessions],
+  );
+  const unreadCount = useMemo(
+    () => sessions.filter((s) => (s.unreadAdmin ?? 0) > 0).length,
+    [sessions],
+  );
 
   const filteredSessions = useMemo(() => {
     return sessions.filter((s) => {
@@ -141,7 +147,12 @@ function AdminChat() {
   }, [selectedSessionId, filteredSessions, sessions]);
 
   useEffect(() => {
-    if (!selectedSessionId && filteredSessions.length > 0 && typeof window !== "undefined" && window.innerWidth >= 1024) {
+    if (
+      !selectedSessionId &&
+      filteredSessions.length > 0 &&
+      typeof window !== "undefined" &&
+      window.innerWidth >= 1024
+    ) {
       setSelectedSessionId(filteredSessions[0].sessionId);
     }
   }, [filteredSessions, selectedSessionId]);
@@ -227,7 +238,9 @@ function AdminChat() {
       </AnimatePresence>
 
       {/* ─── LUXURY EXECUTIVE COMMAND HEADER ─── */}
-      <div className={`relative rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-7 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white shadow-xl ${selectedSessionId ? "hidden lg:block" : "block"}`}>
+      <div
+        className={`relative rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-7 border border-cyan-500/20 bg-gradient-to-br from-[#061220] via-[#091f38] to-[#040d1a] text-white shadow-xl ${selectedSessionId ? "hidden lg:block" : "block"}`}
+      >
         <div
           className="absolute top-0 right-1/3 w-[400px] h-[400px] rounded-full pointer-events-none"
           style={{
@@ -249,30 +262,43 @@ function AdminChat() {
               </span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
-              Real-time customer advisory channels, commercial equipment sizing queries, and live technician assistance.
+              Real-time customer advisory channels, commercial equipment sizing queries, and live
+              technician assistance.
             </p>
           </div>
 
           {/* Quick Metrics HUD */}
           <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 sm:gap-3 w-full lg:w-auto shrink-0">
             <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">Total</div>
-              <div className="text-base sm:text-lg font-black text-white mt-0.5">{sessions.length}</div>
-            </div>
-
-            <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-400 truncate">Live</div>
-              <div className="text-base sm:text-lg font-black text-emerald-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
-                {activeCount}
-                {activeCount > 0 && <span className="size-1.5 sm:size-2 rounded-full bg-emerald-400 animate-ping" />}
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">
+                Total
+              </div>
+              <div className="text-base sm:text-lg font-black text-white mt-0.5">
+                {sessions.length}
               </div>
             </div>
 
             <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">Unread</div>
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-400 truncate">
+                Live
+              </div>
+              <div className="text-base sm:text-lg font-black text-emerald-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
+                {activeCount}
+                {activeCount > 0 && (
+                  <span className="size-1.5 sm:size-2 rounded-full bg-emerald-400 animate-ping" />
+                )}
+              </div>
+            </div>
+
+            <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">
+                Unread
+              </div>
               <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
                 {unreadCount}
-                {unreadCount > 0 && <span className="size-1.5 sm:size-2 rounded-full bg-rose-500 animate-pulse" />}
+                {unreadCount > 0 && (
+                  <span className="size-1.5 sm:size-2 rounded-full bg-rose-500 animate-pulse" />
+                )}
               </div>
             </div>
 
@@ -291,7 +317,9 @@ function AdminChat() {
       {/* ─── DUAL-PANE CHAT CONSOLE ─── */}
       <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start w-full min-w-0">
         {/* LEFT 5 COLS: Session Search, Filter Bar & Card Feed */}
-        <div className={`lg:col-span-5 space-y-3 sm:space-y-4 w-full min-w-0 ${selectedSessionId ? "hidden lg:block" : "block"}`}>
+        <div
+          className={`lg:col-span-5 space-y-3 sm:space-y-4 w-full min-w-0 ${selectedSessionId ? "hidden lg:block" : "block"}`}
+        >
           {/* Search & Filter Toolbar */}
           <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xs space-y-2.5 sm:space-y-3">
             <div className="relative">
@@ -431,7 +459,9 @@ function AdminChat() {
         </div>
 
         {/* RIGHT 7 COLS: Active Live Messaging Console */}
-        <div className={`lg:col-span-7 w-full min-w-0 max-w-full ${selectedSessionId ? "block" : "hidden lg:block"}`}>
+        <div
+          className={`lg:col-span-7 w-full min-w-0 max-w-full ${selectedSessionId ? "block" : "hidden lg:block"}`}
+        >
           <AnimatePresence mode="wait">
             {selectedSession ? (
               <motion.div
@@ -463,7 +493,10 @@ function AdminChat() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="font-black text-xs sm:text-sm text-slate-900 flex items-center gap-1.5 truncate">
-                        <span className="truncate">{selectedSession.userName || `Customer #${selectedSession.sessionId.substring(0, 5)}`}</span>
+                        <span className="truncate">
+                          {selectedSession.userName ||
+                            `Customer #${selectedSession.sessionId.substring(0, 5)}`}
+                        </span>
                         {selectedSession.status === "active" ? (
                           <span className="text-[9px] sm:text-[10px] font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
                             Active
@@ -484,7 +517,9 @@ function AdminChat() {
                             <span className="truncate">{selectedSession.userEmail}</span>
                           </a>
                         ) : (
-                          <span className="text-[10px] sm:text-[11px] text-slate-400">Guest Visitor</span>
+                          <span className="text-[10px] sm:text-[11px] text-slate-400">
+                            Guest Visitor
+                          </span>
                         )}
                         {selectedSession.userPhone && (
                           <a
@@ -528,7 +563,10 @@ function AdminChat() {
                   {selectedSession.messages.map((msg) => {
                     const isAdmin = msg.sender === "admin";
                     return (
-                      <div key={msg.id} className={`flex ${isAdmin ? "justify-end" : "justify-start"}`}>
+                      <div
+                        key={msg.id}
+                        className={`flex ${isAdmin ? "justify-end" : "justify-start"}`}
+                      >
                         <div
                           className={`max-w-[90%] sm:max-w-[78%] rounded-2xl px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-medium space-y-1 shadow-2xs break-words ${
                             isAdmin
@@ -537,7 +575,9 @@ function AdminChat() {
                           }`}
                         >
                           <div className="text-[10px] font-bold opacity-75">
-                            {isAdmin ? "Support Representative" : selectedSession.userName || "Customer"}
+                            {isAdmin
+                              ? "Support Representative"
+                              : selectedSession.userName || "Customer"}
                           </div>
                           <div className="leading-relaxed whitespace-pre-wrap">{msg.text}</div>
                           <div
@@ -595,7 +635,8 @@ function AdminChat() {
                 <MessageSquare className="size-10 mx-auto text-slate-300 stroke-1" />
                 <p className="text-sm font-bold text-slate-700">No active chat selected</p>
                 <p className="text-xs text-slate-400">
-                  Select a live session from the channel feed to communicate with customers in real time.
+                  Select a live session from the channel feed to communicate with customers in real
+                  time.
                 </p>
               </div>
             )}

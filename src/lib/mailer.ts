@@ -1,7 +1,11 @@
 import nodemailer from "nodemailer";
 
 function getEnvSecret(key: string): string {
-  const val = process.env[key] || (typeof (globalThis as any).process !== "undefined" ? (globalThis as any).process?.env?.[key] : undefined);
+  const val =
+    process.env[key] ||
+    (typeof (globalThis as any).process !== "undefined"
+      ? (globalThis as any).process?.env?.[key]
+      : undefined);
   return typeof val === "string" ? val.trim() : "";
 }
 
@@ -12,7 +16,8 @@ const YAHOO_USER = getEnvSecret("YAHOO_USER") || "pswelio@yahoo.com";
 const YAHOO_APP_PASSWORD = getEnvSecret("YAHOO_APP_PASSWORD").replace(/\s+/g, "");
 
 // Comma-separated list of admin emails to receive alerts
-const ADMIN_NOTIFICATION_EMAIL = getEnvSecret("ADMIN_NOTIFICATION_EMAIL") || "jitenksony@gmail.com, pswelio@yahoo.com";
+const ADMIN_NOTIFICATION_EMAIL =
+  getEnvSecret("ADMIN_NOTIFICATION_EMAIL") || "jitenksony@gmail.com, pswelio@yahoo.com";
 
 // Helper to get formatted recipient array
 function getAdminRecipients(): string[] {
@@ -39,7 +44,9 @@ function escapeHtml(str?: string | number | null): string {
  */
 function sanitizeHeader(str?: string): string {
   if (!str) return "";
-  return String(str).replace(/[\r\n]+/g, " ").trim();
+  return String(str)
+    .replace(/[\r\n]+/g, " ")
+    .trim();
 }
 
 // Create reusable transporter object using Gmail SMTP
@@ -70,9 +77,8 @@ async function dispatchEmail(options: {
   text?: string;
   recipients?: string[];
 }) {
-  const recipients = options.recipients && options.recipients.length > 0
-    ? options.recipients
-    : getAdminRecipients();
+  const recipients =
+    options.recipients && options.recipients.length > 0 ? options.recipients : getAdminRecipients();
 
   const toHeader = recipients.join(", ");
   const cleanSubject = sanitizeHeader(options.subject);
@@ -87,7 +93,9 @@ async function dispatchEmail(options: {
         html: options.html,
         text: options.text,
       });
-      console.log(`[Email Service - Yahoo] Notification dispatched successfully. MessageId: ${info.messageId}`);
+      console.log(
+        `[Email Service - Yahoo] Notification dispatched successfully. MessageId: ${info.messageId}`,
+      );
       return { success: true, provider: "yahoo", messageId: info.messageId };
     }
   } catch (yahooErr: any) {
@@ -104,7 +112,9 @@ async function dispatchEmail(options: {
         html: options.html,
         text: options.text,
       });
-      console.log(`[Email Service - Gmail Fallback] Notification dispatched successfully. MessageId: ${info.messageId}`);
+      console.log(
+        `[Email Service - Gmail Fallback] Notification dispatched successfully. MessageId: ${info.messageId}`,
+      );
       return { success: true, provider: "gmail", messageId: info.messageId };
     } else {
       throw new Error("No configured mail provider credentials found in environment variables.");
@@ -159,7 +169,9 @@ export async function sendNewOrderAdminNotification(order: SendOrderEmailPayload
     const formattedShipping =
       order.shipping === 0
         ? "FREE (Standard / Freight)"
-        : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(order.shipping);
+        : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
+            order.shipping,
+          );
 
     const formattedTax = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -192,7 +204,7 @@ export async function sendNewOrderAdminNotification(order: SendOrderEmailPayload
           <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: #0f172a; font-size: 13px;">
             $${(Number(item.price || 0) * Number(item.qty || 1)).toFixed(2)}
           </td>
-        </tr>`
+        </tr>`,
       )
       .join("");
 
@@ -471,4 +483,3 @@ export async function sendContactEmailAdminNotification(contact: SendContactEmai
     return { success: false, error: error.message };
   }
 }
-

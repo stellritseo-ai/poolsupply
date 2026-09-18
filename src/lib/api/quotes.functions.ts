@@ -29,15 +29,15 @@ export interface QuoteRequest {
   notes: string;
   items: QuoteItem[];
   status:
-  | "Under Review"
-  | "Engineering Review"
-  | "Pricing Ready"
-  | "Approved"
-  | "Accepted"
-  | "Rejected"
-  | "Resolved"
-  | "Converted to Order"
-  | "Cancelled";
+    | "Under Review"
+    | "Engineering Review"
+    | "Pricing Ready"
+    | "Approved"
+    | "Accepted"
+    | "Rejected"
+    | "Resolved"
+    | "Converted to Order"
+    | "Cancelled";
   isResolved: boolean;
   quotedAmount?: number;
   adminLeadTime?: string;
@@ -76,7 +76,7 @@ export const createQuoteRequestDb = createServerFn({ method: "POST" })
       estimatedBudget: z.number().optional(),
       notes: z.string().optional(),
       items: z.array(z.any()).optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -92,8 +92,12 @@ export const createQuoteRequestDb = createServerFn({ method: "POST" })
         quoteId,
         customerIdentifier: data.customerIdentifier.trim(),
         customerName: data.customerName?.trim() || "Trade Client",
-        customerEmail: data.customerEmail?.trim() || (data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
-        customerPhone: data.customerPhone?.trim() || (!data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
+        customerEmail:
+          data.customerEmail?.trim() ||
+          (data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
+        customerPhone:
+          data.customerPhone?.trim() ||
+          (!data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
         customerCompany: data.customerCompany?.trim() || "",
         customerContractorId: data.customerContractorId?.trim() || "",
         projectName: data.projectName.trim(),
@@ -139,48 +143,55 @@ export const createQuoteRequestDb = createServerFn({ method: "POST" })
   });
 
 // ── 2. Get All Quote Requests (Admin) ───────────────────────────────────────
-export const getAdminQuotesDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true, quotes: [] as QuoteRequest[] };
-      const quotesCol = db.collection("quotes");
+export const getAdminQuotesDb = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: true, quotes: [] as QuoteRequest[] };
+    const quotesCol = db.collection("quotes");
 
-      const rawQuotes = await quotesCol.find().sort({ createdAt: -1 }).toArray();
+    const rawQuotes = await quotesCol.find().sort({ createdAt: -1 }).toArray();
 
-      const quotes: QuoteRequest[] = rawQuotes.map((q: any) => ({
-        id: q._id.toString(),
-        quoteId: q.quoteId || `Q-${q._id.toString().slice(-5)}`,
-        customerIdentifier: q.customerIdentifier || "",
-        customerName: q.customerName || "Trade Client",
-        customerEmail: q.customerEmail || "",
-        customerPhone: q.customerPhone || "",
-        customerCompany: q.customerCompany || "",
-        customerContractorId: q.customerContractorId || "",
-        projectName: q.projectName || "Commercial Installation",
-        projectLocation: q.projectLocation || "",
-        targetCompletionDate: q.targetCompletionDate || "Next 30 Days",
-        estimatedBudget: typeof q.estimatedBudget === "number" ? q.estimatedBudget : 0,
-        notes: q.notes || "",
-        items: Array.isArray(q.items) ? q.items : [],
-        status: q.status || "Engineering Review",
-        isResolved: typeof q.isResolved === "boolean" ? q.isResolved : q.status === "Resolved" || q.status === "Accepted" || q.status === "Converted to Order",
-        quotedAmount: typeof q.quotedAmount === "number" ? q.quotedAmount : (typeof q.totalAmount === "number" ? q.totalAmount : 0),
-        adminLeadTime: q.adminLeadTime || "",
-        adminFreightTerms: q.adminFreightTerms || "",
-        adminNotes: q.adminNotes || "",
-        adminProposalNotes: q.adminProposalNotes || "",
-        createdAt: q.createdAt || new Date().toISOString(),
-        updatedAt: q.updatedAt || q.createdAt,
-        resolvedAt: q.resolvedAt,
-      }));
+    const quotes: QuoteRequest[] = rawQuotes.map((q: any) => ({
+      id: q._id.toString(),
+      quoteId: q.quoteId || `Q-${q._id.toString().slice(-5)}`,
+      customerIdentifier: q.customerIdentifier || "",
+      customerName: q.customerName || "Trade Client",
+      customerEmail: q.customerEmail || "",
+      customerPhone: q.customerPhone || "",
+      customerCompany: q.customerCompany || "",
+      customerContractorId: q.customerContractorId || "",
+      projectName: q.projectName || "Commercial Installation",
+      projectLocation: q.projectLocation || "",
+      targetCompletionDate: q.targetCompletionDate || "Next 30 Days",
+      estimatedBudget: typeof q.estimatedBudget === "number" ? q.estimatedBudget : 0,
+      notes: q.notes || "",
+      items: Array.isArray(q.items) ? q.items : [],
+      status: q.status || "Engineering Review",
+      isResolved:
+        typeof q.isResolved === "boolean"
+          ? q.isResolved
+          : q.status === "Resolved" || q.status === "Accepted" || q.status === "Converted to Order",
+      quotedAmount:
+        typeof q.quotedAmount === "number"
+          ? q.quotedAmount
+          : typeof q.totalAmount === "number"
+            ? q.totalAmount
+            : 0,
+      adminLeadTime: q.adminLeadTime || "",
+      adminFreightTerms: q.adminFreightTerms || "",
+      adminNotes: q.adminNotes || "",
+      adminProposalNotes: q.adminProposalNotes || "",
+      createdAt: q.createdAt || new Date().toISOString(),
+      updatedAt: q.updatedAt || q.createdAt,
+      resolvedAt: q.resolvedAt,
+    }));
 
-      return { success: true, quotes };
-    } catch (e: any) {
-      console.error("Get Admin Quotes Error:", e);
-      return { success: false, error: "Failed to fetch quotes data.", quotes: [] as QuoteRequest[] };
-    }
-  });
+    return { success: true, quotes };
+  } catch (e: any) {
+    console.error("Get Admin Quotes Error:", e);
+    return { success: false, error: "Failed to fetch quotes data.", quotes: [] as QuoteRequest[] };
+  }
+});
 
 // ── 3. Update Quote Status, Pricing & Resolution (Admin) ────────────────────
 export const updateQuoteStatusDb = createServerFn({ method: "POST" })
@@ -206,7 +217,7 @@ export const updateQuoteStatusDb = createServerFn({ method: "POST" })
       adminFreightTerms: z.string().optional(),
       adminNotes: z.string().optional(),
       adminProposalNotes: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -220,7 +231,11 @@ export const updateQuoteStatusDb = createServerFn({ method: "POST" })
 
       if (data.status !== undefined) {
         updateFields.status = data.status;
-        if (data.status === "Resolved" || data.status === "Accepted" || data.status === "Converted to Order") {
+        if (
+          data.status === "Resolved" ||
+          data.status === "Accepted" ||
+          data.status === "Converted to Order"
+        ) {
           updateFields.isResolved = true;
           updateFields.resolvedAt = new Date().toISOString();
         }
@@ -285,7 +300,7 @@ export const toggleQuoteResolvedDb = createServerFn({ method: "POST" })
     z.object({
       id: z.string(),
       resolved: z.boolean(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {

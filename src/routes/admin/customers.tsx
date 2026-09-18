@@ -60,9 +60,13 @@ export const Route = createFileRoute("/admin/customers")({
 function CustomersAdmin() {
   const initialCustomers = Route.useLoaderData() as any[];
   const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState<"all" | "guest" | "portal" | "contractors" | "buyers" | "recent">("all");
+  const [filterType, setFilterType] = useState<
+    "all" | "guest" | "portal" | "contractors" | "buyers" | "recent"
+  >("all");
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"orders" | "returns" | "quotes" | "addresses" | "info">("orders");
+  const [activeTab, setActiveTab] = useState<
+    "orders" | "returns" | "quotes" | "addresses" | "info"
+  >("orders");
 
   const {
     data: customersData = initialCustomers,
@@ -81,11 +85,20 @@ function CustomersAdmin() {
 
   // KPI Metrics Calculation
   const totalCustomers = customersData.length;
-  const guestBuyers = customersData.filter((c: any) => c.isGuest || c.accountType === "guest").length;
-  const portalAccounts = customersData.filter((c: any) => !c.isGuest && c.accountType !== "guest").length;
+  const guestBuyers = customersData.filter(
+    (c: any) => c.isGuest || c.accountType === "guest",
+  ).length;
+  const portalAccounts = customersData.filter(
+    (c: any) => !c.isGuest && c.accountType !== "guest",
+  ).length;
   const verifiedContractors = customersData.filter((c: any) => c.company || c.contractorId).length;
-  const activeBuyers = customersData.filter((c: any) => (c.totalOrders || c.orders?.length || 0) > 0).length;
-  const totalLifetimeRevenue = customersData.reduce((sum: number, c: any) => sum + (c.lifetimeValue || c.totalSpent || 0), 0);
+  const activeBuyers = customersData.filter(
+    (c: any) => (c.totalOrders || c.orders?.length || 0) > 0,
+  ).length;
+  const totalLifetimeRevenue = customersData.reduce(
+    (sum: number, c: any) => sum + (c.lifetimeValue || c.totalSpent || 0),
+    0,
+  );
 
   // Filtered customer list
   const filteredCustomers = useMemo(() => {
@@ -109,17 +122,27 @@ function CustomersAdmin() {
         const matchPhone = (c.phone || "").includes(q);
         const matchCompany = (c.company || "").toLowerCase().includes(q);
         const matchContractorId = (c.contractorId || "").toLowerCase().includes(q);
-        const matchOrders = (c.orders || []).some((o: any) =>
-          (o.id || "").toLowerCase().includes(q) ||
-          (o.address?.city || "").toLowerCase().includes(q) ||
-          (o.address?.state || "").toLowerCase().includes(q)
+        const matchOrders = (c.orders || []).some(
+          (o: any) =>
+            (o.id || "").toLowerCase().includes(q) ||
+            (o.address?.city || "").toLowerCase().includes(q) ||
+            (o.address?.state || "").toLowerCase().includes(q),
         );
-        const matchAddresses = (c.addresses || []).some((a: any) =>
-          (a.city || "").toLowerCase().includes(q) ||
-          (a.state || "").toLowerCase().includes(q) ||
-          (a.line1 || "").toLowerCase().includes(q)
+        const matchAddresses = (c.addresses || []).some(
+          (a: any) =>
+            (a.city || "").toLowerCase().includes(q) ||
+            (a.state || "").toLowerCase().includes(q) ||
+            (a.line1 || "").toLowerCase().includes(q),
         );
-        return matchName || matchEmail || matchPhone || matchCompany || matchContractorId || matchOrders || matchAddresses;
+        return (
+          matchName ||
+          matchEmail ||
+          matchPhone ||
+          matchCompany ||
+          matchContractorId ||
+          matchOrders ||
+          matchAddresses
+        );
       }
       return true;
     });
@@ -131,7 +154,9 @@ function CustomersAdmin() {
     return customersData.find((c: any) => c.id === selectedCustomerId) || null;
   }, [customersData, selectedCustomerId]);
 
-  const isCustomerGuest = activeCustomer ? (activeCustomer.isGuest || activeCustomer.accountType === "guest") : false;
+  const isCustomerGuest = activeCustomer
+    ? activeCustomer.isGuest || activeCustomer.accountType === "guest"
+    : false;
 
   // Export Customer Directory to CSV
   const handleExportCSV = () => {
@@ -178,7 +203,10 @@ function CustomersAdmin() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `total_customers_directory_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute(
+      "download",
+      `total_customers_directory_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -205,7 +233,7 @@ function CustomersAdmin() {
           <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-align: right; color: #0f172a;">${formatUSD(it.price || 0)}</td>
           <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-align: right; font-weight: bold; color: #0f172a;">${formatUSD((it.price || 0) * (it.qty || 1))}</td>
         </tr>
-      `
+      `,
       )
       .join("");
 
@@ -357,7 +385,8 @@ function CustomersAdmin() {
                 Total Customers
               </h1>
               <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                Omnichannel customer directory — tracks registered trade portal accounts and direct guest checkout buyers who ordered equipment without portal authentication.
+                Omnichannel customer directory — tracks registered trade portal accounts and direct
+                guest checkout buyers who ordered equipment without portal authentication.
               </p>
             </div>
           </div>
@@ -397,19 +426,25 @@ function CustomersAdmin() {
         {/* Pillar 1: Total Directory */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Directory</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Total Directory
+            </span>
             <div className="size-8 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
               <Users className="size-4" />
             </div>
           </div>
           <div className="text-2xl font-black text-slate-900 tracking-tight">{totalCustomers}</div>
-          <div className="text-[11px] font-semibold text-slate-500 mt-0.5 truncate">Omnichannel database</div>
+          <div className="text-[11px] font-semibold text-slate-500 mt-0.5 truncate">
+            Omnichannel database
+          </div>
         </div>
 
         {/* Pillar 2: Guest Checkout (Without Login) */}
         <div className="bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/40 border border-indigo-200 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-indigo-900">Guest Checkout</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-indigo-900">
+              Guest Checkout
+            </span>
             <div className="size-8 rounded-xl bg-indigo-100 text-indigo-700 grid place-items-center">
               <ShoppingBag className="size-4" />
             </div>
@@ -424,37 +459,55 @@ function CustomersAdmin() {
         {/* Pillar 3: Registered Portal */}
         <div className="bg-white border border-emerald-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition bg-gradient-to-br from-white to-emerald-50/40">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">Portal Accounts</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">
+              Portal Accounts
+            </span>
             <div className="size-8 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
               <ShieldCheck className="size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-emerald-950 tracking-tight">{portalAccounts}</div>
-          <div className="text-[11px] font-semibold text-emerald-800/80 mt-0.5 truncate">Client portal logins</div>
+          <div className="text-2xl font-black text-emerald-950 tracking-tight">
+            {portalAccounts}
+          </div>
+          <div className="text-[11px] font-semibold text-emerald-800/80 mt-0.5 truncate">
+            Client portal logins
+          </div>
         </div>
 
         {/* Pillar 4: Trade Contractors */}
         <div className="bg-white border border-cyan-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition bg-gradient-to-br from-white to-cyan-50/40">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">Contractors</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">
+              Contractors
+            </span>
             <div className="size-8 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
               <Building className="size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-cyan-950 tracking-tight">{verifiedContractors}</div>
-          <div className="text-[11px] font-semibold text-cyan-800/80 mt-0.5 truncate">Licensed commercial pros</div>
+          <div className="text-2xl font-black text-cyan-950 tracking-tight">
+            {verifiedContractors}
+          </div>
+          <div className="text-[11px] font-semibold text-cyan-800/80 mt-0.5 truncate">
+            Licensed commercial pros
+          </div>
         </div>
 
         {/* Pillar 5: Total Spend */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition col-span-2 sm:col-span-1">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Customer Spend</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Total Customer Spend
+            </span>
             <div className="size-8 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center">
               <DollarSign className="size-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 tracking-tight truncate">{formatUSD(totalLifetimeRevenue)}</div>
-          <div className="text-[11px] font-semibold text-slate-500 mt-0.5 truncate">Cumulative transaction vol.</div>
+          <div className="text-2xl font-black text-slate-900 tracking-tight truncate">
+            {formatUSD(totalLifetimeRevenue)}
+          </div>
+          <div className="text-[11px] font-semibold text-slate-500 mt-0.5 truncate">
+            Cumulative transaction vol.
+          </div>
         </div>
       </div>
 
@@ -472,7 +525,10 @@ function CustomersAdmin() {
             />
           </div>
           {search && (
-            <button onClick={() => setSearch("")} className="text-xs font-bold text-slate-400 hover:text-slate-700 shrink-0">
+            <button
+              onClick={() => setSearch("")}
+              className="text-xs font-bold text-slate-400 hover:text-slate-700 shrink-0"
+            >
               Clear
             </button>
           )}
@@ -482,18 +538,22 @@ function CustomersAdmin() {
         <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold overflow-x-auto scrollbar-none">
           <button
             onClick={() => setFilterType("all")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${filterType === "all" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
-              }`}
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+              filterType === "all"
+                ? "bg-white text-slate-900 shadow-2xs font-black"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
           >
             All ({totalCustomers})
           </button>
 
           <button
             onClick={() => setFilterType("guest")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 flex items-center gap-1.5 ${filterType === "guest"
-              ? "bg-indigo-600 text-white shadow-2xs font-black"
-              : "text-indigo-800 hover:bg-indigo-50/70"
-              }`}
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 flex items-center gap-1.5 ${
+              filterType === "guest"
+                ? "bg-indigo-600 text-white shadow-2xs font-black"
+                : "text-indigo-800 hover:bg-indigo-50/70"
+            }`}
           >
             <ShoppingBag className="size-3" />
             <span>Guest Checkout ({guestBuyers})</span>
@@ -501,10 +561,11 @@ function CustomersAdmin() {
 
           <button
             onClick={() => setFilterType("portal")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 flex items-center gap-1.5 ${filterType === "portal"
-              ? "bg-emerald-600 text-white shadow-2xs font-black"
-              : "text-emerald-800 hover:bg-emerald-50/70"
-              }`}
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 flex items-center gap-1.5 ${
+              filterType === "portal"
+                ? "bg-emerald-600 text-white shadow-2xs font-black"
+                : "text-emerald-800 hover:bg-emerald-50/70"
+            }`}
           >
             <ShieldCheck className="size-3" />
             <span>Portal Accounts ({portalAccounts})</span>
@@ -512,24 +573,33 @@ function CustomersAdmin() {
 
           <button
             onClick={() => setFilterType("contractors")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${filterType === "contractors" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
-              }`}
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+              filterType === "contractors"
+                ? "bg-white text-slate-900 shadow-2xs font-black"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
           >
             Contractors ({verifiedContractors})
           </button>
 
           <button
             onClick={() => setFilterType("buyers")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${filterType === "buyers" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
-              }`}
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+              filterType === "buyers"
+                ? "bg-white text-slate-900 shadow-2xs font-black"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
           >
             Buyers ({activeBuyers})
           </button>
 
           <button
             onClick={() => setFilterType("recent")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${filterType === "recent" ? "bg-white text-slate-900 shadow-2xs font-black" : "text-slate-600 hover:text-slate-900"
-              }`}
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+              filterType === "recent"
+                ? "bg-white text-slate-900 shadow-2xs font-black"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
           >
             New (30d)
           </button>
@@ -549,7 +619,9 @@ function CustomersAdmin() {
               <Users className="size-8" />
             </div>
             <h3 className="text-base font-extrabold text-slate-900 mb-1">No customers found</h3>
-            <p className="text-xs text-slate-400">No accounts match your current filters or search query.</p>
+            <p className="text-xs text-slate-400">
+              No accounts match your current filters or search query.
+            </p>
           </div>
         ) : (
           <>
@@ -569,15 +641,25 @@ function CustomersAdmin() {
                       setSelectedCustomerId(customer.id);
                       setActiveTab("orders");
                     }}
-                    className={`p-4 transition-colors cursor-pointer space-y-2.5 active:bg-slate-100 ${isSelected ? "bg-cyan-50/80" : "hover:bg-slate-50/80"
-                      }`}
+                    className={`p-4 transition-colors cursor-pointer space-y-2.5 active:bg-slate-100 ${
+                      isSelected ? "bg-cyan-50/80" : "hover:bg-slate-50/80"
+                    }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className={`size-10 rounded-full p-0.5 shrink-0 overflow-hidden ${isGuest ? "bg-gradient-to-tr from-indigo-500 to-purple-600" : "bg-gradient-to-tr from-cyan-500 to-blue-600"
-                          }`}>
+                        <div
+                          className={`size-10 rounded-full p-0.5 shrink-0 overflow-hidden ${
+                            isGuest
+                              ? "bg-gradient-to-tr from-indigo-500 to-purple-600"
+                              : "bg-gradient-to-tr from-cyan-500 to-blue-600"
+                          }`}
+                        >
                           {customer.avatar ? (
-                            <img src={customer.avatar} alt={customer.name} className="size-full rounded-full object-cover" />
+                            <img
+                              src={customer.avatar}
+                              alt={customer.name}
+                              className="size-full rounded-full object-cover"
+                            />
                           ) : (
                             <div className="size-full bg-slate-900 rounded-full grid place-items-center text-white text-xs font-black">
                               {customer.name?.slice(0, 2).toUpperCase() || (isGuest ? "G" : "U")}
@@ -586,7 +668,9 @@ function CustomersAdmin() {
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="font-black text-slate-900 text-sm truncate">{customer.name}</span>
+                            <span className="font-black text-slate-900 text-sm truncate">
+                              {customer.name}
+                            </span>
                             {isGuest ? (
                               <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
                                 <ShoppingBag className="size-2.5" />
@@ -622,7 +706,9 @@ function CustomersAdmin() {
 
                     <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
                       <div className="flex items-center gap-3">
-                        <span><strong>{ordersCount}</strong> Order{ordersCount !== 1 ? "s" : ""}</span>
+                        <span>
+                          <strong>{ordersCount}</strong> Order{ordersCount !== 1 ? "s" : ""}
+                        </span>
                         {primaryAddr?.city && (
                           <span className="flex items-center gap-1 text-slate-400">
                             <MapPin className="size-3" />
@@ -673,21 +759,23 @@ function CustomersAdmin() {
                             setSelectedCustomerId(customer.id);
                             setActiveTab("orders");
                           }}
-                          className={`transition-colors cursor-pointer group ${isSelected
-                            ? isGuest
-                              ? "bg-indigo-50/80 border-l-4 border-l-indigo-600"
-                              : "bg-cyan-50/80 border-l-4 border-l-cyan-600"
-                            : "hover:bg-slate-50/80"
-                            }`}
+                          className={`transition-colors cursor-pointer group ${
+                            isSelected
+                              ? isGuest
+                                ? "bg-indigo-50/80 border-l-4 border-l-indigo-600"
+                                : "bg-cyan-50/80 border-l-4 border-l-cyan-600"
+                              : "hover:bg-slate-50/80"
+                          }`}
                         >
                           {/* Customer & Account Type */}
                           <td className="p-4 sm:px-6">
                             <div className="flex items-center gap-3">
                               <div
-                                className={`size-10 rounded-full p-0.5 shrink-0 shadow-xs overflow-hidden ${isGuest
-                                  ? "bg-gradient-to-tr from-indigo-500 via-purple-600 to-indigo-700"
-                                  : "bg-gradient-to-tr from-cyan-500 to-blue-600"
-                                  }`}
+                                className={`size-10 rounded-full p-0.5 shrink-0 shadow-xs overflow-hidden ${
+                                  isGuest
+                                    ? "bg-gradient-to-tr from-indigo-500 via-purple-600 to-indigo-700"
+                                    : "bg-gradient-to-tr from-cyan-500 to-blue-600"
+                                }`}
                               >
                                 {customer.avatar ? (
                                   <img
@@ -697,7 +785,8 @@ function CustomersAdmin() {
                                   />
                                 ) : (
                                   <div className="size-full bg-slate-900 rounded-full grid place-items-center text-white text-xs font-black">
-                                    {customer.name?.slice(0, 2).toUpperCase() || (isGuest ? "G" : "U")}
+                                    {customer.name?.slice(0, 2).toUpperCase() ||
+                                      (isGuest ? "G" : "U")}
                                   </div>
                                 )}
                               </div>
@@ -725,7 +814,12 @@ function CustomersAdmin() {
                                   {isGuest ? (
                                     <span className="text-slate-500 flex items-center gap-1">
                                       <Clock className="size-3 text-indigo-500" />
-                                      First Order: {customer.createdAt || customer.firstOrderAt ? new Date(customer.createdAt || customer.firstOrderAt).toLocaleDateString() : "Recent"}
+                                      First Order:{" "}
+                                      {customer.createdAt || customer.firstOrderAt
+                                        ? new Date(
+                                            customer.createdAt || customer.firstOrderAt,
+                                          ).toLocaleDateString()
+                                        : "Recent"}
                                     </span>
                                   ) : (
                                     <span className="flex items-center gap-1">
@@ -734,7 +828,9 @@ function CustomersAdmin() {
                                     </span>
                                   )}
                                   {customer.contractorId && (
-                                    <span className="font-mono text-slate-500 font-extrabold">· Lic #{customer.contractorId}</span>
+                                    <span className="font-mono text-slate-500 font-extrabold">
+                                      · Lic #{customer.contractorId}
+                                    </span>
                                   )}
                                 </div>
                               </div>
@@ -768,7 +864,8 @@ function CustomersAdmin() {
                                 <div className="text-[10px] text-slate-400 flex items-center gap-1">
                                   <MapPin className="size-2.5 text-slate-400 shrink-0" />
                                   <span className="truncate max-w-[180px]">
-                                    {primaryAddr.city}, {primaryAddr.state || ""} {primaryAddr.zip || ""}
+                                    {primaryAddr.city}, {primaryAddr.state || ""}{" "}
+                                    {primaryAddr.zip || ""}
                                   </span>
                                 </div>
                               )}
@@ -812,7 +909,9 @@ function CustomersAdmin() {
                             <div className="font-black text-sm text-slate-900">
                               {formatUSD(customer.lifetimeValue || customer.totalSpent || 0)}
                             </div>
-                            <div className="text-[10px] font-extrabold text-emerald-600">Verified Spend</div>
+                            <div className="text-[10px] font-extrabold text-emerald-600">
+                              Verified Spend
+                            </div>
                           </td>
 
                           {/* View Button */}
@@ -852,10 +951,11 @@ function CustomersAdmin() {
             >
               {/* Drawer Top Header */}
               <div
-                className={`p-4 sm:p-6 border-b border-slate-100 text-white shrink-0 relative ${isCustomerGuest
-                  ? "bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900"
-                  : "bg-slate-900"
-                  }`}
+                className={`p-4 sm:p-6 border-b border-slate-100 text-white shrink-0 relative ${
+                  isCustomerGuest
+                    ? "bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900"
+                    : "bg-slate-900"
+                }`}
               >
                 <button
                   onClick={() => setSelectedCustomerId(null)}
@@ -866,10 +966,11 @@ function CustomersAdmin() {
 
                 <div className="flex items-start gap-3 sm:gap-4 pr-8 sm:pr-10">
                   <div
-                    className={`size-12 sm:size-14 rounded-full p-0.5 shrink-0 shadow-lg overflow-hidden ${isCustomerGuest
-                      ? "bg-gradient-to-tr from-indigo-400 via-purple-500 to-indigo-700"
-                      : "bg-gradient-to-tr from-cyan-500 to-blue-600"
-                      }`}
+                    className={`size-12 sm:size-14 rounded-full p-0.5 shrink-0 shadow-lg overflow-hidden ${
+                      isCustomerGuest
+                        ? "bg-gradient-to-tr from-indigo-400 via-purple-500 to-indigo-700"
+                        : "bg-gradient-to-tr from-cyan-500 to-blue-600"
+                    }`}
                   >
                     {activeCustomer.avatar ? (
                       <img
@@ -879,7 +980,8 @@ function CustomersAdmin() {
                       />
                     ) : (
                       <div className="size-full bg-slate-800 rounded-full grid place-items-center text-white text-base font-black">
-                        {activeCustomer.name?.slice(0, 2).toUpperCase() || (isCustomerGuest ? "G" : "U")}
+                        {activeCustomer.name?.slice(0, 2).toUpperCase() ||
+                          (isCustomerGuest ? "G" : "U")}
                       </div>
                     )}
                   </div>
@@ -906,20 +1008,28 @@ function CustomersAdmin() {
                         <Building className="size-3.5 shrink-0" />
                         <span className="truncate">{activeCustomer.company}</span>
                         {activeCustomer.contractorId && (
-                          <span className="text-white/60">· Lic #{activeCustomer.contractorId}</span>
+                          <span className="text-white/60">
+                            · Lic #{activeCustomer.contractorId}
+                          </span>
                         )}
                       </div>
                     )}
 
                     <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 flex items-center gap-2 sm:gap-3 flex-wrap">
                       {activeCustomer.email && (
-                        <a href={`mailto:${activeCustomer.email}`} className="hover:text-cyan-300 flex items-center gap-1 truncate max-w-[220px]">
+                        <a
+                          href={`mailto:${activeCustomer.email}`}
+                          className="hover:text-cyan-300 flex items-center gap-1 truncate max-w-[220px]"
+                        >
                           <Mail className="size-3 shrink-0" />
                           <span className="truncate">{activeCustomer.email}</span>
                         </a>
                       )}
                       {activeCustomer.phone && (
-                        <a href={`tel:${activeCustomer.phone}`} className="hover:text-cyan-300 flex items-center gap-1">
+                        <a
+                          href={`tel:${activeCustomer.phone}`}
+                          className="hover:text-cyan-300 flex items-center gap-1"
+                        >
                           <Phone className="size-3 shrink-0" />
                           <span>{activeCustomer.phone}</span>
                         </a>
@@ -931,19 +1041,25 @@ function CustomersAdmin() {
                 {/* KPI Bar */}
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10 text-center">
                   <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">Lifetime Spend</div>
+                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">
+                      Lifetime Spend
+                    </div>
                     <div className="text-xs sm:text-base font-black text-cyan-300 mt-0.5 truncate">
                       {formatUSD(activeCustomer.lifetimeValue || activeCustomer.totalSpent || 0)}
                     </div>
                   </div>
                   <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">Total Orders</div>
+                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">
+                      Total Orders
+                    </div>
                     <div className="text-xs sm:text-base font-black text-white mt-0.5">
                       {activeCustomer.orders?.length || activeCustomer.totalOrders || 0}
                     </div>
                   </div>
                   <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">RMA Claims</div>
+                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">
+                      RMA Claims
+                    </div>
                     <div className="text-xs sm:text-base font-black text-amber-400 mt-0.5">
                       {activeCustomer.returns?.length || 0}
                     </div>
@@ -955,10 +1071,11 @@ function CustomersAdmin() {
               <div className="flex items-center gap-1 px-4 sm:px-6 pt-3 border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto text-xs font-bold scrollbar-none">
                 <button
                   onClick={() => setActiveTab("orders")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${activeTab === "orders"
-                    ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
-                    : "border-transparent text-slate-600 hover:text-slate-900"
-                    }`}
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                    activeTab === "orders"
+                      ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
+                      : "border-transparent text-slate-600 hover:text-slate-900"
+                  }`}
                 >
                   <ShoppingBag className="size-3.5" />
                   <span>Orders ({activeCustomer.orders?.length || 0})</span>
@@ -966,10 +1083,11 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("addresses")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${activeTab === "addresses"
-                    ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
-                    : "border-transparent text-slate-600 hover:text-slate-900"
-                    }`}
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                    activeTab === "addresses"
+                      ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
+                      : "border-transparent text-slate-600 hover:text-slate-900"
+                  }`}
                 >
                   <MapPin className="size-3.5" />
                   <span>Destinations ({activeCustomer.addresses?.length || 0})</span>
@@ -977,10 +1095,11 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("returns")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${activeTab === "returns"
-                    ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
-                    : "border-transparent text-slate-600 hover:text-slate-900"
-                    }`}
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                    activeTab === "returns"
+                      ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
+                      : "border-transparent text-slate-600 hover:text-slate-900"
+                  }`}
                 >
                   <RotateCcw className="size-3.5" />
                   <span>Returns ({activeCustomer.returns?.length || 0})</span>
@@ -988,10 +1107,11 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("quotes")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${activeTab === "quotes"
-                    ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
-                    : "border-transparent text-slate-600 hover:text-slate-900"
-                    }`}
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                    activeTab === "quotes"
+                      ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
+                      : "border-transparent text-slate-600 hover:text-slate-900"
+                  }`}
                 >
                   <FileText className="size-3.5" />
                   <span>Quotes ({activeCustomer.quotes?.length || 0})</span>
@@ -999,10 +1119,11 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("info")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${activeTab === "info"
-                    ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
-                    : "border-transparent text-slate-600 hover:text-slate-900"
-                    }`}
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                    activeTab === "info"
+                      ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
+                      : "border-transparent text-slate-600 hover:text-slate-900"
+                  }`}
                 >
                   <User className="size-3.5" />
                   <span>Account Info</span>
@@ -1025,7 +1146,10 @@ function CustomersAdmin() {
                         </span>
                       </div>
                       <p className="text-indigo-900/80 leading-relaxed font-medium">
-                        This customer completed purchase transactions directly on the storefront without authenticating into a client portal account. All order records, destination addresses, and spend totals are live-synced from their order transaction logs.
+                        This customer completed purchase transactions directly on the storefront
+                        without authenticating into a client portal account. All order records,
+                        destination addresses, and spend totals are live-synced from their order
+                        transaction logs.
                       </p>
                     </div>
                   </div>
@@ -1036,11 +1160,16 @@ function CustomersAdmin() {
                   <div className="space-y-4">
                     {activeCustomer.orders && activeCustomer.orders.length > 0 ? (
                       activeCustomer.orders.map((order: any) => (
-                        <div key={order.id} className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4 shadow-2xs">
+                        <div
+                          key={order.id}
+                          className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4 shadow-2xs"
+                        >
                           <div className="flex items-center justify-between gap-3 flex-wrap">
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-mono font-black text-sm text-cyan-800">#{order.id}</span>
+                                <span className="font-mono font-black text-sm text-cyan-800">
+                                  #{order.id}
+                                </span>
                                 <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
                                   {order.paymentStatus || "Paid"}
                                 </span>
@@ -1049,13 +1178,17 @@ function CustomersAdmin() {
                                 </span>
                               </div>
                               <div className="text-[11px] text-slate-400 mt-1">
-                                Placed {new Date(order.placedAt).toLocaleDateString()} · Method: {order.method || "Standard Freight"} · Payment: {order.paymentType || "Card"}
+                                Placed {new Date(order.placedAt).toLocaleDateString()} · Method:{" "}
+                                {order.method || "Standard Freight"} · Payment:{" "}
+                                {order.paymentType || "Card"}
                               </div>
                               {order.address && (
                                 <div className="text-[11px] text-slate-600 mt-1 flex items-center gap-1">
                                   <MapPin className="size-3 text-slate-400 shrink-0" />
                                   <span>
-                                    Deliver to: {order.address.street || order.address.line1 || ""}, {order.address.city || ""}, {order.address.state || ""} {order.address.zip || ""}
+                                    Deliver to: {order.address.street || order.address.line1 || ""},{" "}
+                                    {order.address.city || ""}, {order.address.state || ""}{" "}
+                                    {order.address.zip || ""}
                                   </span>
                                 </div>
                               )}
@@ -1063,8 +1196,12 @@ function CustomersAdmin() {
 
                             <div className="flex items-center gap-3">
                               <div className="text-right">
-                                <div className="font-black text-base text-slate-900">{formatUSD(order.total || 0)}</div>
-                                <div className="text-[10px] text-slate-400">{(order.items || []).length} Item(s)</div>
+                                <div className="font-black text-base text-slate-900">
+                                  {formatUSD(order.total || 0)}
+                                </div>
+                                <div className="text-[10px] text-slate-400">
+                                  {(order.items || []).length} Item(s)
+                                </div>
                               </div>
 
                               <button
@@ -1080,7 +1217,10 @@ function CustomersAdmin() {
                           {/* Itemized list */}
                           <div className="border border-slate-200/80 rounded-xl bg-white overflow-hidden divide-y divide-slate-100 text-xs">
                             {(order.items || []).map((it: any, idx: number) => (
-                              <div key={idx} className="p-3 flex items-center justify-between gap-3">
+                              <div
+                                key={idx}
+                                className="p-3 flex items-center justify-between gap-3"
+                              >
                                 <div className="flex items-center gap-2.5 min-w-0">
                                   <div className="size-9 rounded-lg bg-slate-50 border border-slate-100 p-1 shrink-0 grid place-items-center">
                                     <img
@@ -1090,13 +1230,19 @@ function CustomersAdmin() {
                                     />
                                   </div>
                                   <div className="min-w-0">
-                                    <div className="font-extrabold text-slate-900 truncate">{it.name}</div>
-                                    <div className="text-[10px] text-slate-400">{it.brand || "Commercial Equipment"}</div>
+                                    <div className="font-extrabold text-slate-900 truncate">
+                                      {it.name}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400">
+                                      {it.brand || "Commercial Equipment"}
+                                    </div>
                                   </div>
                                 </div>
                                 <div className="text-right font-black text-slate-900 shrink-0">
                                   <div>Qty: {it.qty || 1}</div>
-                                  <div className="text-[10px] text-slate-500 font-semibold">{formatUSD(it.price || 0)} ea</div>
+                                  <div className="text-[10px] text-slate-500 font-semibold">
+                                    {formatUSD(it.price || 0)} ea
+                                  </div>
                                 </div>
                               </div>
                             ))}
@@ -1121,16 +1267,24 @@ function CustomersAdmin() {
                     {isCustomerGuest && (
                       <div className="p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-200/60 text-indigo-900 text-xs font-medium flex items-center gap-2">
                         <MapPin className="size-4 text-indigo-600 shrink-0" />
-                        <span>Delivery freight destinations automatically captured from storefront order transactions.</span>
+                        <span>
+                          Delivery freight destinations automatically captured from storefront order
+                          transactions.
+                        </span>
                       </div>
                     )}
 
                     {activeCustomer.addresses && activeCustomer.addresses.length > 0 ? (
                       <div className="grid sm:grid-cols-2 gap-4">
                         {activeCustomer.addresses.map((addr: any, idx: number) => (
-                          <div key={addr.id || idx} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2 text-xs">
+                          <div
+                            key={addr.id || idx}
+                            className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2 text-xs"
+                          >
                             <div className="flex items-center justify-between">
-                              <span className="font-extrabold text-sm text-slate-900">{addr.title || `Destination #${idx + 1}`}</span>
+                              <span className="font-extrabold text-sm text-slate-900">
+                                {addr.title || `Destination #${idx + 1}`}
+                              </span>
                               {addr.isDefault && (
                                 <span className="text-[10px] font-black text-cyan-800 bg-cyan-100 px-2 py-0.5 rounded-full">
                                   Primary
@@ -1138,8 +1292,12 @@ function CustomersAdmin() {
                               )}
                             </div>
                             <div className="text-slate-700 font-semibold">{addr.recipientName}</div>
-                            <div className="text-slate-600">{addr.line1 || addr.street} {addr.line2 || ""}</div>
-                            <div className="text-slate-600">{addr.city}, {addr.state} {addr.zip}</div>
+                            <div className="text-slate-600">
+                              {addr.line1 || addr.street} {addr.line2 || ""}
+                            </div>
+                            <div className="text-slate-600">
+                              {addr.city}, {addr.state} {addr.zip}
+                            </div>
                             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                               {addr.country || "USA"} · {addr.type || "Freight Shipping"}
                             </div>
@@ -1149,8 +1307,12 @@ function CustomersAdmin() {
                     ) : (
                       <div className="py-16 text-center text-slate-400 space-y-2">
                         <MapPin className="size-10 mx-auto text-slate-300 stroke-1" />
-                        <p className="text-xs font-bold text-slate-700">No destination addresses found</p>
-                        <p className="text-[11px] text-slate-400">Destination addresses will appear here once captured from checkout.</p>
+                        <p className="text-xs font-bold text-slate-700">
+                          No destination addresses found
+                        </p>
+                        <p className="text-[11px] text-slate-400">
+                          Destination addresses will appear here once captured from checkout.
+                        </p>
                       </div>
                     )}
                   </div>
@@ -1163,11 +1325,18 @@ function CustomersAdmin() {
                       activeCustomer.returns.map((ret: any) => {
                         const isResolved = ret.isResolved || ret.status === "Resolved";
                         return (
-                          <div key={ret.id || ret.rmaId} className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3">
+                          <div
+                            key={ret.id || ret.rmaId}
+                            className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3"
+                          >
                             <div className="flex items-center justify-between gap-3 flex-wrap">
                               <div className="flex items-center gap-2">
-                                <span className="font-mono font-black text-sm text-cyan-800">{ret.rmaId}</span>
-                                <span className="text-xs font-bold text-slate-500">· Order #{ret.orderId}</span>
+                                <span className="font-mono font-black text-sm text-cyan-800">
+                                  {ret.rmaId}
+                                </span>
+                                <span className="text-xs font-bold text-slate-500">
+                                  · Order #{ret.orderId}
+                                </span>
                               </div>
                               {isResolved ? (
                                 <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
@@ -1187,7 +1356,9 @@ function CustomersAdmin() {
                               </div>
                               <div>
                                 <span className="font-bold text-slate-700">Action:</span>{" "}
-                                <span className="text-slate-900">{ret.preferredResolution || "Replacement Unit"}</span>
+                                <span className="text-slate-900">
+                                  {ret.preferredResolution || "Replacement Unit"}
+                                </span>
                               </div>
                             </div>
 
@@ -1220,7 +1391,9 @@ function CustomersAdmin() {
                       <div className="py-16 text-center text-slate-400 space-y-2">
                         <RotateCcw className="size-10 mx-auto text-slate-300 stroke-1" />
                         <p className="text-xs font-bold text-slate-700">No return requests filed</p>
-                        <p className="text-[11px] text-slate-400">This account has zero return claims.</p>
+                        <p className="text-[11px] text-slate-400">
+                          This account has zero return claims.
+                        </p>
                       </div>
                     )}
                   </div>
@@ -1231,17 +1404,30 @@ function CustomersAdmin() {
                   <div className="space-y-4">
                     {activeCustomer.quotes && activeCustomer.quotes.length > 0 ? (
                       activeCustomer.quotes.map((q: any) => {
-                        const isResolved = q.isResolved || q.status === "Resolved" || q.status === "Accepted" || q.status === "Converted to Order";
+                        const isResolved =
+                          q.isResolved ||
+                          q.status === "Resolved" ||
+                          q.status === "Accepted" ||
+                          q.status === "Converted to Order";
                         return (
-                          <div key={q.id || q.quoteId} className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3">
+                          <div
+                            key={q.id || q.quoteId}
+                            className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3"
+                          >
                             <div className="flex items-center justify-between gap-3 flex-wrap">
                               <div className="flex items-center gap-2">
-                                <span className="font-mono font-black text-sm text-blue-800">#{q.quoteId}</span>
-                                <span className="font-black text-sm text-slate-900">{q.projectName}</span>
+                                <span className="font-mono font-black text-sm text-blue-800">
+                                  #{q.quoteId}
+                                </span>
+                                <span className="font-black text-sm text-slate-900">
+                                  {q.projectName}
+                                </span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <span className="font-black text-sm text-slate-900">
-                                  {formatUSD(q.quotedAmount || q.totalAmount || q.estimatedBudget || 0)}
+                                  {formatUSD(
+                                    q.quotedAmount || q.totalAmount || q.estimatedBudget || 0,
+                                  )}
                                 </span>
                                 {isResolved ? (
                                   <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
@@ -1256,9 +1442,19 @@ function CustomersAdmin() {
                             </div>
 
                             <div className="text-xs text-slate-500 flex items-center gap-3 flex-wrap">
-                              <span>Target: <strong>{q.targetCompletionDate || "30 Days"}</strong></span>
-                              {q.projectLocation && <span>· Location: <strong>{q.projectLocation}</strong></span>}
-                              {q.adminLeadTime && <span>· Lead Time: <strong>{q.adminLeadTime}</strong></span>}
+                              <span>
+                                Target: <strong>{q.targetCompletionDate || "30 Days"}</strong>
+                              </span>
+                              {q.projectLocation && (
+                                <span>
+                                  · Location: <strong>{q.projectLocation}</strong>
+                                </span>
+                              )}
+                              {q.adminLeadTime && (
+                                <span>
+                                  · Lead Time: <strong>{q.adminLeadTime}</strong>
+                                </span>
+                              )}
                             </div>
 
                             {q.notes && (
@@ -1289,8 +1485,12 @@ function CustomersAdmin() {
                     ) : (
                       <div className="py-16 text-center text-slate-400 space-y-2">
                         <FileText className="size-10 mx-auto text-slate-300 stroke-1" />
-                        <p className="text-xs font-bold text-slate-700">No project quotes requested</p>
-                        <p className="text-[11px] text-slate-400">Commercial project bids will appear here.</p>
+                        <p className="text-xs font-bold text-slate-700">
+                          No project quotes requested
+                        </p>
+                        <p className="text-[11px] text-slate-400">
+                          Commercial project bids will appear here.
+                        </p>
                       </div>
                     )}
                   </div>
@@ -1314,14 +1514,22 @@ function CustomersAdmin() {
                             </div>
                           </div>
                           <div>
-                            <span className="text-slate-500 font-semibold">Customer Reference ID:</span>
-                            <div className="font-mono font-bold text-slate-800 mt-0.5 truncate">{activeCustomer.id}</div>
+                            <span className="text-slate-500 font-semibold">
+                              Customer Reference ID:
+                            </span>
+                            <div className="font-mono font-bold text-slate-800 mt-0.5 truncate">
+                              {activeCustomer.id}
+                            </div>
                           </div>
                           <div>
-                            <span className="text-slate-500 font-semibold">First Storefront Order:</span>
+                            <span className="text-slate-500 font-semibold">
+                              First Storefront Order:
+                            </span>
                             <div className="font-bold text-slate-900 mt-0.5">
                               {activeCustomer.firstOrderAt || activeCustomer.createdAt
-                                ? new Date(activeCustomer.firstOrderAt || activeCustomer.createdAt).toLocaleString()
+                                ? new Date(
+                                    activeCustomer.firstOrderAt || activeCustomer.createdAt,
+                                  ).toLocaleString()
                                 : "N/A"}
                             </div>
                           </div>
@@ -1334,18 +1542,27 @@ function CustomersAdmin() {
                             </div>
                           </div>
                           <div>
-                            <span className="text-slate-500 font-semibold">Average Order Value (AOV):</span>
+                            <span className="text-slate-500 font-semibold">
+                              Average Order Value (AOV):
+                            </span>
                             <div className="font-black text-emerald-700 mt-0.5">
                               {formatUSD(
                                 (activeCustomer.lifetimeValue || activeCustomer.totalSpent || 0) /
-                                (activeCustomer.totalOrders || activeCustomer.orders?.length || 1)
+                                  (activeCustomer.totalOrders ||
+                                    activeCustomer.orders?.length ||
+                                    1),
                               )}
                             </div>
                           </div>
                           <div>
-                            <span className="text-slate-500 font-semibold">Total Items Purchased:</span>
+                            <span className="text-slate-500 font-semibold">
+                              Total Items Purchased:
+                            </span>
                             <div className="font-black text-slate-900 mt-0.5">
-                              {activeCustomer.totalProductsPurchased || activeCustomer.totalItems || 0} unit(s)
+                              {activeCustomer.totalProductsPurchased ||
+                                activeCustomer.totalItems ||
+                                0}{" "}
+                              unit(s)
                             </div>
                           </div>
                         </div>
@@ -1374,44 +1591,64 @@ function CustomersAdmin() {
                     ) : (
                       <>
                         <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3">
-                          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Account Credentials & Verification</div>
+                          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                            Account Credentials & Verification
+                          </div>
                           <div className="grid grid-cols-2 gap-3">
                             <div>
                               <span className="text-slate-500">Account ID:</span>
-                              <div className="font-mono font-bold text-slate-900">{activeCustomer.id}</div>
+                              <div className="font-mono font-bold text-slate-900">
+                                {activeCustomer.id}
+                              </div>
                             </div>
                             <div>
                               <span className="text-slate-500">Registered On:</span>
-                              <div className="font-bold text-slate-900">{new Date(activeCustomer.createdAt).toLocaleString()}</div>
+                              <div className="font-bold text-slate-900">
+                                {new Date(activeCustomer.createdAt).toLocaleString()}
+                              </div>
                             </div>
                             <div>
                               <span className="text-slate-500">Contractor License:</span>
-                              <div className="font-mono font-bold text-slate-900">{activeCustomer.contractorId || "Not on file"}</div>
+                              <div className="font-mono font-bold text-slate-900">
+                                {activeCustomer.contractorId || "Not on file"}
+                              </div>
                             </div>
                             <div>
                               <span className="text-slate-500">Company Name:</span>
-                              <div className="font-bold text-slate-900">{activeCustomer.company || "Independent Contractor"}</div>
+                              <div className="font-bold text-slate-900">
+                                {activeCustomer.company || "Independent Contractor"}
+                              </div>
                             </div>
                           </div>
                         </div>
 
                         <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3">
-                          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Email Notification Preferences</div>
+                          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                            Email Notification Preferences
+                          </div>
                           <div className="grid grid-cols-2 gap-2 text-slate-700 font-semibold">
                             <div className="flex items-center gap-2">
-                              <CheckCircle2 className={`size-3.5 ${activeCustomer.emailPrefs?.orderUpdates ? "text-emerald-600" : "text-slate-300"}`} />
+                              <CheckCircle2
+                                className={`size-3.5 ${activeCustomer.emailPrefs?.orderUpdates ? "text-emerald-600" : "text-slate-300"}`}
+                              />
                               <span>Order Status Updates</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <CheckCircle2 className={`size-3.5 ${activeCustomer.emailPrefs?.freightTracking ? "text-emerald-600" : "text-slate-300"}`} />
+                              <CheckCircle2
+                                className={`size-3.5 ${activeCustomer.emailPrefs?.freightTracking ? "text-emerald-600" : "text-slate-300"}`}
+                              />
                               <span>Freight Tracking Feed</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <CheckCircle2 className={`size-3.5 ${activeCustomer.emailPrefs?.invoiceReceipts ? "text-emerald-600" : "text-slate-300"}`} />
+                              <CheckCircle2
+                                className={`size-3.5 ${activeCustomer.emailPrefs?.invoiceReceipts ? "text-emerald-600" : "text-slate-300"}`}
+                              />
                               <span>Direct PDF Invoices</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <CheckCircle2 className={`size-3.5 ${activeCustomer.emailPrefs?.promoAlerts ? "text-emerald-600" : "text-slate-300"}`} />
+                              <CheckCircle2
+                                className={`size-3.5 ${activeCustomer.emailPrefs?.promoAlerts ? "text-emerald-600" : "text-slate-300"}`}
+                              />
                               <span>Wholesale Rebate Alerts</span>
                             </div>
                           </div>
@@ -1425,7 +1662,8 @@ function CustomersAdmin() {
               {/* Drawer Footer */}
               <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
                 <div className="text-[11px] text-slate-400">
-                  Customer Reference: <span className="font-mono font-bold text-slate-700">{activeCustomer.id}</span>
+                  Customer Reference:{" "}
+                  <span className="font-mono font-bold text-slate-700">{activeCustomer.id}</span>
                 </div>
 
                 <button

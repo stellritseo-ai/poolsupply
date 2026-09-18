@@ -19,7 +19,7 @@ export function useOrders(options?: { refetchInterval?: number }) {
     orders: query.data || [],
     isLoading: query.isLoading,
     error: query.error,
-    refetch: query.refetch
+    refetch: query.refetch,
   };
 }
 

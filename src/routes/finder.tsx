@@ -3,7 +3,12 @@ import { useState, useMemo } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { useProductsQuery, getProductImage, products as defaultProducts, Product } from "@/lib/products";
+import {
+  useProductsQuery,
+  getProductImage,
+  products as defaultProducts,
+  Product,
+} from "@/lib/products";
 import {
   Calculator,
   Sparkles,
@@ -41,25 +46,30 @@ export const Route = createFileRoute("/finder")({
     const breadcrumbLd = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "Equipment Sizing Wizard", "item": pageUrl }
-      ]
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        { "@type": "ListItem", position: 2, name: "Equipment Sizing Wizard", item: pageUrl },
+      ],
     };
 
     const toolLd = {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "Pool Equipment Sizing Wizard & Bundle Builder",
-      "url": pageUrl,
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "All",
-      "browserRequirements": "Requires JavaScript",
-      "offers": {
+      name: "Pool Equipment Sizing Wizard & Bundle Builder",
+      url: pageUrl,
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "All",
+      browserRequirements: "Requires JavaScript",
+      offers: {
         "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      }
+        price: "0",
+        priceCurrency: "USD",
+      },
     };
 
     return {
@@ -70,7 +80,11 @@ export const Route = createFileRoute("/finder")({
           content:
             "Calculate hydraulic flow rates (GPM), pump horsepower, heater BTUs, and filter surface area for your pool. Get instant OEM bundle recommendations with wholesale pricing.",
         },
-        { name: "keywords", content: "pool equipment sizing calculator, pool pump sizing calculator, pool heater BTU calculator, commercial pool package builder, pentair bundle builder" },
+        {
+          name: "keywords",
+          content:
+            "pool equipment sizing calculator, pool pump sizing calculator, pool heater BTU calculator, commercial pool package builder, pentair bundle builder",
+        },
         { property: "og:title", content: "Pool Equipment Sizing Wizard & Bundle Builder" },
         {
           property: "og:description",
@@ -84,20 +98,26 @@ export const Route = createFileRoute("/finder")({
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Pool Equipment Sizing Wizard — Pool Supply Wholesalers" },
+        {
+          property: "og:image:alt",
+          content: "Pool Equipment Sizing Wizard — Pool Supply Wholesalers",
+        },
         { property: "og:locale", content: "en_US" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
         { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: "Pool Equipment Sizing Wizard" },
-        { name: "twitter:description", content: "Calculate flow rates, pump HP, heater BTUs and filter sizing instantly." },
+        {
+          name: "twitter:description",
+          content: "Calculate flow rates, pump HP, heater BTUs and filter sizing instantly.",
+        },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
       links: [{ rel: "canonical", href: pageUrl }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
-        { type: "application/ld+json", children: JSON.stringify(toolLd) }
-      ]
+        { type: "application/ld+json", children: JSON.stringify(toolLd) },
+      ],
     };
   },
   component: FinderPage,
@@ -115,7 +135,9 @@ function FinderPage() {
   const [width, setWidth] = useState(16);
   const [shallowDepth, setShallowDepth] = useState(3.5);
   const [deepDepth, setDeepDepth] = useState(8);
-  const [poolShape, setPoolShape] = useState<"rectangle" | "oval" | "freeform" | "circle">("rectangle");
+  const [poolShape, setPoolShape] = useState<"rectangle" | "oval" | "freeform" | "circle">(
+    "rectangle",
+  );
 
   // Calculate Gallons from Dimensions
   const calculatedGallons = useMemo(() => {
@@ -136,7 +158,12 @@ function FinderPage() {
   // Dynamic Hydraulic Calculations
   const turnoverHours = poolType === "commercial" ? 6 : poolType === "spa" ? 2 : 8;
   const gpm = Math.max(15, Math.round(gallons / (turnoverHours * 60)));
-  const hpSpec = gpm < 45 ? "1.5 HP Variable-Speed" : gpm < 75 ? "2.0 HP Variable-Speed" : "3.0 HP Commercial VS";
+  const hpSpec =
+    gpm < 45
+      ? "1.5 HP Variable-Speed"
+      : gpm < 75
+        ? "2.0 HP Variable-Speed"
+        : "3.0 HP Commercial VS";
   const btuSpec =
     climate === "cold"
       ? "400,000 BTU High-Output Gas"
@@ -156,18 +183,24 @@ function FinderPage() {
     const pumps = productsList.filter((p) => {
       const cat = (p.category || "").toLowerCase();
       const name = (p.name || "").toLowerCase();
-      return (cat.includes("pump") || name.includes("pump")) && p.img && !p.img.includes("commingsoon");
+      return (
+        (cat.includes("pump") || name.includes("pump")) && p.img && !p.img.includes("commingsoon")
+      );
     });
     if (pumps.length === 0) return null;
     if (gallons < 15000) {
-      return pumps.find((p) => p.name.toLowerCase().includes("1.5") || p.name.toLowerCase().includes("super")) || pumps[0];
+      return (
+        pumps.find(
+          (p) => p.name.toLowerCase().includes("1.5") || p.name.toLowerCase().includes("super"),
+        ) || pumps[0]
+      );
     } else if (gallons < 32000) {
       return (
         pumps.find(
           (p) =>
             p.name.toLowerCase().includes("intelliflo") ||
             p.name.toLowerCase().includes("vsf") ||
-            p.name.toLowerCase().includes("tristar")
+            p.name.toLowerCase().includes("tristar"),
         ) ||
         pumps[1] ||
         pumps[0]
@@ -178,7 +211,7 @@ function FinderPage() {
           (p) =>
             p.name.toLowerCase().includes("3.0") ||
             p.name.toLowerCase().includes("intelliflo3") ||
-            p.name.toLowerCase().includes("commercial")
+            p.name.toLowerCase().includes("commercial"),
         ) ||
         pumps[2] ||
         pumps[0]
@@ -203,7 +236,7 @@ function FinderPage() {
           (p) =>
             p.name.toLowerCase().includes("400") ||
             p.name.toLowerCase().includes("mastertemp") ||
-            p.name.toLowerCase().includes("gas")
+            p.name.toLowerCase().includes("gas"),
         ) || heaters[0]
       );
     } else if (climate === "moderate") {
@@ -213,7 +246,7 @@ function FinderPage() {
             p.name.toLowerCase().includes("250") ||
             p.name.toLowerCase().includes("300") ||
             p.name.toLowerCase().includes("raypak") ||
-            p.name.toLowerCase().includes("universal")
+            p.name.toLowerCase().includes("universal"),
         ) ||
         heaters[1] ||
         heaters[0]
@@ -224,7 +257,7 @@ function FinderPage() {
           (p) =>
             p.name.toLowerCase().includes("heat pump") ||
             p.name.toLowerCase().includes("electric") ||
-            p.name.toLowerCase().includes("140")
+            p.name.toLowerCase().includes("140"),
         ) ||
         heaters[2] ||
         heaters[0]
@@ -236,13 +269,19 @@ function FinderPage() {
     const filters = productsList.filter((p) => {
       const cat = (p.category || "").toLowerCase();
       const name = (p.name || "").toLowerCase();
-      return (cat.includes("filter") || name.includes("filter")) && p.img && !p.img.includes("commingsoon");
+      return (
+        (cat.includes("filter") || name.includes("filter")) &&
+        p.img &&
+        !p.img.includes("commingsoon")
+      );
     });
     if (filters.length === 0) return null;
     if (gallons < 18000) {
       return (
-        filters.find((p) => p.name.toLowerCase().includes("200") || p.name.toLowerCase().includes("clean & clear")) ||
-        filters[0]
+        filters.find(
+          (p) =>
+            p.name.toLowerCase().includes("200") || p.name.toLowerCase().includes("clean & clear"),
+        ) || filters[0]
       );
     } else if (gallons < 32000) {
       return (
@@ -250,7 +289,7 @@ function FinderPage() {
           (p) =>
             p.name.toLowerCase().includes("420") ||
             p.name.toLowerCase().includes("swimclear") ||
-            p.name.toLowerCase().includes("quad")
+            p.name.toLowerCase().includes("quad"),
         ) ||
         filters[1] ||
         filters[0]
@@ -261,7 +300,7 @@ function FinderPage() {
           (p) =>
             p.name.toLowerCase().includes("520") ||
             p.name.toLowerCase().includes("commercial") ||
-            p.name.toLowerCase().includes("grid")
+            p.name.toLowerCase().includes("grid"),
         ) ||
         filters[2] ||
         filters[0]
@@ -341,7 +380,8 @@ function FinderPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-medium"
               >
-                Calculate flow dynamics (GPM), pump horsepower, heater BTUs, and filter square footage calibrated to ANSI/APSP/ICC-15 commercial turnover standards.
+                Calculate flow dynamics (GPM), pump horsepower, heater BTUs, and filter square
+                footage calibrated to ANSI/APSP/ICC-15 commercial turnover standards.
               </motion.p>
             </div>
           </div>
@@ -355,20 +395,22 @@ function FinderPage() {
               <div className="p-1 rounded-2xl bg-slate-100 border border-slate-200/90 shadow-2xs flex items-center gap-1">
                 <button
                   onClick={() => setActiveTab("instant")}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${activeTab === "instant"
-                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
-                    : "text-slate-600 hover:text-slate-900"
-                    }`}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+                    activeTab === "instant"
+                      ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
                 >
                   <Sliders className="size-4 text-cyan-600" />
                   <span>Live Sizing Console</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("dimension")}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${activeTab === "dimension"
-                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
-                    : "text-slate-600 hover:text-slate-900"
-                    }`}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+                    activeTab === "dimension"
+                      ? "bg-white text-slate-900 shadow-xs border border-slate-200/80"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
                 >
                   <Ruler className="size-4 text-cyan-600" />
                   <span>Dimension Volume Calculator</span>
@@ -428,10 +470,11 @@ function FinderPage() {
                         <button
                           key={preset}
                           onClick={() => setGallons(preset)}
-                          className={`py-1.5 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${gallons === preset
-                            ? "bg-cyan-600 text-white shadow-2xs"
-                            : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/80"
-                            }`}
+                          className={`py-1.5 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                            gallons === preset
+                              ? "bg-cyan-600 text-white shadow-2xs"
+                              : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/80"
+                          }`}
                         >
                           {preset / 1000}k Gal
                         </button>
@@ -446,8 +489,18 @@ function FinderPage() {
                     </label>
                     <div className="grid grid-cols-3 gap-2">
                       {[
-                        { id: "residential", label: "Residential", icon: Home, turnover: "8-hr cycle" },
-                        { id: "commercial", label: "Commercial", icon: Building2, turnover: "6-hr cycle" },
+                        {
+                          id: "residential",
+                          label: "Residential",
+                          icon: Home,
+                          turnover: "8-hr cycle",
+                        },
+                        {
+                          id: "commercial",
+                          label: "Commercial",
+                          icon: Building2,
+                          turnover: "6-hr cycle",
+                        },
                         { id: "spa", label: "Spa / Hydro", icon: Waves, turnover: "2-hr cycle" },
                       ].map((item) => {
                         const Icon = item.icon;
@@ -456,15 +509,22 @@ function FinderPage() {
                           <button
                             key={item.id}
                             onClick={() => setPoolType(item.id as any)}
-                            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${active
-                              ? "bg-cyan-50/70 border-cyan-500 text-cyan-950 shadow-2xs"
-                              : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
-                              }`}
+                            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                              active
+                                ? "bg-cyan-50/70 border-cyan-500 text-cyan-950 shadow-2xs"
+                                : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
+                            }`}
                           >
-                            <Icon className={`size-4 mb-2 ${active ? "text-cyan-600" : "text-slate-400"}`} />
+                            <Icon
+                              className={`size-4 mb-2 ${active ? "text-cyan-600" : "text-slate-400"}`}
+                            />
                             <div>
-                              <div className="text-xs font-extrabold leading-tight">{item.label}</div>
-                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">{item.turnover}</div>
+                              <div className="text-xs font-extrabold leading-tight">
+                                {item.label}
+                              </div>
+                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">
+                                {item.turnover}
+                              </div>
                             </div>
                           </button>
                         );
@@ -489,15 +549,22 @@ function FinderPage() {
                           <button
                             key={item.id}
                             onClick={() => setClimate(item.id as any)}
-                            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${active
-                              ? "bg-cyan-50/70 border-cyan-500 text-cyan-950 shadow-2xs"
-                              : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
-                              }`}
+                            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                              active
+                                ? "bg-cyan-50/70 border-cyan-500 text-cyan-950 shadow-2xs"
+                                : "bg-white border-slate-200/80 text-slate-600 hover:bg-slate-50"
+                            }`}
                           >
-                            <Icon className={`size-4 mb-2 ${active ? "text-cyan-600" : "text-slate-400"}`} />
+                            <Icon
+                              className={`size-4 mb-2 ${active ? "text-cyan-600" : "text-slate-400"}`}
+                            />
                             <div>
-                              <div className="text-xs font-extrabold leading-tight">{item.label}</div>
-                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">{item.btu}</div>
+                              <div className="text-xs font-extrabold leading-tight">
+                                {item.label}
+                              </div>
+                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">
+                                {item.btu}
+                              </div>
                             </div>
                           </button>
                         );
@@ -518,26 +585,42 @@ function FinderPage() {
 
                     <div className="grid grid-cols-2 gap-3 text-xs">
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">Required Flow Rate</div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                          Required Flow Rate
+                        </div>
                         <div className="font-black text-cyan-300 text-sm">{gpm} GPM</div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">Turnover Cycle</div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                          Turnover Cycle
+                        </div>
                         <div className="font-black text-white text-sm">{turnoverHours} Hours</div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">Hydraulic Pump Spec</div>
-                        <div className="font-extrabold text-white text-[11px] truncate">{hpSpec}</div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                          Hydraulic Pump Spec
+                        </div>
+                        <div className="font-extrabold text-white text-[11px] truncate">
+                          {hpSpec}
+                        </div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">Thermal Output</div>
-                        <div className="font-extrabold text-white text-[11px] truncate">{btuSpec.split(" ")[0]} BTU</div>
+                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                          Thermal Output
+                        </div>
+                        <div className="font-extrabold text-white text-[11px] truncate">
+                          {btuSpec.split(" ")[0]} BTU
+                        </div>
                       </div>
                     </div>
 
                     <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between">
-                      <span className="text-[11px] text-slate-300 font-bold">Estimated Annual Energy Savings:</span>
-                      <span className="text-xs font-black text-emerald-400">~${annualSavings}/yr</span>
+                      <span className="text-[11px] text-slate-300 font-bold">
+                        Estimated Annual Energy Savings:
+                      </span>
+                      <span className="text-xs font-black text-emerald-400">
+                        ~${annualSavings}/yr
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -550,7 +633,8 @@ function FinderPage() {
                         Matched 3-Piece OEM Equipment Package
                       </h2>
                       <p className="text-xs text-slate-500">
-                        Factory authorized Pentair, Hayward, Jandy, and Raypak components matching your hydraulic specs.
+                        Factory authorized Pentair, Hayward, Jandy, and Raypak components matching
+                        your hydraulic specs.
                       </p>
                     </div>
 
@@ -588,7 +672,9 @@ function FinderPage() {
                           </div>
                         </div>
                         <div className="text-center sm:text-right shrink-0">
-                          <div className="text-base font-black text-slate-900">{formatUSD(matchedPump.price)}</div>
+                          <div className="text-base font-black text-slate-900">
+                            {formatUSD(matchedPump.price)}
+                          </div>
                           <button
                             onClick={() => {
                               add(matchedPump, 1);
@@ -629,7 +715,9 @@ function FinderPage() {
                           </div>
                         </div>
                         <div className="text-center sm:text-right shrink-0">
-                          <div className="text-base font-black text-slate-900">{formatUSD(matchedHeater.price)}</div>
+                          <div className="text-base font-black text-slate-900">
+                            {formatUSD(matchedHeater.price)}
+                          </div>
                           <button
                             onClick={() => {
                               add(matchedHeater, 1);
@@ -670,7 +758,9 @@ function FinderPage() {
                           </div>
                         </div>
                         <div className="text-center sm:text-right shrink-0">
-                          <div className="text-base font-black text-slate-900">{formatUSD(matchedFilter.price)}</div>
+                          <div className="text-base font-black text-slate-900">
+                            {formatUSD(matchedFilter.price)}
+                          </div>
                           <button
                             onClick={() => {
                               add(matchedFilter, 1);
@@ -692,7 +782,9 @@ function FinderPage() {
                         Complete OEM 3-Piece Package
                       </span>
                       <div className="flex items-baseline gap-2 mt-0.5">
-                        <span className="text-2xl font-black text-white">{formatUSD(bundleTotal)}</span>
+                        <span className="text-2xl font-black text-white">
+                          {formatUSD(bundleTotal)}
+                        </span>
                         {bundleSavings > 0 && (
                           <span className="text-xs text-slate-400 line-through font-medium">
                             {formatUSD(bundleMsrpTotal)}
@@ -712,7 +804,9 @@ function FinderPage() {
                       className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 text-white font-black text-xs sm:text-sm shadow-[0_8px_25px_rgba(6,182,212,0.35)] transition-all cursor-pointer"
                     >
                       <ShoppingBag className="size-4" />
-                      <span>{bundleAdded ? "Bundle Added to Cart!" : "Add Complete Package to Cart"}</span>
+                      <span>
+                        {bundleAdded ? "Bundle Added to Cart!" : "Add Complete Package to Cart"}
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -725,7 +819,8 @@ function FinderPage() {
                     Pool Dimension & Volume Calculator
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                    Input your pool's physical dimensions to determine accurate water volume in US Gallons.
+                    Input your pool's physical dimensions to determine accurate water volume in US
+                    Gallons.
                   </p>
                 </div>
 
@@ -744,10 +839,11 @@ function FinderPage() {
                       <button
                         key={shape.id}
                         onClick={() => setPoolShape(shape.id as any)}
-                        className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${poolShape === shape.id
-                          ? "bg-cyan-50/80 border-cyan-500 text-cyan-950 shadow-2xs font-bold"
-                          : "bg-slate-50/70 border-slate-200/80 text-slate-600 hover:bg-slate-100"
-                          }`}
+                        className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                          poolShape === shape.id
+                            ? "bg-cyan-50/80 border-cyan-500 text-cyan-950 shadow-2xs font-bold"
+                            : "bg-slate-50/70 border-slate-200/80 text-slate-600 hover:bg-slate-100"
+                        }`}
                       >
                         <div className="text-xs font-extrabold">{shape.label}</div>
                         <div className="text-[10px] text-slate-400 mt-0.5">{shape.desc}</div>
@@ -861,7 +957,8 @@ function FinderPage() {
                 </div>
                 <h3 className="font-extrabold text-sm text-slate-900">Flow Rate Formula</h3>
                 <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  <strong>GPM = Gallons ÷ (Turnover Hours × 60)</strong>. Sized to maintain minimum velocity without exceeding maximum pipe friction head loss.
+                  <strong>GPM = Gallons ÷ (Turnover Hours × 60)</strong>. Sized to maintain minimum
+                  velocity without exceeding maximum pipe friction head loss.
                 </p>
               </div>
 
@@ -871,7 +968,8 @@ function FinderPage() {
                 </div>
                 <h3 className="font-extrabold text-sm text-slate-900">Thermal Output Calcs</h3>
                 <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  <strong>BTU/hr = Gallons × 8.33 × Desired Temp Rise ÷ Hours</strong>. Ensures rapid recovery during cold nighttime ambient temperature drops.
+                  <strong>BTU/hr = Gallons × 8.33 × Desired Temp Rise ÷ Hours</strong>. Ensures
+                  rapid recovery during cold nighttime ambient temperature drops.
                 </p>
               </div>
 
@@ -881,7 +979,8 @@ function FinderPage() {
                 </div>
                 <h3 className="font-extrabold text-sm text-slate-900">Filtration Surface Area</h3>
                 <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  Calculated at 0.375 GPM/sq. ft. commercial design rate to minimize operating PSI, extend cartridge lifespan, and reduce backwashing.
+                  Calculated at 0.375 GPM/sq. ft. commercial design rate to minimize operating PSI,
+                  extend cartridge lifespan, and reduce backwashing.
                 </p>
               </div>
             </div>

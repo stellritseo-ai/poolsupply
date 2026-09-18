@@ -4,7 +4,16 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useProducts, Product } from "@/lib/products";
 import { useCart, formatUSD } from "@/components/site/cart-context";
-import { Star, ShoppingBag, Eye, Filter, ArrowUpDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import {
+  Star,
+  ShoppingBag,
+  Eye,
+  Filter,
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+} from "lucide-react";
 import { ProductCard } from "@/components/site/ProductCard";
 
 export const Route = createFileRoute("/brands/$brand")({
@@ -17,26 +26,39 @@ export const Route = createFileRoute("/brands/$brand")({
     const breadcrumbLd = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "Brands", "item": "https://poolsupplywholesalers.com/#brands" },
-        { "@type": "ListItem", "position": 3, "name": brandName, "item": brandUrl }
-      ]
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Brands",
+          item: "https://poolsupplywholesalers.com/#brands",
+        },
+        { "@type": "ListItem", position: 3, name: brandName, item: brandUrl },
+      ],
     };
 
     const brandLd = {
       "@context": "https://schema.org",
       "@type": "Brand",
-      "name": brandName,
-      "url": brandUrl,
-      "description": `Authorized commercial distributor of genuine ${brandName} pool equipment and replacement parts.`
+      name: brandName,
+      url: brandUrl,
+      description: `Authorized commercial distributor of genuine ${brandName} pool equipment and replacement parts.`,
     };
 
     return {
       meta: [
         { title },
         { name: "description", content: description },
-        { name: "keywords", content: `${brandName} pool equipment, buy ${brandName} wholesale, ${brandName} pool pumps, ${brandName} pool heaters, authorized ${brandName} distributor, commercial pool supplies` },
+        {
+          name: "keywords",
+          content: `${brandName} pool equipment, buy ${brandName} wholesale, ${brandName} pool pumps, ${brandName} pool heaters, authorized ${brandName} distributor, commercial pool supplies`,
+        },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: brandUrl },
@@ -45,7 +67,10 @@ export const Route = createFileRoute("/brands/$brand")({
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: `${brandName} Pool Equipment — Pool Supply Wholesalers` },
+        {
+          property: "og:image:alt",
+          content: `${brandName} Pool Equipment — Pool Supply Wholesalers`,
+        },
         { property: "og:locale", content: "en_US" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
@@ -57,8 +82,8 @@ export const Route = createFileRoute("/brands/$brand")({
       links: [{ rel: "canonical", href: brandUrl }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
-        { type: "application/ld+json", children: JSON.stringify(brandLd) }
-      ]
+        { type: "application/ld+json", children: JSON.stringify(brandLd) },
+      ],
     };
   },
   component: BrandPage,
@@ -66,10 +91,14 @@ export const Route = createFileRoute("/brands/$brand")({
 
 function getBrandName(slug: string): string {
   switch (slug.toLowerCase()) {
-    case "pentair": return "Pentair";
-    case "hayward": return "Hayward";
-    case "jandy": return "Jandy";
-    default: return slug.charAt(0).toUpperCase() + slug.slice(1);
+    case "pentair":
+      return "Pentair";
+    case "hayward":
+      return "Hayward";
+    case "jandy":
+      return "Jandy";
+    default:
+      return slug.charAt(0).toUpperCase() + slug.slice(1);
   }
 }
 
@@ -114,29 +143,29 @@ function BrandPage() {
   // Get products matching this brand
   const filteredProducts = useMemo(() => {
     // Filter matching brand
-    let items = dbProducts.filter(p => p.brand.toLowerCase() === brandName.toLowerCase());
+    let items = dbProducts.filter((p) => p.brand.toLowerCase() === brandName.toLowerCase());
 
     // Search query filter
     if (searchQuery.trim() !== "") {
       const terms = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
-      items = items.filter(p => {
+      items = items.filter((p) => {
         const name = (p.name || "").toLowerCase();
         const sku = (p.sku || "").toLowerCase();
         const category = (p.category || "").toLowerCase();
         const description = (p.description || "").toLowerCase();
         const fullText = `${name} ${sku} ${category} ${description}`;
-        return terms.every(term => fullText.includes(term));
+        return terms.every((term) => fullText.includes(term));
       });
     }
 
     // Category filter
     if (selectedCategories.length > 0) {
-      items = items.filter(p => selectedCategories.includes(p.category.toLowerCase()));
+      items = items.filter((p) => selectedCategories.includes(p.category.toLowerCase()));
     }
 
     // Availability filter
     if (inStockOnly) {
-      items = items.filter(p => p.stock > 0);
+      items = items.filter((p) => p.stock > 0);
     }
 
     // Sorting
@@ -163,15 +192,15 @@ function BrandPage() {
   // Extract all categories in this brand for filtering options
   const brandCategories = useMemo(() => {
     const all = dbProducts
-      .filter(p => p.brand.toLowerCase() === brandName.toLowerCase())
-      .map(p => p.category);
+      .filter((p) => p.brand.toLowerCase() === brandName.toLowerCase())
+      .map((p) => p.category);
     return Array.from(new Set(all));
   }, [dbProducts, brandName]);
 
   const toggleCategory = (cat: string) => {
     const lower = cat.toLowerCase();
-    setSelectedCategories(prev =>
-      prev.includes(lower) ? prev.filter(c => c !== lower) : [...prev, lower]
+    setSelectedCategories((prev) =>
+      prev.includes(lower) ? prev.filter((c) => c !== lower) : [...prev, lower],
     );
   };
 
@@ -184,8 +213,12 @@ function BrandPage() {
         <section className="bg-gradient-to-b from-surface to-background border-b border-border/50 py-8 md:py-10 mb-6 md:mb-8">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">Authorized Brand Dealer</span>
-              <h1 className="mt-1.5 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">{brandName} Equipment</h1>
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
+                Authorized Brand Dealer
+              </span>
+              <h1 className="mt-1.5 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
+                {brandName} Equipment
+              </h1>
               <p className="mt-2 text-xs sm:text-sm text-muted-foreground max-w-xl leading-relaxed font-medium">
                 {overview}
               </p>
@@ -231,7 +264,9 @@ function BrandPage() {
 
               {/* Search Filter */}
               <div className="space-y-3">
-                <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">Search {brandName}</h3>
+                <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                  Search {brandName}
+                </h3>
                 <div className="relative">
                   <Search className="absolute left-3 top-3 size-4 text-slate-400" />
                   <input
@@ -250,10 +285,15 @@ function BrandPage() {
               {/* Category Filter */}
               {brandCategories.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">Filter by Category</h3>
+                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                    Filter by Category
+                  </h3>
                   <div className="space-y-2">
-                    {brandCategories.map(cat => (
-                      <label key={cat} className="flex items-center gap-2.5 text-sm font-medium text-foreground/80 cursor-pointer select-none">
+                    {brandCategories.map((cat) => (
+                      <label
+                        key={cat}
+                        className="flex items-center gap-2.5 text-sm font-medium text-foreground/80 cursor-pointer select-none"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedCategories.includes(cat.toLowerCase())}
@@ -269,7 +309,9 @@ function BrandPage() {
 
               {/* Stock Filter */}
               <div className="space-y-3">
-                <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">Availability</h3>
+                <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                  Availability
+                </h3>
                 <label className="flex items-center gap-2.5 text-sm font-medium text-foreground/80 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -287,7 +329,16 @@ function BrandPage() {
               {/* Toolbar */}
               <div className="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-border/50">
                 <div className="text-xs font-semibold text-muted-foreground">
-                  Showing <span className="font-bold text-foreground">{filteredProducts.length > 0 ? (page - 1) * PAGE_SIZE + 1 : 0}</span> to <span className="font-bold text-foreground">{Math.min(page * PAGE_SIZE, filteredProducts.length)}</span> of <span className="font-bold text-foreground">{filteredProducts.length}</span> products
+                  Showing{" "}
+                  <span className="font-bold text-foreground">
+                    {filteredProducts.length > 0 ? (page - 1) * PAGE_SIZE + 1 : 0}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-bold text-foreground">
+                    {Math.min(page * PAGE_SIZE, filteredProducts.length)}
+                  </span>{" "}
+                  of <span className="font-bold text-foreground">{filteredProducts.length}</span>{" "}
+                  products
                 </div>
 
                 {/* Right Controls: Quick Search + Sort selector */}
@@ -331,8 +382,12 @@ function BrandPage() {
                 </div>
               ) : (
                 <div className="text-center py-20 bg-surface rounded-3xl border border-dashed border-border p-6">
-                  <p className="text-sm font-semibold text-muted-foreground">No products found matching filters</p>
-                  <p className="text-xs text-muted-foreground/75 mt-1">Try clearing selected filters or check another brand.</p>
+                  <p className="text-sm font-semibold text-muted-foreground">
+                    No products found matching filters
+                  </p>
+                  <p className="text-xs text-muted-foreground/75 mt-1">
+                    Try clearing selected filters or check another brand.
+                  </p>
                 </div>
               )}
 
@@ -340,7 +395,8 @@ function BrandPage() {
               {totalPages > 1 && (
                 <div className="pt-8 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200/80">
                   <div className="text-xs font-bold text-slate-500">
-                    Page <span className="text-slate-900 font-extrabold">{page}</span> of <span className="text-slate-900 font-extrabold">{totalPages}</span>
+                    Page <span className="text-slate-900 font-extrabold">{page}</span> of{" "}
+                    <span className="text-slate-900 font-extrabold">{totalPages}</span>
                   </div>
 
                   <div className="flex items-center gap-1.5">
@@ -356,13 +412,17 @@ function BrandPage() {
 
                     {/* Page Numbers */}
                     {Array.from({ length: totalPages }, (_, i) => i + 1)
-                      .filter(pNum => pNum === 1 || pNum === totalPages || Math.abs(pNum - page) <= 2)
+                      .filter(
+                        (pNum) => pNum === 1 || pNum === totalPages || Math.abs(pNum - page) <= 2,
+                      )
                       .map((pNum, idx, arr) => {
                         const prev = arr[idx - 1];
                         return (
                           <div key={pNum} className="flex items-center gap-1.5">
                             {prev && pNum - prev > 1 && (
-                              <span className="px-1 text-slate-400 text-xs font-bold select-none">...</span>
+                              <span className="px-1 text-slate-400 text-xs font-bold select-none">
+                                ...
+                              </span>
                             )}
                             <button
                               onClick={() => handlePageChange(pNum)}

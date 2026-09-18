@@ -33,19 +33,24 @@ export function Finder() {
   // Dynamic Hydraulic Calculations
   const turnoverHours = poolType === "commercial" ? 6 : poolType === "spa" ? 2 : 8;
   const gpm = Math.round(gallons / (turnoverHours * 60));
-  const hpSpec = gpm < 45 ? "1.5 HP Variable-Speed" : gpm < 75 ? "2.0 HP Variable-Speed" : "3.0 HP Commercial VS";
+  const hpSpec =
+    gpm < 45
+      ? "1.5 HP Variable-Speed"
+      : gpm < 75
+        ? "2.0 HP Variable-Speed"
+        : "3.0 HP Commercial VS";
   const btuSpec =
     climate === "cold"
       ? "400k BTU Gas"
       : climate === "moderate"
-      ? "250k - 300k Hybrid"
-      : "140k - 200k Heat Pump";
+        ? "250k - 300k Hybrid"
+        : "140k - 200k Heat Pump";
   const filterSpec =
     gallons < 18000
       ? "150 - 200 Sq. Ft."
       : gallons < 32000
-      ? "320 - 420 Sq. Ft."
-      : "520 Sq. Ft. Commercial";
+        ? "320 - 420 Sq. Ft."
+        : "520 Sq. Ft. Commercial";
   const annualSavings = Math.round((gallons / 1000) * 32 + 350);
 
   // Match real real-time products from the database
@@ -53,18 +58,24 @@ export function Finder() {
     const pumps = productsList.filter((p) => {
       const cat = (p.category || "").toLowerCase();
       const name = (p.name || "").toLowerCase();
-      return (cat.includes("pump") || name.includes("pump")) && p.img && !p.img.includes("commingsoon");
+      return (
+        (cat.includes("pump") || name.includes("pump")) && p.img && !p.img.includes("commingsoon")
+      );
     });
     if (pumps.length === 0) return null;
     if (gallons < 15000) {
-      return pumps.find((p) => p.name.toLowerCase().includes("1.5") || p.name.toLowerCase().includes("super")) || pumps[0];
+      return (
+        pumps.find(
+          (p) => p.name.toLowerCase().includes("1.5") || p.name.toLowerCase().includes("super"),
+        ) || pumps[0]
+      );
     } else if (gallons < 32000) {
       return (
         pumps.find(
           (p) =>
             p.name.toLowerCase().includes("intelliflo") ||
             p.name.toLowerCase().includes("vsf") ||
-            p.name.toLowerCase().includes("tristar")
+            p.name.toLowerCase().includes("tristar"),
         ) ||
         pumps[1] ||
         pumps[0]
@@ -75,7 +86,7 @@ export function Finder() {
           (p) =>
             p.name.toLowerCase().includes("3.0") ||
             p.name.toLowerCase().includes("intelliflo3") ||
-            p.name.toLowerCase().includes("commercial")
+            p.name.toLowerCase().includes("commercial"),
         ) ||
         pumps[2] ||
         pumps[0]
@@ -100,7 +111,7 @@ export function Finder() {
           (p) =>
             p.name.toLowerCase().includes("400") ||
             p.name.toLowerCase().includes("mastertemp") ||
-            p.name.toLowerCase().includes("gas")
+            p.name.toLowerCase().includes("gas"),
         ) || heaters[0]
       );
     } else if (climate === "moderate") {
@@ -110,7 +121,7 @@ export function Finder() {
             p.name.toLowerCase().includes("250") ||
             p.name.toLowerCase().includes("300") ||
             p.name.toLowerCase().includes("raypak") ||
-            p.name.toLowerCase().includes("universal")
+            p.name.toLowerCase().includes("universal"),
         ) ||
         heaters[1] ||
         heaters[0]
@@ -121,7 +132,7 @@ export function Finder() {
           (p) =>
             p.name.toLowerCase().includes("heat pump") ||
             p.name.toLowerCase().includes("150") ||
-            p.name.toLowerCase().includes("200")
+            p.name.toLowerCase().includes("200"),
         ) ||
         heaters[2] ||
         heaters[0]
@@ -133,11 +144,20 @@ export function Finder() {
     const filters = productsList.filter((p) => {
       const cat = (p.category || "").toLowerCase();
       const name = (p.name || "").toLowerCase();
-      return (cat.includes("filter") || name.includes("filter")) && p.img && !p.img.includes("commingsoon");
+      return (
+        (cat.includes("filter") || name.includes("filter")) &&
+        p.img &&
+        !p.img.includes("commingsoon")
+      );
     });
     if (filters.length === 0) return null;
     if (gallons < 18000) {
-      return filters.find((p) => p.name.toLowerCase().includes("150") || p.name.toLowerCase().includes("clean & clear")) || filters[0];
+      return (
+        filters.find(
+          (p) =>
+            p.name.toLowerCase().includes("150") || p.name.toLowerCase().includes("clean & clear"),
+        ) || filters[0]
+      );
     } else if (gallons < 32000) {
       return (
         filters.find(
@@ -145,7 +165,7 @@ export function Finder() {
             p.name.toLowerCase().includes("320") ||
             p.name.toLowerCase().includes("420") ||
             p.name.toLowerCase().includes("plus") ||
-            p.name.toLowerCase().includes("swimclear")
+            p.name.toLowerCase().includes("swimclear"),
         ) ||
         filters[1] ||
         filters[0]
@@ -156,7 +176,7 @@ export function Finder() {
           (p) =>
             p.name.toLowerCase().includes("520") ||
             p.name.toLowerCase().includes("quad") ||
-            p.name.toLowerCase().includes("commercial")
+            p.name.toLowerCase().includes("commercial"),
         ) ||
         filters[2] ||
         filters[0]
@@ -164,7 +184,8 @@ export function Finder() {
     }
   }, [productsList, gallons]);
 
-  const bundleTotal = (matchedPump?.price || 0) + (matchedHeater?.price || 0) + (matchedFilter?.price || 0);
+  const bundleTotal =
+    (matchedPump?.price || 0) + (matchedHeater?.price || 0) + (matchedFilter?.price || 0);
 
   const handleAddBundle = () => {
     if (matchedPump) add(matchedPump, 1);
@@ -175,7 +196,10 @@ export function Finder() {
   };
 
   return (
-    <section id="finder" className="py-10 sm:py-14 md:py-18 lg:py-22 bg-gradient-to-b from-white via-surface to-white relative overflow-hidden font-sans border-y border-slate-200/60">
+    <section
+      id="finder"
+      className="py-10 sm:py-14 md:py-18 lg:py-22 bg-gradient-to-b from-white via-surface to-white relative overflow-hidden font-sans border-y border-slate-200/60"
+    >
       <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -205,7 +229,8 @@ export function Finder() {
                 </h2>
 
                 <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed max-w-2xl">
-                  Customize your pool specifications. Our engine calculates flow dynamics, heating BTUs, and matches authentic commercial equipment.
+                  Customize your pool specifications. Our engine calculates flow dynamics, heating
+                  BTUs, and matches authentic commercial equipment.
                 </p>
               </div>
 
@@ -214,7 +239,10 @@ export function Finder() {
                 {/* 1. Pool Volume Slider */}
                 <div className="p-3.5 sm:p-5 rounded-2xl bg-slate-50/80 border border-slate-200/80 space-y-3 shadow-2xs">
                   <div className="flex items-center justify-between gap-2">
-                    <label htmlFor="finder-volume-slider" className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <label
+                      htmlFor="finder-volume-slider"
+                      className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5"
+                    >
                       <Waves className="size-4 text-cyan-600 shrink-0" />
                       <span>Pool Water Volume</span>
                     </label>
@@ -254,7 +282,9 @@ export function Finder() {
                         }`}
                       >
                         <span className="leading-none">{p.label}</span>
-                        <span className={`text-[9.5px] mt-0.5 font-medium leading-none ${gallons === p.val ? "text-cyan-300" : "text-slate-400"}`}>
+                        <span
+                          className={`text-[9.5px] mt-0.5 font-medium leading-none ${gallons === p.val ? "text-cyan-300" : "text-slate-400"}`}
+                        >
                           {p.sub}
                         </span>
                       </button>
@@ -270,7 +300,12 @@ export function Finder() {
                   <div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-2">
                     {[
                       { id: "residential", label: "Residential", desc: "8h Turnover", icon: Home },
-                      { id: "commercial", label: "Commercial", desc: "6h Rapid Flow", icon: Building2 },
+                      {
+                        id: "commercial",
+                        label: "Commercial",
+                        desc: "6h Rapid Flow",
+                        icon: Building2,
+                      },
                       { id: "spa", label: "Spa / Plunge", desc: "2h Ultra Fast", icon: Sparkles },
                     ].map((t) => {
                       const isActive = poolType === t.id;
@@ -286,10 +321,14 @@ export function Finder() {
                           }`}
                         >
                           <div className="flex items-center gap-1.5 text-xs font-extrabold">
-                            <t.icon className={`size-3.5 shrink-0 ${isActive ? "text-cyan-400" : "text-slate-400"}`} />
+                            <t.icon
+                              className={`size-3.5 shrink-0 ${isActive ? "text-cyan-400" : "text-slate-400"}`}
+                            />
                             <span className="truncate">{t.label}</span>
                           </div>
-                          <div className={`text-[10px] sm:mt-1 font-medium ${isActive ? "text-cyan-300" : "text-slate-400"}`}>
+                          <div
+                            className={`text-[10px] sm:mt-1 font-medium ${isActive ? "text-cyan-300" : "text-slate-400"}`}
+                          >
                             {t.desc}
                           </div>
                         </button>
@@ -306,8 +345,18 @@ export function Finder() {
                   <div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-2">
                     {[
                       { id: "warm", label: "Warm (80°F+)", desc: "Southern Sunbelt", icon: Sun },
-                      { id: "moderate", label: "Moderate (60-80°)", desc: "Coastal / Midwest", icon: CloudSun },
-                      { id: "cold", label: "Cold (<60°F)", desc: "North / Cold Zone", icon: Snowflake },
+                      {
+                        id: "moderate",
+                        label: "Moderate (60-80°)",
+                        desc: "Coastal / Midwest",
+                        icon: CloudSun,
+                      },
+                      {
+                        id: "cold",
+                        label: "Cold (<60°F)",
+                        desc: "North / Cold Zone",
+                        icon: Snowflake,
+                      },
                     ].map((c) => {
                       const isActive = climate === c.id;
                       return (
@@ -322,10 +371,14 @@ export function Finder() {
                           }`}
                         >
                           <div className="flex items-center gap-1.5 text-xs font-extrabold">
-                            <c.icon className={`size-3.5 shrink-0 ${isActive ? "text-white" : "text-cyan-600"}`} />
+                            <c.icon
+                              className={`size-3.5 shrink-0 ${isActive ? "text-white" : "text-cyan-600"}`}
+                            />
                             <span className="truncate">{c.label}</span>
                           </div>
-                          <div className={`text-[10px] sm:mt-1 font-medium ${isActive ? "text-cyan-100" : "text-slate-400"}`}>
+                          <div
+                            className={`text-[10px] sm:mt-1 font-medium ${isActive ? "text-cyan-100" : "text-slate-400"}`}
+                          >
                             {c.desc}
                           </div>
                         </button>
@@ -341,21 +394,27 @@ export function Finder() {
                       <Gauge className="size-3 text-cyan-600 shrink-0" />
                       <span className="truncate">Min. Flow</span>
                     </span>
-                    <span className="text-xs sm:text-sm font-black text-cyan-900 mt-0.5">{gpm} GPM</span>
+                    <span className="text-xs sm:text-sm font-black text-cyan-900 mt-0.5">
+                      {gpm} GPM
+                    </span>
                   </div>
                   <div className="flex flex-col items-center border-x border-cyan-200/50 px-1">
                     <span className="text-[8.5px] sm:text-[9.5px] uppercase font-bold text-slate-500 flex items-center gap-1">
                       <Clock className="size-3 text-cyan-600 shrink-0" />
                       <span className="truncate">Turnover</span>
                     </span>
-                    <span className="text-xs sm:text-sm font-black text-cyan-900 mt-0.5">{turnoverHours} Hours</span>
+                    <span className="text-xs sm:text-sm font-black text-cyan-900 mt-0.5">
+                      {turnoverHours} Hours
+                    </span>
                   </div>
                   <div className="flex flex-col items-center">
                     <span className="text-[8.5px] sm:text-[9.5px] uppercase font-bold text-slate-500 flex items-center gap-1">
                       <DollarSign className="size-3 text-emerald-600 shrink-0" />
                       <span className="truncate">Est. Savings</span>
                     </span>
-                    <span className="text-xs sm:text-sm font-black text-emerald-700 mt-0.5">${annualSavings}/yr</span>
+                    <span className="text-xs sm:text-sm font-black text-emerald-700 mt-0.5">
+                      ${annualSavings}/yr
+                    </span>
                   </div>
                 </div>
               </div>
@@ -398,14 +457,22 @@ export function Finder() {
                             <span className="text-[9px] uppercase font-extrabold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/50">
                               Pump • {hpSpec}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">{matchedPump.brand}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                              {matchedPump.brand}
+                            </span>
                           </div>
-                          <Link to="/products/$productId" params={{ productId: matchedPump.id }} className="block">
+                          <Link
+                            to="/products/$productId"
+                            params={{ productId: matchedPump.id }}
+                            className="block"
+                          >
                             <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors">
                               {matchedPump.name}
                             </h4>
                           </Link>
-                          <span className="text-xs sm:text-sm font-black text-slate-900">{formatUSD(matchedPump.price)}</span>
+                          <span className="text-xs sm:text-sm font-black text-slate-900">
+                            {formatUSD(matchedPump.price)}
+                          </span>
                         </div>
                       </div>
                       <button
@@ -440,14 +507,22 @@ export function Finder() {
                             <span className="text-[9px] uppercase font-extrabold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/50">
                               Heating • {btuSpec}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">{matchedHeater.brand}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                              {matchedHeater.brand}
+                            </span>
                           </div>
-                          <Link to="/products/$productId" params={{ productId: matchedHeater.id }} className="block">
+                          <Link
+                            to="/products/$productId"
+                            params={{ productId: matchedHeater.id }}
+                            className="block"
+                          >
                             <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors">
                               {matchedHeater.name}
                             </h4>
                           </Link>
-                          <span className="text-xs sm:text-sm font-black text-slate-900">{formatUSD(matchedHeater.price)}</span>
+                          <span className="text-xs sm:text-sm font-black text-slate-900">
+                            {formatUSD(matchedHeater.price)}
+                          </span>
                         </div>
                       </div>
                       <button
@@ -482,14 +557,22 @@ export function Finder() {
                             <span className="text-[9px] uppercase font-extrabold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/50">
                               Filter • {filterSpec}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">{matchedFilter.brand}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                              {matchedFilter.brand}
+                            </span>
                           </div>
-                          <Link to="/products/$productId" params={{ productId: matchedFilter.id }} className="block">
+                          <Link
+                            to="/products/$productId"
+                            params={{ productId: matchedFilter.id }}
+                            className="block"
+                          >
                             <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors">
                               {matchedFilter.name}
                             </h4>
                           </Link>
-                          <span className="text-xs sm:text-sm font-black text-slate-900">{formatUSD(matchedFilter.price)}</span>
+                          <span className="text-xs sm:text-sm font-black text-slate-900">
+                            {formatUSD(matchedFilter.price)}
+                          </span>
                         </div>
                       </div>
                       <button
@@ -508,8 +591,12 @@ export function Finder() {
                 <div className="pt-3 border-t border-slate-100 space-y-2.5">
                   <div className="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200/70 gap-2">
                     <div>
-                      <span className="text-[10px] uppercase font-extrabold text-slate-500 block">3-Piece Package Total</span>
-                      <span className="text-sm sm:text-base font-black text-slate-900">{formatUSD(bundleTotal)}</span>
+                      <span className="text-[10px] uppercase font-extrabold text-slate-500 block">
+                        3-Piece Package Total
+                      </span>
+                      <span className="text-sm sm:text-base font-black text-slate-900">
+                        {formatUSD(bundleTotal)}
+                      </span>
                     </div>
                     <span className="text-[10px] sm:text-[10.5px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200/60 flex items-center gap-1 shrink-0">
                       <Check className="size-3 text-emerald-600" />
@@ -523,7 +610,11 @@ export function Finder() {
                     className="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-cyan-600 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer min-h-[44px]"
                   >
                     <ShoppingBag className="size-4 shrink-0" />
-                    <span className="truncate">{bundleAdded ? "✓ Added Complete Package to Cart!" : "Add Complete 3-Piece System to Cart"}</span>
+                    <span className="truncate">
+                      {bundleAdded
+                        ? "✓ Added Complete Package to Cart!"
+                        : "Add Complete 3-Piece System to Cart"}
+                    </span>
                   </button>
 
                   <Link

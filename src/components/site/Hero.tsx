@@ -1,5 +1,16 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Truck, Award, Tag, Headphones, Sparkles, Clock, PackageCheck, Users } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Truck,
+  Award,
+  Tag,
+  Headphones,
+  Sparkles,
+  Clock,
+  PackageCheck,
+  Users,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 const features = [
@@ -10,10 +21,30 @@ const features = [
 ];
 
 const stats = [
-  { value: "20+", label: "Years Industry Leadership", icon: Clock, color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30" },
-  { value: "8,000+", label: "Commercial Products", icon: PackageCheck, color: "text-blue-400 bg-blue-500/10 border-blue-500/30" },
-  { value: "50+", label: "Authorized Brands", icon: Award, color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
-  { value: "5,000+", label: "Verified Trade Buyers", icon: Users, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
+  {
+    value: "20+",
+    label: "Years Industry Leadership",
+    icon: Clock,
+    color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
+  },
+  {
+    value: "8,000+",
+    label: "Commercial Products",
+    icon: PackageCheck,
+    color: "text-blue-400 bg-blue-500/10 border-blue-500/30",
+  },
+  {
+    value: "50+",
+    label: "Authorized Brands",
+    icon: Award,
+    color: "text-amber-400 bg-amber-500/10 border-amber-500/30",
+  },
+  {
+    value: "5,000+",
+    label: "Verified Trade Buyers",
+    icon: Users,
+    color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
+  },
 ];
 
 const duplicatedStats = [...stats, ...stats, ...stats, ...stats];
@@ -30,7 +61,10 @@ export function Hero() {
           playsInline
           className="w-full h-full object-cover scale-105 filter brightness-100 contrast-105"
         >
-          <source src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/herovideo_nubwi4.mov" type="video/mp4" />
+          <source
+            src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/herovideo_nubwi4.mov"
+            type="video/mp4"
+          />
         </video>
         {/* Slightly Lighter Layered Background Overlays */}
         <div className="absolute inset-0 bg-slate-950/20" />
@@ -77,7 +111,8 @@ export function Hero() {
               </h1>
 
               <p className="max-w-2xl leading-relaxed font-medium text-sm sm:text-base lg:text-lg text-white/90">
-                America's leading wholesale catalog for commercial pumps, heaters, filters, salt systems, and smart automation — engineered for trade pros and pool owners alike.
+                America's leading wholesale catalog for commercial pumps, heaters, filters, salt
+                systems, and smart automation — engineered for trade pros and pool owners alike.
               </p>
             </motion.div>
 
@@ -149,7 +184,9 @@ export function Hero() {
                     <div className="text-2xl sm:text-3xl font-black tracking-tight text-white group-hover:text-cyan-400 transition-colors">
                       {s.value}
                     </div>
-                    <div className={`size-8 rounded-xl ${s.color} border grid place-items-center shrink-0 group-hover:scale-105 transition-transform duration-300`}>
+                    <div
+                      className={`size-8 rounded-xl ${s.color} border grid place-items-center shrink-0 group-hover:scale-105 transition-transform duration-300`}
+                    >
                       <Icon className="size-4" />
                     </div>
                   </div>

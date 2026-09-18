@@ -16,10 +16,12 @@ import { z } from "zod";
  *  5. Add both values to Vercel environment variables
  */
 export const uploadImage = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    filename: z.string(),
-    base64: z.string()
-  }))
+  .inputValidator(
+    z.object({
+      filename: z.string(),
+      base64: z.string(),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
@@ -28,7 +30,7 @@ export const uploadImage = createServerFn({ method: "POST" })
       if (!cloudName || !uploadPreset) {
         throw new Error(
           "Missing CLOUDINARY_CLOUD_NAME or CLOUDINARY_UPLOAD_PRESET environment variables. " +
-          "Please add them to your Vercel project settings."
+            "Please add them to your Vercel project settings.",
         );
       }
 
@@ -44,27 +46,27 @@ export const uploadImage = createServerFn({ method: "POST" })
       // Use the original filename (without extension) as the public_id folder hint
       formData.append("folder", "pool-products");
 
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        { method: "POST", body: formData }
-      );
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         const errBody = await response.text();
         throw new Error(`Cloudinary upload failed (${response.status}): ${errBody}`);
       }
 
-      const result = await response.json() as { secure_url: string; public_id: string };
+      const result = (await response.json()) as { secure_url: string; public_id: string };
 
       return {
         success: true,
-        url: result.secure_url   // HTTPS CDN URL — works everywhere, no local disk needed
+        url: result.secure_url, // HTTPS CDN URL — works everywhere, no local disk needed
       };
     } catch (e: any) {
       console.error("Failed to upload image:", e);
       return {
         success: false,
-        error: e.message || "Failed to process image upload."
+        error: e.message || "Failed to process image upload.",
       };
     }
   });

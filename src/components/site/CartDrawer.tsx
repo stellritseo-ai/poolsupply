@@ -35,7 +35,11 @@ export function CartDrawer() {
                 <h2 className="font-bold tracking-tight text-lg">Your Cart</h2>
                 <span className="text-sm text-muted-foreground">({items.length})</span>
               </div>
-              <button aria-label="Close cart" onClick={close} className="size-9 grid place-items-center rounded-full hover:bg-muted transition">
+              <button
+                aria-label="Close cart"
+                onClick={close}
+                className="size-9 grid place-items-center rounded-full hover:bg-muted transition"
+              >
                 <X className="size-5" />
               </button>
             </header>
@@ -50,7 +54,10 @@ export function CartDrawer() {
                   <p className="text-sm text-muted-foreground mt-1 max-w-[260px]">
                     Browse our pumps, heaters and automation to get started.
                   </p>
-                  <button onClick={close} className="mt-6 px-5 py-2.5 rounded-full bg-gradient-ocean text-white text-sm font-semibold">
+                  <button
+                    onClick={close}
+                    className="mt-6 px-5 py-2.5 rounded-full bg-gradient-ocean text-white text-sm font-semibold"
+                  >
                     Continue Shopping
                   </button>
                 </div>
@@ -64,7 +71,11 @@ export function CartDrawer() {
                         onClick={close}
                         className="size-20 shrink-0 rounded-xl bg-gradient-to-b from-[oklch(0.97_0.01_240)] to-[oklch(0.92_0.04_220)] grid place-items-center overflow-hidden hover:opacity-90 transition-opacity"
                       >
-                        <img src={it.img} alt={it.name} className="size-full object-contain p-2 mix-blend-multiply" />
+                        <img
+                          src={it.img}
+                          alt={it.name}
+                          className="size-full object-contain p-2 mix-blend-multiply"
+                        />
                       </Link>
                       <div className="flex-1 min-w-0">
                         <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold flex items-center gap-1.5 flex-wrap">
@@ -100,10 +111,16 @@ export function CartDrawer() {
                               <Plus className="size-3" />
                             </button>
                           </div>
-                          <div className="font-bold tracking-tight">{formatUSD(it.price * it.qty)}</div>
+                          <div className="font-bold tracking-tight">
+                            {formatUSD(it.price * it.qty)}
+                          </div>
                         </div>
                       </div>
-                      <button aria-label="Remove" onClick={() => remove(it.id)} className="size-8 self-start grid place-items-center text-muted-foreground hover:text-destructive transition">
+                      <button
+                        aria-label="Remove"
+                        onClick={() => remove(it.id)}
+                        className="size-8 self-start grid place-items-center text-muted-foreground hover:text-destructive transition"
+                      >
                         <Trash2 className="size-4" />
                       </button>
                     </li>
@@ -128,7 +145,10 @@ export function CartDrawer() {
                 >
                   Checkout · {formatUSD(subtotal + tax)}
                 </Link>
-                <button onClick={close} className="w-full text-center py-2 text-sm text-muted-foreground hover:text-foreground transition">
+                <button
+                  onClick={close}
+                  className="w-full text-center py-2 text-sm text-muted-foreground hover:text-foreground transition"
+                >
                   Continue shopping
                 </button>
               </footer>
@@ -140,9 +160,21 @@ export function CartDrawer() {
   );
 }
 
-function Row({ label, value, muted, bold }: { label: string; value: string; muted?: boolean; bold?: boolean }) {
+function Row({
+  label,
+  value,
+  muted,
+  bold,
+}: {
+  label: string;
+  value: string;
+  muted?: boolean;
+  bold?: boolean;
+}) {
   return (
-    <div className={`flex items-center justify-between text-sm ${muted ? "text-muted-foreground" : ""} ${bold ? "text-base font-bold text-foreground" : ""}`}>
+    <div
+      className={`flex items-center justify-between text-sm ${muted ? "text-muted-foreground" : ""} ${bold ? "text-base font-bold text-foreground" : ""}`}
+    >
       <span>{label}</span>
       <span className={bold ? "tracking-tight" : ""}>{value}</span>
     </div>

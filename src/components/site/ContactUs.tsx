@@ -62,7 +62,10 @@ export function ContactUs() {
   };
 
   return (
-    <section id="contact" className="py-[50px] bg-gradient-to-b from-white via-surface to-white relative overflow-hidden font-sans border-y border-slate-200/60">
+    <section
+      id="contact"
+      className="py-[50px] bg-gradient-to-b from-white via-surface to-white relative overflow-hidden font-sans border-y border-slate-200/60"
+    >
       {/* Background Ambient Radial Glows */}
       <div className="absolute top-1/3 left-10 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
@@ -83,7 +86,8 @@ export function ContactUs() {
           </h2>
 
           <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
-            Need immediate assistance with commercial bids, equipment sizing, or pallet dispatch? Our master technicians and trade reps respond within hours.
+            Need immediate assistance with commercial bids, equipment sizing, or pallet dispatch?
+            Our master technicians and trade reps respond within hours.
           </p>
         </div>
 
@@ -103,7 +107,9 @@ export function ContactUs() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">Corporate & Fulfillment</span>
+                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">
+                    Corporate & Fulfillment
+                  </span>
                   <span className="text-[9.5px] font-bold text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/60">
                     Nashville Hub
                   </span>
@@ -122,17 +128,25 @@ export function ContactUs() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">Contractor Direct Line</span>
+                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">
+                    Contractor Direct Line
+                  </span>
                   <span className="inline-flex items-center gap-1 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Support
+                    <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live
+                    Support
                   </span>
                 </div>
-                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">Call Our Technicians</h3>
+                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">
+                  Call Our Technicians
+                </h3>
                 <a
                   href="tel:6154770407"
                   className="inline-block text-xs sm:text-[13px] font-black text-cyan-700 hover:text-cyan-800 hover:underline"
                 >
-                  (615) 477-0407 <span className="text-[10px] text-slate-400 font-normal ml-1">Mon–Fri 8am-6pm EST</span>
+                  (615) 477-0407{" "}
+                  <span className="text-[10px] text-slate-400 font-normal ml-1">
+                    Mon–Fri 8am-6pm EST
+                  </span>
                 </a>
               </div>
             </div>
@@ -144,12 +158,16 @@ export function ContactUs() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">Electronic Helpdesk</span>
+                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">
+                    Electronic Helpdesk
+                  </span>
                   <span className="text-[9.5px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
                     &lt; 30m Response
                   </span>
                 </div>
-                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">Email Sales & Specs</h3>
+                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">
+                  Email Sales & Specs
+                </h3>
                 <a
                   href="mailto:sales@poolsupplywholesalers.com"
                   className="inline-block text-[11px] sm:text-xs font-black text-cyan-700 hover:text-cyan-800 hover:underline truncate max-w-full"
@@ -184,8 +202,12 @@ export function ContactUs() {
 
             <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
               <div>
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Send Us a Direct Message</h3>
-                <p className="text-xs text-slate-400 mt-0.5">Fill out your inquiry and a dedicated pool tech will respond promptly.</p>
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                  Send Us a Direct Message
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Fill out your inquiry and a dedicated pool tech will respond promptly.
+                </p>
               </div>
               <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
                 <ShieldCheck className="size-3 text-emerald-600" /> SSL Secured
@@ -197,7 +219,8 @@ export function ContactUs() {
                 <CheckCircle2 className="size-12 text-emerald-600 mx-auto" />
                 <h4 className="text-xl font-black text-slate-900">Message Received!</h4>
                 <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Thank you for contacting Pool Supply Wholesalers. A support ticket has been created and assigned to one of our product specialists.
+                  Thank you for contacting Pool Supply Wholesalers. A support ticket has been
+                  created and assigned to one of our product specialists.
                 </p>
                 <button
                   type="button"
@@ -217,7 +240,10 @@ export function ContactUs() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label htmlFor="firstName" className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <label
+                      htmlFor="firstName"
+                      className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5"
+                    >
                       <User className="size-3.5 text-cyan-600" />
                       First Name
                     </label>
@@ -232,7 +258,10 @@ export function ContactUs() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="lastName" className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <label
+                      htmlFor="lastName"
+                      className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5"
+                    >
                       <User className="size-3.5 text-cyan-600" />
                       Last Name
                     </label>
@@ -248,7 +277,10 @@ export function ContactUs() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <label
+                    htmlFor="email"
+                    className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5"
+                  >
                     <Mail className="size-3.5 text-cyan-600" />
                     Email Address *
                   </label>
@@ -264,7 +296,10 @@ export function ContactUs() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="subject" className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <label
+                    htmlFor="subject"
+                    className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5"
+                  >
                     <HelpCircle className="size-3.5 text-cyan-600" />
                     Subject
                   </label>
@@ -282,7 +317,10 @@ export function ContactUs() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="message" className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <label
+                    htmlFor="message"
+                    className="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5"
+                  >
                     <MessageSquare className="size-3.5 text-cyan-600" />
                     Message *
                   </label>
@@ -304,7 +342,8 @@ export function ContactUs() {
                 >
                   {submitting ? (
                     <>
-                      <Loader2 className="size-4 animate-spin text-cyan-400" /> Submitting Request...
+                      <Loader2 className="size-4 animate-spin text-cyan-400" /> Submitting
+                      Request...
                     </>
                   ) : (
                     <>

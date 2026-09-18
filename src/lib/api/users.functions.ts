@@ -2,41 +2,42 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { connectDB } from "../db";
 
-export const getUsers = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true, users: [] };
-      const usersCol = db.collection("users");
-      const users = await usersCol.find({}, { projection: { password: 0 } }).toArray();
+export const getUsers = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: true, users: [] };
+    const usersCol = db.collection("users");
+    const users = await usersCol.find({}, { projection: { password: 0 } }).toArray();
 
-      const formatted = users.map(u => ({
-        id: u._id.toString(),
-        username: u.username,
-        fullName: u.fullName || u.name || u.username,
-        email: u.email || `${u.username}@poolsupplywholesalers.com`,
-        role: u.role || "manager",
-        status: u.status || "active",
-        lastLoginAt: u.lastLoginAt ? new Date(u.lastLoginAt).toISOString() : null,
-        createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
-      }));
+    const formatted = users.map((u) => ({
+      id: u._id.toString(),
+      username: u.username,
+      fullName: u.fullName || u.name || u.username,
+      email: u.email || `${u.username}@poolsupplywholesalers.com`,
+      role: u.role || "manager",
+      status: u.status || "active",
+      lastLoginAt: u.lastLoginAt ? new Date(u.lastLoginAt).toISOString() : null,
+      createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
+    }));
 
-      return { success: true, users: formatted };
-    } catch (e: any) {
-      console.error("Users fetch error:", e);
-      return { success: false, error: "Failed to fetch users." };
-    }
-  });
+    return { success: true, users: formatted };
+  } catch (e: any) {
+    console.error("Users fetch error:", e);
+    return { success: false, error: "Failed to fetch users." };
+  }
+});
 
 export const createUser = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    username: z.string().min(3),
-    password: z.string().min(6),
-    role: z.enum(["admin", "manager", "viewer"]),
-    fullName: z.string().optional(),
-    email: z.string().email().optional(),
-    status: z.enum(["active", "inactive"]).optional(),
-  }))
+  .inputValidator(
+    z.object({
+      username: z.string().min(3),
+      password: z.string().min(6),
+      role: z.enum(["admin", "manager", "viewer"]),
+      fullName: z.string().optional(),
+      email: z.string().email().optional(),
+      status: z.enum(["active", "inactive"]).optional(),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -75,7 +76,7 @@ export const createUser = createServerFn({ method: "POST" })
           role: newUserDoc.role,
           status: newUserDoc.status,
           createdAt: newUserDoc.createdAt.toISOString(),
-        }
+        },
       };
     } catch (e: any) {
       return { success: false, error: "Failed to create staff account." };
@@ -83,15 +84,17 @@ export const createUser = createServerFn({ method: "POST" })
   });
 
 export const updateUser = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    id: z.string(),
-    username: z.string().min(3).optional(),
-    fullName: z.string().optional(),
-    email: z.string().email().optional(),
-    role: z.enum(["admin", "manager", "viewer"]).optional(),
-    status: z.enum(["active", "inactive"]).optional(),
-    password: z.string().min(6).optional(),
-  }))
+  .inputValidator(
+    z.object({
+      id: z.string(),
+      username: z.string().min(3).optional(),
+      fullName: z.string().optional(),
+      email: z.string().email().optional(),
+      role: z.enum(["admin", "manager", "viewer"]).optional(),
+      status: z.enum(["active", "inactive"]).optional(),
+      password: z.string().min(6).optional(),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -99,7 +102,9 @@ export const updateUser = createServerFn({ method: "POST" })
       const usersCol = db.collection("users");
       const { ObjectId } = await import("mongodb");
 
-      const query = ObjectId.isValid(data.id) ? { _id: new ObjectId(data.id) } : { _id: data.id as any };
+      const query = ObjectId.isValid(data.id)
+        ? { _id: new ObjectId(data.id) }
+        : { _id: data.id as any };
       const user = await usersCol.findOne(query);
       if (!user) return { success: false, error: "User not found." };
 
@@ -135,7 +140,7 @@ export const updateUser = createServerFn({ method: "POST" })
           email: updates.email || user.email,
           role: updates.role || user.role,
           status: updates.status || user.status,
-        }
+        },
       };
     } catch (e: any) {
       console.error("Update user error:", e);
@@ -152,7 +157,9 @@ export const deleteUser = createServerFn({ method: "POST" })
       const usersCol = db.collection("users");
       const { ObjectId } = await import("mongodb");
 
-      const query = ObjectId.isValid(data.id) ? { _id: new ObjectId(data.id) } : { _id: data.id as any };
+      const query = ObjectId.isValid(data.id)
+        ? { _id: new ObjectId(data.id) }
+        : { _id: data.id as any };
       const user = await usersCol.findOne(query);
 
       // Prevent deleting the main admin
@@ -168,12 +175,14 @@ export const deleteUser = createServerFn({ method: "POST" })
   });
 
 export const updateSuperAdmin = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    currentUsername: z.string(),
-    newUsername: z.string().min(3).optional(),
-    currentPassword: z.string().min(1),
-    newPassword: z.string().min(6).optional()
-  }))
+  .inputValidator(
+    z.object({
+      currentUsername: z.string(),
+      newUsername: z.string().min(3).optional(),
+      currentPassword: z.string().min(1),
+      newPassword: z.string().min(6).optional(),
+    }),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();

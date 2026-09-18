@@ -33,31 +33,36 @@ export const Route = createFileRoute("/contact")({
     const breadcrumbLd = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "Contact Us", "item": pageUrl }
-      ]
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        { "@type": "ListItem", position: 2, name: "Contact Us", item: pageUrl },
+      ],
     };
 
     const contactLd = {
       "@context": "https://schema.org",
       "@type": "ContactPage",
-      "name": "Contact Pool Supply Wholesalers",
-      "url": pageUrl,
-      "mainEntity": {
+      name: "Contact Pool Supply Wholesalers",
+      url: pageUrl,
+      mainEntity: {
         "@type": "WholesaleStore",
-        "name": "Pool Supply Wholesalers",
-        "telephone": "+1-615-477-0407",
-        "email": "sales@poolsupplywholesalers.com",
-        "address": {
+        name: "Pool Supply Wholesalers",
+        telephone: "+1-615-477-0407",
+        email: "sales@poolsupplywholesalers.com",
+        address: {
           "@type": "PostalAddress",
-          "streetAddress": "410 Scott Pike",
-          "addressLocality": "Nashville",
-          "addressRegion": "TN",
-          "postalCode": "37207",
-          "addressCountry": "US"
-        }
-      }
+          streetAddress: "410 Scott Pike",
+          addressLocality: "Nashville",
+          addressRegion: "TN",
+          postalCode: "37207",
+          addressCountry: "US",
+        },
+      },
     };
 
     return {
@@ -68,7 +73,11 @@ export const Route = createFileRoute("/contact")({
           content:
             "Contact our wholesale desk for commercial pricing, dealer account activation, same-day freight, or certified technical support. Response guaranteed within 2 business hours.",
         },
-        { name: "keywords", content: "contact pool supply wholesalers, commercial pool customer service, pool equipment wholesale quote, pool parts contractor desk" },
+        {
+          name: "keywords",
+          content:
+            "contact pool supply wholesalers, commercial pool customer service, pool equipment wholesale quote, pool parts contractor desk",
+        },
         { property: "og:title", content: "Contact Pool Supply Wholesalers Desk" },
         {
           property: "og:description",
@@ -88,14 +97,17 @@ export const Route = createFileRoute("/contact")({
         { name: "twitter:site", content: "@poolsupplywholesalers" },
         { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: "Contact Pool Supply Wholesalers" },
-        { name: "twitter:description", content: "Wholesale desk response guaranteed within 2 business hours." },
+        {
+          name: "twitter:description",
+          content: "Wholesale desk response guaranteed within 2 business hours.",
+        },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
       links: [{ rel: "canonical", href: pageUrl }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
-        { type: "application/ld+json", children: JSON.stringify(contactLd) }
-      ]
+        { type: "application/ld+json", children: JSON.stringify(contactLd) },
+      ],
     };
   },
   component: ContactPage,
@@ -278,7 +290,8 @@ function ContactPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-medium"
               >
-                Direct assistance for commercial pool builders, service companies, and municipality facilities. Connect directly with licensed CPO technicians and account managers.
+                Direct assistance for commercial pool builders, service companies, and municipality
+                facilities. Connect directly with licensed CPO technicians and account managers.
               </motion.p>
             </div>
           </div>
@@ -333,9 +346,7 @@ function ContactPage() {
                       <div className="font-extrabold text-sm text-slate-900 leading-snug group-hover:text-cyan-700 transition-colors">
                         {ch.value}
                       </div>
-                      <div className="text-xs text-slate-500 mt-1 font-medium">
-                        {ch.sub}
-                      </div>
+                      <div className="text-xs text-slate-500 mt-1 font-medium">{ch.sub}</div>
                     </div>
 
                     {ch.href && (
@@ -375,7 +386,8 @@ function ContactPage() {
                     Send a Message to the Wholesale Desk
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-                    Fill out the form below — all inquiries receive a direct response from a live trade specialist within 2 business hours.
+                    Fill out the form below — all inquiries receive a direct response from a live
+                    trade specialist within 2 business hours.
                   </p>
                 </div>
 
@@ -403,13 +415,18 @@ function ContactPage() {
                                 key={dept.val}
                                 type="button"
                                 onClick={() => setSubject(dept.val)}
-                                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-2 ${active
-                                  ? "bg-cyan-50 border-cyan-500 text-cyan-950 font-extrabold shadow-2xs"
-                                  : "bg-slate-50/60 border-slate-200/80 text-slate-600 hover:bg-slate-100 font-bold"
-                                  }`}
+                                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-2 ${
+                                  active
+                                    ? "bg-cyan-50 border-cyan-500 text-cyan-950 font-extrabold shadow-2xs"
+                                    : "bg-slate-50/60 border-slate-200/80 text-slate-600 hover:bg-slate-100 font-bold"
+                                }`}
                               >
-                                <Icon className={`size-4 shrink-0 ${active ? "text-cyan-600" : "text-slate-400"}`} />
-                                <span className="text-[11px] truncate leading-tight">{dept.label}</span>
+                                <Icon
+                                  className={`size-4 shrink-0 ${active ? "text-cyan-600" : "text-slate-400"}`}
+                                />
+                                <span className="text-[11px] truncate leading-tight">
+                                  {dept.label}
+                                </span>
                               </button>
                             );
                           })}
@@ -480,7 +497,8 @@ function ContactPage() {
                       {/* Message */}
                       <div>
                         <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
-                          Message & Equipment Specifications <span className="text-rose-500">*</span>
+                          Message & Equipment Specifications{" "}
+                          <span className="text-rose-500">*</span>
                         </label>
                         <textarea
                           required
@@ -520,7 +538,9 @@ function ContactPage() {
                       <div className="size-16 rounded-full bg-cyan-600 text-white grid place-items-center mx-auto shadow-lg">
                         <CheckCircle2 className="size-8" />
                       </div>
-                      <h3 className="text-xl font-black text-slate-900">Message Successfully Dispatched</h3>
+                      <h3 className="text-xl font-black text-slate-900">
+                        Message Successfully Dispatched
+                      </h3>
                       <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium">
                         Thank you, <strong>{name}</strong>. A wholesale specialist from our{" "}
                         <strong>{activeDept.label}</strong> department will contact you at{" "}
@@ -590,7 +610,11 @@ function ContactPage() {
 
                   <div className="space-y-2">
                     {[
-                      { city: "Nashville, TN", role: "Central HQ Hub", lead: "1-Day Regional Lead" },
+                      {
+                        city: "Nashville, TN",
+                        role: "Central HQ Hub",
+                        lead: "1-Day Regional Lead",
+                      },
                       { city: "Los Angeles, CA", role: "West Coast Hub", lead: "1-2 Day Transit" },
                       { city: "Dallas, TX", role: "Southwest Hub", lead: "1-2 Day Transit" },
                       { city: "Orlando, FL", role: "Southeast Hub", lead: "1-Day Transit" },
@@ -638,7 +662,8 @@ function ContactPage() {
                 </h2>
 
                 <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                  Instant trade registration with zero account setup fees. Unlock wholesale trade pricing on over 8,000+ factory SKUs.
+                  Instant trade registration with zero account setup fees. Unlock wholesale trade
+                  pricing on over 8,000+ factory SKUs.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">

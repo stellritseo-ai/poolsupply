@@ -32,12 +32,36 @@ import logo from "@/assets/logo.png";
 
 // ── Quick action shortcuts ────────────────────────────────────────────────────
 const QUICK_ACTIONS = [
-  { icon: <Droplet className="w-3.5 h-3.5 text-cyan-500" />, label: "Pool Pumps", message: "I need assistance with commercial pool pumps." },
-  { icon: <Flame className="w-3.5 h-3.5 text-orange-500" />, label: "Gas Heaters", message: "Can you help me choose the right pool heater?" },
-  { icon: <Filter className="w-3.5 h-3.5 text-blue-500" />, label: "Filters", message: "I'm looking for high-rate pool filters." },
-  { icon: <Sparkles className="w-3.5 h-3.5 text-amber-500" />, label: "Cleaners", message: "Tell me about commercial pool cleaners." },
-  { icon: <Lightbulb className="w-3.5 h-3.5 text-yellow-500" />, label: "Lighting", message: "I need LED pool lighting specifications." },
-  { icon: <LifeBuoy className="w-3.5 h-3.5 text-rose-500" />, label: "Support", message: "I need general wholesale support." },
+  {
+    icon: <Droplet className="w-3.5 h-3.5 text-cyan-500" />,
+    label: "Pool Pumps",
+    message: "I need assistance with commercial pool pumps.",
+  },
+  {
+    icon: <Flame className="w-3.5 h-3.5 text-orange-500" />,
+    label: "Gas Heaters",
+    message: "Can you help me choose the right pool heater?",
+  },
+  {
+    icon: <Filter className="w-3.5 h-3.5 text-blue-500" />,
+    label: "Filters",
+    message: "I'm looking for high-rate pool filters.",
+  },
+  {
+    icon: <Sparkles className="w-3.5 h-3.5 text-amber-500" />,
+    label: "Cleaners",
+    message: "Tell me about commercial pool cleaners.",
+  },
+  {
+    icon: <Lightbulb className="w-3.5 h-3.5 text-yellow-500" />,
+    label: "Lighting",
+    message: "I need LED pool lighting specifications.",
+  },
+  {
+    icon: <LifeBuoy className="w-3.5 h-3.5 text-rose-500" />,
+    label: "Support",
+    message: "I need general wholesale support.",
+  },
 ];
 
 function formatTime(dateString: string) {
@@ -207,13 +231,19 @@ export function FloatingChat() {
               <div className="flex items-center gap-3 relative z-10">
                 <div className="relative">
                   <div className="w-10 h-10 rounded-2xl bg-white/10 ring-1 ring-white/20 flex items-center justify-center overflow-hidden p-1.5 shadow-inner">
-                    <img src={logo} alt="PSW" className="w-full h-full object-contain brightness-0 invert" />
+                    <img
+                      src={logo}
+                      alt="PSW"
+                      className="w-full h-full object-contain brightness-0 invert"
+                    />
                   </div>
                   <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full ring-2 ring-[#061220] animate-pulse" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h3 className="font-extrabold text-white text-sm tracking-tight">Pool Supply Support</h3>
+                    <h3 className="font-extrabold text-white text-sm tracking-tight">
+                      Pool Supply Support
+                    </h3>
                     <ShieldCheck className="size-3.5 text-cyan-400" />
                   </div>
                   <p className="text-cyan-200/80 text-[11px] font-medium flex items-center gap-1.5 mt-0.5">
@@ -285,7 +315,9 @@ export function FloatingChat() {
                     </div>
                   </div>
 
-                  <div className="text-center text-[10px] font-black text-slate-300 uppercase tracking-widest">— OR —</div>
+                  <div className="text-center text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                    — OR —
+                  </div>
 
                   <div>
                     <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
@@ -307,7 +339,9 @@ export function FloatingChat() {
                   </div>
 
                   {formError && (
-                    <p className="text-[11px] text-rose-500 font-bold mt-1 text-center">{formError}</p>
+                    <p className="text-[11px] text-rose-500 font-bold mt-1 text-center">
+                      {formError}
+                    </p>
                   )}
 
                   <button
@@ -341,7 +375,8 @@ export function FloatingChat() {
                         <span>Welcome to Wholesale Support!</span>
                       </div>
                       <p className="text-slate-600 font-medium text-[12px] leading-normal">
-                        Ask about pumps, heaters, sand filters, salt chlorinators, or contractor volume discounts. How can we help?
+                        Ask about pumps, heaters, sand filters, salt chlorinators, or contractor
+                        volume discounts. How can we help?
                       </p>
                     </motion.div>
                   )}
@@ -359,7 +394,11 @@ export function FloatingChat() {
                       >
                         {!isUser && (
                           <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-700 flex items-center justify-center shrink-0 mb-1 overflow-hidden p-1 shadow-2xs">
-                            <img src={logo} alt="PSW" className="w-full h-full object-contain brightness-0 invert" />
+                            <img
+                              src={logo}
+                              alt="PSW"
+                              className="w-full h-full object-contain brightness-0 invert"
+                            />
                           </div>
                         )}
 
@@ -375,7 +414,9 @@ export function FloatingChat() {
                               Support Representative
                             </div>
                           )}
-                          <p className="text-[13px] leading-snug font-medium whitespace-pre-wrap">{msg.text}</p>
+                          <p className="text-[13px] leading-snug font-medium whitespace-pre-wrap">
+                            {msg.text}
+                          </p>
                           <div
                             className={`text-[9px] mt-0.5 font-bold flex items-center justify-end gap-1 ${
                               isUser ? "text-cyan-100/75" : "text-slate-400"
@@ -397,7 +438,8 @@ export function FloatingChat() {
                         <span>This conversation has been resolved.</span>
                       </div>
                       <p className="text-[11px] text-slate-500 max-w-[260px] font-medium">
-                        Need assistance with another product or order? Click below to start a new chat.
+                        Need assistance with another product or order? Click below to start a new
+                        chat.
                       </p>
                       <button
                         onClick={handleStartNewSession}
@@ -415,7 +457,9 @@ export function FloatingChat() {
                 {/* Quick Actions (only before first message) */}
                 {messages.length === 0 && !isResolved && (
                   <div className="px-4 pb-3 bg-slate-50/70 shrink-0">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Quick Inquiries</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                      Quick Inquiries
+                    </p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {QUICK_ACTIONS.map((action, i) => (
                         <button
@@ -439,7 +483,11 @@ export function FloatingChat() {
                       value={inputText}
                       onChange={(e) => setInputText(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder={isResolved ? "Type to start a new chat session…" : "Ask about pool supplies…"}
+                      placeholder={
+                        isResolved
+                          ? "Type to start a new chat session…"
+                          : "Ask about pool supplies…"
+                      }
                       disabled={sendMutation.isPending}
                       className="flex-1 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs font-medium text-slate-900 bg-slate-50 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all shadow-2xs"
                     />
@@ -471,11 +519,23 @@ export function FloatingChat() {
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
-            <motion.span key="x" initial={{ rotate: -90, scale: 0.5 }} animate={{ rotate: 0, scale: 1 }} exit={{ rotate: 90, scale: 0.5 }} transition={{ duration: 0.15 }}>
+            <motion.span
+              key="x"
+              initial={{ rotate: -90, scale: 0.5 }}
+              animate={{ rotate: 0, scale: 1 }}
+              exit={{ rotate: 90, scale: 0.5 }}
+              transition={{ duration: 0.15 }}
+            >
               <X className="w-6 h-6" />
             </motion.span>
           ) : (
-            <motion.span key="msg" initial={{ rotate: 90, scale: 0.5 }} animate={{ rotate: 0, scale: 1 }} exit={{ rotate: -90, scale: 0.5 }} transition={{ duration: 0.15 }}>
+            <motion.span
+              key="msg"
+              initial={{ rotate: 90, scale: 0.5 }}
+              animate={{ rotate: 0, scale: 1 }}
+              exit={{ rotate: -90, scale: 0.5 }}
+              transition={{ duration: 0.15 }}
+            >
               <MessageCircle className="w-6 h-6" />
             </motion.span>
           )}

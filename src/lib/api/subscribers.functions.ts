@@ -30,27 +30,26 @@ export const subscribeEmail = createServerFn({ method: "POST" })
     }
   });
 
-export const getSubscribers = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true, subscribers: [] };
-      const subscribersCol = db.collection("subscribers");
+export const getSubscribers = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: true, subscribers: [] };
+    const subscribersCol = db.collection("subscribers");
 
-      const subscribers = await subscribersCol.find().sort({ createdAt: -1 }).toArray();
+    const subscribers = await subscribersCol.find().sort({ createdAt: -1 }).toArray();
 
-      const formatted = subscribers.map(s => ({
-        id: s._id.toString(),
-        email: s.email,
-        createdAt: s.createdAt,
-      }));
+    const formatted = subscribers.map((s) => ({
+      id: s._id.toString(),
+      email: s.email,
+      createdAt: s.createdAt,
+    }));
 
-      return { success: true, subscribers: formatted };
-    } catch (e: any) {
-      console.error("Failed to fetch subscribers:", e);
-      return { success: false, error: "Failed to retrieve subscriber list." };
-    }
-  });
+    return { success: true, subscribers: formatted };
+  } catch (e: any) {
+    console.error("Failed to fetch subscribers:", e);
+    return { success: false, error: "Failed to retrieve subscriber list." };
+  }
+});
 
 export const deleteSubscriber = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))

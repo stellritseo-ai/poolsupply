@@ -16,7 +16,12 @@ const baseCats = [
   { name: "Pool Lights", slug: "pool-lights", categoryKey: "lights", img: light },
   { name: "Pool Filters", slug: "pool-filters", categoryKey: "filters", img: filter },
   { name: "Pool Cleaners", slug: "pool-cleaners", categoryKey: "cleaners", img: cleaner },
-  { name: "Automation Systems", slug: "automation-systems", categoryKey: "automation", img: automation },
+  {
+    name: "Automation Systems",
+    slug: "automation-systems",
+    categoryKey: "automation",
+    img: automation,
+  },
 ];
 
 const DEFAULT_CATEGORY_COUNTS: Record<string, number> = {
@@ -42,7 +47,7 @@ export function Categories() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const getCount = (cat: typeof baseCats[number]) => {
+  const getCount = (cat: (typeof baseCats)[number]) => {
     const count = countsData?.[cat.slug] ?? DEFAULT_CATEGORY_COUNTS[cat.slug] ?? 0;
     return `${count}+ products`;
   };
@@ -51,7 +56,9 @@ export function Categories() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10 sm:mb-14">
           <div>
-            <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Best Seller Categories</span>
+            <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">
+              Best Seller Categories
+            </span>
             <h2 className="mt-2 text-2xl sm:text-3xl lg:text-[35px] font-extrabold tracking-tight">
               Everything your pool needs, <span className="text-gradient">expertly curated.</span>
             </h2>
@@ -95,9 +102,12 @@ export function Categories() {
 
                 <div className="flex items-center justify-between mt-1 px-1">
                   <div>
-                    <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">{c.name}</h3>
+                    <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+                      {c.name}
+                    </h3>
                     <span className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground group-hover:text-primary transition-all duration-300 mt-1">
-                      Explore Equipment <ArrowUpRight className="size-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      Explore Equipment{" "}
+                      <ArrowUpRight className="size-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </span>
                   </div>
 

@@ -2,7 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import commingSoonImg from "@/assets/commingsoon.png";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { products as initialProducts, Product, Review, syncLocalProducts, useProducts, invalidateProductsCache } from "@/lib/products";
+import {
+  products as initialProducts,
+  Product,
+  Review,
+  syncLocalProducts,
+  useProducts,
+  invalidateProductsCache,
+} from "@/lib/products";
 import { formatUSD } from "@/components/site/cart-context";
 import {
   Plus,
@@ -26,12 +33,21 @@ import {
   Percent,
   DollarSign,
   SlidersHorizontal,
-  Star
+  Star,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as XLSX from "xlsx";
 import { uploadImage } from "@/lib/api/upload.functions";
-import { saveProductDb, deleteProductDb, bulkDeleteProductsDb, bulkSaveProductsDb, bulkAdjustPricesDb, getAllProductsAdminDb, getAllProductsForExportDb, deleteAllProductsDb } from "@/lib/api/products.functions";
+import {
+  saveProductDb,
+  deleteProductDb,
+  bulkDeleteProductsDb,
+  bulkSaveProductsDb,
+  bulkAdjustPricesDb,
+  getAllProductsAdminDb,
+  getAllProductsForExportDb,
+  deleteAllProductsDb,
+} from "@/lib/api/products.functions";
 import { classifyProductByNameAndPrice } from "@/lib/shipping";
 
 export const Route = createFileRoute("/admin/products")({
@@ -67,7 +83,7 @@ const CATEGORIES = [
   "Pool Filters",
   "Pool Cleaners",
   "Automation Systems",
-  "Electric Heat Pumps"
+  "Electric Heat Pumps",
 ];
 
 export function generateSampleCSV(): string {
@@ -88,7 +104,7 @@ export function generateSampleCSV(): string {
     "Product Description",
     "Specifications",
     "5-Star Review 1",
-    "5-Star Review 2"
+    "5-Star Review 2",
   ].join(",");
 
   const row1 = [
@@ -98,9 +114,9 @@ export function generateSampleCSV(): string {
     '"SuperFlo VS 1.5 HP Variable Speed Pump"',
     '"Pentair SuperFlo VS 1.5 HP Energy Efficient Pump"',
     '"011533"',
-    '1249.99',
-    '1399.99',
-    '35',
+    "1249.99",
+    "1399.99",
+    "35",
     '"Medium Freight"',
     '"1.5 HP, 115V/230V, Variable Speed, Ultra Quiet"',
     `"${commingSoonImg}"`,
@@ -108,7 +124,7 @@ export function generateSampleCSV(): string {
     '"The Pentair SuperFlo VS Pump brings the energy savings of variable speed technology to standard pool applications at an affordable price."',
     '"Warranty: 2 Years Limited; Volts: 115V/230V; Horsepower: 1.5 HP; Port Size: 1.5 inch"',
     '"Extremely quiet operation and reduced our electric bill by nearly 65% in the first month!"',
-    '"Commercial grade durability. Easy installation for pool technicians."'
+    '"Commercial grade durability. Easy installation for pool technicians."',
   ].join(",");
 
   const row2 = [
@@ -118,9 +134,9 @@ export function generateSampleCSV(): string {
     '"Universal H-Series 400K BTU Natural Gas Heater"',
     '"Hayward Universal H-Series 400,000 BTU Gas Pool Heater"',
     '"H400FDN"',
-    '2899.00',
-    '3199.00',
-    '18',
+    "2899.00",
+    "3199.00",
+    "18",
     '"Heavy Freight (LTL)"',
     '"400K BTU, Natural Gas, Cupro Nickel Heat Exchanger, Low NOx"',
     `"${commingSoonImg}"`,
@@ -128,14 +144,14 @@ export function generateSampleCSV(): string {
     '"Hayward Universal H-Series heaters represent the executive standard of high efficiency performance for in-ground pools and spas."',
     '"Warranty: 3 Years Limited; Fuel: Natural Gas; Heating Capacity: 400000 BTU; Heat Exchanger: Cupro Nickel"',
     '"Heats our 25,000 gallon pool in under 4 hours. Unmatched heating performance!"',
-    '"Solid construction and straightforward digital LED interface."'
+    '"Solid construction and straightforward digital LED interface."',
   ].join(",");
 
   return `${headers}\n${row1}\n${row2}`;
 }
 
 export function parseCSV(text: string): Product[] {
-  const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
+  const lines = text.split(/\r?\n/).filter((line) => line.trim() !== "");
   if (lines.length < 2) return [];
 
   // Parse header line handling quotes
@@ -147,7 +163,7 @@ export function parseCSV(text: string): Product[] {
       const char = rowStr[i];
       if (char === '"') {
         inQuotes = !inQuotes;
-      } else if ((char === ',' || char === '\t' || char === ';') && !inQuotes) {
+      } else if ((char === "," || char === "\t" || char === ";") && !inQuotes) {
         arr.push(field.trim().replace(/^["']|["']$/g, ""));
         field = "";
       } else {
@@ -158,24 +174,32 @@ export function parseCSV(text: string): Product[] {
     return arr;
   };
 
-  const headers = parseRow(lines[0]).map(h => h.toLowerCase().trim());
+  const headers = parseRow(lines[0]).map((h) => h.toLowerCase().trim());
 
   const findIdx = (keywords: string[]) => {
-    return headers.findIndex(h => keywords.some(k => h.includes(k)));
+    return headers.findIndex((h) => keywords.some((k) => h.includes(k)));
   };
 
   const catIdx = findIdx(["category", "cat", "parent category"]);
   const subCatIdx = findIdx(["sub category", "subcategory", "sub-category"]);
   const mfrIdx = findIdx(["manufacturer", "brand", "make", "mfr"]);
-  const nameIdx = headers.findIndex(h => h === "name" || h === "product name") !== -1
-    ? headers.findIndex(h => h === "name" || h === "product name")
-    : findIdx(["name", "title"]);
+  const nameIdx =
+    headers.findIndex((h) => h === "name" || h === "product name") !== -1
+      ? headers.findIndex((h) => h === "name" || h === "product name")
+      : findIdx(["name", "title"]);
   const dispNameIdx = findIdx(["display name", "displayname", "public name"]);
   const skuIdx = findIdx(["sku", "code", "part number"]);
   const priceIdx = findIdx(["price", "wholesale", "cost"]);
   const salePriceIdx = findIdx(["sale price", "saleprice", "selling price", "retail price"]);
   const qtyIdx = findIdx(["qty available", "qty", "quantity", "stock"]);
-  const sizeIdx = findIdx(["product size", "productsize", "package size", "shipping size", "box size", "size"]);
+  const sizeIdx = findIdx([
+    "product size",
+    "productsize",
+    "package size",
+    "shipping size",
+    "box size",
+    "size",
+  ]);
   const detailsIdx = findIdx(["details", "highlights", "short description"]);
   const imgIdx = findIdx(["image link", "image url", "image", "img", "photo"]);
   const seoIdx = findIdx(["seo keywords", "keywords", "tags", "seo"]);
@@ -189,26 +213,37 @@ export function parseCSV(text: string): Product[] {
 
   for (let i = 1; i < lines.length; i++) {
     const row = parseRow(lines[i]);
-    if (row.length === 0 || !row.some(c => c.length > 0)) continue;
+    if (row.length === 0 || !row.some((c) => c.length > 0)) continue;
 
     const rowName = nameIdx !== -1 && row[nameIdx] ? row[nameIdx] : "";
     const rowDispName = dispNameIdx !== -1 && row[dispNameIdx] ? row[dispNameIdx] : "";
     const pName = rowDispName || rowName || `Product ${i}`;
-    if (!pName || pName.toLowerCase() === "name" || pName.toLowerCase() === "display name") continue;
+    if (!pName || pName.toLowerCase() === "name" || pName.toLowerCase() === "display name")
+      continue;
 
     const pCat = catIdx !== -1 && row[catIdx] ? row[catIdx] : "Pool & Spa";
     const pSubCat = subCatIdx !== -1 && row[subCatIdx] ? row[subCatIdx] : "Pool Pumps";
     const pBrand = mfrIdx !== -1 && row[mfrIdx] ? row[mfrIdx] : "Pentair";
     const pSku = skuIdx !== -1 && row[skuIdx] ? row[skuIdx] : `SKU-${timestamp}-${i}`;
-    const pPrice = priceIdx !== -1 ? Math.max(0.01, parseFloat(row[priceIdx].replace(/[^0-9.]/g, "")) || 199.99) : 199.99;
-    const pSalePrice = salePriceIdx !== -1 && row[salePriceIdx] ? Math.max(0.01, parseFloat(row[salePriceIdx].replace(/[^0-9.]/g, "")) || 0) || undefined : undefined;
-    const pStock = qtyIdx !== -1 ? Math.max(0, parseInt(row[qtyIdx].replace(/[^0-9]/g, ""), 10) || 20) : 20;
+    const pPrice =
+      priceIdx !== -1
+        ? Math.max(0.01, parseFloat(row[priceIdx].replace(/[^0-9.]/g, "")) || 199.99)
+        : 199.99;
+    const pSalePrice =
+      salePriceIdx !== -1 && row[salePriceIdx]
+        ? Math.max(0.01, parseFloat(row[salePriceIdx].replace(/[^0-9.]/g, "")) || 0) || undefined
+        : undefined;
+    const pStock =
+      qtyIdx !== -1 ? Math.max(0, parseInt(row[qtyIdx].replace(/[^0-9]/g, ""), 10) || 20) : 20;
     const pDetails = detailsIdx !== -1 && row[detailsIdx] ? row[detailsIdx] : "";
     const rawSize = sizeIdx !== -1 && row[sizeIdx] ? row[sizeIdx].trim() : "";
     const pSize = rawSize || classifyProductByNameAndPrice(pName, pPrice, pCat, pDetails);
     const pImg = imgIdx !== -1 && row[imgIdx] ? row[imgIdx] : "";
     const pSeo = seoIdx !== -1 && row[seoIdx] ? row[seoIdx] : "";
-    const pDesc = descIdx !== -1 && row[descIdx] ? row[descIdx] : `${pName} manufactured by ${pBrand}. Commercial pool grade equipment.`;
+    const pDesc =
+      descIdx !== -1 && row[descIdx]
+        ? row[descIdx]
+        : `${pName} manufactured by ${pBrand}. Commercial pool grade equipment.`;
     const pSpecsRaw = specsIdx !== -1 && row[specsIdx] ? row[specsIdx] : "";
     const r1Raw = r1Idx !== -1 && row[r1Idx] ? row[r1Idx] : "";
     const r2Raw = r2Idx !== -1 && row[r2Idx] ? row[r2Idx] : "";
@@ -217,7 +252,7 @@ export function parseCSV(text: string): Product[] {
     const specsMap: Record<string, string> = { Warranty: "2 Years Limited Warranty" };
     if (pSpecsRaw) {
       const parts = pSpecsRaw.split(/;|\||\n/);
-      parts.forEach(part => {
+      parts.forEach((part) => {
         const colon = part.indexOf(":");
         if (colon !== -1) {
           const k = part.substring(0, colon).trim();
@@ -238,7 +273,7 @@ export function parseCSV(text: string): Product[] {
         rating: 5,
         date: "Recently Verified",
         title: "Top Quality Equipment",
-        content: r1Raw
+        content: r1Raw,
       });
     }
     if (r2Raw) {
@@ -248,7 +283,7 @@ export function parseCSV(text: string): Product[] {
         rating: 5,
         date: "Recently Verified",
         title: "Highly Recommended",
-        content: r2Raw
+        content: r2Raw,
       });
     }
 
@@ -272,7 +307,7 @@ export function parseCSV(text: string): Product[] {
       description: pDesc,
       seoKeywords: pSeo,
       specs: specsMap,
-      reviews: reviewsArr
+      reviews: reviewsArr,
     });
   }
 
@@ -287,20 +322,27 @@ export function parseJSONRows(rows: any[]): Product[] {
 
   rows.forEach((row, i) => {
     if (!row || typeof row !== "object") return;
-    const values = Object.values(row).map(v => String(v ?? "").trim());
-    if (values.every(v => v === "")) return;
+    const values = Object.values(row).map((v) => String(v ?? "").trim());
+    if (values.every((v) => v === "")) return;
 
     const getVal = (keywords: string[]) => {
       for (const k of Object.keys(row)) {
         const cleanK = k.toLowerCase().trim();
-        if (keywords.some(key => cleanK.includes(key))) {
+        if (keywords.some((key) => cleanK.includes(key))) {
           return String(row[k] ?? "").trim();
         }
       }
       return "";
     };
 
-    const rowName = getVal(["display name", "displayname", "name", "title", "product name", "product"]);
+    const rowName = getVal([
+      "display name",
+      "displayname",
+      "name",
+      "title",
+      "product name",
+      "product",
+    ]);
     const rowDispName = getVal(["display name", "displayname", "public name"]);
     const pName = rowDispName || rowName;
 
@@ -312,18 +354,33 @@ export function parseJSONRows(rows: any[]): Product[] {
     const pSku = getVal(["sku", "code", "part number"]) || `SKU-${timestamp}-${i + 1}`;
 
     const priceRaw = getVal(["price", "wholesale", "cost"]);
-    const pPrice = priceRaw ? Math.max(0.01, parseFloat(priceRaw.replace(/[^0-9.]/g, "")) || 199.99) : 199.99;
+    const pPrice = priceRaw
+      ? Math.max(0.01, parseFloat(priceRaw.replace(/[^0-9.]/g, "")) || 199.99)
+      : 199.99;
     const salePriceRaw = getVal(["sale price", "saleprice", "selling price", "retail price"]);
-    const pSalePrice = salePriceRaw ? Math.max(0.01, parseFloat(salePriceRaw.replace(/[^0-9.]/g, "")) || 0) || undefined : undefined;
+    const pSalePrice = salePriceRaw
+      ? Math.max(0.01, parseFloat(salePriceRaw.replace(/[^0-9.]/g, "")) || 0) || undefined
+      : undefined;
 
     const stockRaw = getVal(["qty available", "qty", "quantity", "stock"]);
     const pStock = stockRaw ? Math.max(0, parseInt(stockRaw.replace(/[^0-9]/g, ""), 10) || 20) : 20;
     const pDetails = getVal(["details", "highlights", "short description"]);
-    const rawSize = getVal(["product size", "productsize", "package size", "shipping size", "box size", "size"]);
-    const pProductSize = rawSize ? rawSize.trim() : classifyProductByNameAndPrice(pName, pPrice, pCat, pDetails);
+    const rawSize = getVal([
+      "product size",
+      "productsize",
+      "package size",
+      "shipping size",
+      "box size",
+      "size",
+    ]);
+    const pProductSize = rawSize
+      ? rawSize.trim()
+      : classifyProductByNameAndPrice(pName, pPrice, pCat, pDetails);
     const pImg = getVal(["image link", "image url", "image", "img", "photo"]);
     const pSeo = getVal(["seo keywords", "keywords", "tags", "seo"]);
-    const pDesc = getVal(["product description", "description", "desc", "full description"]) || `${pName} by ${pBrand}. Commercial pool grade equipment.`;
+    const pDesc =
+      getVal(["product description", "description", "desc", "full description"]) ||
+      `${pName} by ${pBrand}. Commercial pool grade equipment.`;
     const pSpecsRaw = getVal(["specifications", "specs", "technical specs"]);
     const r1Raw = getVal(["5-star review 1", "review 1", "review1"]);
     const r2Raw = getVal(["5-star review 2", "review 2", "review2"]);
@@ -332,7 +389,7 @@ export function parseJSONRows(rows: any[]): Product[] {
     const specsMap: Record<string, string> = { Warranty: "2 Years Limited Warranty" };
     if (pSpecsRaw) {
       const parts = pSpecsRaw.split(/;|\||\n/);
-      parts.forEach(part => {
+      parts.forEach((part) => {
         const colon = part.indexOf(":");
         if (colon !== -1) {
           const k = part.substring(0, colon).trim();
@@ -353,7 +410,7 @@ export function parseJSONRows(rows: any[]): Product[] {
         rating: 5,
         date: "Recently Verified",
         title: "Top Quality Equipment",
-        content: r1Raw
+        content: r1Raw,
       });
     }
     if (r2Raw) {
@@ -363,7 +420,7 @@ export function parseJSONRows(rows: any[]): Product[] {
         rating: 5,
         date: "Recently Verified",
         title: "Highly Recommended",
-        content: r2Raw
+        content: r2Raw,
       });
     }
 
@@ -387,7 +444,7 @@ export function parseJSONRows(rows: any[]): Product[] {
       description: pDesc,
       seoKeywords: pSeo,
       specs: specsMap,
-      reviews: reviewsArr
+      reviews: reviewsArr,
     });
   });
 
@@ -403,27 +460,27 @@ export function formatProductToExcelRow(p: Product) {
       .join("; ");
   }
 
-  const review1 = p.reviews && p.reviews[0] ? (p.reviews[0].content || p.reviews[0].title || "") : "";
-  const review2 = p.reviews && p.reviews[1] ? (p.reviews[1].content || p.reviews[1].title || "") : "";
+  const review1 = p.reviews && p.reviews[0] ? p.reviews[0].content || p.reviews[0].title || "" : "";
+  const review2 = p.reviews && p.reviews[1] ? p.reviews[1].content || p.reviews[1].title || "" : "";
 
   return {
-    "Category": p.parentCategory || p.category || "Pool & Spa",
+    Category: p.parentCategory || p.category || "Pool & Spa",
     "Sub Category": p.subCategory || p.category || "",
-    "Manufacturer": p.brand || "",
-    "Name": p.name || "",
+    Manufacturer: p.brand || "",
+    Name: p.name || "",
     "Display Name": p.displayName || p.name || "",
-    "SKU": p.sku || "",
-    "Price": Number(p.price) || 0,
+    SKU: p.sku || "",
+    Price: Number(p.price) || 0,
     "Sale Price": p.salePrice != null && p.salePrice > 0 ? Number(p.salePrice) : "",
     "Qty Available": Number(p.stock) || 0,
     "Product Size": p.productSize || "",
-    "Details": p.details || "",
+    Details: p.details || "",
     "Image Link": p.img || (p as any).image || "",
     "SEO Keywords": p.seoKeywords || "",
     "Product Description": p.description || "",
-    "Specifications": specsStr,
+    Specifications: specsStr,
     "5-Star Review 1": review1,
-    "5-Star Review 2": review2
+    "5-Star Review 2": review2,
   };
 }
 
@@ -496,7 +553,7 @@ function ProductsManager() {
             limit: pageSize,
             search: searchTerm || undefined,
             category: selectedCategory !== "all" ? selectedCategory : undefined,
-          }
+          },
         });
         if (res.success && Array.isArray(res.products)) {
           return res;
@@ -504,7 +561,13 @@ function ProductsManager() {
       } catch (e) {
         console.error("Failed to query admin products:", e);
       }
-      return { success: false, products: defaultProductsList, total: defaultProductsList.length, page: 1, pages: 1 };
+      return {
+        success: false,
+        products: defaultProductsList,
+        total: defaultProductsList.length,
+        page: 1,
+        pages: 1,
+      };
     },
     staleTime: 0,
     keepPreviousData: true,
@@ -519,13 +582,17 @@ function ProductsManager() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
-  const [deleteProgress, setDeleteProgress] = useState<{ current: number; total: number } | null>(null);
+  const [deleteProgress, setDeleteProgress] = useState<{ current: number; total: number } | null>(
+    null,
+  );
 
   // Bulk Price Adjuster State
   const [priceAdjustModalOpen, setPriceAdjustModalOpen] = useState(false);
   const [adjustScope, setAdjustScope] = useState<"all" | "category" | "selected">("all");
   const [adjustCategory, setAdjustCategory] = useState(CATEGORIES[0] || "Pool Pumps");
-  const [adjustMode, setAdjustMode] = useState<"percent_increase" | "percent_decrease" | "fixed_increase" | "fixed_decrease">("percent_increase");
+  const [adjustMode, setAdjustMode] = useState<
+    "percent_increase" | "percent_decrease" | "fixed_increase" | "fixed_decrease"
+  >("percent_increase");
   const [adjustValue, setAdjustValue] = useState<number>(10);
   const [adjustMsrp, setAdjustMsrp] = useState(true);
   const [isAdjustingPrices, setIsAdjustingPrices] = useState(false);
@@ -564,14 +631,15 @@ function ProductsManager() {
   const affectedProducts = useMemo(() => {
     if (adjustScope === "selected") {
       const selectedSet = new Set(selectedIds);
-      return bulkPoolProducts.filter(p => selectedSet.has(p.id));
+      return bulkPoolProducts.filter((p) => selectedSet.has(p.id));
     }
     if (adjustScope === "category") {
       const target = adjustCategory.toLowerCase();
-      return bulkPoolProducts.filter(p =>
-        (p.category || "").toLowerCase() === target ||
-        (p.parentCategory || "").toLowerCase() === target ||
-        (p.subCategory || "").toLowerCase() === target
+      return bulkPoolProducts.filter(
+        (p) =>
+          (p.category || "").toLowerCase() === target ||
+          (p.parentCategory || "").toLowerCase() === target ||
+          (p.subCategory || "").toLowerCase() === target,
       );
     }
     return bulkPoolProducts;
@@ -606,7 +674,7 @@ function ProductsManager() {
 
     return {
       price: newPrice,
-      msrp: adjustMsrp ? newMsrp : currentMsrp
+      msrp: adjustMsrp ? newMsrp : currentMsrp,
     };
   };
 
@@ -623,7 +691,7 @@ function ProductsManager() {
           mode: adjustMode,
           value: adjustValue,
           adjustMsrp,
-        }
+        },
       });
 
       if (!res.success) {
@@ -660,11 +728,18 @@ function ProductsManager() {
       queryClient.invalidateQueries({ queryKey: ["all_products"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
 
-      const desc = adjustMode === "percent_increase" ? `+${adjustValue}%` :
-        adjustMode === "percent_decrease" ? `-${adjustValue}%` :
-          adjustMode === "fixed_increase" ? `+$${adjustValue}` : `-$${adjustValue}`;
+      const desc =
+        adjustMode === "percent_increase"
+          ? `+${adjustValue}%`
+          : adjustMode === "percent_decrease"
+            ? `-${adjustValue}%`
+            : adjustMode === "fixed_increase"
+              ? `+$${adjustValue}`
+              : `-$${adjustValue}`;
 
-      triggerToast(`🎉 Sale price adjustment (${desc}) applied to all ${count.toLocaleString()} products!`);
+      triggerToast(
+        `🎉 Sale price adjustment (${desc}) applied to all ${count.toLocaleString()} products!`,
+      );
       setPriceAdjustModalOpen(false);
     } catch (err: any) {
       console.error("Failed to apply bulk price adjustment:", err);
@@ -679,7 +754,9 @@ function ProductsManager() {
   const [parsedProducts, setParsedProducts] = useState<Product[]>([]);
   const [isImporting, setIsImporting] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [importProgress, setImportProgress] = useState<{ current: number; total: number } | null>(null);
+  const [importProgress, setImportProgress] = useState<{ current: number; total: number } | null>(
+    null,
+  );
   const [fileName, setFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -717,11 +794,10 @@ function ProductsManager() {
     setTimeout(() => setToast(""), 4000);
   };
 
-
   // Derive categories dynamically from loaded products (reflects actual DB values)
   const dynamicCategories = useMemo(() => {
     const cats = new Set<string>();
-    productsList.forEach(p => {
+    productsList.forEach((p) => {
       if (p.category) cats.add(p.category);
       if (p.parentCategory) cats.add(p.parentCategory);
       if (p.subCategory) cats.add(p.subCategory);
@@ -737,7 +813,7 @@ function ProductsManager() {
   // Selection handlers
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(filteredProducts.map(p => p.id));
+      setSelectedIds(filteredProducts.map((p) => p.id));
     } else {
       setSelectedIds([]);
     }
@@ -745,9 +821,9 @@ function ProductsManager() {
 
   const handleSelectOne = (id: string, checked: boolean) => {
     if (checked) {
-      setSelectedIds(prev => [...prev, id]);
+      setSelectedIds((prev) => [...prev, id]);
     } else {
-      setSelectedIds(prev => prev.filter(item => item !== id));
+      setSelectedIds((prev) => prev.filter((item) => item !== id));
     }
   };
 
@@ -772,7 +848,7 @@ function ProductsManager() {
     }
 
     const deleteSet = new Set(idsToDelete);
-    const updated = productsList.filter(p => !deleteSet.has(p.id));
+    const updated = productsList.filter((p) => !deleteSet.has(p.id));
     syncLocalProducts(updated);
 
     setSelectedIds([]);
@@ -787,8 +863,8 @@ function ProductsManager() {
 
   const deleteProduct = async () => {
     if (!deleteId) return;
-    const item = productsList.find(p => p.id === deleteId);
-    const updated = productsList.filter(p => p.id !== deleteId);
+    const item = productsList.find((p) => p.id === deleteId);
+    const updated = productsList.filter((p) => p.id !== deleteId);
     syncLocalProducts(updated);
     queryClient.setQueryData(["admin_all_products"], updated);
     queryClient.setQueryData(["products"], updated);
@@ -806,7 +882,12 @@ function ProductsManager() {
   };
 
   const handleDeleteAllProducts = async () => {
-    if (!confirm("Are you sure you want to PERMANENTLY remove ALL products from both the website and the database?")) return;
+    if (
+      !confirm(
+        "Are you sure you want to PERMANENTLY remove ALL products from both the website and the database?",
+      )
+    )
+      return;
     setIsBulkDeleting(true);
     try {
       await deleteAllProductsDb();
@@ -828,7 +909,7 @@ function ProductsManager() {
 
   // Native Excel (.xlsx) & CSV Template Downloader
   const downloadSampleExcel = async () => {
-    let XLSX = (typeof window !== "undefined" ? (window as any).XLSX : null);
+    let XLSX = typeof window !== "undefined" ? (window as any).XLSX : null;
     if (!XLSX && typeof document !== "undefined") {
       try {
         XLSX = await new Promise((resolve, reject) => {
@@ -845,59 +926,67 @@ function ProductsManager() {
 
     const sampleData = [
       {
-        "Category": "Pool & Spa",
+        Category: "Pool & Spa",
         "Sub Category": "Pumps",
-        "Manufacturer": "Pentair",
-        "Name": "SuperFlo VS 1.5 HP Variable Speed Pump",
+        Manufacturer: "Pentair",
+        Name: "SuperFlo VS 1.5 HP Variable Speed Pump",
         "Display Name": "Pentair SuperFlo VS 1.5 HP Energy Efficient Pump",
-        "SKU": "011533",
-        "Price": 1249.99,
+        SKU: "011533",
+        Price: 1249.99,
         "Qty Available": 35,
         "Product Size": "Medium Freight",
-        "Details": "1.5 HP, 115V/230V, Variable Speed, Ultra Quiet",
+        Details: "1.5 HP, 115V/230V, Variable Speed, Ultra Quiet",
         "Image Link": commingSoonImg,
         "SEO Keywords": "pentair, pool pump, superflo, variable speed, energy star",
-        "Product Description": "The Pentair SuperFlo VS Pump brings the energy savings of variable speed technology to standard pool applications at an affordable price.",
-        "Specifications": "Warranty: 2 Years Limited; Volts: 115V/230V; Horsepower: 1.5 HP; Port Size: 1.5 inch",
-        "5-Star Review 1": "Extremely quiet operation and reduced our electric bill by nearly 65% in the first month!",
-        "5-Star Review 2": "Commercial grade durability. Easy installation for pool technicians."
+        "Product Description":
+          "The Pentair SuperFlo VS Pump brings the energy savings of variable speed technology to standard pool applications at an affordable price.",
+        Specifications:
+          "Warranty: 2 Years Limited; Volts: 115V/230V; Horsepower: 1.5 HP; Port Size: 1.5 inch",
+        "5-Star Review 1":
+          "Extremely quiet operation and reduced our electric bill by nearly 65% in the first month!",
+        "5-Star Review 2": "Commercial grade durability. Easy installation for pool technicians.",
       },
       {
-        "Category": "Pool & Spa",
+        Category: "Pool & Spa",
         "Sub Category": "Heaters",
-        "Manufacturer": "Hayward",
-        "Name": "Universal H-Series 400K BTU Natural Gas Heater",
+        Manufacturer: "Hayward",
+        Name: "Universal H-Series 400K BTU Natural Gas Heater",
         "Display Name": "Hayward Universal H-Series 400,000 BTU Gas Pool Heater",
-        "SKU": "H400FDN",
-        "Price": 2899.00,
+        SKU: "H400FDN",
+        Price: 2899.0,
         "Qty Available": 18,
         "Product Size": "Heavy Freight (LTL)",
-        "Details": "400K BTU, Natural Gas, Cupro Nickel Heat Exchanger, Low NOx",
+        Details: "400K BTU, Natural Gas, Cupro Nickel Heat Exchanger, Low NOx",
         "Image Link": commingSoonImg,
         "SEO Keywords": "hayward, pool heater, h-series, 400k btu, natural gas",
-        "Product Description": "Hayward Universal H-Series heaters represent the executive standard of high efficiency performance for in-ground pools and spas.",
-        "Specifications": "Warranty: 3 Years Limited; Fuel: Natural Gas; Heating Capacity: 400000 BTU; Heat Exchanger: Cupro Nickel",
-        "5-Star Review 1": "Heats our 25,000 gallon pool in under 4 hours. Unmatched heating performance!",
-        "5-Star Review 2": "Solid construction and straightforward digital LED interface."
+        "Product Description":
+          "Hayward Universal H-Series heaters represent the executive standard of high efficiency performance for in-ground pools and spas.",
+        Specifications:
+          "Warranty: 3 Years Limited; Fuel: Natural Gas; Heating Capacity: 400000 BTU; Heat Exchanger: Cupro Nickel",
+        "5-Star Review 1":
+          "Heats our 25,000 gallon pool in under 4 hours. Unmatched heating performance!",
+        "5-Star Review 2": "Solid construction and straightforward digital LED interface.",
       },
       {
-        "Category": "Pool & Spa",
+        Category: "Pool & Spa",
         "Sub Category": "Salt Systems",
-        "Manufacturer": "Jandy",
-        "Name": "TruClear Salt Chlorinator System 30k",
+        Manufacturer: "Jandy",
+        Name: "TruClear Salt Chlorinator System 30k",
         "Display Name": "Jandy TruClear Compact Salt Water Chlorination Generator",
-        "SKU": "TRU30K",
-        "Price": 849.50,
+        SKU: "TRU30K",
+        Price: 849.5,
         "Qty Available": 22,
         "Product Size": "Standard Parcel",
-        "Details": "30,000 Gallon Capacity, Transparent Cell Window, Self-Cleaning",
+        Details: "30,000 Gallon Capacity, Transparent Cell Window, Self-Cleaning",
         "Image Link": commingSoonImg,
         "SEO Keywords": "jandy, salt system, truclear, chlorinator, saltwater pool",
-        "Product Description": "Compact salt chlorination generator designed for easy installation and crystal clear pool water.",
-        "Specifications": "Warranty: 2 Years Limited; Pool Size: Up to 30000 Gallons; Output: 0.93 lbs/day",
+        "Product Description":
+          "Compact salt chlorination generator designed for easy installation and crystal clear pool water.",
+        Specifications:
+          "Warranty: 2 Years Limited; Pool Size: Up to 30000 Gallons; Output: 0.93 lbs/day",
         "5-Star Review 1": "Water feels smooth as silk and no harsh chlorine odor. Fantastic unit!",
-        "5-Star Review 2": "Easy to inspect cell window and very reliable control panel."
-      }
+        "5-Star Review 2": "Easy to inspect cell window and very reliable control panel.",
+      },
     ];
 
     try {
@@ -1092,8 +1181,8 @@ function ProductsManager() {
 
     const specStr = p.specs
       ? Object.entries(p.specs)
-        .map(([k, v]) => `${k}: ${v}`)
-        .join("; ")
+          .map(([k, v]) => `${k}: ${v}`)
+          .join("; ")
       : "";
     setSpecifications(specStr);
 
@@ -1155,8 +1244,13 @@ function ProductsManager() {
       const finalImg = img.trim() !== "" ? img.trim() : commingSoonImg;
       const finalName = displayName.trim() || name.trim();
       const finalCat = subCategory.trim() || parentCategory.trim() || "Pool Pumps";
-      const finalDesc = description.trim() || `Commercial grade ${brand.trim()} ${finalName} engineered for heavy-duty pool filtration, heating, and wholesale commercial applications.`;
-      const finalSalePrice = salePrice !== "" && salePrice !== undefined && Number(salePrice) > 0 ? Number(salePrice) : undefined;
+      const finalDesc =
+        description.trim() ||
+        `Commercial grade ${brand.trim()} ${finalName} engineered for heavy-duty pool filtration, heating, and wholesale commercial applications.`;
+      const finalSalePrice =
+        salePrice !== "" && salePrice !== undefined && Number(salePrice) > 0
+          ? Number(salePrice)
+          : undefined;
 
       if (editingProduct) {
         const updatedProduct: Product = {
@@ -1264,8 +1358,8 @@ function ProductsManager() {
         const res = await uploadImage({
           data: {
             filename: file.name,
-            base64: base64String
-          }
+            base64: base64String,
+          },
         });
 
         if (res.success && res.url) {
@@ -1307,14 +1401,16 @@ function ProductsManager() {
           <h1 className="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2 sm:gap-3 flex-wrap">
             <span>Products Catalog</span>
             <span className="text-[10px] sm:text-xs font-bold bg-slate-100 text-slate-600 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-slate-200">
-              {dbLoading ? "Loading..." :
-                searchTerm || selectedCategory !== "all"
+              {dbLoading
+                ? "Loading..."
+                : searchTerm || selectedCategory !== "all"
                   ? `${totalProducts.toLocaleString()} items (filtered)`
-                  : `${totalProducts.toLocaleString()} items`
-              }
+                  : `${totalProducts.toLocaleString()} items`}
             </span>
           </h1>
-          <p className="text-slate-500 text-xs sm:text-sm mt-1">Manage wholesale products, inventories, and pricing metrics.</p>
+          <p className="text-slate-500 text-xs sm:text-sm mt-1">
+            Manage wholesale products, inventories, and pricing metrics.
+          </p>
         </div>
 
         {/* Right Action Buttons */}
@@ -1383,14 +1479,17 @@ function ProductsManager() {
           className="h-10 sm:h-11 px-3 border border-slate-200 bg-slate-50 rounded-xl text-xs font-bold focus:outline-none focus:border-primary focus:bg-white cursor-pointer"
         >
           <option value="all">All Categories ({productsList.length})</option>
-          {dynamicCategories.map(cat => {
-            const count = productsList.filter(p =>
-              (p.category || "").toLowerCase() === cat.toLowerCase() ||
-              (p.parentCategory || "").toLowerCase() === cat.toLowerCase() ||
-              (p.subCategory || "").toLowerCase() === cat.toLowerCase()
+          {dynamicCategories.map((cat) => {
+            const count = productsList.filter(
+              (p) =>
+                (p.category || "").toLowerCase() === cat.toLowerCase() ||
+                (p.parentCategory || "").toLowerCase() === cat.toLowerCase() ||
+                (p.subCategory || "").toLowerCase() === cat.toLowerCase(),
             ).length;
             return (
-              <option key={cat} value={cat}>{cat} ({count})</option>
+              <option key={cat} value={cat}>
+                {cat} ({count})
+              </option>
             );
           })}
         </select>
@@ -1441,7 +1540,10 @@ function ProductsManager() {
               const isLow = p.stock < 10;
               const isSelected = selectedIds.includes(p.id);
               return (
-                <div key={p.id} className={`p-3.5 transition-colors ${isSelected ? "bg-amber-50/60" : "hover:bg-slate-50/50"}`}>
+                <div
+                  key={p.id}
+                  className={`p-3.5 transition-colors ${isSelected ? "bg-amber-50/60" : "hover:bg-slate-50/50"}`}
+                >
                   <div className="flex items-start gap-3">
                     <div className="pt-1 shrink-0">
                       <input
@@ -1454,14 +1556,25 @@ function ProductsManager() {
 
                     <div className="size-14 rounded-xl bg-slate-100/80 border border-slate-200/50 flex items-center justify-center overflow-hidden shrink-0">
                       {p.img ? (
-                        <img src={p.img} alt={p.name} referrerPolicy="no-referrer" className="size-full object-contain p-1" onError={(e) => { if (!e.currentTarget.src.endsWith('/assets/commingsoon.png')) e.currentTarget.src = "/assets/commingsoon.png"; }} />
+                        <img
+                          src={p.img}
+                          alt={p.name}
+                          referrerPolicy="no-referrer"
+                          className="size-full object-contain p-1"
+                          onError={(e) => {
+                            if (!e.currentTarget.src.endsWith("/assets/commingsoon.png"))
+                              e.currentTarget.src = "/assets/commingsoon.png";
+                          }}
+                        />
                       ) : (
                         <Package className="size-5 text-slate-400" />
                       )}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold text-xs text-slate-900 truncate capitalize">{p.name}</div>
+                      <div className="font-bold text-xs text-slate-900 truncate capitalize">
+                        {p.name}
+                      </div>
                       <div className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
                         <span className="font-semibold text-slate-600">{p.brand}</span>
                         <span>•</span>
@@ -1480,14 +1593,22 @@ function ProductsManager() {
                         <div>
                           <div className="flex items-baseline gap-2.5 flex-wrap">
                             <div>
-                              <span className="text-[9.5px] uppercase font-bold text-slate-400 block leading-none mb-0.5">Price</span>
-                              <span className="font-black text-sm text-slate-900">{formatUSD(p.price)}</span>
+                              <span className="text-[9.5px] uppercase font-bold text-slate-400 block leading-none mb-0.5">
+                                Price
+                              </span>
+                              <span className="font-black text-sm text-slate-900">
+                                {formatUSD(p.price)}
+                              </span>
                             </div>
                             {p.salePrice && p.salePrice > 0 && (
                               <div>
-                                <span className="text-[9.5px] uppercase font-bold text-emerald-600 block leading-none mb-0.5">Sale Price</span>
+                                <span className="text-[9.5px] uppercase font-bold text-emerald-600 block leading-none mb-0.5">
+                                  Sale Price
+                                </span>
                                 <div className="flex items-center gap-1">
-                                  <span className="font-black text-sm text-emerald-700">{formatUSD(p.salePrice)}</span>
+                                  <span className="font-black text-sm text-emerald-700">
+                                    {formatUSD(p.salePrice)}
+                                  </span>
                                   {p.salePrice > p.price && (
                                     <span className="text-[9px] font-black bg-emerald-100 text-emerald-700 border border-emerald-300/60 px-1 py-0.2 rounded">
                                       +{Math.round(((p.salePrice - p.price) / p.price) * 100)}%
@@ -1503,8 +1624,12 @@ function ProductsManager() {
                             )}
                           </div>
                           <div className="flex items-center gap-1 mt-1">
-                            {isLow && <AlertTriangle className="size-3 text-rose-500 animate-pulse" />}
-                            <span className={`text-[10px] ${isLow ? "text-rose-600 font-bold" : "text-slate-500"}`}>
+                            {isLow && (
+                              <AlertTriangle className="size-3 text-rose-500 animate-pulse" />
+                            )}
+                            <span
+                              className={`text-[10px] ${isLow ? "text-rose-600 font-bold" : "text-slate-500"}`}
+                            >
                               {p.stock} in stock
                             </span>
                           </div>
@@ -1547,7 +1672,9 @@ function ProductsManager() {
                 <th className="p-4 w-12 text-center">
                   <input
                     type="checkbox"
-                    checked={filteredProducts.length > 0 && selectedIds.length === filteredProducts.length}
+                    checked={
+                      filteredProducts.length > 0 && selectedIds.length === filteredProducts.length
+                    }
                     onChange={(e) => handleSelectAll(e.target.checked)}
                     className="size-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer accent-primary"
                     title="Select All Products"
@@ -1570,7 +1697,10 @@ function ProductsManager() {
                   const isLow = p.stock < 10;
                   const isSelected = selectedIds.includes(p.id);
                   return (
-                    <tr key={p.id} className={`hover:bg-slate-50/50 transition-colors group ${isSelected ? "bg-amber-50/50" : ""}`}>
+                    <tr
+                      key={p.id}
+                      className={`hover:bg-slate-50/50 transition-colors group ${isSelected ? "bg-amber-50/50" : ""}`}
+                    >
                       <td className="p-4 w-12 text-center">
                         <input
                           type="checkbox"
@@ -1582,7 +1712,16 @@ function ProductsManager() {
                       <td className="p-4">
                         <div className="size-12 rounded-xl bg-slate-100/80 border border-slate-200/50 flex items-center justify-center overflow-hidden">
                           {p.img ? (
-                            <img src={p.img} alt={p.name} referrerPolicy="no-referrer" className="size-full object-contain p-1" onError={(e) => { if (!e.currentTarget.src.endsWith('/assets/commingsoon.png')) e.currentTarget.src = "/assets/commingsoon.png"; }} />
+                            <img
+                              src={p.img}
+                              alt={p.name}
+                              referrerPolicy="no-referrer"
+                              className="size-full object-contain p-1"
+                              onError={(e) => {
+                                if (!e.currentTarget.src.endsWith("/assets/commingsoon.png"))
+                                  e.currentTarget.src = "/assets/commingsoon.png";
+                              }}
+                            />
                           ) : (
                             <Package className="size-5 text-slate-400" />
                           )}
@@ -1599,7 +1738,9 @@ function ProductsManager() {
                         </span>
                       </td>
                       <td className="p-4 text-center">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${p.productSize ? "bg-sky-50 text-sky-700 border-sky-200" : "bg-slate-50 text-slate-400 border-slate-200"}`}>
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${p.productSize ? "bg-sky-50 text-sky-700 border-sky-200" : "bg-slate-50 text-slate-400 border-slate-200"}`}
+                        >
                           {p.productSize || "—"}
                         </span>
                       </td>
@@ -1609,7 +1750,9 @@ function ProductsManager() {
                       <td className="p-4 text-right">
                         {p.salePrice && p.salePrice > 0 ? (
                           <div>
-                            <div className="font-bold text-emerald-700">{formatUSD(p.salePrice)}</div>
+                            <div className="font-bold text-emerald-700">
+                              {formatUSD(p.salePrice)}
+                            </div>
                             {p.salePrice > p.price && (
                               <span className="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/80 border border-emerald-300/60 px-1.5 py-0.5 rounded-md mt-0.5 shadow-2xs">
                                 +{Math.round(((p.salePrice - p.price) / p.price) * 100)}%
@@ -1627,7 +1770,9 @@ function ProductsManager() {
                       </td>
                       <td className="p-4 text-center">
                         <div className="flex items-center justify-center gap-1">
-                          {isLow && <AlertTriangle className="size-3.5 text-rose-500 animate-pulse" />}
+                          {isLow && (
+                            <AlertTriangle className="size-3.5 text-rose-500 animate-pulse" />
+                          )}
                           <span className={isLow ? "text-rose-600 font-bold" : "text-slate-800"}>
                             {p.stock} units
                           </span>
@@ -1669,11 +1814,13 @@ function ProductsManager() {
         {totalPages > 1 && (
           <div className="flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 px-4 sm:px-5 py-3 bg-slate-50/50 gap-2.5 sm:gap-0">
             <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold">
-              Showing {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, totalProducts)} of {totalProducts.toLocaleString()} products
+              Showing {(currentPage - 1) * pageSize + 1}–
+              {Math.min(currentPage * pageSize, totalProducts)} of {totalProducts.toLocaleString()}{" "}
+              products
             </span>
             <div className="flex items-center gap-1 sm:gap-1.5">
               <button
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="size-7 sm:size-8 rounded-lg hover:bg-slate-200 disabled:opacity-30 grid place-items-center transition cursor-pointer"
               >
@@ -1697,7 +1844,7 @@ function ProductsManager() {
                 );
               })}
               <button
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 className="size-7 sm:size-8 rounded-lg hover:bg-slate-200 disabled:opacity-30 grid place-items-center transition cursor-pointer"
               >
@@ -1731,8 +1878,12 @@ function ProductsManager() {
                     <FileSpreadsheet className="size-5 sm:size-6" />
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-base sm:text-lg text-slate-900">Bulk Import Products</h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500">Upload product list CSV or Excel export into database.</p>
+                    <h3 className="font-extrabold text-base sm:text-lg text-slate-900">
+                      Bulk Import Products
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500">
+                      Upload product list CSV or Excel export into database.
+                    </p>
                   </div>
                 </div>
                 <button
@@ -1747,7 +1898,10 @@ function ProductsManager() {
               <div className="bg-emerald-50/70 border border-emerald-200/60 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="text-xs">
                   <span className="font-bold text-emerald-900 block">Need a sample format?</span>
-                  <span className="text-emerald-700 text-[11px]">Download our 16-column sample template (.xlsx) with preconfigured pool categories, shipping sizes & schemas.</span>
+                  <span className="text-emerald-700 text-[11px]">
+                    Download our 16-column sample template (.xlsx) with preconfigured pool
+                    categories, shipping sizes & schemas.
+                  </span>
                 </div>
                 <button
                   onClick={downloadSampleExcel}
@@ -1777,7 +1931,9 @@ function ProductsManager() {
                     "Click to select or drag & drop Excel (.csv, .xlsx, .json)"
                   )}
                 </div>
-                <p className="text-[10px] text-slate-400 font-semibold">Supports CSV (UTF-8), Excel CSV, or JSON exports</p>
+                <p className="text-[10px] text-slate-400 font-semibold">
+                  Supports CSV (UTF-8), Excel CSV, or JSON exports
+                </p>
               </div>
 
               {/* Parsed Products Preview Table */}
@@ -1796,7 +1952,9 @@ function ProductsManager() {
                         <div className="min-w-0">
                           <div className="font-bold text-slate-900 truncate">{p.name}</div>
                           <div className="text-[10px] text-slate-400 flex items-center gap-1.5 flex-wrap">
-                            <span>{p.brand} • {p.category}</span>
+                            <span>
+                              {p.brand} • {p.category}
+                            </span>
                             {p.productSize && (
                               <span className="font-semibold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200">
                                 Size: {p.productSize}
@@ -1824,7 +1982,9 @@ function ProductsManager() {
                 <div className="space-y-2 pt-2">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-700">
                     <span>Importing products...</span>
-                    <span>{importProgress.current} / {importProgress.total}</span>
+                    <span>
+                      {importProgress.current} / {importProgress.total}
+                    </span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
                     <div
@@ -1838,7 +1998,11 @@ function ProductsManager() {
               {/* Import Action Buttons */}
               <div className="flex flex-wrap items-center justify-end gap-2.5 sm:gap-3 pt-2">
                 <button
-                  onClick={() => { setImportModalOpen(false); setParsedProducts([]); setFileName(""); }}
+                  onClick={() => {
+                    setImportModalOpen(false);
+                    setParsedProducts([]);
+                    setFileName("");
+                  }}
                   disabled={isImporting}
                   className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
                 >
@@ -1849,8 +2013,14 @@ function ProductsManager() {
                   disabled={parsedProducts.length === 0 || isImporting}
                   className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {isImporting ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}
-                  <span>Import {parsedProducts.length > 0 ? `${parsedProducts.length} Items` : "File"}</span>
+                  {isImporting ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Upload className="size-3.5" />
+                  )}
+                  <span>
+                    Import {parsedProducts.length > 0 ? `${parsedProducts.length} Items` : "File"}
+                  </span>
                 </button>
               </div>
             </motion.div>
@@ -1890,12 +2060,17 @@ function ProductsManager() {
               <form onSubmit={saveProduct} className="space-y-3.5 sm:space-y-4">
                 {/* Section 1: Classification */}
                 <div className="bg-slate-50 border border-slate-200/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl space-y-2.5 sm:space-y-3">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">1. Categorization & Brand</span>
+                  <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                    1. Categorization & Brand
+                  </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-slate-600 mb-1">Parent Category</span>
+                      <span className="block text-[10px] font-bold text-slate-600 mb-1">
+                        Parent Category
+                      </span>
                       <select
-                        value={parentCategory} onChange={(e) => setParentCategory(e.target.value)}
+                        value={parentCategory}
+                        onChange={(e) => setParentCategory(e.target.value)}
                         className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-white text-xs font-bold focus:outline-none focus:border-indigo-500 transition cursor-pointer"
                       >
                         <option value="Pool & Spa">Pool & Spa</option>
@@ -1907,21 +2082,31 @@ function ProductsManager() {
                     </label>
 
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-slate-600 mb-1">Sub Category</span>
+                      <span className="block text-[10px] font-bold text-slate-600 mb-1">
+                        Sub Category
+                      </span>
                       <select
-                        value={subCategory} onChange={(e) => setSubCategory(e.target.value)}
+                        value={subCategory}
+                        onChange={(e) => setSubCategory(e.target.value)}
                         className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-white text-xs font-bold focus:outline-none focus:border-indigo-500 transition cursor-pointer"
                       >
-                        {CATEGORIES.map(cat => (
-                          <option key={cat} value={cat}>{cat}</option>
+                        {CATEGORIES.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
                         ))}
                       </select>
                     </label>
 
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-slate-600 mb-1">Manufacturer (Brand)</span>
+                      <span className="block text-[10px] font-bold text-slate-600 mb-1">
+                        Manufacturer (Brand)
+                      </span>
                       <input
-                        type="text" required value={brand} onChange={(e) => setBrand(e.target.value)}
+                        type="text"
+                        required
+                        value={brand}
+                        onChange={(e) => setBrand(e.target.value)}
                         placeholder="e.g. Pentair, Hayward, Jandy"
                         className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-white text-xs font-bold focus:outline-none focus:border-indigo-500 transition"
                       />
@@ -1932,27 +2117,41 @@ function ProductsManager() {
                 {/* Section 2: Product Titles & Identifiers */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">System Name</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      System Name
+                    </span>
                     <input
-                      type="text" required value={name} onChange={(e) => setName(e.target.value)}
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Pentair SuperFlo VS 1.5HP"
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Display Name (Public)</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Display Name (Public)
+                    </span>
                     <input
-                      type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}
+                      type="text"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
                       placeholder="e.g. SuperFlo VS Energy Efficient Pump"
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">SKU Code</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      SKU Code
+                    </span>
                     <input
-                      type="text" required value={sku} onChange={(e) => setSku(e.target.value)}
+                      type="text"
+                      required
+                      value={sku}
+                      onChange={(e) => setSku(e.target.value)}
                       placeholder="e.g. 011533"
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono font-bold focus:outline-none focus:border-indigo-500 transition"
                     />
@@ -1962,33 +2161,59 @@ function ProductsManager() {
                 {/* Section 3: Pricing, Stock & Product Size */}
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Wholesale Price ($)</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Wholesale Price ($)
+                    </span>
                     <input
-                      type="number" required min={0.01} step="0.01" value={price === 0 ? "" : price} onChange={(e) => setPrice(e.target.value === "" ? 0 : Number(e.target.value))}
+                      type="number"
+                      required
+                      min={0.01}
+                      step="0.01"
+                      value={price === 0 ? "" : price}
+                      onChange={(e) => setPrice(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-extrabold focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-1">Sale Price ($)</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-1">
+                      Sale Price ($)
+                    </span>
                     <input
-                      type="number" min={0} step="0.01" placeholder="e.g. 349.99" value={salePrice === "" ? "" : salePrice} onChange={(e) => setSalePrice(e.target.value === "" ? "" : Number(e.target.value))}
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      placeholder="e.g. 349.99"
+                      value={salePrice === "" ? "" : salePrice}
+                      onChange={(e) =>
+                        setSalePrice(e.target.value === "" ? "" : Number(e.target.value))
+                      }
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-extrabold text-emerald-700 focus:outline-none focus:border-emerald-500 transition"
                     />
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Qty Available (Stock)</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Qty Available (Stock)
+                    </span>
                     <input
-                      type="number" required min={0} value={stock === 0 ? "" : stock} onChange={(e) => setStock(e.target.value === "" ? 0 : Number(e.target.value))}
+                      type="number"
+                      required
+                      min={0}
+                      value={stock === 0 ? "" : stock}
+                      onChange={(e) => setStock(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-extrabold focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Product Size (Shipping Tier)</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Product Size (Shipping Tier)
+                    </span>
                     <input
-                      type="text" value={productSize} onChange={(e) => setProductSize(e.target.value)}
+                      type="text"
+                      value={productSize}
+                      onChange={(e) => setProductSize(e.target.value)}
                       placeholder="e.g. Medium Freight, Small, Large"
                       list="product-size-datalist"
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold focus:outline-none focus:border-indigo-500 transition"
@@ -2007,26 +2232,43 @@ function ProductsManager() {
                 {/* Section 4: Details & Image */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Feature Details / Short Summary</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Feature Details / Short Summary
+                    </span>
                     <input
-                      type="text" value={details} onChange={(e) => setDetails(e.target.value)}
+                      type="text"
+                      value={details}
+                      onChange={(e) => setDetails(e.target.value)}
                       placeholder="e.g. 1.5 HP, 115V/230V, Variable Speed, Ultra Quiet"
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
 
                   <div className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Image Link (URL or Upload)</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Image Link (URL or Upload)
+                    </span>
                     <div className="flex gap-2">
                       <input
-                        type="text" value={img} onChange={(e) => setImg(e.target.value)}
+                        type="text"
+                        value={img}
+                        onChange={(e) => setImg(e.target.value)}
                         placeholder="https://... or click upload"
                         className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition min-w-0"
                       />
                       <label className="h-9 px-3 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 transition">
-                        {isUploading ? <Loader2 className="size-3.5 animate-spin" /> : <UploadCloud className="size-3.5" />}
+                        {isUploading ? (
+                          <Loader2 className="size-3.5 animate-spin" />
+                        ) : (
+                          <UploadCloud className="size-3.5" />
+                        )}
                         <span>Upload</span>
-                        <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
                       </label>
                     </div>
                   </div>
@@ -2035,18 +2277,26 @@ function ProductsManager() {
                 {/* Section 5: SEO Keywords & Specs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">SEO Keywords</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      SEO Keywords
+                    </span>
                     <input
-                      type="text" value={seoKeywords} onChange={(e) => setSeoKeywords(e.target.value)}
+                      type="text"
+                      value={seoKeywords}
+                      onChange={(e) => setSeoKeywords(e.target.value)}
                       placeholder="e.g. pentair, pool pump, superflo, variable speed"
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition"
                     />
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Specifications</span>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Specifications
+                    </span>
                     <input
-                      type="text" value={specifications} onChange={(e) => setSpecifications(e.target.value)}
+                      type="text"
+                      value={specifications}
+                      onChange={(e) => setSpecifications(e.target.value)}
                       placeholder="e.g. Warranty: 2 Years; Volts: 115V/230V; HP: 1.5 HP"
                       className="w-full h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition"
                     />
@@ -2055,9 +2305,13 @@ function ProductsManager() {
 
                 {/* Section 6: Product Description */}
                 <label className="block">
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Product Description</span>
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    Product Description
+                  </span>
                   <textarea
-                    rows={3} value={description} onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     placeholder="Enter full commercial product description, features, and specs (optional)..."
                     className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-indigo-500 transition resize-none"
                   />
@@ -2067,22 +2321,32 @@ function ProductsManager() {
                 <div className="bg-amber-50/60 border border-amber-200/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl space-y-2.5 sm:space-y-3">
                   <div className="flex items-center gap-2">
                     <Star className="size-4 text-amber-500 fill-amber-500" />
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900">5-Star Verified Customer Reviews</span>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900">
+                      5-Star Verified Customer Reviews
+                    </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-amber-800 mb-1">5-Star Review 1</span>
+                      <span className="block text-[10px] font-bold text-amber-800 mb-1">
+                        5-Star Review 1
+                      </span>
                       <textarea
-                        rows={2} value={review1} onChange={(e) => setReview1(e.target.value)}
+                        rows={2}
+                        value={review1}
+                        onChange={(e) => setReview1(e.target.value)}
                         placeholder="e.g. Extremely quiet operation and reduced our electric bill by 65%!"
                         className="w-full p-2.5 rounded-xl border border-amber-200 bg-white text-xs focus:outline-none focus:border-amber-500 transition resize-none"
                       />
                     </label>
 
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-amber-800 mb-1">5-Star Review 2</span>
+                      <span className="block text-[10px] font-bold text-amber-800 mb-1">
+                        5-Star Review 2
+                      </span>
                       <textarea
-                        rows={2} value={review2} onChange={(e) => setReview2(e.target.value)}
+                        rows={2}
+                        value={review2}
+                        onChange={(e) => setReview2(e.target.value)}
                         placeholder="e.g. Commercial grade durability and easy installation for technicians."
                         className="w-full p-2.5 rounded-xl border border-amber-200 bg-white text-xs focus:outline-none focus:border-amber-500 transition resize-none"
                       />
@@ -2092,7 +2356,8 @@ function ProductsManager() {
 
                 <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-end pt-3 sm:pt-4">
                   <button
-                    type="button" onClick={() => setFormOpen(false)}
+                    type="button"
+                    onClick={() => setFormOpen(false)}
                     className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-slate-100 font-semibold text-xs text-slate-500 transition cursor-pointer"
                   >
                     Cancel
@@ -2132,7 +2397,8 @@ function ProductsManager() {
               <AlertTriangle className="size-10 sm:size-12 text-rose-500 mx-auto animate-bounce mb-2 sm:mb-3" />
               <h3 className="font-extrabold text-sm sm:text-base text-slate-900">Delete Product</h3>
               <p className="text-xs text-slate-500 mt-1.5 sm:mt-2 leading-relaxed">
-                Are you sure you want to delete this product? This will remove the item from active consumer catalog grids. This action cannot be undone.
+                Are you sure you want to delete this product? This will remove the item from active
+                consumer catalog grids. This action cannot be undone.
               </p>
 
               <div className="flex gap-2.5 sm:gap-3 mt-5 sm:mt-6 justify-center">
@@ -2176,20 +2442,28 @@ function ProductsManager() {
                   <Trash2 className="size-5 sm:size-6" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm sm:text-base text-slate-900">Delete {selectedIds.length} Products?</h3>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">This will permanently remove the selected items from database & catalog.</p>
+                  <h3 className="font-extrabold text-sm sm:text-base text-slate-900">
+                    Delete {selectedIds.length} Products?
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                    This will permanently remove the selected items from database & catalog.
+                  </p>
                 </div>
               </div>
 
               <div className="max-h-36 sm:max-h-44 overflow-y-auto bg-slate-50 border border-slate-200/60 rounded-xl p-3 text-xs space-y-1 text-left scrollbar-thin">
                 {productsList
-                  .filter(p => selectedIds.includes(p.id))
+                  .filter((p) => selectedIds.includes(p.id))
                   .slice(0, 6)
-                  .map(p => (
-                    <div key={p.id} className="font-semibold text-slate-700 truncate">• {p.name} <span className="text-[10px] text-slate-400">({p.sku})</span></div>
+                  .map((p) => (
+                    <div key={p.id} className="font-semibold text-slate-700 truncate">
+                      • {p.name} <span className="text-[10px] text-slate-400">({p.sku})</span>
+                    </div>
                   ))}
                 {selectedIds.length > 6 && (
-                  <div className="text-slate-400 font-bold pt-1 text-[11px]">...and {selectedIds.length - 6} more items</div>
+                  <div className="text-slate-400 font-bold pt-1 text-[11px]">
+                    ...and {selectedIds.length - 6} more items
+                  </div>
                 )}
               </div>
 
@@ -2206,7 +2480,11 @@ function ProductsManager() {
                   disabled={isBulkDeleting}
                   className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition flex items-center gap-1.5 sm:gap-2 shadow-md disabled:opacity-50 cursor-pointer"
                 >
-                  {isBulkDeleting ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
+                  {isBulkDeleting ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Trash2 className="size-3.5" />
+                  )}
                   <span>Delete ({selectedIds.length})</span>
                 </button>
               </div>
@@ -2239,8 +2517,12 @@ function ProductsManager() {
                     <TrendingUp className="size-5 sm:size-6" />
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">Bulk Price Adjuster</h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">Adjust pricing across catalog by percentage or fixed dollar amounts</p>
+                    <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                      Bulk Price Adjuster
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                      Adjust pricing across catalog by percentage or fixed dollar amounts
+                    </p>
                   </div>
                 </div>
                 <button
@@ -2254,7 +2536,9 @@ function ProductsManager() {
               {/* Step 1: Target Scope */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">1. Target Scope</span>
+                  <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                    1. Target Scope
+                  </span>
                   {isLoadingAllProducts && (
                     <span className="text-[10px] text-indigo-600 font-bold flex items-center gap-1">
                       <Loader2 className="size-3 animate-spin" /> Loading all products...
@@ -2275,12 +2559,13 @@ function ProductsManager() {
                         type="button"
                         disabled={disabled}
                         onClick={() => setAdjustScope(s.id as any)}
-                        className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${active
+                        className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                          active
                             ? "border-indigo-600 bg-indigo-50 text-indigo-900 font-bold shadow-xs"
                             : disabled
                               ? "opacity-40 cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400"
                               : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium"
-                          }`}
+                        }`}
                       >
                         <div className="text-xs font-bold">{s.label}</div>
                         <div className="text-[10px] text-slate-400 mt-0.5">
@@ -2294,7 +2579,9 @@ function ProductsManager() {
                 {/* Category Dropdown when Category scope is active */}
                 {adjustScope === "category" && (
                   <div className="pt-2">
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Select Target Category:</label>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                      Select Target Category:
+                    </label>
                     <select
                       value={adjustCategory}
                       onChange={(e) => setAdjustCategory(e.target.value)}
@@ -2302,10 +2589,11 @@ function ProductsManager() {
                     >
                       {CATEGORIES.map((cat) => {
                         const target = cat.toLowerCase();
-                        const count = bulkPoolProducts.filter((p) =>
-                          (p.category || "").toLowerCase() === target ||
-                          (p.parentCategory || "").toLowerCase() === target ||
-                          (p.subCategory || "").toLowerCase() === target
+                        const count = bulkPoolProducts.filter(
+                          (p) =>
+                            (p.category || "").toLowerCase() === target ||
+                            (p.parentCategory || "").toLowerCase() === target ||
+                            (p.subCategory || "").toLowerCase() === target,
                         ).length;
                         return (
                           <option key={cat} value={cat}>
@@ -2320,7 +2608,9 @@ function ProductsManager() {
 
               {/* Step 2: Adjustment Mode */}
               <div className="space-y-2">
-                <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">2. Adjustment Method</span>
+                <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                  2. Adjustment Method
+                </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {[
                     { id: "percent_increase", label: "+ % Increase", sub: "e.g. +10%" },
@@ -2334,13 +2624,18 @@ function ProductsManager() {
                         key={m.id}
                         type="button"
                         onClick={() => setAdjustMode(m.id as any)}
-                        className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer ${active
+                        className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                          active
                             ? "border-indigo-600 bg-indigo-600 text-white font-bold shadow-xs"
                             : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold"
-                          }`}
+                        }`}
                       >
                         <div className="text-xs">{m.label}</div>
-                        <div className={`text-[10px] ${active ? "text-indigo-100" : "text-slate-400"}`}>{m.sub}</div>
+                        <div
+                          className={`text-[10px] ${active ? "text-indigo-100" : "text-slate-400"}`}
+                        >
+                          {m.sub}
+                        </div>
                       </button>
                     );
                   })}
@@ -2350,7 +2645,8 @@ function ProductsManager() {
               {/* Step 3: Value Input & Presets */}
               <div className="space-y-2">
                 <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-                  3. Enter {adjustMode.startsWith("percent") ? "Percentage Value (%)" : "Dollar Amount ($)"}
+                  3. Enter{" "}
+                  {adjustMode.startsWith("percent") ? "Percentage Value (%)" : "Dollar Amount ($)"}
                 </span>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
                   <div className="relative flex-1">
@@ -2369,13 +2665,19 @@ function ProductsManager() {
 
                   {/* Dynamic Preset Buttons for % and $ (Increase & Decrease) */}
                   <div className="flex flex-wrap gap-1">
-                    {(adjustMode.startsWith("percent") ? [5, 10, 15, 20, 25] : [5, 10, 25, 50, 100]).map((val) => (
+                    {(adjustMode.startsWith("percent")
+                      ? [5, 10, 15, 20, 25]
+                      : [5, 10, 25, 50, 100]
+                    ).map((val) => (
                       <button
                         key={val}
                         type="button"
                         onClick={() => setAdjustValue(val)}
-                        className={`px-2.5 py-1.5 sm:py-2 rounded-lg border text-xs font-extrabold transition cursor-pointer flex-1 sm:flex-none ${adjustValue === val ? "bg-indigo-600 text-white border-indigo-600" : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200"
-                          }`}
+                        className={`px-2.5 py-1.5 sm:py-2 rounded-lg border text-xs font-extrabold transition cursor-pointer flex-1 sm:flex-none ${
+                          adjustValue === val
+                            ? "bg-indigo-600 text-white border-indigo-600"
+                            : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200"
+                        }`}
                       >
                         {adjustMode.includes("decrease") ? "-" : "+"}
                         {adjustMode.startsWith("percent") ? `${val}%` : `$${val}`}
@@ -2395,85 +2697,104 @@ function ProductsManager() {
                     className="size-4 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500 shrink-0"
                   />
                   <div>
-                    <div className="text-xs font-bold text-slate-800">Proportionally Adjust MSRP Retail Price</div>
-                    <div className="text-[11px] text-slate-500">Applies the same percentage or fixed delta to manufacturer list price</div>
+                    <div className="text-xs font-bold text-slate-800">
+                      Proportionally Adjust MSRP Retail Price
+                    </div>
+                    <div className="text-[11px] text-slate-500">
+                      Applies the same percentage or fixed delta to manufacturer list price
+                    </div>
                   </div>
                 </label>
               </div>
 
               {/* Step 5: Live Sample Calculation Preview */}
-              {affectedProducts.length > 0 && (() => {
-                const sTerm = previewSearch.trim().toLowerCase();
-                const filteredPreview = sTerm
-                  ? affectedProducts.filter(p =>
-                      (p.name || "").toLowerCase().includes(sTerm) ||
-                      (p.sku || "").toLowerCase().includes(sTerm) ||
-                      (p.brand || "").toLowerCase().includes(sTerm)
-                    )
-                  : affectedProducts;
-                const shownItems = filteredPreview.slice(0, previewLimit);
+              {affectedProducts.length > 0 &&
+                (() => {
+                  const sTerm = previewSearch.trim().toLowerCase();
+                  const filteredPreview = sTerm
+                    ? affectedProducts.filter(
+                        (p) =>
+                          (p.name || "").toLowerCase().includes(sTerm) ||
+                          (p.sku || "").toLowerCase().includes(sTerm) ||
+                          (p.brand || "").toLowerCase().includes(sTerm),
+                      )
+                    : affectedProducts;
+                  const shownItems = filteredPreview.slice(0, previewLimit);
 
-                return (
-                  <div className="border border-indigo-100 bg-indigo-50/50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 space-y-2.5">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-indigo-900">
-                        Live Preview ({affectedProducts.length.toLocaleString()} items affected)
-                      </span>
-                      <span className="text-[10px] text-slate-500 font-semibold">
-                        Showing {shownItems.length} of {filteredPreview.length.toLocaleString()}
-                      </span>
-                    </div>
-
-                    {/* Preview search filter */}
-                    {affectedProducts.length > 5 && (
-                      <div className="relative">
-                        <Search className="absolute left-2.5 top-2.5 size-3.5 text-slate-400" />
-                        <input
-                          type="text"
-                          placeholder="Filter preview by name, SKU, or brand..."
-                          value={previewSearch}
-                          onChange={(e) => setPreviewSearch(e.target.value)}
-                          className="w-full pl-8 pr-3 h-8 rounded-lg border border-indigo-200/80 bg-white text-xs placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
-                        />
+                  return (
+                    <div className="border border-indigo-100 bg-indigo-50/50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 space-y-2.5">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-indigo-900">
+                          Live Preview ({affectedProducts.length.toLocaleString()} items affected)
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-semibold">
+                          Showing {shownItems.length} of {filteredPreview.length.toLocaleString()}
+                        </span>
                       </div>
-                    )}
 
-                    <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 text-xs scrollbar-thin">
-                      {shownItems.map((p) => {
-                        const { price: newP } = calculateAdjustedPrices(p);
-                        const diff = newP - p.price;
-                        return (
-                          <div key={p.id} className="flex flex-col xs:flex-row xs:items-center justify-between bg-white p-2.5 rounded-xl border border-indigo-100 gap-1.5 xs:gap-0">
-                            <div className="truncate font-semibold text-slate-700 max-w-[240px]">
-                              {p.name} <span className="text-[10px] text-slate-400">({p.sku})</span>
-                            </div>
-                            <div className="text-left xs:text-right shrink-0">
-                              <span className="text-slate-400 text-[11px] mr-1.5 font-medium">Cost: ${p.price.toFixed(2)}</span>
-                              <span className="font-extrabold text-emerald-700">Sale Price: ${newP.toFixed(2)}</span>
-                              <span className={`ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${diff >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
-                                {diff >= 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2)}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                      {/* Preview search filter */}
+                      {affectedProducts.length > 5 && (
+                        <div className="relative">
+                          <Search className="absolute left-2.5 top-2.5 size-3.5 text-slate-400" />
+                          <input
+                            type="text"
+                            placeholder="Filter preview by name, SKU, or brand..."
+                            value={previewSearch}
+                            onChange={(e) => setPreviewSearch(e.target.value)}
+                            className="w-full pl-8 pr-3 h-8 rounded-lg border border-indigo-200/80 bg-white text-xs placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
+                          />
+                        </div>
+                      )}
 
-                    {/* Show more button */}
-                    {filteredPreview.length > previewLimit && (
-                      <div className="flex justify-center pt-1">
-                        <button
-                          type="button"
-                          onClick={() => setPreviewLimit(prev => Math.min(prev + 50, filteredPreview.length))}
-                          className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-indigo-200 px-3 py-1 rounded-lg hover:bg-indigo-50 transition cursor-pointer"
-                        >
-                          Show 50 More (Remaining: {(filteredPreview.length - previewLimit).toLocaleString()})
-                        </button>
+                      <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 text-xs scrollbar-thin">
+                        {shownItems.map((p) => {
+                          const { price: newP } = calculateAdjustedPrices(p);
+                          const diff = newP - p.price;
+                          return (
+                            <div
+                              key={p.id}
+                              className="flex flex-col xs:flex-row xs:items-center justify-between bg-white p-2.5 rounded-xl border border-indigo-100 gap-1.5 xs:gap-0"
+                            >
+                              <div className="truncate font-semibold text-slate-700 max-w-[240px]">
+                                {p.name}{" "}
+                                <span className="text-[10px] text-slate-400">({p.sku})</span>
+                              </div>
+                              <div className="text-left xs:text-right shrink-0">
+                                <span className="text-slate-400 text-[11px] mr-1.5 font-medium">
+                                  Cost: ${p.price.toFixed(2)}
+                                </span>
+                                <span className="font-extrabold text-emerald-700">
+                                  Sale Price: ${newP.toFixed(2)}
+                                </span>
+                                <span
+                                  className={`ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${diff >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
+                                >
+                                  {diff >= 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2)}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                    )}
-                  </div>
-                );
-              })()}
+
+                      {/* Show more button */}
+                      {filteredPreview.length > previewLimit && (
+                        <div className="flex justify-center pt-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setPreviewLimit((prev) => Math.min(prev + 50, filteredPreview.length))
+                            }
+                            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-indigo-200 px-3 py-1 rounded-lg hover:bg-indigo-50 transition cursor-pointer"
+                          >
+                            Show 50 More (Remaining:{" "}
+                            {(filteredPreview.length - previewLimit).toLocaleString()})
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-end pt-2">
@@ -2493,11 +2814,15 @@ function ProductsManager() {
                 >
                   {isAdjustingPrices ? (
                     <>
-                      <Loader2 className="size-3.5 animate-spin" /> <span>Saving Changes to {affectedProducts.length.toLocaleString()} Products...</span>
+                      <Loader2 className="size-3.5 animate-spin" />{" "}
+                      <span>
+                        Saving Changes to {affectedProducts.length.toLocaleString()} Products...
+                      </span>
                     </>
                   ) : (
                     <>
-                      <TrendingUp className="size-3.5" /> <span>Apply to {affectedProducts.length.toLocaleString()} Products</span>
+                      <TrendingUp className="size-3.5" />{" "}
+                      <span>Apply to {affectedProducts.length.toLocaleString()} Products</span>
                     </>
                   )}
                 </button>

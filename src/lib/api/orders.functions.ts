@@ -18,7 +18,7 @@ const OrderItemSchema = z.object({
   brand: z.string(),
   price: z.number(),
   qty: z.number(),
-  img: z.string().optional()
+  img: z.string().optional(),
 });
 
 const AddressSchema = z.object({
@@ -27,7 +27,7 @@ const AddressSchema = z.object({
   city: z.string(),
   state: z.string(),
   zip: z.string(),
-  country: z.string()
+  country: z.string(),
 });
 
 const OrderSchema = z.object({
@@ -49,45 +49,41 @@ const OrderSchema = z.object({
   paymentStatus: z.string().optional(),
   paymentIntentId: z.string().optional(),
   status: z.enum(["Pending", "Shipped", "Delivered", "Cancelled"]).optional(),
-  method: z.string()
+  method: z.string(),
 });
 
 export type Order = z.infer<typeof OrderSchema>;
 
-export const getOrdersDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true, orders: [] };
-      const ordersCol = db.collection("orders");
+export const getOrdersDb = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: true, orders: [] };
+    const ordersCol = db.collection("orders");
 
-      const orders = await ordersCol
-        .find()
-        .sort({ placedAt: -1, _id: -1 })
-        .toArray();
+    const orders = await ordersCol.find().sort({ placedAt: -1, _id: -1 }).toArray();
 
-      const formatted = orders.map((o: any) => {
-        const item = { ...o };
-        if (!item.id) {
-          item.id = o._id.toString();
-        }
-        delete item._id;
-        return item as Order;
-      });
+    const formatted = orders.map((o: any) => {
+      const item = { ...o };
+      if (!item.id) {
+        item.id = o._id.toString();
+      }
+      delete item._id;
+      return item as Order;
+    });
 
-      // Defensive JS sort to guarantee newest timestamp is always index 0
-      formatted.sort((a, b) => {
-        const timeA = new Date(a.placedAt || 0).getTime();
-        const timeB = new Date(b.placedAt || 0).getTime();
-        return timeB - timeA;
-      });
+    // Defensive JS sort to guarantee newest timestamp is always index 0
+    formatted.sort((a, b) => {
+      const timeA = new Date(a.placedAt || 0).getTime();
+      const timeB = new Date(b.placedAt || 0).getTime();
+      return timeB - timeA;
+    });
 
-      return { success: true, orders: formatted };
-    } catch (e: any) {
-      console.error("Failed to fetch orders from DB:", e);
-      return { success: false, error: "Failed to load orders from database." };
-    }
-  });
+    return { success: true, orders: formatted };
+  } catch (e: any) {
+    console.error("Failed to fetch orders from DB:", e);
+    return { success: false, error: "Failed to load orders from database." };
+  }
+});
 
 export const getOrderByIdDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
@@ -102,8 +98,10 @@ export const getOrderByIdDb = createServerFn({ method: "POST" })
         $or: [
           { id: cleanId },
           { _id: toQueryId(cleanId) },
-          { id: { $regex: new RegExp(`^${cleanId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } }
-        ]
+          {
+            id: { $regex: new RegExp(`^${cleanId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") },
+          },
+        ],
       });
 
       if (!order) return { success: false, error: "Order not found." };
@@ -122,7 +120,9 @@ export const getOrderByIdDb = createServerFn({ method: "POST" })
   });
 
 export const updateOrderStatusDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string(), status: z.enum(["Pending", "Shipped", "Delivered", "Cancelled"]) }))
+  .inputValidator(
+    z.object({ id: z.string(), status: z.enum(["Pending", "Shipped", "Delivered", "Cancelled"]) }),
+  )
   .handler(async ({ data }) => {
     try {
       const db = await connectDB();
@@ -131,7 +131,7 @@ export const updateOrderStatusDb = createServerFn({ method: "POST" })
 
       const result = await ordersCol.updateOne(
         { $or: [{ _id: toQueryId(data.id) }, { id: data.id }] },
-        { $set: { status: data.status } }
+        { $set: { status: data.status } },
       );
 
       return { success: true };
@@ -177,7 +177,7 @@ export const createOrderDb = createServerFn({ method: "POST" })
         message: `Order #${data.id} has been placed by ${data.name}.`,
         type: "order",
         read: false,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
 
       // Dispatch real-time Gmail notification to admin
@@ -202,7 +202,7 @@ export const seedMockOrdersDb = createServerFn({ method: "POST" })
 
       const count = await ordersCol.countDocuments();
       if (count === 0) {
-        const toInsert = data.map(o => ({ ...o, _id: toQueryId(o.id) }));
+        const toInsert = data.map((o) => ({ ...o, _id: toQueryId(o.id) }));
         await ordersCol.insertMany(toInsert);
       }
 

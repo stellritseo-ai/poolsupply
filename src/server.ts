@@ -31,7 +31,12 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   }
 
   const capturedErr = consumeLastCapturedError();
-  const errorMsg = capturedErr instanceof Error ? capturedErr.stack || capturedErr.message : (capturedErr ? String(capturedErr) : `h3 swallowed SSR error: ${body}`);
+  const errorMsg =
+    capturedErr instanceof Error
+      ? capturedErr.stack || capturedErr.message
+      : capturedErr
+        ? String(capturedErr)
+        : `h3 swallowed SSR error: ${body}`;
   console.error(capturedErr ?? new Error(`h3 swallowed SSR error: ${body}`));
   return new Response(renderErrorPage(errorMsg), {
     status: 500,

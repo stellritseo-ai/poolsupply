@@ -28,8 +28,13 @@ export const Route = createFileRoute("/privacy-policy")({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": pageUrl },
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        { "@type": "ListItem", position: 2, name: "Privacy Policy", item: pageUrl },
       ],
     };
 
@@ -38,7 +43,8 @@ export const Route = createFileRoute("/privacy-policy")({
       "@type": "WebPage",
       name: "Privacy Policy — Pool Supply Wholesalers",
       url: pageUrl,
-      description: "Learn how Pool Supply Wholesalers collects, uses, and safeguards your personal data, order records, and contractor account information.",
+      description:
+        "Learn how Pool Supply Wholesalers collects, uses, and safeguards your personal data, order records, and contractor account information.",
     };
 
     return {
@@ -51,12 +57,14 @@ export const Route = createFileRoute("/privacy-policy")({
         },
         {
           name: "keywords",
-          content: "privacy policy, data protection, pool supply wholesalers privacy, customer personal data, SSL encryption",
+          content:
+            "privacy policy, data protection, pool supply wholesalers privacy, customer personal data, SSL encryption",
         },
         { property: "og:title", content: "Privacy Policy — Pool Supply Wholesalers" },
         {
           property: "og:description",
-          content: "This privacy policy describes how we collect, use, and protect your personal information when you use our website and services.",
+          content:
+            "This privacy policy describes how we collect, use, and protect your personal information when you use our website and services.",
         },
         { property: "og:url", content: pageUrl },
         { property: "og:type", content: "website" },
@@ -73,7 +81,8 @@ export const Route = createFileRoute("/privacy-policy")({
         { name: "twitter:title", content: "Privacy Policy — Pool Supply Wholesalers" },
         {
           name: "twitter:description",
-          content: "This privacy policy describes how we collect, use, and protect your personal information when you use our website and services.",
+          content:
+            "This privacy policy describes how we collect, use, and protect your personal information when you use our website and services.",
         },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
@@ -97,7 +106,9 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          We collect information that you provide directly to us, such as when you create an account, make a purchase, or contact us for support. This may include your name, email address, mailing address, phone number, and payment information.
+          We collect information that you provide directly to us, such as when you create an
+          account, make a purchase, or contact us for support. This may include your name, email
+          address, mailing address, phone number, and payment information.
         </p>
         <div className="grid sm:grid-cols-2 gap-3 pt-1">
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
@@ -105,7 +116,8 @@ const SECTIONS = [
               <UserCheck className="size-3.5 text-cyan-600" /> Account & Contact Info
             </span>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Full name, contractor license details, primary email, contact phone, and company affiliation.
+              Full name, contractor license details, primary email, contact phone, and company
+              affiliation.
             </p>
           </div>
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
@@ -113,7 +125,8 @@ const SECTIONS = [
               <Lock className="size-3.5 text-cyan-600" /> Billing & Logistics Data
             </span>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Job-site delivery address, billing credentials processed via tokenized Stripe SSL, and invoice records.
+              Job-site delivery address, billing credentials processed via tokenized Stripe SSL, and
+              invoice records.
             </p>
           </div>
         </div>
@@ -166,10 +179,14 @@ const SECTIONS = [
           <span>We do not sell, trade, or rent your personal information to third parties.</span>
         </div>
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          We may share your information with service providers who assist us in operating our website and conducting our business, as long as those parties agree to keep this information confidential.
+          We may share your information with service providers who assist us in operating our
+          website and conducting our business, as long as those parties agree to keep this
+          information confidential.
         </p>
         <p className="text-xs text-slate-500 leading-relaxed">
-          These trusted partners include authorized freight carriers (for freight tracking and delivery), verified payment gateways (such as Stripe for encrypted tokenized processing), and transactional email providers for order tracking notifications.
+          These trusted partners include authorized freight carriers (for freight tracking and
+          delivery), verified payment gateways (such as Stripe for encrypted tokenized processing),
+          and transactional email providers for order tracking notifications.
         </p>
       </div>
     ),
@@ -183,7 +200,8 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.
+          We implement appropriate security measures to protect your personal information against
+          unauthorized access, alteration, disclosure, or destruction.
         </p>
         <div className="grid sm:grid-cols-3 gap-3 pt-1">
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center space-y-1">
@@ -220,12 +238,17 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          You have the right to access, update, or delete your personal information at any time. You may also opt out of receiving marketing communications from us.
+          You have the right to access, update, or delete your personal information at any time. You
+          may also opt out of receiving marketing communications from us.
         </p>
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
           <div>
-            <p className="font-bold text-slate-900">Need to update your contractor file or unsubscribe?</p>
-            <p className="text-slate-500 mt-0.5">Contact our support desk or manage your preferences directly.</p>
+            <p className="font-bold text-slate-900">
+              Need to update your contractor file or unsubscribe?
+            </p>
+            <p className="text-slate-500 mt-0.5">
+              Contact our support desk or manage your preferences directly.
+            </p>
           </div>
           <Link
             to="/contact"
@@ -246,10 +269,13 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          We use cookies to enhance your experience on our website. You can choose to disable cookies through your browser settings, though this may affect the functionality of the site.
+          We use cookies to enhance your experience on our website. You can choose to disable
+          cookies through your browser settings, though this may affect the functionality of the
+          site.
         </p>
         <p className="text-xs text-slate-500 leading-relaxed">
-          Cookies allow our platform to remember your cart items, remember your wholesale quote drafts, and ensure fast, secure page loads across sessions.
+          Cookies allow our platform to remember your cart items, remember your wholesale quote
+          drafts, and ensure fast, secure page loads across sessions.
         </p>
       </div>
     ),
@@ -263,7 +289,8 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.
+          We may update this privacy policy from time to time. We will notify you of any changes by
+          posting the new policy on this page.
         </p>
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-2">
@@ -325,7 +352,9 @@ const SECTIONS = [
             </div>
             <div>
               <div className="text-xs text-slate-500 font-medium">Mailing Address</div>
-              <div className="text-sm font-bold text-slate-900">410 Scott Pike, Nashville, TN 37207</div>
+              <div className="text-sm font-bold text-slate-900">
+                410 Scott Pike, Nashville, TN 37207
+              </div>
             </div>
           </div>
 
@@ -335,7 +364,9 @@ const SECTIONS = [
             </div>
             <div>
               <div className="text-xs text-slate-500 font-medium">Response SLA</div>
-              <div className="text-sm font-bold text-slate-900">Guaranteed within 1-2 business days</div>
+              <div className="text-sm font-bold text-slate-900">
+                Guaranteed within 1-2 business days
+              </div>
             </div>
           </div>
         </div>
@@ -387,7 +418,8 @@ function PrivacyPolicyPage() {
                 </h1>
 
                 <p className="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed font-medium">
-                  This privacy policy describes how we collect, use, and protect your personal information when you use our website and services.
+                  This privacy policy describes how we collect, use, and protect your personal
+                  information when you use our website and services.
                 </p>
               </div>
 
@@ -452,7 +484,9 @@ function PrivacyPolicyPage() {
                         className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-cyan-700 hover:bg-cyan-50/60 transition-all group"
                       >
                         <span className="flex items-center gap-2.5 truncate">
-                          <span className="text-[11px] font-mono font-bold text-cyan-600">{s.num}.</span>
+                          <span className="text-[11px] font-mono font-bold text-cyan-600">
+                            {s.num}.
+                          </span>
                           <span className="truncate">{s.title}</span>
                         </span>
                         <ChevronRight className="size-3 text-slate-400 group-hover:text-cyan-600 group-hover:translate-x-0.5 transition-all shrink-0" />
@@ -464,7 +498,8 @@ function PrivacyPolicyPage() {
                     <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-2">
                       <p className="font-bold text-slate-900">Your Privacy Matters</p>
                       <p className="leading-relaxed">
-                        Have questions about your order data or want to request information deletion?
+                        Have questions about your order data or want to request information
+                        deletion?
                       </p>
                       <Link
                         to="/contact"
@@ -507,9 +542,12 @@ function PrivacyPolicyPage() {
                 {/* Additional Trust Banner */}
                 <div className="p-6 rounded-2xl bg-gradient-to-r from-cyan-50 via-sky-50 to-blue-50 border border-cyan-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="space-y-1 text-center sm:text-left">
-                    <h3 className="text-sm font-bold text-slate-900">Dedicated Wholesale Account Privacy</h3>
+                    <h3 className="text-sm font-bold text-slate-900">
+                      Dedicated Wholesale Account Privacy
+                    </h3>
                     <p className="text-xs text-slate-600">
-                      We treat all trade quotes, commercial project specs, and tax-exempt contractor files with strict confidentiality.
+                      We treat all trade quotes, commercial project specs, and tax-exempt contractor
+                      files with strict confidentiality.
                     </p>
                   </div>
                   <Link

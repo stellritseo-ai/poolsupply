@@ -1,10 +1,22 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, PhoneCall, ShieldCheck, Truck, Tag, CheckCircle2, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  PhoneCall,
+  ShieldCheck,
+  Truck,
+  Tag,
+  CheckCircle2,
+  Zap,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 export function CTA() {
   return (
-    <section id="cta" className="py-[50px] px-4 sm:px-6 lg:px-8 font-sans relative overflow-hidden bg-background">
+    <section
+      id="cta"
+      className="py-[50px] px-4 sm:px-6 lg:px-8 font-sans relative overflow-hidden bg-background"
+    >
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -38,7 +50,8 @@ export function CTA() {
             </h2>
 
             <p className="text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed font-medium mx-auto lg:mx-0">
-              Unlock direct tier-1 wholesale pricing on Pentair, Hayward, Jandy, and Raypak. Speak with a certified pool specialist or browse 8,000+ commercial SKUs.
+              Unlock direct tier-1 wholesale pricing on Pentair, Hayward, Jandy, and Raypak. Speak
+              with a certified pool specialist or browse 8,000+ commercial SKUs.
             </p>
 
             {/* CTA Buttons */}
@@ -70,8 +83,12 @@ export function CTA() {
                 <Truck className="size-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs sm:text-sm font-extrabold text-white">Same-Day Freight Dispatch</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Orders placed before 2:00 PM EST ship same day</div>
+                <div className="text-xs sm:text-sm font-extrabold text-white">
+                  Same-Day Freight Dispatch
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Orders placed before 2:00 PM EST ship same day
+                </div>
               </div>
             </div>
 
@@ -80,8 +97,12 @@ export function CTA() {
                 <Tag className="size-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs sm:text-sm font-extrabold text-white">Direct Wholesale Trade Rates</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Commercial volume margins with zero markups</div>
+                <div className="text-xs sm:text-sm font-extrabold text-white">
+                  Direct Wholesale Trade Rates
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Commercial volume margins with zero markups
+                </div>
               </div>
             </div>
 
@@ -90,8 +111,12 @@ export function CTA() {
                 <ShieldCheck className="size-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs sm:text-sm font-extrabold text-white">100% Authorized OEM Distributor</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Full factory serial verification and warranty</div>
+                <div className="text-xs sm:text-sm font-extrabold text-white">
+                  100% Authorized OEM Distributor
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Full factory serial verification and warranty
+                </div>
               </div>
             </div>
           </div>

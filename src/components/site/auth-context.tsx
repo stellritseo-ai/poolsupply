@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  
+
   // Auth Modal State
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalType, setAuthModalType] = useState<"login" | "register">("login");
@@ -71,7 +71,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const closeAuthModal = () => setIsAuthModalOpen(false);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, updateUser, isAuthModalOpen, openAuthModal, closeAuthModal, authModalType }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        updateUser,
+        isAuthModalOpen,
+        openAuthModal,
+        closeAuthModal,
+        authModalType,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

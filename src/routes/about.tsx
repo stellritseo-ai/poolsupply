@@ -29,18 +29,24 @@ export const Route = createFileRoute("/about")({
     const breadcrumbLd = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "About Us", "item": pageUrl }
-      ]
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        { "@type": "ListItem", position: 2, name: "About Us", item: pageUrl },
+      ],
     };
 
     const aboutLd = {
       "@context": "https://schema.org",
       "@type": "AboutPage",
-      "name": "About Pool Supply Wholesalers",
-      "url": pageUrl,
-      "description": "America's trusted distributor of commercial pool equipment, variable speed pumps, heaters, filters, and automation systems."
+      name: "About Pool Supply Wholesalers",
+      url: pageUrl,
+      description:
+        "America's trusted distributor of commercial pool equipment, variable speed pumps, heaters, filters, and automation systems.",
     };
 
     return {
@@ -51,8 +57,15 @@ export const Route = createFileRoute("/about")({
           content:
             "Since 2008, Pool Supply Wholesalers has been America's trusted B2B distributor of commercial pool equipment. Serving 5,000+ pool builders and technicians with authorized Pentair, Hayward, Jandy & Raypak systems.",
         },
-        { name: "keywords", content: "about pool supply wholesalers, commercial pool distributor, pool equipment distributor Nashville TN, wholesale pool supplies history" },
-        { property: "og:title", content: "About Pool Supply Wholesalers — Commercial Pool Distributor" },
+        {
+          name: "keywords",
+          content:
+            "about pool supply wholesalers, commercial pool distributor, pool equipment distributor Nashville TN, wholesale pool supplies history",
+        },
+        {
+          property: "og:title",
+          content: "About Pool Supply Wholesalers — Commercial Pool Distributor",
+        },
         {
           property: "og:description",
           content:
@@ -65,20 +78,26 @@ export const Route = createFileRoute("/about")({
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "About Pool Supply Wholesalers — Commercial Pool Equipment Distributor" },
+        {
+          property: "og:image:alt",
+          content: "About Pool Supply Wholesalers — Commercial Pool Equipment Distributor",
+        },
         { property: "og:locale", content: "en_US" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
         { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: "About Pool Supply Wholesalers" },
-        { name: "twitter:description", content: "America's leading commercial pool equipment distributor." },
+        {
+          name: "twitter:description",
+          content: "America's leading commercial pool equipment distributor.",
+        },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
       links: [{ rel: "canonical", href: pageUrl }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
-        { type: "application/ld+json", children: JSON.stringify(aboutLd) }
-      ]
+        { type: "application/ld+json", children: JSON.stringify(aboutLd) },
+      ],
     };
   },
   component: AboutPage,
@@ -154,12 +173,32 @@ const VALUES = [
 ];
 
 const BRANDS = [
-  { name: "Pentair", role: "Variable Speed Pumps, Filters & IntelliCenter", spec: "Authorized Master Distributor" },
-  { name: "Hayward", role: "Universal H-Series, TriStar & Salt Systems", spec: "Direct OEM Partner" },
-  { name: "Jandy", role: "JXi Heaters, TruClear & AquaLink Automation", spec: "Authorized Wholesale Partner" },
-  { name: "Raypak", role: "Commercial ASME & Digital Gas Heaters", spec: "Authorized Master Distributor" },
+  {
+    name: "Pentair",
+    role: "Variable Speed Pumps, Filters & IntelliCenter",
+    spec: "Authorized Master Distributor",
+  },
+  {
+    name: "Hayward",
+    role: "Universal H-Series, TriStar & Salt Systems",
+    spec: "Direct OEM Partner",
+  },
+  {
+    name: "Jandy",
+    role: "JXi Heaters, TruClear & AquaLink Automation",
+    spec: "Authorized Wholesale Partner",
+  },
+  {
+    name: "Raypak",
+    role: "Commercial ASME & Digital Gas Heaters",
+    spec: "Authorized Master Distributor",
+  },
   { name: "Zodiac", role: "Robotic Commercial Cleaners & Valves", spec: "Authorized Partner" },
-  { name: "Waterway", role: "Commercial Filters, Manifolds & Plastics", spec: "Authorized OEM Supplier" },
+  {
+    name: "Waterway",
+    role: "Commercial Filters, Manifolds & Plastics",
+    spec: "Authorized OEM Supplier",
+  },
 ];
 
 const HUBS = [
@@ -268,7 +307,9 @@ function AboutPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-medium"
               >
-                Since 2008, Pool Supply Wholesalers has supplied over 5,000 commercial pool builders, service companies, and municipality facilities with authorized OEM equipment, nationwide 24-hour freight, and dedicated wholesale pricing.
+                Since 2008, Pool Supply Wholesalers has supplied over 5,000 commercial pool
+                builders, service companies, and municipality facilities with authorized OEM
+                equipment, nationwide 24-hour freight, and dedicated wholesale pricing.
               </motion.p>
 
               <motion.div
@@ -350,13 +391,19 @@ function AboutPage() {
 
                 <div className="space-y-3.5 text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
                   <p>
-                    Pool Supply Wholesalers was founded in 2008 by commercial pool builders who experienced the daily friction of fragmented supply chains, inflated equipment markups, and uncertain lead times.
+                    Pool Supply Wholesalers was founded in 2008 by commercial pool builders who
+                    experienced the daily friction of fragmented supply chains, inflated equipment
+                    markups, and uncertain lead times.
                   </p>
                   <p>
-                    Starting with our primary distribution facility in Nashville, Tennessee, we forged direct manufacturer relationships with the premier names in aquatic engineering: <strong>Pentair, Hayward, Jandy, and Raypak</strong>.
+                    Starting with our primary distribution facility in Nashville, Tennessee, we
+                    forged direct manufacturer relationships with the premier names in aquatic
+                    engineering: <strong>Pentair, Hayward, Jandy, and Raypak</strong>.
                   </p>
                   <p>
-                    Today, we operate four nationwide logistics centers spanning over 250,000 square feet of fulfillment space, stocking over 8,000 commercial SKUs and providing pool professionals with uninterrupted access to essential equipment.
+                    Today, we operate four nationwide logistics centers spanning over 250,000 square
+                    feet of fulfillment space, stocking over 8,000 commercial SKUs and providing
+                    pool professionals with uninterrupted access to essential equipment.
                   </p>
                 </div>
 
@@ -365,13 +412,17 @@ function AboutPage() {
                     <div className="flex items-center gap-2 text-cyan-700 font-extrabold text-xs">
                       <CheckCircle2 className="size-4" /> Direct OEM Warranty
                     </div>
-                    <div className="text-[11px] text-slate-500 mt-1">Full factory warranty registration support</div>
+                    <div className="text-[11px] text-slate-500 mt-1">
+                      Full factory warranty registration support
+                    </div>
                   </div>
                   <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
                     <div className="flex items-center gap-2 text-cyan-700 font-extrabold text-xs">
                       <Truck className="size-4" /> Liftgate Freight Delivery
                     </div>
-                    <div className="text-[11px] text-slate-500 mt-1">Commercial job site & warehouse drop-off</div>
+                    <div className="text-[11px] text-slate-500 mt-1">
+                      Commercial job site & warehouse drop-off
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -399,12 +450,17 @@ function AboutPage() {
                         <Building2 className="size-5" />
                       </div>
                       <div>
-                        <div className="text-xs font-extrabold text-white">Nashville Central Distribution Hub</div>
-                        <div className="text-[10px] text-slate-400">412 Ezell Pike, Nashville, TN 37217</div>
+                        <div className="text-xs font-extrabold text-white">
+                          Nashville Central Distribution Hub
+                        </div>
+                        <div className="text-[10px] text-slate-400">
+                          412 Ezell Pike, Nashville, TN 37217
+                        </div>
                       </div>
                     </div>
                     <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-400 text-[10px] font-bold">
-                      <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Hub
+                      <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active
+                      Hub
                     </span>
                   </div>
                 </div>
@@ -424,7 +480,8 @@ function AboutPage() {
                 Our Operational Commitments
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                Standards engineered directly into every quote, order fulfillment, and technical delivery.
+                Standards engineered directly into every quote, order fulfillment, and technical
+                delivery.
               </p>
             </div>
 
@@ -454,9 +511,7 @@ function AboutPage() {
                         {v.title}
                       </h3>
 
-                      <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                        {v.desc}
-                      </p>
+                      <p className="text-xs text-slate-500 leading-relaxed font-medium">{v.desc}</p>
                     </div>
                   </motion.div>
                 );
@@ -478,7 +533,8 @@ function AboutPage() {
                 Four Strategic National Fulfillment Hubs
               </h2>
               <p className="text-xs sm:text-sm text-slate-400">
-                Positioned to deliver commercial freight and parcel shipments nationwide within 24 to 48 hours.
+                Positioned to deliver commercial freight and parcel shipments nationwide within 24
+                to 48 hours.
               </p>
             </div>
 
@@ -533,7 +589,8 @@ function AboutPage() {
                 Authorized Master Distribution
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                Direct manufacturer agreements guaranteeing genuine equipment and complete warranty validity.
+                Direct manufacturer agreements guaranteeing genuine equipment and complete warranty
+                validity.
               </p>
             </div>
 
@@ -584,7 +641,8 @@ function AboutPage() {
                 18 Years of Continuous Growth
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                From a single regional warehouse in Tennessee to a nationwide commercial distribution network.
+                From a single regional warehouse in Tennessee to a nationwide commercial
+                distribution network.
               </p>
             </div>
 
@@ -603,7 +661,9 @@ function AboutPage() {
                       {item.year}
                     </span>
                     <h3 className="text-sm font-extrabold text-slate-900">{item.title}</h3>
-                    <p className="text-xs text-slate-500 leading-relaxed font-medium">{item.desc}</p>
+                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                      {item.desc}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -642,7 +702,9 @@ function AboutPage() {
 
                   <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
                     <div>
-                      <div className="text-xs sm:text-sm font-extrabold text-white">{item.name}</div>
+                      <div className="text-xs sm:text-sm font-extrabold text-white">
+                        {item.name}
+                      </div>
                       <div className="text-[11px] text-cyan-400 font-semibold">{item.title}</div>
                     </div>
                     <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2.5 py-1 rounded-md">
@@ -682,7 +744,8 @@ function AboutPage() {
                 </h2>
 
                 <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                  Open a free commercial account today for immediate access to wholesale pricing tiers, live warehouse stock levels, and certified technical support.
+                  Open a free commercial account today for immediate access to wholesale pricing
+                  tiers, live warehouse stock levels, and certified technical support.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">

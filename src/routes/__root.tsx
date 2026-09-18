@@ -65,8 +65,10 @@ if (typeof window !== "undefined") {
     if (
       fullText.includes("scrnli_recorder_root") ||
       fullText.includes("Could not establish connection. Receiving end does not exist") ||
-      (fullText.includes("Hydration failed") && (fullText.includes("extension") || fullText.includes("scrnli"))) ||
-      (fullText.includes("server rendered HTML didn't match the client") && fullText.includes("scrnli"))
+      (fullText.includes("Hydration failed") &&
+        (fullText.includes("extension") || fullText.includes("scrnli"))) ||
+      (fullText.includes("server rendered HTML didn't match the client") &&
+        fullText.includes("scrnli"))
     ) {
       return; // Safely ignore extension-injected DOM mismatches
     }
@@ -140,10 +142,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Pool Supply Wholesalers — Wholesale to Retail Pool Equipment Supplier" },
-      { name: "description", content: "America's top wholesale to retail distributor of commercial pool pumps, gas heaters, cartridge filters, salt chlorinators, and automation. Buy wholesale pool supplies directly at retail prices from hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL." },
-      { name: "keywords", content: "wholesale to retail pool supplies, wholesale to retail pool equipment, buy wholesale pool equipment at retail, wholesale pool supply distributor, retail pool supplies wholesale prices, commercial pool pumps, variable speed pool pumps, gas pool heaters, pool cartridge filters, salt chlorinators, pentair intelliflo, hayward tristar, jandy pro series, raypak pool heaters, pool automation systems, pool contractor trade pricing, pool supply Nashville TN, pool equipment distributor Los Angeles CA, wholesale pool supplies Dallas TX, commercial pool equipment Orlando FL" },
+      {
+        name: "description",
+        content:
+          "America's top wholesale to retail distributor of commercial pool pumps, gas heaters, cartridge filters, salt chlorinators, and automation. Buy wholesale pool supplies directly at retail prices from hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL.",
+      },
+      {
+        name: "keywords",
+        content:
+          "wholesale to retail pool supplies, wholesale to retail pool equipment, buy wholesale pool equipment at retail, wholesale pool supply distributor, retail pool supplies wholesale prices, commercial pool pumps, variable speed pool pumps, gas pool heaters, pool cartridge filters, salt chlorinators, pentair intelliflo, hayward tristar, jandy pro series, raypak pool heaters, pool automation systems, pool contractor trade pricing, pool supply Nashville TN, pool equipment distributor Los Angeles CA, wholesale pool supplies Dallas TX, commercial pool equipment Orlando FL",
+      },
       { name: "author", content: "Pool Supply Wholesalers" },
-      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      {
+        name: "robots",
+        content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      },
       { name: "google-site-verification", content: "CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" },
 
       // Local SEO geo tags (Nashville HQ)
@@ -157,8 +170,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
       { name: "theme-color", content: "#020617" },
       { property: "og:site_name", content: "Pool Supply Wholesalers" },
-      { property: "og:title", content: "Pool Supply Wholesalers — Direct Wholesale to Retail Pool Equipment" },
-      { property: "og:description", content: "Direct wholesale to retail access to Pentair, Hayward, Jandy & Raypak commercial pool pumps, heaters, filters & automation. Same-day shipping nationwide." },
+      {
+        property: "og:title",
+        content: "Pool Supply Wholesalers — Direct Wholesale to Retail Pool Equipment",
+      },
+      {
+        property: "og:description",
+        content:
+          "Direct wholesale to retail access to Pentair, Hayward, Jandy & Raypak commercial pool pumps, heaters, filters & automation. Same-day shipping nationwide.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://poolsupplywholesalers.com/" },
       { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
@@ -171,8 +191,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@poolsupplywholesalers" },
       { name: "twitter:creator", content: "@poolsupplywholesalers" },
-      { name: "twitter:title", content: "Pool Supply Wholesalers — Wholesale to Retail Pool Supplies" },
-      { name: "twitter:description", content: "Wholesale to retail distributor for pool builders, service pros, and homeowners. Fast shipping from TN, CA, TX, and FL hubs." },
+      {
+        name: "twitter:title",
+        content: "Pool Supply Wholesalers — Wholesale to Retail Pool Supplies",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Wholesale to retail distributor for pool builders, service pros, and homeowners. Fast shipping from TN, CA, TX, and FL hubs.",
+      },
       { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
     ],
     links: [
@@ -190,7 +217,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "dns-prefetch", href: "https://js.stripe.com" },
       { rel: "preconnect", href: "https://www.googletagmanager.com" },
       { rel: "dns-prefetch", href: "https://www.googletagmanager.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
+      },
       { rel: "canonical", href: "https://poolsupplywholesalers.com/" },
       // hreflang for US English targeting
       { rel: "alternate", hrefLang: "en-US", href: "https://poolsupplywholesalers.com/" },
@@ -208,186 +238,189 @@ function RootShell({ children }: { children: ReactNode }) {
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Pool Supply Wholesalers",
-      "alternateName": ["PSW", "Pool Supply Wholesalers Online"],
-      "url": "https://poolsupplywholesalers.com",
-      "description": "Pool Supply Wholesalers — wholesale pool supplies and commercial equipment online at trade pricing.",
-      "publisher": {
+      name: "Pool Supply Wholesalers",
+      alternateName: ["PSW", "Pool Supply Wholesalers Online"],
+      url: "https://poolsupplywholesalers.com",
+      description:
+        "Pool Supply Wholesalers — wholesale pool supplies and commercial equipment online at trade pricing.",
+      publisher: {
         "@type": "Organization",
-        "name": "Pool Supply Wholesalers",
-        "url": "https://poolsupplywholesalers.com",
-        "logo": "https://poolsupplywholesalers.com/logo.png"
+        name: "Pool Supply Wholesalers",
+        url: "https://poolsupplywholesalers.com",
+        logo: "https://poolsupplywholesalers.com/logo.png",
       },
-      "potentialAction": {
+      potentialAction: {
         "@type": "SearchAction",
-        "target": "https://poolsupplywholesalers.com/shop/all?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+        target: "https://poolsupplywholesalers.com/shop/all?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
     },
     {
       "@context": "https://schema.org",
       "@type": ["Organization", "WholesaleStore", "Store"],
-      "name": "Pool Supply Wholesalers",
-      "alternateName": ["Pool Supply Wholesalers LLC", "PSW Wholesale"],
-      "url": "https://poolsupplywholesalers.com",
-      "logo": "https://poolsupplywholesalers.com/logo.png",
-      "image": "https://poolsupplywholesalers.com/about-hero.png",
-      "telephone": "+1-615-477-0407",
-      "email": "sales@poolsupplywholesalers.com",
-      "priceRange": "$$",
-      "description": "America's premier wholesale to retail distributor of commercial pool equipment, variable speed pumps, gas heaters, cartridge filters, and automation systems from Pentair, Hayward, Jandy, and Raypak.",
-      "founder": [
+      name: "Pool Supply Wholesalers",
+      alternateName: ["Pool Supply Wholesalers LLC", "PSW Wholesale"],
+      url: "https://poolsupplywholesalers.com",
+      logo: "https://poolsupplywholesalers.com/logo.png",
+      image: "https://poolsupplywholesalers.com/about-hero.png",
+      telephone: "+1-615-477-0407",
+      email: "sales@poolsupplywholesalers.com",
+      priceRange: "$$",
+      description:
+        "America's premier wholesale to retail distributor of commercial pool equipment, variable speed pumps, gas heaters, cartridge filters, and automation systems from Pentair, Hayward, Jandy, and Raypak.",
+      founder: [
         {
           "@type": "Person",
-          "name": "Jonathan Elio Rodriguez"
+          name: "Jonathan Elio Rodriguez",
         },
         {
           "@type": "Person",
-          "name": "David Elio Rodriguez"
-        }
+          name: "David Elio Rodriguez",
+        },
       ],
-      "parentOrganization": {
+      parentOrganization: {
         "@type": "Organization",
-        "name": "Pools By Elio",
-        "description": "Master pool construction and commercial aquatic contracting firm with 25+ years of industry leadership."
+        name: "Pools By Elio",
+        description:
+          "Master pool construction and commercial aquatic contracting firm with 25+ years of industry leadership.",
       },
-      "contactPoint": {
+      contactPoint: {
         "@type": "ContactPoint",
-        "telephone": "+1-615-477-0407",
-        "contactType": "customer service",
-        "email": "sales@poolsupplywholesalers.com",
-        "areaServed": "US",
-        "availableLanguage": "English"
+        telephone: "+1-615-477-0407",
+        contactType: "customer service",
+        email: "sales@poolsupplywholesalers.com",
+        areaServed: "US",
+        availableLanguage: "English",
       },
-      "address": {
+      address: {
         "@type": "PostalAddress",
-        "streetAddress": "410 Scott Pike",
-        "addressLocality": "Nashville",
-        "addressRegion": "TN",
-        "postalCode": "37207",
-        "addressCountry": "US"
+        streetAddress: "410 Scott Pike",
+        addressLocality: "Nashville",
+        addressRegion: "TN",
+        postalCode: "37207",
+        addressCountry: "US",
       },
-      "areaServed": [
-        { "@type": "State", "name": "Tennessee" },
-        { "@type": "State", "name": "California" },
-        { "@type": "State", "name": "Texas" },
-        { "@type": "State", "name": "Florida" },
-        { "@type": "Country", "name": "United States" }
+      areaServed: [
+        { "@type": "State", name: "Tennessee" },
+        { "@type": "State", name: "California" },
+        { "@type": "State", name: "Texas" },
+        { "@type": "State", name: "Florida" },
+        { "@type": "Country", name: "United States" },
       ],
-      "hasOfferCatalog": {
+      hasOfferCatalog: {
         "@type": "OfferCatalog",
-        "name": "Wholesale to Retail Commercial Pool Equipment Catalog",
-        "itemListElement": [
-          { "@type": "OfferCatalog", "name": "Wholesale & Retail Variable Speed Pool Pumps" },
-          { "@type": "OfferCatalog", "name": "Commercial & Residential Gas Pool Heaters" },
-          { "@type": "OfferCatalog", "name": "Cartridge & Sand Pool Filters Wholesale to Retail" },
-          { "@type": "OfferCatalog", "name": "Salt Water Chlorinators at Wholesale Pricing" },
-          { "@type": "OfferCatalog", "name": "Smart Commercial & Retail Pool Automation" }
-        ]
+        name: "Wholesale to Retail Commercial Pool Equipment Catalog",
+        itemListElement: [
+          { "@type": "OfferCatalog", name: "Wholesale & Retail Variable Speed Pool Pumps" },
+          { "@type": "OfferCatalog", name: "Commercial & Residential Gas Pool Heaters" },
+          { "@type": "OfferCatalog", name: "Cartridge & Sand Pool Filters Wholesale to Retail" },
+          { "@type": "OfferCatalog", name: "Salt Water Chlorinators at Wholesale Pricing" },
+          { "@type": "OfferCatalog", name: "Smart Commercial & Retail Pool Automation" },
+        ],
       },
-      "sameAs": [
+      sameAs: [
         "https://www.facebook.com/poolsupplywholesalers",
         "https://www.instagram.com/poolsupplywholesalers",
         "https://www.linkedin.com/company/pool-supply-wholesalers",
-        "https://www.youtube.com/@poolsupplywholesalers"
+        "https://www.youtube.com/@poolsupplywholesalers",
       ],
-      "knowsAbout": [
+      knowsAbout: [
         "Commercial Pool Equipment",
         "Variable Speed Pool Pumps",
         "Gas Pool Heaters",
         "Pool Cartridge Filters",
         "Salt Chlorine Generators",
         "Pool Automation Systems",
-        "Wholesale Pool Supplies"
-      ]
+        "Wholesale Pool Supplies",
+      ],
     },
     {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
-      "name": "Pool Supply Wholesalers",
-      "image": "https://poolsupplywholesalers.com/about-hero.png",
-      "url": "https://poolsupplywholesalers.com",
-      "telephone": "+1-615-477-0407",
-      "email": "sales@poolsupplywholesalers.com",
-      "priceRange": "$$",
-      "address": {
+      name: "Pool Supply Wholesalers",
+      image: "https://poolsupplywholesalers.com/about-hero.png",
+      url: "https://poolsupplywholesalers.com",
+      telephone: "+1-615-477-0407",
+      email: "sales@poolsupplywholesalers.com",
+      priceRange: "$$",
+      address: {
         "@type": "PostalAddress",
-        "streetAddress": "410 Scott Pike",
-        "addressLocality": "Nashville",
-        "addressRegion": "TN",
-        "postalCode": "37207",
-        "addressCountry": "US"
+        streetAddress: "410 Scott Pike",
+        addressLocality: "Nashville",
+        addressRegion: "TN",
+        postalCode: "37207",
+        addressCountry: "US",
       },
-      "geo": {
+      geo: {
         "@type": "GeoCoordinates",
-        "latitude": 36.1627,
-        "longitude": -86.7816
+        latitude: 36.1627,
+        longitude: -86.7816,
       },
-      "openingHoursSpecification": [
+      openingHoursSpecification: [
         {
           "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          "opens": "08:00",
-          "closes": "17:00"
-        }
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "08:00",
+          closes: "17:00",
+        },
       ],
-      "sameAs": [
+      sameAs: [
         "https://www.facebook.com/poolsupplywholesalers",
         "https://www.instagram.com/poolsupplywholesalers",
         "https://www.linkedin.com/company/pool-supply-wholesalers",
-        "https://www.youtube.com/@poolsupplywholesalers"
-      ]
+        "https://www.youtube.com/@poolsupplywholesalers",
+      ],
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "speakable": {
+      speakable: {
         "@type": "SpeakableSpecification",
-        "cssSelector": [".faq-speakable", "h1", ".hero-description"]
+        cssSelector: [".faq-speakable", "h1", ".hero-description"],
       },
-      "mainEntity": [
+      mainEntity: [
         {
           "@type": "Question",
-          "name": "What pool equipment brands does Pool Supply Wholesalers carry?",
-          "acceptedAnswer": {
+          name: "What pool equipment brands does Pool Supply Wholesalers carry?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "Pool Supply Wholesalers is an authorized wholesale to retail distributor for Pentair, Hayward, Jandy, Raypak, Zodiac, and Waterway. We carry pumps, heaters, filters, automation systems, salt chlorinators, LED lights, and robotic cleaners from all major brands at wholesale to retail pricing."
-          }
+            text: "Pool Supply Wholesalers is an authorized wholesale to retail distributor for Pentair, Hayward, Jandy, Raypak, Zodiac, and Waterway. We carry pumps, heaters, filters, automation systems, salt chlorinators, LED lights, and robotic cleaners from all major brands at wholesale to retail pricing.",
+          },
         },
         {
           "@type": "Question",
-          "name": "How do I get wholesale pool equipment pricing?",
-          "acceptedAnswer": {
+          name: "How do I get wholesale pool equipment pricing?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "Pool Supply Wholesalers offers wholesale to retail pricing to everyone — contractors, service professionals, and homeowners. No membership required. Simply shop our catalog at poolsupplywholesalers.com and all products display our direct wholesale to retail pricing, typically 20-40% below standard retail MSRP."
-          }
+            text: "Pool Supply Wholesalers offers wholesale to retail pricing to everyone — contractors, service professionals, and homeowners. No membership required. Simply shop our catalog at poolsupplywholesalers.com and all products display our direct wholesale to retail pricing, typically 20-40% below standard retail MSRP.",
+          },
         },
         {
           "@type": "Question",
-          "name": "Does Pool Supply Wholesalers ship nationwide?",
-          "acceptedAnswer": {
+          name: "Does Pool Supply Wholesalers ship nationwide?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "Yes. Pool Supply Wholesalers ships to all 50 US states with same-day shipping available from distribution hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL. Most orders ship within 1 business day with 2-5 day delivery nationwide."
-          }
+            text: "Yes. Pool Supply Wholesalers ships to all 50 US states with same-day shipping available from distribution hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL. Most orders ship within 1 business day with 2-5 day delivery nationwide.",
+          },
         },
         {
           "@type": "Question",
-          "name": "What is the difference between a variable speed pool pump and a single speed pump?",
-          "acceptedAnswer": {
+          name: "What is the difference between a variable speed pool pump and a single speed pump?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "Variable speed pool pumps (VSPs) use a permanent magnet motor that can run at any speed between 600-3,450 RPM, saving 70-90% on electricity versus fixed-speed pumps. Single speed pumps run at a fixed 3,450 RPM at full power always. As of 2021, the US DOE mandates variable speed for most pool pump replacements. Pool Supply Wholesalers carries Pentair IntelliFlo, Hayward TriStar VS, and Jandy FloPro VS at wholesale pricing."
-          }
+            text: "Variable speed pool pumps (VSPs) use a permanent magnet motor that can run at any speed between 600-3,450 RPM, saving 70-90% on electricity versus fixed-speed pumps. Single speed pumps run at a fixed 3,450 RPM at full power always. As of 2021, the US DOE mandates variable speed for most pool pump replacements. Pool Supply Wholesalers carries Pentair IntelliFlo, Hayward TriStar VS, and Jandy FloPro VS at wholesale pricing.",
+          },
         },
         {
           "@type": "Question",
-          "name": "Are Pentair and Hayward pool equipment prices negotiable for commercial accounts?",
-          "acceptedAnswer": {
+          name: "Are Pentair and Hayward pool equipment prices negotiable for commercial accounts?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "Pool Supply Wholesalers offers special commercial account pricing for contractors, pool builders, property managers, and aquatic facilities ordering in volume. Contact our team at sales@poolsupplywholesalers.com or call +1-615-477-0407 to set up a commercial wholesale account with dedicated pricing and priority fulfillment."
-          }
-        }
-      ]
-    }
+            text: "Pool Supply Wholesalers offers special commercial account pricing for contractors, pool builders, property managers, and aquatic facilities ordering in volume. Contact our team at sales@poolsupplywholesalers.com or call +1-615-477-0407 to set up a commercial wholesale account with dedicated pricing and priority fulfillment.",
+          },
+        },
+      ],
+    },
   ];
 
   return (
@@ -400,7 +433,10 @@ function RootShell({ children }: { children: ReactNode }) {
           }}
         />
         {/* ── End GTM ── */}
-        <meta name="google-site-verification" content="CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" />
+        <meta
+          name="google-site-verification"
+          content="CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc"
+        />
         <HeadContent />
         <script
           type="application/ld+json"
@@ -473,7 +509,9 @@ function RootComponent() {
     }
 
     checkMaintenance();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (isMaintenance && !router.state.location.pathname.startsWith("/admin")) {
@@ -484,9 +522,9 @@ function RootComponent() {
           className="absolute inset-0 z-0 opacity-50 scale-110"
           style={{
             backgroundImage: `url('https://res.cloudinary.com/dmanafb84/image/upload/v1780845960/pool-products/uinvsu9cddj77qn8nnvn.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(24px)'
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "blur(24px)",
           }}
         />
 
@@ -500,7 +538,7 @@ function RootComponent() {
             background: "rgba(255, 255, 255, 0.08)",
             backdropFilter: "blur(40px)",
             WebkitBackdropFilter: "blur(40px)",
-            boxShadow: "0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)"
+            boxShadow: "0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)",
           }}
         >
           <div className="absolute top-0 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" />
@@ -512,7 +550,7 @@ function RootComponent() {
             className="w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative"
             style={{
               background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02))",
-              border: "1px solid rgba(255,255,255,0.2)"
+              border: "1px solid rgba(255,255,255,0.2)",
             }}
           >
             <div className="absolute inset-0 rounded-full border border-white/20 animate-[spin_5s_linear_infinite]" />
@@ -535,7 +573,8 @@ function RootComponent() {
             transition={{ delay: 0.5, duration: 0.5 }}
             className="text-white/80 text-sm sm:text-base font-medium leading-relaxed mb-10 max-w-md mx-auto"
           >
-            {maintenanceNotice || "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates."}
+            {maintenanceNotice ||
+              "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates."}
           </motion.p>
 
           <motion.div
@@ -569,4 +608,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-

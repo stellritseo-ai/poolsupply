@@ -85,24 +85,37 @@ export const Route = createFileRoute("/blog/$slug")({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", position: 2, name: "Pool Equipment Blog", item: "https://poolsupplywholesalers.com/blog" },
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Pool Equipment Blog",
+          item: "https://poolsupplywholesalers.com/blog",
+        },
         { "@type": "ListItem", position: 3, name: article.title, item: pageUrl },
       ],
     };
 
-    const faqLd = article.faqs.length > 0 ? {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: article.faqs.map(faq => ({
-        "@type": "Question",
-        name: faq.q,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: faq.a,
-        },
-      })),
-    } : null;
+    const faqLd =
+      article.faqs.length > 0
+        ? {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: article.faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.q,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.a,
+              },
+            })),
+          }
+        : null;
 
     return {
       meta: [
@@ -126,7 +139,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "article:modified_time", content: article.dateModified },
         { property: "article:author", content: article.author },
         { property: "article:section", content: article.categoryLabel },
-        ...(article.tags.map(tag => ({ property: "article:tag", content: tag }))),
+        ...article.tags.map((tag) => ({ property: "article:tag", content: tag })),
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
         { name: "twitter:creator", content: "@poolsupplywholesalers" },
@@ -134,9 +147,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { name: "twitter:description", content: article.metaDescription },
         { name: "twitter:image", content: article.image },
       ],
-      links: [
-        { rel: "canonical", href: pageUrl },
-      ],
+      links: [{ rel: "canonical", href: pageUrl }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(articleLd) },
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
@@ -158,14 +169,21 @@ function renderBlock(block: ContentBlock, index: number) {
 
     case "h2":
       return (
-        <h2 key={index} className="text-xl sm:text-2xl font-black text-slate-900 mt-8 mb-3 leading-snug scroll-mt-24" id={block.text.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>
+        <h2
+          key={index}
+          className="text-xl sm:text-2xl font-black text-slate-900 mt-8 mb-3 leading-snug scroll-mt-24"
+          id={block.text.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
+        >
           {block.text}
         </h2>
       );
 
     case "h3":
       return (
-        <h3 key={index} className="text-base sm:text-lg font-extrabold text-slate-800 mt-6 mb-2 leading-snug">
+        <h3
+          key={index}
+          className="text-base sm:text-lg font-extrabold text-slate-800 mt-6 mb-2 leading-snug"
+        >
           {block.text}
         </h3>
       );
@@ -174,7 +192,10 @@ function renderBlock(block: ContentBlock, index: number) {
       return (
         <ul key={index} className="space-y-2 my-4">
           {block.items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-[15px] text-slate-700 leading-relaxed">
+            <li
+              key={i}
+              className="flex items-start gap-2.5 text-[15px] text-slate-700 leading-relaxed"
+            >
               <CheckCircle2 className="size-4 text-cyan-600 shrink-0 mt-0.5" />
               <span>{item}</span>
             </li>
@@ -186,7 +207,10 @@ function renderBlock(block: ContentBlock, index: number) {
       return (
         <ol key={index} className="space-y-2 my-4">
           {block.items.map((item, i) => (
-            <li key={i} className="flex items-start gap-3 text-[15px] text-slate-700 leading-relaxed">
+            <li
+              key={i}
+              className="flex items-start gap-3 text-[15px] text-slate-700 leading-relaxed"
+            >
               <span className="size-5 rounded-full bg-cyan-600 text-white text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">
                 {i + 1}
               </span>
@@ -198,12 +222,18 @@ function renderBlock(block: ContentBlock, index: number) {
 
     case "table":
       return (
-        <div key={index} className="my-6 overflow-x-auto rounded-xl border border-slate-200 shadow-xs">
+        <div
+          key={index}
+          className="my-6 overflow-x-auto rounded-xl border border-slate-200 shadow-xs"
+        >
           <table className="w-full text-[13px] border-collapse">
             <thead>
               <tr className="bg-gradient-to-r from-slate-900 to-slate-800">
                 {block.headers.map((h, i) => (
-                  <th key={i} className="text-left px-4 py-3 text-white font-extrabold uppercase tracking-wide text-[11px] first:rounded-tl-xl last:rounded-tr-xl">
+                  <th
+                    key={i}
+                    className="text-left px-4 py-3 text-white font-extrabold uppercase tracking-wide text-[11px] first:rounded-tl-xl last:rounded-tr-xl"
+                  >
                     {h}
                   </th>
                 ))}
@@ -213,7 +243,10 @@ function renderBlock(block: ContentBlock, index: number) {
               {block.rows.map((row, ri) => (
                 <tr key={ri} className={ri % 2 === 0 ? "bg-white" : "bg-slate-50"}>
                   {row.map((cell, ci) => (
-                    <td key={ci} className={`px-4 py-3 text-slate-700 border-t border-slate-100 ${ci === 0 ? "font-bold text-slate-900" : ""}`}>
+                    <td
+                      key={ci}
+                      className={`px-4 py-3 text-slate-700 border-t border-slate-100 ${ci === 0 ? "font-bold text-slate-900" : ""}`}
+                    >
                       {cell}
                     </td>
                   ))}
@@ -226,16 +259,33 @@ function renderBlock(block: ContentBlock, index: number) {
 
     case "callout": {
       const variants = {
-        tip: { bg: "bg-cyan-50 border-cyan-300", icon: <Lightbulb className="size-4 text-cyan-600" />, titleColor: "text-cyan-800", textColor: "text-cyan-700" },
-        warning: { bg: "bg-amber-50 border-amber-300", icon: <AlertTriangle className="size-4 text-amber-600" />, titleColor: "text-amber-800", textColor: "text-amber-700" },
-        info: { bg: "bg-blue-50 border-blue-300", icon: <Info className="size-4 text-blue-600" />, titleColor: "text-blue-800", textColor: "text-blue-700" },
+        tip: {
+          bg: "bg-cyan-50 border-cyan-300",
+          icon: <Lightbulb className="size-4 text-cyan-600" />,
+          titleColor: "text-cyan-800",
+          textColor: "text-cyan-700",
+        },
+        warning: {
+          bg: "bg-amber-50 border-amber-300",
+          icon: <AlertTriangle className="size-4 text-amber-600" />,
+          titleColor: "text-amber-800",
+          textColor: "text-amber-700",
+        },
+        info: {
+          bg: "bg-blue-50 border-blue-300",
+          icon: <Info className="size-4 text-blue-600" />,
+          titleColor: "text-blue-800",
+          textColor: "text-blue-700",
+        },
       };
       const v = variants[block.variant];
       return (
         <div key={index} className={`my-5 p-4 rounded-xl border ${v.bg} flex gap-3`}>
           <div className="shrink-0 mt-0.5">{v.icon}</div>
           <div>
-            <div className={`text-[11px] font-black uppercase tracking-wider mb-1 ${v.titleColor}`}>{block.title}</div>
+            <div className={`text-[11px] font-black uppercase tracking-wider mb-1 ${v.titleColor}`}>
+              {block.title}
+            </div>
             <p className={`text-[13px] leading-relaxed ${v.textColor}`}>{block.text}</p>
           </div>
         </div>
@@ -264,9 +314,13 @@ function ArticlePage() {
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-xs font-semibold text-white/50 mb-6 flex-wrap">
-              <Link to="/" className="hover:text-white/80 transition-colors">Home</Link>
+              <Link to="/" className="hover:text-white/80 transition-colors">
+                Home
+              </Link>
               <ChevronRight className="size-3 text-white/30" />
-              <Link to="/blog" className="hover:text-white/80 transition-colors">Blog</Link>
+              <Link to="/blog" className="hover:text-white/80 transition-colors">
+                Blog
+              </Link>
               <ChevronRight className="size-3 text-white/30" />
               <span className="text-white/70 line-clamp-1">{article.categoryLabel}</span>
             </div>
@@ -307,7 +361,11 @@ function ArticlePage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Calendar className="size-3.5 text-cyan-400" />
-                {new Date(article.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                {new Date(article.date).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="size-3.5 text-cyan-400" />
@@ -317,8 +375,11 @@ function ArticlePage() {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-1.5 mt-5">
-              {article.tags.slice(0, 4).map(tag => (
-                <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white/60 bg-white/10 border border-white/15">
+              {article.tags.slice(0, 4).map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white/60 bg-white/10 border border-white/15"
+                >
                   <Tag className="size-2.5" />
                   {tag}
                 </span>
@@ -331,7 +392,6 @@ function ArticlePage() {
         <section className="py-10 sm:py-14 bg-slate-50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-[1fr_280px] gap-10 items-start">
-
               {/* Article Content */}
               <article className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                 {/* Featured Article Image */}
@@ -405,10 +465,12 @@ function ArticlePage() {
               <aside className="space-y-5 lg:sticky lg:top-28">
                 {/* Table of Contents */}
                 <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-600">In This Guide</h3>
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-600">
+                    In This Guide
+                  </h3>
                   <nav className="space-y-1" aria-label="Table of contents">
                     {article.content
-                      .filter(b => b.type === "h2")
+                      .filter((b) => b.type === "h2")
                       .map((b, i) => {
                         if (b.type !== "h2") return null;
                         const id = b.text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -430,9 +492,12 @@ function ArticlePage() {
 
                 {/* CTA */}
                 <div className="p-5 rounded-2xl bg-gradient-to-br from-cyan-600 to-blue-700 text-white space-y-3 shadow-md shadow-cyan-600/20">
-                  <h3 className="text-sm font-black leading-tight">Ready to order the equipment from this guide?</h3>
+                  <h3 className="text-sm font-black leading-tight">
+                    Ready to order the equipment from this guide?
+                  </h3>
                   <p className="text-xs text-white/80 leading-relaxed">
-                    All equipment mentioned — Pentair, Hayward, Jandy, Raypak — at wholesale to retail pricing. Same-day shipping nationwide.
+                    All equipment mentioned — Pentair, Hayward, Jandy, Raypak — at wholesale to
+                    retail pricing. Same-day shipping nationwide.
                   </p>
                   <a
                     href="/shop/all"
@@ -452,12 +517,33 @@ function ArticlePage() {
 
                 {/* Article Info */}
                 <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3 text-xs text-slate-500">
-                  <h3 className="text-[10px] font-black uppercase tracking-wider text-slate-500">Article Details</h3>
+                  <h3 className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                    Article Details
+                  </h3>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2"><Calendar className="size-3.5 text-cyan-600" /><span>Published {new Date(article.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span></div>
-                    <div className="flex items-center gap-2"><Clock className="size-3.5 text-cyan-600" /><span>{article.readTime}</span></div>
-                    <div className="flex items-center gap-2"><User className="size-3.5 text-cyan-600" /><span>{article.author}</span></div>
-                    <div className="flex items-center gap-2"><BookOpen className="size-3.5 text-cyan-600" /><span>{article.categoryLabel}</span></div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="size-3.5 text-cyan-600" />
+                      <span>
+                        Published{" "}
+                        {new Date(article.date).toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="size-3.5 text-cyan-600" />
+                      <span>{article.readTime}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <User className="size-3.5 text-cyan-600" />
+                      <span>{article.author}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="size-3.5 text-cyan-600" />
+                      <span>{article.categoryLabel}</span>
+                    </div>
                   </div>
                 </div>
               </aside>
@@ -528,7 +614,8 @@ function ArticlePage() {
               </span>
             </h2>
             <p className="text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-              Pentair, Hayward, Jandy, and Raypak equipment shipped same-day from Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL hubs.
+              Pentair, Hayward, Jandy, and Raypak equipment shipped same-day from Nashville TN, Los
+              Angeles CA, Dallas TX, and Orlando FL hubs.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a
@@ -556,5 +643,4 @@ function ArticlePage() {
 }
 
 // Generate static params for all blog slugs
-export const generateStaticParams = () =>
-  BLOG_ARTICLES.map(a => ({ slug: a.slug }));
+export const generateStaticParams = () => BLOG_ARTICLES.map((a) => ({ slug: a.slug }));

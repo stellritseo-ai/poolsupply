@@ -29,24 +29,29 @@ export const Route = createFileRoute("/reviews")({
     const breadcrumbLd = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "Customer Reviews", "item": pageUrl }
-      ]
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        { "@type": "ListItem", position: 2, name: "Customer Reviews", item: pageUrl },
+      ],
     };
 
     const reviewsLd = {
       "@context": "https://schema.org",
       "@type": "WholesaleStore",
-      "name": "Pool Supply Wholesalers",
-      "url": "https://poolsupplywholesalers.com",
-      "aggregateRating": {
+      name: "Pool Supply Wholesalers",
+      url: "https://poolsupplywholesalers.com",
+      aggregateRating: {
         "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": "5000",
-        "bestRating": "5",
-        "worstRating": "1"
-      }
+        ratingValue: "4.9",
+        reviewCount: "5000",
+        bestRating: "5",
+        worstRating: "1",
+      },
     };
 
     return {
@@ -57,7 +62,11 @@ export const Route = createFileRoute("/reviews")({
           content:
             "Read verified reviews from 5,000+ pool contractors and service companies. 4.9/5 star aggregate rating on wholesale pricing, same-day freight, and OEM equipment.",
         },
-        { name: "keywords", content: "pool supply wholesalers reviews, pool equipment contractor reviews, verified pool distributor ratings, pentair wholesale reviews" },
+        {
+          name: "keywords",
+          content:
+            "pool supply wholesalers reviews, pool equipment contractor reviews, verified pool distributor ratings, pentair wholesale reviews",
+        },
         { property: "og:title", content: "Google Verified Reviews — Pool Supply Wholesalers" },
         {
           property: "og:description",
@@ -71,20 +80,26 @@ export const Route = createFileRoute("/reviews")({
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Pool Supply Wholesalers Customer Reviews — 4.9 Stars" },
+        {
+          property: "og:image:alt",
+          content: "Pool Supply Wholesalers Customer Reviews — 4.9 Stars",
+        },
         { property: "og:locale", content: "en_US" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
         { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: "Customer Reviews — Pool Supply Wholesalers" },
-        { name: "twitter:description", content: "Rated 4.9/5.0 by verified pool builders and trade contractors nationwide." },
+        {
+          name: "twitter:description",
+          content: "Rated 4.9/5.0 by verified pool builders and trade contractors nationwide.",
+        },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
       links: [{ rel: "canonical", href: pageUrl }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
-        { type: "application/ld+json", children: JSON.stringify(reviewsLd) }
-      ]
+        { type: "application/ld+json", children: JSON.stringify(reviewsLd) },
+      ],
     };
   },
   component: ReviewsPage,
@@ -258,13 +273,14 @@ function ReviewsPage() {
           setReviews(parsed);
           return;
         }
-      } catch { }
+      } catch {}
     }
     setReviews(SEED_REVIEWS);
   }, []);
 
   const filtered = useMemo(() => {
-    let list = activeCategory === "all" ? reviews : reviews.filter((r) => r.category === activeCategory);
+    let list =
+      activeCategory === "all" ? reviews : reviews.filter((r) => r.category === activeCategory);
     return [...list].sort((a, b) => {
       if (sortBy === "highest") return b.rating - a.rating;
       if (sortBy === "helpful") return (b.helpful || 0) - (a.helpful || 0);
@@ -397,7 +413,8 @@ function ReviewsPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-medium"
               >
-                Authentic feedback from commercial pool builders, service companies, and municipality operators relying on our wholesale supply chain every day.
+                Authentic feedback from commercial pool builders, service companies, and
+                municipality operators relying on our wholesale supply chain every day.
               </motion.p>
 
               <motion.div
@@ -467,7 +484,9 @@ function ReviewsPage() {
                   <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                     <div>
                       <h2 className="text-base font-black text-slate-900">Overall Rating</h2>
-                      <div className="text-xs text-slate-400 font-medium">Based on {stats.total} verified reviews</div>
+                      <div className="text-xs text-slate-400 font-medium">
+                        Based on {stats.total} verified reviews
+                      </div>
                     </div>
                     <div className="text-3xl font-black text-cyan-700">{stats.avg}</div>
                   </div>
@@ -478,7 +497,10 @@ function ReviewsPage() {
                       const count = stats.counts[stars - 1] || 0;
                       const pct = stats.total ? Math.round((count / stats.total) * 100) : 0;
                       return (
-                        <div key={stars} className="flex items-center gap-3 text-xs font-bold text-slate-700">
+                        <div
+                          key={stars}
+                          className="flex items-center gap-3 text-xs font-bold text-slate-700"
+                        >
                           <span className="w-3 text-right">{stars}</span>
                           <Star className="size-3 fill-amber-400 text-amber-400 shrink-0" />
                           <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -512,18 +534,24 @@ function ReviewsPage() {
                   <div className="space-y-1">
                     {CATEGORIES.map((cat) => {
                       const active = activeCategory === cat.id;
-                      const count = cat.id === "all" ? reviews.length : reviews.filter((r) => r.category === cat.id).length;
+                      const count =
+                        cat.id === "all"
+                          ? reviews.length
+                          : reviews.filter((r) => r.category === cat.id).length;
                       return (
                         <button
                           key={cat.id}
                           onClick={() => setActiveCategory(cat.id)}
-                          className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${active
+                          className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            active
                               ? "bg-cyan-50 text-cyan-800 border border-cyan-200/80"
                               : "text-slate-600 hover:bg-slate-50"
-                            }`}
+                          }`}
                         >
                           <span>{cat.label}</span>
-                          <span className={`text-[10px] px-2 py-0.5 rounded-md ${active ? "bg-cyan-200/60 text-cyan-900 font-black" : "bg-slate-100 text-slate-500 font-semibold"}`}>
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded-md ${active ? "bg-cyan-200/60 text-cyan-900 font-black" : "bg-slate-100 text-slate-500 font-semibold"}`}
+                          >
                             {count}
                           </span>
                         </button>
@@ -580,7 +608,9 @@ function ReviewsPage() {
                               </div>
                               <div>
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="font-extrabold text-xs sm:text-sm text-slate-900">{rev.author}</span>
+                                  <span className="font-extrabold text-xs sm:text-sm text-slate-900">
+                                    {rev.author}
+                                  </span>
                                   {rev.verified && (
                                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full">
                                       <CheckCircle2 className="size-2.5" /> Verified Contractor
@@ -597,10 +627,15 @@ function ReviewsPage() {
                             <div className="text-right shrink-0">
                               <div className="flex gap-0.5 justify-end mb-0.5">
                                 {[1, 2, 3, 4, 5].map((i) => (
-                                  <Star key={i} className="size-3.5 fill-amber-400 text-amber-400" />
+                                  <Star
+                                    key={i}
+                                    className="size-3.5 fill-amber-400 text-amber-400"
+                                  />
                                 ))}
                               </div>
-                              <div className="text-[10px] text-slate-400 font-medium">{formatDate(rev.date)}</div>
+                              <div className="text-[10px] text-slate-400 font-medium">
+                                {formatDate(rev.date)}
+                              </div>
                             </div>
                           </div>
 
@@ -625,7 +660,9 @@ function ReviewsPage() {
 
                         {/* Footer */}
                         <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-                          <span className="text-[11px] text-slate-400 font-medium">Was this review helpful?</span>
+                          <span className="text-[11px] text-slate-400 font-medium">
+                            Was this review helpful?
+                          </span>
                           <button
                             onClick={() => markHelpful(rev.id)}
                             className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-slate-600 hover:text-cyan-700 transition px-2.5 py-1 rounded-lg hover:bg-slate-50 border border-slate-200/80 cursor-pointer"
@@ -640,7 +677,9 @@ function ReviewsPage() {
                 ) : (
                   <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200 p-6 space-y-2">
                     <MessageSquare className="size-8 mx-auto text-slate-300" />
-                    <p className="text-xs font-bold text-slate-700">No reviews found in this category.</p>
+                    <p className="text-xs font-bold text-slate-700">
+                      No reviews found in this category.
+                    </p>
                   </div>
                 )}
               </div>
@@ -672,7 +711,8 @@ function ReviewsPage() {
                 </h2>
 
                 <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                  Open a free trade account and experience direct wholesale pricing on Pentair, Hayward, Jandy, and Raypak with 24-hour freight dispatch.
+                  Open a free trade account and experience direct wholesale pricing on Pentair,
+                  Hayward, Jandy, and Raypak with 24-hour freight dispatch.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
@@ -722,8 +762,12 @@ function ReviewsPage() {
                     <Star className="size-4 fill-white" />
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-sm text-slate-900">Write a Verified Review</h3>
-                    <p className="text-[11px] text-slate-400">Share your wholesale equipment experience</p>
+                    <h3 className="font-extrabold text-sm text-slate-900">
+                      Write a Verified Review
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Share your wholesale equipment experience
+                    </p>
                   </div>
                 </div>
                 <button
@@ -822,15 +866,20 @@ function ReviewsPage() {
                         className="p-1 cursor-pointer hover:scale-110 transition-transform"
                       >
                         <Star
-                          className={`size-6 ${star <= (newHoverRating || newRating)
+                          className={`size-6 ${
+                            star <= (newHoverRating || newRating)
                               ? "fill-amber-400 text-amber-400"
                               : "text-slate-200"
-                            }`}
+                          }`}
                         />
                       </button>
                     ))}
                     <span className="ml-2 text-xs font-bold text-slate-600">
-                      {["", "1 - Poor", "2 - Fair", "3 - Good", "4 - Great", "5 - Outstanding"][newHoverRating || newRating]}
+                      {
+                        ["", "1 - Poor", "2 - Fair", "3 - Good", "4 - Great", "5 - Outstanding"][
+                          newHoverRating || newRating
+                        ]
+                      }
                     </span>
                   </div>
                 </div>

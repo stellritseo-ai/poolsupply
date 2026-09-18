@@ -35,10 +35,15 @@ export const Route = createFileRoute("/why-us")({
     const breadcrumbLd = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "Why Choose Us", "item": pageUrl }
-      ]
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        { "@type": "ListItem", position: 2, name: "Why Choose Us", item: pageUrl },
+      ],
     };
 
     return {
@@ -49,7 +54,11 @@ export const Route = createFileRoute("/why-us")({
           content:
             "Discover why 5,000+ pool contractors and service companies trust Pool Supply Wholesalers for genuine OEM equipment, factory warranties, same-day shipping, and certified technical support.",
         },
-        { name: "keywords", content: "why choose pool supply wholesalers, commercial pool supplier advantages, wholesale pool equipment trade pricing, genuine OEM pool parts" },
+        {
+          name: "keywords",
+          content:
+            "why choose pool supply wholesalers, commercial pool supplier advantages, wholesale pool equipment trade pricing, genuine OEM pool parts",
+        },
         { property: "og:title", content: "Why Pool Professionals Choose Pool Supply Wholesalers" },
         {
           property: "og:description",
@@ -63,19 +72,24 @@ export const Route = createFileRoute("/why-us")({
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Why Choose Pool Supply Wholesalers — Authorized Pool Equipment Distributor" },
+        {
+          property: "og:image:alt",
+          content: "Why Choose Pool Supply Wholesalers — Authorized Pool Equipment Distributor",
+        },
         { property: "og:locale", content: "en_US" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
         { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: "Why Choose Pool Supply Wholesalers" },
-        { name: "twitter:description", content: "Authorized distributor for Pentair, Hayward, Jandy & Raypak with 4 US fulfillment hubs." },
+        {
+          name: "twitter:description",
+          content:
+            "Authorized distributor for Pentair, Hayward, Jandy & Raypak with 4 US fulfillment hubs.",
+        },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
       links: [{ rel: "canonical", href: pageUrl }],
-      scripts: [
-        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) }
-      ]
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(breadcrumbLd) }],
     };
   },
   component: WhyUsPage,
@@ -264,7 +278,9 @@ function WhyUsPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-medium"
               >
-                We built Pool Supply Wholesalers to give pool builders and service companies a reliable wholesale supply chain — factory-authorized equipment, true trade margins, and same-day freight logistics.
+                We built Pool Supply Wholesalers to give pool builders and service companies a
+                reliable wholesale supply chain — factory-authorized equipment, true trade margins,
+                and same-day freight logistics.
               </motion.p>
 
               <motion.div
@@ -335,7 +351,8 @@ function WhyUsPage() {
                 Our Six Wholesale Commitments
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                Operational standards engineered into every order, invoice, and technical consultation.
+                Operational standards engineered into every order, invoice, and technical
+                consultation.
               </p>
             </div>
 
@@ -356,9 +373,7 @@ function WhyUsPage() {
                         <div className="size-11 rounded-2xl bg-cyan-500/10 text-cyan-700 border border-cyan-500/20 grid place-items-center group-hover:bg-cyan-600 group-hover:text-white transition-colors">
                           <Icon className="size-5" />
                         </div>
-                        <span className="text-xs font-black text-slate-400">
-                          {pillar.number}
-                        </span>
+                        <span className="text-xs font-black text-slate-400">{pillar.number}</span>
                       </div>
 
                       <div>
@@ -376,7 +391,10 @@ function WhyUsPage() {
 
                       <ul className="space-y-2 pt-2 border-t border-slate-100">
                         {pillar.bullets.map((b) => (
-                          <li key={b} className="flex items-start gap-2 text-[11.5px] font-semibold text-slate-700">
+                          <li
+                            key={b}
+                            className="flex items-start gap-2 text-[11.5px] font-semibold text-slate-700"
+                          >
                             <CheckCircle2 className="size-3.5 text-cyan-600 shrink-0 mt-0.5" />
                             <span>{b}</span>
                           </li>
@@ -401,7 +419,8 @@ function WhyUsPage() {
                 Wholesale Distributor vs. Typical Alternatives
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                See how our dedicated commercial B2B supply chain outperforms retail channels and middlemen.
+                See how our dedicated commercial B2B supply chain outperforms retail channels and
+                middlemen.
               </p>
             </div>
 
@@ -415,13 +434,19 @@ function WhyUsPage() {
               {/* Header row */}
               <div className="grid grid-cols-12 text-center border-b border-slate-200">
                 <div className="col-span-6 p-4 sm:p-5 border-r border-slate-200 text-left">
-                  <div className="text-xs font-black text-slate-500 uppercase tracking-wider">Operational Feature</div>
+                  <div className="text-xs font-black text-slate-500 uppercase tracking-wider">
+                    Operational Feature
+                  </div>
                 </div>
                 <div className="col-span-3 p-4 sm:p-5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white border-r border-slate-200">
-                  <div className="text-[11px] sm:text-xs font-black uppercase tracking-wider">Pool Supply Wholesalers</div>
+                  <div className="text-[11px] sm:text-xs font-black uppercase tracking-wider">
+                    Pool Supply Wholesalers
+                  </div>
                 </div>
                 <div className="col-span-3 p-4 sm:p-5 bg-slate-50">
-                  <div className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Typical Retailers</div>
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    Typical Retailers
+                  </div>
                 </div>
               </div>
 
@@ -429,8 +454,9 @@ function WhyUsPage() {
               {COMPARISON.map((row, i) => (
                 <div
                   key={row.feature}
-                  className={`grid grid-cols-12 text-center items-center ${i !== COMPARISON.length - 1 ? "border-b border-slate-100" : ""
-                    }`}
+                  className={`grid grid-cols-12 text-center items-center ${
+                    i !== COMPARISON.length - 1 ? "border-b border-slate-100" : ""
+                  }`}
                 >
                   <div className="col-span-6 p-3.5 sm:p-4 border-r border-slate-100 text-xs font-bold text-slate-800 text-left px-5 flex items-center">
                     {row.feature}
@@ -480,10 +506,11 @@ function WhyUsPage() {
                       {faq.q}
                     </span>
                     <span
-                      className={`size-7 rounded-xl flex items-center justify-center shrink-0 border transition-all ${openFaq === i
+                      className={`size-7 rounded-xl flex items-center justify-center shrink-0 border transition-all ${
+                        openFaq === i
                           ? "bg-cyan-600 text-white border-cyan-600"
                           : "border-slate-200 text-slate-400"
-                        }`}
+                      }`}
                     >
                       <ChevronDown
                         className={`size-3.5 transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`}
@@ -536,7 +563,8 @@ function WhyUsPage() {
                 </h2>
 
                 <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                  Join 5,000+ pool contractors and service companies. Open your commercial account in minutes with zero setup fees.
+                  Join 5,000+ pool contractors and service companies. Open your commercial account
+                  in minutes with zero setup fees.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">

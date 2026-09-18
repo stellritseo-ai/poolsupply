@@ -117,7 +117,7 @@ function OrdersManager() {
             (it: any) =>
               (it.name || "").toLowerCase().includes(q) ||
               (it.brand || "").toLowerCase().includes(q) ||
-              (it.id || "").toLowerCase().includes(q)
+              (it.id || "").toLowerCase().includes(q),
           );
         const matchStatus =
           statusFilter === "all" ||
@@ -268,10 +268,7 @@ function OrdersManager() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute(
-      "download",
-      `Wholesale_Orders_${new Date().toISOString().split("T")[0]}.csv`
-    );
+    link.setAttribute("download", `Wholesale_Orders_${new Date().toISOString().split("T")[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -299,7 +296,7 @@ function OrdersManager() {
           <td style="padding: 12px 14px; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-align: right; color: #0f172a;">${formatUSD(it.price || 0)}</td>
           <td style="padding: 12px 14px; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-align: right; font-weight: bold; color: #0f172a;">${formatUSD((it.price || 0) * (it.qty || 1))}</td>
         </tr>
-      `
+      `,
       )
       .join("");
 
@@ -471,7 +468,8 @@ function OrdersManager() {
                 </span>
               </h1>
               <p className="text-slate-400 text-xs sm:text-sm font-medium mt-0.5">
-                Real-time commercial purchase logs, carrier fulfillment, and contractor invoice telemetry.
+                Real-time commercial purchase logs, carrier fulfillment, and contractor invoice
+                telemetry.
               </p>
             </div>
           </div>
@@ -510,12 +508,16 @@ function OrdersManager() {
         {/* Metric 1: Total Orders */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Orders</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Total Orders
+            </span>
             <div className="size-8 sm:size-9 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
               <ShoppingBag className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{totalOrders}</div>
+          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
+            {totalOrders}
+          </div>
           <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 sm:mt-1 flex items-center gap-1 truncate">
             <span className="text-emerald-600 font-bold">100% verified</span> in Atlas
           </div>
@@ -524,12 +526,16 @@ function OrdersManager() {
         {/* Metric 2: Pending Fulfillment */}
         <div className="bg-white border border-amber-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-amber-50/40 hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">Pending Dispatch</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">
+              Pending Dispatch
+            </span>
             <div className="size-8 sm:size-9 rounded-xl bg-amber-100 text-amber-800 grid place-items-center">
               <Clock className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-amber-950 tracking-tight">{pendingOrders}</div>
+          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-amber-950 tracking-tight">
+            {pendingOrders}
+          </div>
           <div className="text-[10px] sm:text-[11px] font-semibold text-amber-800/80 mt-0.5 sm:mt-1 truncate">
             Awaiting dock
           </div>
@@ -538,12 +544,16 @@ function OrdersManager() {
         {/* Metric 3: In Transit */}
         <div className="bg-white border border-cyan-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40 hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">Freight In-Transit</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">
+              Freight In-Transit
+            </span>
             <div className="size-8 sm:size-9 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
               <Truck className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-cyan-950 tracking-tight">{shippedOrders}</div>
+          <div className="text-xl sm:text-2xl lg:text-3xl font-black text-cyan-950 tracking-tight">
+            {shippedOrders}
+          </div>
           <div className="text-[10px] sm:text-[11px] font-semibold text-cyan-800/80 mt-0.5 sm:mt-1 truncate">
             Dispatched routes
           </div>
@@ -552,12 +562,16 @@ function OrdersManager() {
         {/* Metric 4: Gross Revenue */}
         <div className="bg-white border border-emerald-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40 hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">Settled Revenue</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">
+              Settled Revenue
+            </span>
             <div className="size-8 sm:size-9 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
               <DollarSign className="size-4 sm:size-4.5" />
             </div>
           </div>
-          <div className="text-lg sm:text-2xl lg:text-3xl font-black text-emerald-950 tracking-tight truncate">{formatUSD(totalRevenue)}</div>
+          <div className="text-lg sm:text-2xl lg:text-3xl font-black text-emerald-950 tracking-tight truncate">
+            {formatUSD(totalRevenue)}
+          </div>
           <div className="text-[10px] sm:text-[11px] font-semibold text-emerald-800/80 mt-0.5 sm:mt-1 truncate">
             Gross wholesale sales
           </div>
@@ -636,9 +650,7 @@ function OrdersManager() {
             <span>All Orders</span>
             <span
               className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                statusFilter === "all"
-                  ? "bg-white/20 text-white"
-                  : "bg-slate-200 text-slate-700"
+                statusFilter === "all" ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"
               }`}
             >
               {totalOrders}
@@ -678,9 +690,7 @@ function OrdersManager() {
             <span>Shipped</span>
             <span
               className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                statusFilter === "Shipped"
-                  ? "bg-white/20 text-white"
-                  : "bg-cyan-200 text-cyan-950"
+                statusFilter === "Shipped" ? "bg-white/20 text-white" : "bg-cyan-200 text-cyan-950"
               }`}
             >
               {shippedOrders}
@@ -767,7 +777,7 @@ function OrdersManager() {
                         </div>
                         <span
                           className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black border ${getStatusStyle(
-                            o.status
+                            o.status,
                           )}`}
                         >
                           <StatusIcon className="size-3" />
@@ -778,11 +788,17 @@ function OrdersManager() {
                       <div className="flex items-center justify-between text-xs">
                         <div>
                           <div className="font-black text-slate-900">{o.name}</div>
-                          <div className="text-[11px] text-slate-400 font-medium truncate max-w-[200px]">{o.email}</div>
+                          <div className="text-[11px] text-slate-400 font-medium truncate max-w-[200px]">
+                            {o.email}
+                          </div>
                         </div>
                         <div className="text-right">
-                          <div className="font-black text-slate-900 text-sm">{formatUSD(o.total || 0)}</div>
-                          <div className="text-[10px] text-slate-400 font-semibold">{items.length} item(s)</div>
+                          <div className="font-black text-slate-900 text-sm">
+                            {formatUSD(o.total || 0)}
+                          </div>
+                          <div className="text-[10px] text-slate-400 font-semibold">
+                            {items.length} item(s)
+                          </div>
                         </div>
                       </div>
 
@@ -798,8 +814,12 @@ function OrdersManager() {
               ) : (
                 <div className="text-center py-16 text-slate-400 font-bold text-xs space-y-2 p-4">
                   <ShoppingBag className="size-10 mx-auto text-slate-300 stroke-1" />
-                  <div className="text-slate-700 font-black text-sm">No wholesale customer orders found</div>
-                  <div className="text-slate-400 text-xs">Try adjusting your search query or status filter.</div>
+                  <div className="text-slate-700 font-black text-sm">
+                    No wholesale customer orders found
+                  </div>
+                  <div className="text-slate-400 text-xs">
+                    Try adjusting your search query or status filter.
+                  </div>
                 </div>
               )}
             </div>
@@ -851,9 +871,7 @@ function OrdersManager() {
                           {/* Col 2: Customer Profile */}
                           <td className="p-4 sm:px-6">
                             <div className="space-y-0.5">
-                              <div className="font-black text-slate-900 text-sm">
-                                {o.name}
-                              </div>
+                              <div className="font-black text-slate-900 text-sm">{o.name}</div>
                               <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
                                 <Mail className="size-3 text-slate-400 shrink-0" />
                                 <span>{o.email}</span>
@@ -880,7 +898,9 @@ function OrdersManager() {
                             <div className="space-y-1">
                               <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
                                 <Truck className="size-3 text-slate-400" />
-                                <span>{o.method === "pickup" ? "Hub Pickup" : "Freight Delivery"}</span>
+                                <span>
+                                  {o.method === "pickup" ? "Hub Pickup" : "Freight Delivery"}
+                                </span>
                               </div>
                               <div className="text-[10px] text-slate-400 flex items-center gap-1">
                                 <CreditCard className="size-3 text-slate-400" />
@@ -891,7 +911,9 @@ function OrdersManager() {
 
                           {/* Col 5: Total Amount */}
                           <td className="p-4 sm:px-6 text-right">
-                            <div className="font-black text-slate-900 text-sm">{formatUSD(o.total || 0)}</div>
+                            <div className="font-black text-slate-900 text-sm">
+                              {formatUSD(o.total || 0)}
+                            </div>
                             <div className="text-[10px] text-emerald-600 font-bold mt-0.5">
                               {o.paymentStatus || "Paid"}
                             </div>
@@ -901,7 +923,7 @@ function OrdersManager() {
                           <td className="p-4 sm:px-6 text-center">
                             <span
                               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border ${getStatusStyle(
-                                o.status
+                                o.status,
                               )}`}
                             >
                               <StatusIcon className="size-3" />
@@ -913,10 +935,17 @@ function OrdersManager() {
                     })
                   ) : (
                     <tr>
-                      <td colSpan={6} className="text-center py-24 text-slate-400 font-bold text-xs space-y-2">
+                      <td
+                        colSpan={6}
+                        className="text-center py-24 text-slate-400 font-bold text-xs space-y-2"
+                      >
                         <ShoppingBag className="size-12 mx-auto text-slate-300 stroke-1" />
-                        <div className="text-slate-700 font-black text-sm">No wholesale customer orders found</div>
-                        <div className="text-slate-400 text-xs">Try adjusting your search query or status filter above.</div>
+                        <div className="text-slate-700 font-black text-sm">
+                          No wholesale customer orders found
+                        </div>
+                        <div className="text-slate-400 text-xs">
+                          Try adjusting your search query or status filter above.
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -966,10 +995,10 @@ function OrdersManager() {
                           selectedOrder.status === "Delivered"
                             ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                             : selectedOrder.status === "Shipped"
-                            ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
-                            : selectedOrder.status === "Cancelled"
-                            ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
-                            : "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                              ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+                              : selectedOrder.status === "Cancelled"
+                                ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                                : "bg-amber-500/20 text-amber-300 border-amber-500/40"
                         }`}
                       >
                         {selectedOrder.status || "Pending"}
@@ -979,7 +1008,9 @@ function OrdersManager() {
                     <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 flex items-center gap-2 flex-wrap">
                       <span>Placed on {new Date(selectedOrder.placedAt).toLocaleDateString()}</span>
                       <span>·</span>
-                      <span className="text-emerald-400 font-bold">{selectedOrder.paymentStatus || "Paid"}</span>
+                      <span className="text-emerald-400 font-bold">
+                        {selectedOrder.paymentStatus || "Paid"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1010,7 +1041,9 @@ function OrdersManager() {
                 <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5 sm:space-y-3">
                   <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-500">
                     <span>Fulfillment Progress</span>
-                    <span className="text-cyan-700 font-extrabold">{selectedOrder.status || "Pending Fulfillment"}</span>
+                    <span className="text-cyan-700 font-extrabold">
+                      {selectedOrder.status || "Pending Fulfillment"}
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-4 gap-1.5 relative">
@@ -1040,11 +1073,23 @@ function OrdersManager() {
 
                   <div className="grid grid-cols-4 text-[10px] font-black text-slate-400 text-center pt-0.5">
                     <span className="text-cyan-800">1. Received</span>
-                    <span className={selectedOrder.status !== "Pending" ? "text-cyan-800" : ""}>2. Packed</span>
-                    <span className={selectedOrder.status === "Shipped" || selectedOrder.status === "Delivered" ? "text-cyan-800" : ""}>
+                    <span className={selectedOrder.status !== "Pending" ? "text-cyan-800" : ""}>
+                      2. Packed
+                    </span>
+                    <span
+                      className={
+                        selectedOrder.status === "Shipped" || selectedOrder.status === "Delivered"
+                          ? "text-cyan-800"
+                          : ""
+                      }
+                    >
                       3. In Transit
                     </span>
-                    <span className={selectedOrder.status === "Delivered" ? "text-emerald-700" : ""}>4. Delivered</span>
+                    <span
+                      className={selectedOrder.status === "Delivered" ? "text-emerald-700" : ""}
+                    >
+                      4. Delivered
+                    </span>
                   </div>
                 </div>
 
@@ -1052,22 +1097,27 @@ function OrdersManager() {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center justify-between">
                     <span>Update Order Lifecycle</span>
-                    {isUpdatingStatus && <span className="text-cyan-600 font-bold">Saving changes...</span>}
+                    {isUpdatingStatus && (
+                      <span className="text-cyan-600 font-bold">Saving changes...</span>
+                    )}
                   </label>
                   <div className="grid grid-cols-2 xs:grid-cols-4 gap-1.5 sm:gap-2">
-                    {(["Pending", "Shipped", "Delivered", "Cancelled"] as Order["status"][]).map((st) => (
-                      <button
-                        key={st}
-                        onClick={() => updateStatus(selectedOrder.id, st)}
-                        className={`py-2 sm:py-2.5 px-2 rounded-xl text-xs font-black transition-all cursor-pointer border text-center ${
-                          selectedOrder.status === st || (!selectedOrder.status && st === "Pending")
-                            ? "bg-slate-900 text-white border-slate-900 shadow-md"
-                            : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
-                        }`}
-                      >
-                        {st}
-                      </button>
-                    ))}
+                    {(["Pending", "Shipped", "Delivered", "Cancelled"] as Order["status"][]).map(
+                      (st) => (
+                        <button
+                          key={st}
+                          onClick={() => updateStatus(selectedOrder.id, st)}
+                          className={`py-2 sm:py-2.5 px-2 rounded-xl text-xs font-black transition-all cursor-pointer border text-center ${
+                            selectedOrder.status === st ||
+                            (!selectedOrder.status && st === "Pending")
+                              ? "bg-slate-900 text-white border-slate-900 shadow-md"
+                              : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                          }`}
+                        >
+                          {st}
+                        </button>
+                      ),
+                    )}
                   </div>
                 </div>
 
@@ -1077,24 +1127,30 @@ function OrdersManager() {
                     Customer & Destination
                   </div>
                   <div>
-                    <div className="font-black text-sm text-slate-900">
-                      {selectedOrder.name}
+                    <div className="font-black text-sm text-slate-900">{selectedOrder.name}</div>
+                    <div className="text-xs text-slate-500 font-medium mt-0.5">
+                      {selectedOrder.email}
                     </div>
-                    <div className="text-xs text-slate-500 font-medium mt-0.5">{selectedOrder.email}</div>
                   </div>
 
                   <div className="space-y-1.5 pt-2 border-t border-slate-200/80 text-xs">
                     {selectedOrder.phone && (
                       <div className="text-slate-600 flex items-center gap-2">
                         <Phone className="size-3.5 text-cyan-600 shrink-0" />
-                        <a href={`tel:${selectedOrder.phone}`} className="hover:underline font-bold text-slate-800">
+                        <a
+                          href={`tel:${selectedOrder.phone}`}
+                          className="hover:underline font-bold text-slate-800"
+                        >
                           {selectedOrder.phone}
                         </a>
                       </div>
                     )}
                     <div className="text-slate-600 flex items-center gap-2">
                       <Mail className="size-3.5 text-cyan-600 shrink-0" />
-                      <a href={`mailto:${selectedOrder.email}`} className="hover:underline text-cyan-800 font-bold">
+                      <a
+                        href={`mailto:${selectedOrder.email}`}
+                        className="hover:underline text-cyan-800 font-bold"
+                      >
                         {selectedOrder.email}
                       </a>
                     </div>
@@ -1103,15 +1159,23 @@ function OrdersManager() {
                         <MapPin className="size-3.5 text-slate-400 shrink-0 mt-0.5" />
                         <span>
                           {selectedOrder.address.line1} {selectedOrder.address.line2 || ""},{" "}
-                          {selectedOrder.address.city}, {selectedOrder.address.state} {selectedOrder.address.zip}
+                          {selectedOrder.address.city}, {selectedOrder.address.state}{" "}
+                          {selectedOrder.address.zip}
                         </span>
                       </div>
                     )}
                   </div>
 
                   <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-200/80 flex justify-between">
-                    <span>Logistics: <strong>{selectedOrder.method === "pickup" ? "Hub Pickup" : "Freight Delivery"}</strong></span>
-                    <span>Payment: <strong>{selectedOrder.paymentType || "Commercial Card"}</strong></span>
+                    <span>
+                      Logistics:{" "}
+                      <strong>
+                        {selectedOrder.method === "pickup" ? "Hub Pickup" : "Freight Delivery"}
+                      </strong>
+                    </span>
+                    <span>
+                      Payment: <strong>{selectedOrder.paymentType || "Commercial Card"}</strong>
+                    </span>
                   </div>
                 </div>
 
@@ -1119,7 +1183,9 @@ function OrdersManager() {
                 <div className="space-y-3">
                   <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center justify-between">
                     <span>Itemized Equipment SKUs ({selectedOrder.items?.length || 0})</span>
-                    <span>Subtotal: {formatUSD(selectedOrder.subtotal || selectedOrder.total || 0)}</span>
+                    <span>
+                      Subtotal: {formatUSD(selectedOrder.subtotal || selectedOrder.total || 0)}
+                    </span>
                   </div>
                   <div className="border border-slate-200/80 rounded-2xl bg-white overflow-hidden divide-y divide-slate-100 text-xs">
                     {selectedOrder.items?.map((item, idx) => (
@@ -1147,7 +1213,8 @@ function OrdersManager() {
                               <div className="font-black text-slate-900">{item.name}</div>
                             )}
                             <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
-                              {item.brand || "Pool Supply Wholesalers"} · Qty: {item.qty} · {formatUSD(item.price)} ea
+                              {item.brand || "Pool Supply Wholesalers"} · Qty: {item.qty} ·{" "}
+                              {formatUSD(item.price)} ea
                             </div>
                           </div>
                         </div>
@@ -1167,15 +1234,23 @@ function OrdersManager() {
                   </div>
                   <div className="flex justify-between text-slate-500 font-semibold">
                     <span>Freight Commercial Delivery</span>
-                    <span>{selectedOrder.shipping ? formatUSD(selectedOrder.shipping) : "FREE / Included"}</span>
+                    <span>
+                      {selectedOrder.shipping
+                        ? formatUSD(selectedOrder.shipping)
+                        : "FREE / Included"}
+                    </span>
                   </div>
                   <div className="flex justify-between text-slate-500 font-semibold">
                     <span>Estimated Sales Tax</span>
-                    <span>{selectedOrder.tax ? formatUSD(selectedOrder.tax) : "$0.00 (Exempt)"}</span>
+                    <span>
+                      {selectedOrder.tax ? formatUSD(selectedOrder.tax) : "$0.00 (Exempt)"}
+                    </span>
                   </div>
                   <div className="flex justify-between text-base font-black text-slate-900 pt-2 border-t border-slate-200">
                     <span>Total Billed Amount</span>
-                    <span className="text-cyan-700 font-black">{formatUSD(selectedOrder.total)}</span>
+                    <span className="text-cyan-700 font-black">
+                      {formatUSD(selectedOrder.total)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1222,9 +1297,12 @@ function OrdersManager() {
                 <Trash2 className="size-6" />
               </div>
               <div className="text-center space-y-1">
-                <h3 className="font-black text-base text-slate-900">Delete Order #{deleteConfirmId}?</h3>
+                <h3 className="font-black text-base text-slate-900">
+                  Delete Order #{deleteConfirmId}?
+                </h3>
                 <p className="text-xs text-slate-500">
-                  This will permanently remove this customer order record from the database. This action cannot be undone.
+                  This will permanently remove this customer order record from the database. This
+                  action cannot be undone.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 pt-2">

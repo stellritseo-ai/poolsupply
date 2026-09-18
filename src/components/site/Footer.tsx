@@ -12,22 +12,22 @@ const ROUTE_MAP: Record<string, string> = {
   "Why Choose Us": "/why-us",
   "Pool Pumps": "/shop/pumps",
   "Commercial Pool Pumps": "/shop/pumps",
-  "Heaters": "/shop/heaters",
+  Heaters: "/shop/heaters",
   "Gas & Propane Heaters": "/shop/heaters",
-  "Filters": "/shop/filters",
+  Filters: "/shop/filters",
   "Cartridge & DE Filters": "/shop/filters",
-  "Lights": "/shop/lights",
+  Lights: "/shop/lights",
   "LED Pool Lights": "/shop/lights",
-  "Cleaners": "/shop/cleaners",
+  Cleaners: "/shop/cleaners",
   "Robotic Cleaners": "/shop/cleaners",
-  "Automation": "/shop/automation",
+  Automation: "/shop/automation",
   "Automation & Controls": "/shop/automation",
-  "Pentair": "/brands/pentair",
-  "Hayward": "/brands/hayward",
-  "Jandy": "/brands/jandy",
-  "Raypak": "/brands/raypak",
-  "Zodiac": "/brands/zodiac",
-  "Waterway": "/brands/waterway",
+  Pentair: "/brands/pentair",
+  Hayward: "/brands/hayward",
+  Jandy: "/brands/jandy",
+  Raypak: "/brands/raypak",
+  Zodiac: "/brands/zodiac",
+  Waterway: "/brands/waterway",
   "Equipment Sizing Wizard": "/finder",
   "Pool Pump Buying Guide": "/shop/pumps",
   "Filter Sizing & Care": "/shop/filters",
@@ -39,13 +39,20 @@ const ROUTE_MAP: Record<string, string> = {
   "Terms & Conditions": "/terms-and-conditions",
   "Terms and Conditions": "/terms-and-conditions",
   "Blog & Resources": "/blog",
-  "Blog": "/blog",
+  Blog: "/blog",
 };
 
 const cols = [
   {
     title: "Equipment Categories",
-    links: ["Commercial Pool Pumps", "Gas & Propane Heaters", "Cartridge & DE Filters", "LED Pool Lights", "Robotic Cleaners", "Automation & Controls"],
+    links: [
+      "Commercial Pool Pumps",
+      "Gas & Propane Heaters",
+      "Cartridge & DE Filters",
+      "LED Pool Lights",
+      "Robotic Cleaners",
+      "Automation & Controls",
+    ],
   },
   {
     title: "Authorized Brands",
@@ -53,11 +60,24 @@ const cols = [
   },
   {
     title: "Pool Resources",
-    links: ["Equipment Sizing Wizard", "Pool Pump Buying Guide", "Filter Sizing & Care", "Verified Reviews", "Energy Savings Calculator"],
+    links: [
+      "Equipment Sizing Wizard",
+      "Pool Pump Buying Guide",
+      "Filter Sizing & Care",
+      "Verified Reviews",
+      "Energy Savings Calculator",
+    ],
   },
   {
     title: "Company & Support",
-    links: ["About Distributor", "Blog & Resources", "Why Choose Us", "Contact Us", "Commercial Accounts", "Warranty & Support"],
+    links: [
+      "About Distributor",
+      "Blog & Resources",
+      "Why Choose Us",
+      "Contact Us",
+      "Commercial Accounts",
+      "Warranty & Support",
+    ],
   },
 ];
 
@@ -100,17 +120,22 @@ export function Footer() {
         <div className="mb-12 p-6 sm:p-8 lg:p-10 rounded-[2rem] bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-[#040d1a] border border-cyan-500/20 shadow-xl backdrop-blur-xl flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="max-w-2xl space-y-2 text-center lg:text-left">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60">
-              <span className="size-1.5 rounded-full bg-cyan-400 animate-pulse" /> Exclusive Trade Alerts
+              <span className="size-1.5 rounded-full bg-cyan-400 animate-pulse" /> Exclusive Trade
+              Alerts
             </span>
             <h3 className="text-lg sm:text-xl md:text-[22px] lg:text-[25px] font-black text-white tracking-tight whitespace-normal lg:whitespace-nowrap">
               Get Wholesale Price Drop & Inventory Alerts
             </h3>
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-xl">
-              Join 5,000+ pool contractors and service techs. Receive immediate notifications on factory rebates, volume pricing, and new SKU arrivals.
+              Join 5,000+ pool contractors and service techs. Receive immediate notifications on
+              factory rebates, volume pricing, and new SKU arrivals.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full lg:w-auto flex flex-col sm:flex-row gap-2.5 shrink-0">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full lg:w-auto flex flex-col sm:flex-row gap-2.5 shrink-0"
+          >
             <input
               type="email"
               required
@@ -144,7 +169,8 @@ export function Footer() {
             </Link>
 
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              America's premier wholesale distributor of commercial-grade pool equipment, variable speed pumps, gas heaters, salt chlorinators, and automation systems.
+              America's premier wholesale distributor of commercial-grade pool equipment, variable
+              speed pumps, gas heaters, salt chlorinators, and automation systems.
             </p>
           </div>
 
@@ -157,7 +183,8 @@ export function Footer() {
                 </h4>
                 <ul className="space-y-2 text-xs font-medium text-slate-400">
                   {c.links.map((l) => {
-                    const targetRoute = ROUTE_MAP[l] || `/shop/${l.toLowerCase().replace(/ /g, "-")}`;
+                    const targetRoute =
+                      ROUTE_MAP[l] || `/shop/${l.toLowerCase().replace(/ /g, "-")}`;
                     return (
                       <li key={l}>
                         <Link

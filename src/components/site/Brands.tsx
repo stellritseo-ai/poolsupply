@@ -19,7 +19,10 @@ export function Brands() {
   const duplicatedBrands = [...brands, ...brands, ...brands, ...brands];
 
   return (
-    <section id="brands" className="relative py-[50px] overflow-hidden isolate bg-slate-950 text-white border-y border-white/10">
+    <section
+      id="brands"
+      className="relative py-[50px] overflow-hidden isolate bg-slate-950 text-white border-y border-white/10"
+    >
       {/* Background Cinematic Video & Layered Overlays */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <video
@@ -29,7 +32,10 @@ export function Brands() {
           playsInline
           className="w-full h-full object-cover scale-105 filter brightness-105 contrast-110"
         >
-          <source src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/pools_phemjp.mp4" type="video/mp4" />
+          <source
+            src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/pools_phemjp.mp4"
+            type="video/mp4"
+          />
         </video>
         {/* Layered Cinematic Overlays */}
         <div className="absolute inset-0 bg-slate-950/50" />
@@ -51,10 +57,14 @@ export function Brands() {
           Direct Manufacturer Authorized
         </span>
         <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold tracking-tight text-white">
-          Built with the world's <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-white">most trusted brands.</span>
+          Built with the world's{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-white">
+            most trusted brands.
+          </span>
         </h2>
         <p className="mt-3 text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          Direct trade access to authentic OEM pool equipment with full factory warranty and verified commercial supply chains.
+          Direct trade access to authentic OEM pool equipment with full factory warranty and
+          verified commercial supply chains.
         </p>
       </div>
 
@@ -96,7 +106,9 @@ export function Brands() {
 
                 <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-600 group-hover:text-slate-900 transition-colors z-10 pt-1.5 border-t border-slate-100">
                   <span>{b.name}</span>
-                  <span className="text-[9px] uppercase tracking-wider text-cyan-600 font-extrabold">Authorized</span>
+                  <span className="text-[9px] uppercase tracking-wider text-cyan-600 font-extrabold">
+                    Authorized
+                  </span>
                 </div>
               </Link>
             ))}

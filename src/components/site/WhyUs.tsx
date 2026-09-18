@@ -1,6 +1,14 @@
 import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { Tag, Headphones, Truck, ShieldCheck, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
+import {
+  Tag,
+  Headphones,
+  Truck,
+  ShieldCheck,
+  CheckCircle2,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 
 const features = [
   {
@@ -39,7 +47,10 @@ const features = [
 
 export function WhyUs() {
   return (
-    <section id="why" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-white via-surface/60 to-white relative overflow-hidden isolate">
+    <section
+      id="why"
+      className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-white via-surface/60 to-white relative overflow-hidden isolate"
+    >
       {/* Background Ambient Video */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <video
@@ -49,7 +60,10 @@ export function WhyUs() {
           playsInline
           className="w-full h-full object-cover scale-105 filter brightness-105 contrast-110 opacity-15"
         >
-          <source src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/pools_phemjp.mp4" type="video/mp4" />
+          <source
+            src="https://res.cloudinary.com/dmanafb84/video/upload/v1787602658/pools_phemjp.mp4"
+            type="video/mp4"
+          />
         </video>
       </div>
 
@@ -68,7 +82,8 @@ export function WhyUs() {
             A wholesale supplier you can <span className="text-gradient">build a business on.</span>
           </h2>
           <p className="mt-3 text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed max-w-3xl">
-            Engineered specifically for pool contractors, service technicians, and commercial facility managers demanding reliable supply chains and authentic equipment.
+            Engineered specifically for pool contractors, service technicians, and commercial
+            facility managers demanding reliable supply chains and authentic equipment.
           </p>
         </div>
 
@@ -134,8 +149,12 @@ export function WhyUs() {
               <Tag className="size-5" />
             </div>
             <div>
-              <h4 className="font-bold text-sm sm:text-base text-white">Need large commercial project quotes or pallet pricing?</h4>
-              <p className="text-xs text-slate-400">Our commercial desk provides custom quotes within 2 business hours.</p>
+              <h4 className="font-bold text-sm sm:text-base text-white">
+                Need large commercial project quotes or pallet pricing?
+              </h4>
+              <p className="text-xs text-slate-400">
+                Our commercial desk provides custom quotes within 2 business hours.
+              </p>
             </div>
           </div>
 

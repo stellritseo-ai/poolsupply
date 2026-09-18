@@ -16,7 +16,7 @@ import {
   Check,
   Gift,
   HelpCircle,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -31,7 +31,11 @@ export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
       { title: "Secure Checkout — Pool Supply Wholesalers" },
-      { name: "description", content: "Complete your Pool Supply Wholesalers wholesale order with 100% Free Shipping and Stripe 256-bit encrypted checkout." },
+      {
+        name: "description",
+        content:
+          "Complete your Pool Supply Wholesalers wholesale order with 100% Free Shipping and Stripe 256-bit encrypted checkout.",
+      },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -58,9 +62,19 @@ type FormState = {
 };
 
 const INITIAL: FormState = {
-  email: "", firstName: "", lastName: "", company: "",
-  address1: "", address2: "", city: "", state: "", zip: "", country: "United States",
-  phone: "", paymentType: "stripe", cardName: "",
+  email: "",
+  firstName: "",
+  lastName: "",
+  company: "",
+  address1: "",
+  address2: "",
+  city: "",
+  state: "",
+  zip: "",
+  country: "United States",
+  phone: "",
+  paymentType: "stripe",
+  cardName: "",
   method: "standard",
 };
 
@@ -70,7 +84,7 @@ function getStripePromise() {
   if (typeof window === "undefined") return Promise.resolve(null);
   if (!_stripePromise) {
     _stripePromise = loadStripe(
-      "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2"
+      "pk_live_51TxoN3LlienmBCcZCAlvmfLnIsLe0BaWwIaBTSm8CrVBjuh7dPLzpHbe9QXiWKR9zxPYdBqJNbEoPNDCSGWcL5C900sY0uRiB2",
     );
   }
   return _stripePromise;
@@ -131,8 +145,8 @@ function CheckoutPage() {
   // ---------------------------------------------------------------------------
   // Shipping — async OSM Nominatim geocoding, 400ms debounce
   // ---------------------------------------------------------------------------
-  const [shippingResult, setShippingResult] = useState<ShippingResult>(
-    () => computeShipping(items, "", "")
+  const [shippingResult, setShippingResult] = useState<ShippingResult>(() =>
+    computeShipping(items, "", ""),
   );
   const [shippingLoading, setShippingLoading] = useState(false);
 
@@ -177,7 +191,8 @@ function CheckoutPage() {
 
   const taxLabel = "Sales Tax (9.25%)";
 
-  const set = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((f) => ({ ...f, [k]: v }));
+  const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
+    setForm((f) => ({ ...f, [k]: v }));
 
   // Initialize official Stripe Elements on Mount — lazy to avoid SSR null resolution
   useEffect(() => {
@@ -195,7 +210,8 @@ function CheckoutPage() {
             base: {
               color: "#0f172a",
               fontSize: "14px",
-              fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+              fontFamily:
+                "'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
               fontWeight: "600",
               "::placeholder": {
                 color: "#94a3b8",
@@ -277,7 +293,7 @@ function CheckoutPage() {
               zip: form.zip,
               country: form.country,
             },
-          }
+          },
         });
 
         if (!stripeRes.success || !stripeRes.clientSecret) {
@@ -298,28 +314,34 @@ function CheckoutPage() {
           return;
         }
 
-        const { paymentIntent, error } = await stripeClient.confirmCardPayment(stripeRes.clientSecret, {
-          payment_method: {
-            card: cardElement,
-            billing_details: {
-              name: (form.cardName || customerFullName).trim(),
-              email: form.email.trim(),
-              phone: form.phone.trim(),
-              address: {
-                line1: form.address1.trim(),
-                line2: form.address2 ? form.address2.trim() : undefined,
-                city: form.city.trim(),
-                state: form.state.trim(),
-                postal_code: form.zip.trim(),
-                country: normalizeCountryCode(form.country),
+        const { paymentIntent, error } = await stripeClient.confirmCardPayment(
+          stripeRes.clientSecret,
+          {
+            payment_method: {
+              card: cardElement,
+              billing_details: {
+                name: (form.cardName || customerFullName).trim(),
+                email: form.email.trim(),
+                phone: form.phone.trim(),
+                address: {
+                  line1: form.address1.trim(),
+                  line2: form.address2 ? form.address2.trim() : undefined,
+                  city: form.city.trim(),
+                  state: form.state.trim(),
+                  postal_code: form.zip.trim(),
+                  country: normalizeCountryCode(form.country),
+                },
               },
             },
           },
-        });
+        );
 
         if (error) {
           console.error("Stripe Card Confirmation Error:", error);
-          setStripeError(error.message || "Payment authorization failed. Please check your card details and try again.");
+          setStripeError(
+            error.message ||
+              "Payment authorization failed. Please check your card details and try again.",
+          );
           setSubmitting(false);
           return;
         }
@@ -330,11 +352,12 @@ function CheckoutPage() {
             paymentIntent.status !== "processing" &&
             paymentIntent.status !== "requires_capture")
         ) {
-          setStripeError(`Payment status was ${paymentIntent?.status || "incomplete"}. Please try again.`);
+          setStripeError(
+            `Payment status was ${paymentIntent?.status || "incomplete"}. Please try again.`,
+          );
           setSubmitting(false);
           return;
         }
-
 
         paymentIntentId = paymentIntent.id;
         setStripeStatus(`Payment Approved · Ref: ${paymentIntentId.slice(-8)}`);
@@ -353,7 +376,14 @@ function CheckoutPage() {
       phone: form.phone,
       name: customerFullName,
       company: form.company,
-      address: { line1: form.address1, line2: form.address2, city: form.city, state: form.state, zip: form.zip, country: form.country },
+      address: {
+        line1: form.address1,
+        line2: form.address2,
+        city: form.city,
+        state: form.state,
+        zip: form.zip,
+        country: form.country,
+      },
       items,
       subtotal,
       shipping,
@@ -363,7 +393,9 @@ function CheckoutPage() {
       promoCode: appliedPromo,
       method: form.method,
       paymentType: form.paymentType,
-      paymentStatus: paymentIntentId ? `Paid via Stripe (${paymentIntentId})` : "Paid (Stripe Encrypted)",
+      paymentStatus: paymentIntentId
+        ? `Paid via Stripe (${paymentIntentId})`
+        : "Paid (Stripe Encrypted)",
     };
 
     try {
@@ -386,8 +418,13 @@ function CheckoutPage() {
         <main className="flex-1 grid place-items-center px-6 pt-32 pb-20">
           <div className="text-center max-w-md">
             <h1 className="text-3xl font-extrabold tracking-tight">Your shopping cart is empty</h1>
-            <p className="mt-3 text-muted-foreground text-sm">Add a few commercial pool products before heading to checkout.</p>
-            <Link to="/" className="mt-8 inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-ocean text-white font-bold shadow-lg">
+            <p className="mt-3 text-muted-foreground text-sm">
+              Add a few commercial pool products before heading to checkout.
+            </p>
+            <Link
+              to="/"
+              className="mt-8 inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-ocean text-white font-bold shadow-lg"
+            >
               Explore Products Catalog
             </Link>
           </div>
@@ -402,7 +439,10 @@ function CheckoutPage() {
       <Header alwaysDark />
       <main className="pt-28 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <Link to="/" className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-900 transition mt-[20px] mb-6 font-bold">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-900 transition mt-[20px] mb-6 font-bold"
+          >
             &lt; Back to Products Storefront
           </Link>
 
@@ -421,7 +461,8 @@ function CheckoutPage() {
                   Transparent Pricing — No Hidden Fees
                 </h3>
                 <p className="text-xs text-slate-300 font-medium mt-0.5">
-                  Dynamic freight shipping (by item size &amp; delivery zone) + 9.25% TN sales tax applied at checkout.
+                  Dynamic freight shipping (by item size &amp; delivery zone) + 9.25% TN sales tax
+                  applied at checkout.
                 </p>
               </div>
             </div>
@@ -437,11 +478,16 @@ function CheckoutPage() {
 
           <div className="flex items-end justify-between flex-wrap gap-3 mb-8">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Checkout</h1>
-              <p className="text-xs text-slate-500 mt-1 font-medium">Verify your shipping address and complete secure payment.</p>
+              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                Checkout
+              </h1>
+              <p className="text-xs text-slate-500 mt-1 font-medium">
+                Verify your shipping address and complete secure payment.
+              </p>
             </div>
             <div className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-3.5 py-2 rounded-2xl border border-slate-200 shadow-xs">
-              <Lock className="size-4 text-emerald-600" />SSL Encrypted Checkout
+              <Lock className="size-4 text-emerald-600" />
+              SSL Encrypted Checkout
             </div>
           </div>
 
@@ -451,22 +497,87 @@ function CheckoutPage() {
               {/* Contact & Shipping Section */}
               <Section icon={Truck} title="Contact & Shipping Address">
                 <div className="grid gap-4">
-                  <Input label="Business Email Address" type="email" required value={form.email} onChange={(v) => set("email", v)} placeholder="john@poolservice.com" />
+                  <Input
+                    label="Business Email Address"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(v) => set("email", v)}
+                    placeholder="john@poolservice.com"
+                  />
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Input label="First Name" required value={form.firstName} onChange={(v) => set("firstName", v)} placeholder="John" />
-                    <Input label="Last Name" required value={form.lastName} onChange={(v) => set("lastName", v)} placeholder="Smith" />
+                    <Input
+                      label="First Name"
+                      required
+                      value={form.firstName}
+                      onChange={(v) => set("firstName", v)}
+                      placeholder="John"
+                    />
+                    <Input
+                      label="Last Name"
+                      required
+                      value={form.lastName}
+                      onChange={(v) => set("lastName", v)}
+                      placeholder="Smith"
+                    />
                   </div>
-                  <Input label="Company / Trade Account (Optional)" value={form.company} onChange={(v) => set("company", v)} placeholder="Acuity Commercial Pools LLC" />
-                  <Input label="Street Delivery Address" required value={form.address1} onChange={(v) => set("address1", v)} placeholder="1244 Commercial Way, Suite 100" />
-                  <Input label="Building, Suite, Unit (Optional)" value={form.address2} onChange={(v) => set("address2", v)} placeholder="Building B" />
+                  <Input
+                    label="Company / Trade Account (Optional)"
+                    value={form.company}
+                    onChange={(v) => set("company", v)}
+                    placeholder="Acuity Commercial Pools LLC"
+                  />
+                  <Input
+                    label="Street Delivery Address"
+                    required
+                    value={form.address1}
+                    onChange={(v) => set("address1", v)}
+                    placeholder="1244 Commercial Way, Suite 100"
+                  />
+                  <Input
+                    label="Building, Suite, Unit (Optional)"
+                    value={form.address2}
+                    onChange={(v) => set("address2", v)}
+                    placeholder="Building B"
+                  />
                   <div className="grid sm:grid-cols-3 gap-4">
-                    <Input label="City" required value={form.city} onChange={(v) => set("city", v)} placeholder="Nashville" />
-                    <Input label="State / Province" required value={form.state} onChange={(v) => set("state", v)} placeholder="TN" />
-                    <Input label="ZIP / Postal Code" required value={form.zip} onChange={(v) => set("zip", v)} placeholder="37201" />
+                    <Input
+                      label="City"
+                      required
+                      value={form.city}
+                      onChange={(v) => set("city", v)}
+                      placeholder="Nashville"
+                    />
+                    <Input
+                      label="State / Province"
+                      required
+                      value={form.state}
+                      onChange={(v) => set("state", v)}
+                      placeholder="TN"
+                    />
+                    <Input
+                      label="ZIP / Postal Code"
+                      required
+                      value={form.zip}
+                      onChange={(v) => set("zip", v)}
+                      placeholder="37201"
+                    />
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Input label="Country" required value={form.country} onChange={(v) => set("country", v)} />
-                    <Input label="Phone Number" type="tel" required value={form.phone} onChange={(v) => set("phone", v)} placeholder="(615) 555-0199" />
+                    <Input
+                      label="Country"
+                      required
+                      value={form.country}
+                      onChange={(v) => set("country", v)}
+                    />
+                    <Input
+                      label="Phone Number"
+                      type="tel"
+                      required
+                      value={form.phone}
+                      onChange={(v) => set("phone", v)}
+                      placeholder="(615) 555-0199"
+                    />
                   </div>
                 </div>
               </Section>
@@ -478,15 +589,19 @@ function CheckoutPage() {
                     {/* Standard Commercial Delivery Option */}
                     <div
                       onClick={() => set("method", "standard")}
-                      className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${form.method === "standard"
-                        ? "bg-cyan-50/40 border-cyan-400 shadow-sm ring-1 ring-cyan-400/30"
-                        : "bg-slate-50/60 border-slate-200 hover:border-slate-300"
-                        }`}
+                      className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${
+                        form.method === "standard"
+                          ? "bg-cyan-50/40 border-cyan-400 shadow-sm ring-1 ring-cyan-400/30"
+                          : "bg-slate-50/60 border-slate-200 hover:border-slate-300"
+                      }`}
                     >
-                      <div className={`size-10 rounded-xl grid place-items-center shrink-0 shadow-sm ${form.method === "standard"
-                        ? "bg-gradient-to-br from-cyan-600 to-blue-600 text-white"
-                        : "bg-slate-200 text-slate-600"
-                        }`}>
+                      <div
+                        className={`size-10 rounded-xl grid place-items-center shrink-0 shadow-sm ${
+                          form.method === "standard"
+                            ? "bg-gradient-to-br from-cyan-600 to-blue-600 text-white"
+                            : "bg-slate-200 text-slate-600"
+                        }`}
+                      >
                         {shippingLoading ? (
                           <Loader2 className="size-5 animate-spin" />
                         ) : (
@@ -512,51 +627,72 @@ function CheckoutPage() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <div className="text-[11px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5">
                             {shippingLoading ? (
-                              <><Loader2 className="size-3 animate-spin" /> Calculating exact distance…</>
+                              <>
+                                <Loader2 className="size-3 animate-spin" /> Calculating exact
+                                distance…
+                              </>
                             ) : shippingResult.isPending ? (
                               "Enter address to calculate exact shipping"
                             ) : (
                               `Zone ${shippingResult.zone} · ${shippingResult.zoneLabel}`
                             )}
                           </div>
-                          {!shippingLoading && shippingResult.geocoded && !shippingResult.isPending && (
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
-                              <svg className="size-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
-                              OpenStreetMap
-                            </span>
-                          )}
+                          {!shippingLoading &&
+                            shippingResult.geocoded &&
+                            !shippingResult.isPending && (
+                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <svg className="size-2.5" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                </svg>
+                                OpenStreetMap
+                              </span>
+                            )}
                         </div>
 
                         {/* Distance info */}
                         {!shippingLoading && shippingResult.distanceMiles !== undefined && (
                           <div className="text-[10px] text-slate-500 font-medium">
-                            📍 {shippingResult.distanceMiles} mi from Nashville warehouse (412 Ezell Pike)
+                            📍 {shippingResult.distanceMiles} mi from Nashville warehouse (412 Ezell
+                            Pike)
                           </div>
                         )}
 
                         {/* Per-class breakdown */}
-                        {!shippingLoading && !shippingResult.isPending && shippingResult.breakdown.length > 0 && (
-                          <div className="space-y-1 bg-white/70 p-2.5 rounded-xl border border-slate-200/80">
-                            {shippingResult.breakdown.map((b) => (
-                              <div key={b.cls} className="flex items-center justify-between text-[10px] text-slate-600 font-medium">
-                                <span className="capitalize">{b.cls} item{b.lineCount > 1 ? `s (×${b.lineCount})` : ""} · {b.rateLabel}</span>
-                                <span className="font-bold text-slate-800">${b.finalAmount.toFixed(2)}</span>
+                        {!shippingLoading &&
+                          !shippingResult.isPending &&
+                          shippingResult.breakdown.length > 0 && (
+                            <div className="space-y-1 bg-white/70 p-2.5 rounded-xl border border-slate-200/80">
+                              {shippingResult.breakdown.map((b) => (
+                                <div
+                                  key={b.cls}
+                                  className="flex items-center justify-between text-[10px] text-slate-600 font-medium"
+                                >
+                                  <span className="capitalize">
+                                    {b.cls} item{b.lineCount > 1 ? `s (×${b.lineCount})` : ""} ·{" "}
+                                    {b.rateLabel}
+                                  </span>
+                                  <span className="font-bold text-slate-800">
+                                    ${b.finalAmount.toFixed(2)}
+                                  </span>
+                                </div>
+                              ))}
+                              <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium border-t border-slate-200 pt-1">
+                                <span>
+                                  {shippingResult.multiplier >= 2
+                                    ? "Outside TN: 2.0× full base rate"
+                                    : `Distance scaling: ${(shippingResult.multiplier * 100).toFixed(1)}% (${shippingResult.distanceMiles ?? 0} mi / 50 mi)`}
+                                </span>
+                                <span className="font-black text-slate-800">
+                                  {formatUSD(shippingResult.amount)}
+                                </span>
                               </div>
-                            ))}
-                            <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium border-t border-slate-200 pt-1">
-                              <span>
-                                {shippingResult.multiplier >= 2
-                                  ? "Outside TN: 2.0× full base rate"
-                                  : `Distance scaling: ${(shippingResult.multiplier * 100).toFixed(1)}% (${shippingResult.distanceMiles ?? 0} mi / 50 mi)`}
-                              </span>
-                              <span className="font-black text-slate-800">{formatUSD(shippingResult.amount)}</span>
                             </div>
-                          </div>
-                        )}
+                          )}
 
                         {!shippingLoading && shippingResult.isPending && (
                           <div className="text-[10px] text-slate-400 font-medium italic">
-                            Distance rate: Small $50 · Medium $150 · Large $400 (scaled by miles from Nashville, capped at 50 mi)
+                            Distance rate: Small $50 · Medium $150 · Large $400 (scaled by miles
+                            from Nashville, capped at 50 mi)
                           </div>
                         )}
                       </div>
@@ -575,15 +711,19 @@ function CheckoutPage() {
                     {!shippingLoading && shippingResult.isFreePickup && (
                       <div
                         onClick={() => set("method", "pickup")}
-                        className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${form.method === "pickup"
-                          ? "bg-emerald-50/70 border-emerald-400 shadow-sm ring-1 ring-emerald-400/30"
-                          : "bg-emerald-50/20 border-emerald-200/60 hover:border-emerald-300"
-                          }`}
+                        className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${
+                          form.method === "pickup"
+                            ? "bg-emerald-50/70 border-emerald-400 shadow-sm ring-1 ring-emerald-400/30"
+                            : "bg-emerald-50/20 border-emerald-200/60 hover:border-emerald-300"
+                        }`}
                       >
-                        <div className={`size-10 rounded-xl grid place-items-center shrink-0 shadow-sm ${form.method === "pickup"
-                          ? "bg-gradient-to-br from-emerald-500 to-green-600 text-white"
-                          : "bg-emerald-100 text-emerald-700"
-                          }`}>
+                        <div
+                          className={`size-10 rounded-xl grid place-items-center shrink-0 shadow-sm ${
+                            form.method === "pickup"
+                              ? "bg-gradient-to-br from-emerald-500 to-green-600 text-white"
+                              : "bg-emerald-100 text-emerald-700"
+                          }`}
+                        >
                           <Truck className="size-5" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -598,7 +738,8 @@ function CheckoutPage() {
                             </div>
                           </div>
                           <div className="text-[11px] text-emerald-700 font-medium mt-0.5">
-                            Your address is within 5 miles of our warehouse ({shippingResult.distanceMiles} mi) — pickup is 100% FREE!
+                            Your address is within 5 miles of our warehouse (
+                            {shippingResult.distanceMiles} mi) — pickup is 100% FREE!
                           </div>
                           <div className="text-[10px] text-emerald-600 font-semibold mt-1">
                             📍 Warehouse: 412 Ezell Pike, Nashville, TN 37217 (Mon–Fri 8AM–5PM)
@@ -676,7 +817,8 @@ function CheckoutPage() {
 
                   <p className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5 pt-1">
                     <ShieldCheck className="size-4 text-emerald-600 shrink-0" />
-                    Official Stripe Live Gateway. Your card data is processed directly inside Stripe's encrypted vault.
+                    Official Stripe Live Gateway. Your card data is processed directly inside
+                    Stripe's encrypted vault.
                   </p>
                 </div>
               </Section>
@@ -700,7 +842,11 @@ function CheckoutPage() {
                     <li key={it.id} className="flex gap-3 py-3 items-center">
                       <div className="relative size-14 shrink-0">
                         <div className="size-full rounded-2xl bg-slate-50 border border-slate-200 grid place-items-center overflow-hidden shadow-2xs">
-                          <img src={it.img} alt={it.name} className="size-full object-contain p-1" />
+                          <img
+                            src={it.img}
+                            alt={it.name}
+                            className="size-full object-contain p-1"
+                          />
                         </div>
                         <span className="absolute -top-2 -right-2 size-5.5 rounded-full bg-slate-900 text-white text-[11px] font-black grid place-items-center shadow-md border-2 border-white z-10">
                           {it.qty}
@@ -711,9 +857,13 @@ function CheckoutPage() {
                           <span>{it.brand}</span>
                         </div>
                         <div className="text-xs font-bold text-slate-800 truncate">{it.name}</div>
-                        <div className="text-[11px] text-slate-400 font-semibold">{formatUSD(it.price)} each</div>
+                        <div className="text-[11px] text-slate-400 font-semibold">
+                          {formatUSD(it.price)} each
+                        </div>
                       </div>
-                      <div className="text-xs font-black text-slate-900">{formatUSD(it.price * it.qty)}</div>
+                      <div className="text-xs font-black text-slate-900">
+                        {formatUSD(it.price * it.qty)}
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -736,7 +886,12 @@ function CheckoutPage() {
                       onClick={() => {
                         const code = promoInput.trim().toUpperCase();
                         if (!code) return;
-                        if (code === "PROMO10" || code === "POOL10" || code === "SAVE20" || code === "FREESHIP") {
+                        if (
+                          code === "PROMO10" ||
+                          code === "POOL10" ||
+                          code === "SAVE20" ||
+                          code === "FREESHIP"
+                        ) {
                           setAppliedPromo(code);
                           setPromoError(null);
                           setPromoInput("");
@@ -749,12 +904,12 @@ function CheckoutPage() {
                       Apply
                     </button>
                   </div>
-                  {promoError && (
-                    <p className="text-xs text-rose-600 font-bold">{promoError}</p>
-                  )}
+                  {promoError && <p className="text-xs text-rose-600 font-bold">{promoError}</p>}
                   {appliedPromo && (
                     <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-xl text-xs font-bold">
-                      <span>Promo Code Applied: <strong>{appliedPromo}</strong></span>
+                      <span>
+                        Promo Code Applied: <strong>{appliedPromo}</strong>
+                      </span>
                       <button
                         type="button"
                         onClick={() => setAppliedPromo(null)}
@@ -770,7 +925,11 @@ function CheckoutPage() {
                 <div className="pt-4 border-t border-slate-100 space-y-2.5 text-xs font-bold">
                   <Row label="Subtotal" value={formatUSD(subtotal)} />
                   {discount > 0 && (
-                    <Row label={`Discount (${appliedPromo})`} value={`-${formatUSD(discount)}`} className="text-emerald-600 font-extrabold" />
+                    <Row
+                      label={`Discount (${appliedPromo})`}
+                      value={`-${formatUSD(discount)}`}
+                      className="text-emerald-600 font-extrabold"
+                    />
                   )}
 
                   {/* SHIPPING DISPLAY — dynamic distance-based */}
@@ -825,11 +984,19 @@ function CheckoutPage() {
 
                 <p className="text-[11px] text-slate-400 text-center font-semibold leading-relaxed">
                   By completing order, you agree to Pool Supply Wholesalers'{" "}
-                  <Link to="/terms-and-conditions" target="_blank" className="text-cyan-400 hover:underline">
+                  <Link
+                    to="/terms-and-conditions"
+                    target="_blank"
+                    className="text-cyan-400 hover:underline"
+                  >
                     Terms & Conditions
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy-policy" target="_blank" className="text-cyan-400 hover:underline">
+                  <Link
+                    to="/privacy-policy"
+                    target="_blank"
+                    className="text-cyan-400 hover:underline"
+                  >
                     Privacy Policy
                   </Link>
                   .
@@ -844,7 +1011,15 @@ function CheckoutPage() {
   );
 }
 
-function Section({ icon: Icon, title, children }: { icon: typeof Truck; title: string; children: React.ReactNode }) {
+function Section({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: typeof Truck;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <section className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm space-y-5">
       <h2 className="flex items-center gap-3 font-black text-slate-900 tracking-tight text-lg">
@@ -858,13 +1033,26 @@ function Section({ icon: Icon, title, children }: { icon: typeof Truck; title: s
   );
 }
 
-function Input({ label, value, onChange, type = "text", required, placeholder }: {
-  label: string; value: string; onChange: (v: string) => void;
-  type?: string; required?: boolean; placeholder?: string;
+function Input({
+  label,
+  value,
+  onChange,
+  type = "text",
+  required,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
 }) {
   return (
     <label className="block space-y-1.5">
-      <span className="block text-xs font-black uppercase tracking-wider text-slate-600">{label}</span>
+      <span className="block text-xs font-black uppercase tracking-wider text-slate-600">
+        {label}
+      </span>
       <input
         type={type}
         required={required}
@@ -877,9 +1065,23 @@ function Input({ label, value, onChange, type = "text", required, placeholder }:
   );
 }
 
-function Row({ label, value, muted, bold, className }: { label: string; value: string; muted?: boolean; bold?: boolean; className?: string }) {
+function Row({
+  label,
+  value,
+  muted,
+  bold,
+  className,
+}: {
+  label: string;
+  value: string;
+  muted?: boolean;
+  bold?: boolean;
+  className?: string;
+}) {
   return (
-    <div className={`flex items-center justify-between ${muted ? "text-slate-500" : "text-slate-800"} ${bold ? "text-base font-black text-slate-900" : ""} ${className || ""}`}>
+    <div
+      className={`flex items-center justify-between ${muted ? "text-slate-500" : "text-slate-800"} ${bold ? "text-base font-black text-slate-900" : ""} ${className || ""}`}
+    >
       <span>{label}</span>
       <span>{value}</span>
     </div>

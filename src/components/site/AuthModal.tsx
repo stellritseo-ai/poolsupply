@@ -42,7 +42,9 @@ export function AuthModal() {
       }
     } catch (e: any) {
       console.error("Auth submit error:", e);
-      toast.error(e?.message || "An unexpected error occurred. Please check your credentials and try again.");
+      toast.error(
+        e?.message || "An unexpected error occurred. Please check your credentials and try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -100,7 +102,7 @@ export function AuthModal() {
                 />
               </div>
             )}
-            
+
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
               <input
@@ -130,7 +132,13 @@ export function AuthModal() {
               disabled={loading}
               className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-ocean py-4 font-bold text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100"
             >
-              {loading ? <Loader2 className="size-5 animate-spin" /> : (isLogin ? "Sign In" : "Register")}
+              {loading ? (
+                <Loader2 className="size-5 animate-spin" />
+              ) : isLogin ? (
+                "Sign In"
+              ) : (
+                "Register"
+              )}
             </button>
           </form>
 

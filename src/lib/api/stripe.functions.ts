@@ -5,7 +5,9 @@ import { z } from "zod";
 function getSecretKey(): string {
   const k =
     process.env.STRIPE_SECRET_KEY ||
-    (typeof (globalThis as any).process !== "undefined" ? (globalThis as any).process?.env?.STRIPE_SECRET_KEY : undefined);
+    (typeof (globalThis as any).process !== "undefined"
+      ? (globalThis as any).process?.env?.STRIPE_SECRET_KEY
+      : undefined);
 
   if (typeof k === "string" && k.trim() && (k.startsWith("sk_live_") || k.startsWith("sk_test_"))) {
     return k.trim();
@@ -17,9 +19,14 @@ function getSecretKey(): string {
 function getPublishableKey(): string {
   const envKey =
     process.env.STRIPE_PUBLISHABLE_KEY ||
-    (typeof (globalThis as any).process !== "undefined" ? (globalThis as any).process?.env?.STRIPE_PUBLISHABLE_KEY : undefined);
+    (typeof (globalThis as any).process !== "undefined"
+      ? (globalThis as any).process?.env?.STRIPE_PUBLISHABLE_KEY
+      : undefined);
 
-  if (typeof envKey === "string" && (envKey.startsWith("pk_live_") || envKey.startsWith("pk_test_"))) {
+  if (
+    typeof envKey === "string" &&
+    (envKey.startsWith("pk_live_") || envKey.startsWith("pk_test_"))
+  ) {
     return envKey.trim();
   }
   throw new Error("STRIPE_PUBLISHABLE_KEY environment variable is not set or invalid.");
@@ -37,33 +44,39 @@ function normalizeCountryCode(country?: string): string {
   return "US";
 }
 
-const AddressInputSchema = z.object({
-  line1: z.string().optional(),
-  line2: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zip: z.string().optional(),
-  country: z.string().optional(),
-}).optional();
+const AddressInputSchema = z
+  .object({
+    line1: z.string().optional(),
+    line2: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    zip: z.string().optional(),
+    country: z.string().optional(),
+  })
+  .optional();
 
 export const createStripePaymentIntentDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    amount: z.number(),
-    currency: z.string().default("usd"),
-    tokenId: z.string().optional(),
-    paymentMethodId: z.string().optional(),
-    email: z.string().optional(),
-    phone: z.string().optional(),
-    description: z.string().optional(),
-    metadata: z.record(z.string(), z.string()).optional(),
-    cardName: z.string().optional(),
-    address: AddressInputSchema,
-  }))
+  .inputValidator(
+    z.object({
+      amount: z.number(),
+      currency: z.string().default("usd"),
+      tokenId: z.string().optional(),
+      paymentMethodId: z.string().optional(),
+      email: z.string().optional(),
+      phone: z.string().optional(),
+      description: z.string().optional(),
+      metadata: z.record(z.string(), z.string()).optional(),
+      cardName: z.string().optional(),
+      address: AddressInputSchema,
+    }),
+  )
   .handler(async ({ data }) => {
     const secretKey = getSecretKey();
     const publishableKey = getPublishableKey();
     const isLive = secretKey.startsWith("sk_live_");
-    console.log(`[Stripe] Mode: ${isLive ? "LIVE" : "TEST"} | Key prefix: ${secretKey.slice(0, 14)}...`);
+    console.log(
+      `[Stripe] Mode: ${isLive ? "LIVE" : "TEST"} | Key prefix: ${secretKey.slice(0, 14)}...`,
+    );
 
     if (!isLive) {
       return {
@@ -107,7 +120,10 @@ export const createStripePaymentIntentDb = createServerFn({ method: "POST" })
       const customerName = data.cardName || data.metadata?.customer_name || "Commercial Customer";
       piParams.append("shipping[name]", customerName);
       if (data.phone || data.metadata?.customer_phone) {
-        piParams.append("shipping[phone]", (data.phone || data.metadata?.customer_phone || "").trim());
+        piParams.append(
+          "shipping[phone]",
+          (data.phone || data.metadata?.customer_phone || "").trim(),
+        );
       }
       if (data.address?.line1) {
         piParams.append("shipping[address][line1]", data.address.line1.trim());
@@ -129,7 +145,7 @@ export const createStripePaymentIntentDb = createServerFn({ method: "POST" })
       const piRes = await fetch("https://api.stripe.com/v1/payment_intents", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${secretKey}`,
+          Authorization: `Bearer ${secretKey}`,
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: piParams.toString(),
@@ -172,51 +188,49 @@ export const createStripePaymentIntentDb = createServerFn({ method: "POST" })
     }
   });
 
-export const getStripeConfigDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    const secretKey = getSecretKey();
-    const publishableKey = getPublishableKey();
+export const getStripeConfigDb = createServerFn({ method: "POST" }).handler(async () => {
+  const secretKey = getSecretKey();
+  const publishableKey = getPublishableKey();
 
-    return {
-      isConfigured: true,
-      isLive: true,
-      publishableKey,
-    };
-  });
+  return {
+    isConfigured: true,
+    isLive: true,
+    publishableKey,
+  };
+});
 
-export const verifyStripeLiveConnectionDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    const secretKey = getSecretKey();
-    const isLive = secretKey.startsWith("sk_live_");
+export const verifyStripeLiveConnectionDb = createServerFn({ method: "POST" }).handler(async () => {
+  const secretKey = getSecretKey();
+  const isLive = secretKey.startsWith("sk_live_");
 
-    try {
-      const res = await fetch("https://api.stripe.com/v1/balance", {
-        headers: {
-          "Authorization": `Bearer ${secretKey}`,
-        },
-      });
-      const data = await res.json();
+  try {
+    const res = await fetch("https://api.stripe.com/v1/balance", {
+      headers: {
+        Authorization: `Bearer ${secretKey}`,
+      },
+    });
+    const data = await res.json();
 
-      if (res.ok) {
-        return {
-          success: true,
-          isLive,
-          livemode: data.livemode,
-          status: "Live and Ready",
-          currencies: (data.available || []).map((b: any) => b.currency.toUpperCase()),
-        };
-      } else {
-        return {
-          success: false,
-          isLive,
-          error: data.error?.message || "Stripe authentication failed.",
-        };
-      }
-    } catch (err: any) {
+    if (res.ok) {
+      return {
+        success: true,
+        isLive,
+        livemode: data.livemode,
+        status: "Live and Ready",
+        currencies: (data.available || []).map((b: any) => b.currency.toUpperCase()),
+      };
+    } else {
       return {
         success: false,
         isLive,
-        error: err.message || "Could not reach Stripe servers.",
+        error: data.error?.message || "Stripe authentication failed.",
       };
     }
-  });
+  } catch (err: any) {
+    return {
+      success: false,
+      isLive,
+      error: err.message || "Could not reach Stripe servers.",
+    };
+  }
+});

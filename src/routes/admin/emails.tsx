@@ -170,7 +170,7 @@ function AdminWebEmailsPage() {
     if (activeMessage && !activeMessage.read) {
       markContactMessageReadDb({ data: { id: activeMessage.id } }).then(() => {
         queryClient.setQueryData<ContactMessage[]>(["admin_contact_messages"], (old) =>
-          (old || []).map((m) => (m.id === activeMessage.id ? { ...m, read: true } : m))
+          (old || []).map((m) => (m.id === activeMessage.id ? { ...m, read: true } : m)),
         );
       });
     }
@@ -182,7 +182,7 @@ function AdminWebEmailsPage() {
     try {
       await deleteContactMessageDb({ data: { id } });
       queryClient.setQueryData<ContactMessage[]>(["admin_contact_messages"], (old) =>
-        (old || []).filter((m) => m.id !== id)
+        (old || []).filter((m) => m.id !== id),
       );
       if (selectedId === id) {
         setSelectedId(null);
@@ -199,7 +199,7 @@ function AdminWebEmailsPage() {
   const handleSendReply = () => {
     if (!replyText.trim() || !activeMessage) return;
     const mailto = `mailto:${activeMessage.email}?subject=Re: ${encodeURIComponent(
-      activeMessage.subject
+      activeMessage.subject,
     )}&body=${encodeURIComponent(replyText)}`;
     window.open(mailto, "_blank");
     setReplyText("");
@@ -255,22 +255,31 @@ function AdminWebEmailsPage() {
               </span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
-              Centralized inbox for real-time contact form inquiries, trade account applications, and equipment quote submissions.
+              Centralized inbox for real-time contact form inquiries, trade account applications,
+              and equipment quote submissions.
             </p>
           </div>
 
           {/* Quick Metrics HUD */}
           <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-3 w-full lg:w-auto shrink-0">
             <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">Total Inquiries</div>
-              <div className="text-base sm:text-lg font-black text-white mt-0.5">{messages.length}</div>
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">
+                Total Inquiries
+              </div>
+              <div className="text-base sm:text-lg font-black text-white mt-0.5">
+                {messages.length}
+              </div>
             </div>
 
             <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">Unread Queue</div>
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">
+                Unread Queue
+              </div>
               <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
                 {unreadCount}
-                {unreadCount > 0 && <span className="size-1.5 sm:size-2 rounded-full bg-rose-500 animate-pulse" />}
+                {unreadCount > 0 && (
+                  <span className="size-1.5 sm:size-2 rounded-full bg-rose-500 animate-pulse" />
+                )}
               </div>
             </div>
 
@@ -289,7 +298,9 @@ function AdminWebEmailsPage() {
       {/* ─── DUAL-PANE INBOX & DISPATCH CONSOLE ─── */}
       <div className="grid lg:grid-cols-12 gap-6 items-start">
         {/* LEFT PANE (5 Cols): Search, Filter Toolbar & Email Stream */}
-        <div className={`lg:col-span-5 space-y-3 sm:space-y-4 ${selectedId ? "hidden lg:block" : "block"}`}>
+        <div
+          className={`lg:col-span-5 space-y-3 sm:space-y-4 ${selectedId ? "hidden lg:block" : "block"}`}
+        >
           {/* Search & Filter Toolbar */}
           <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 shadow-2xs space-y-3">
             <div className="relative">
@@ -315,28 +326,31 @@ function AdminWebEmailsPage() {
             <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-[11px] sm:text-xs font-bold overflow-x-auto scrollbar-none">
               <button
                 onClick={() => setFilterTab("all")}
-                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${filterTab === "all"
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${
+                  filterTab === "all"
                     ? "bg-white text-slate-900 shadow-2xs font-black"
                     : "text-slate-500 hover:text-slate-900"
-                  }`}
+                }`}
               >
                 All ({messages.length})
               </button>
               <button
                 onClick={() => setFilterTab("unread")}
-                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${filterTab === "unread"
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${
+                  filterTab === "unread"
                     ? "bg-white text-slate-900 shadow-2xs font-black"
                     : "text-slate-500 hover:text-slate-900"
-                  }`}
+                }`}
               >
                 Unread ({unreadCount})
               </button>
               <button
                 onClick={() => setFilterTab("starred")}
-                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${filterTab === "starred"
+                className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${
+                  filterTab === "starred"
                     ? "bg-white text-slate-900 shadow-2xs font-black"
                     : "text-slate-500 hover:text-slate-900"
-                  }`}
+                }`}
               >
                 Starred ({starredIds.size})
               </button>
@@ -353,10 +367,11 @@ function AdminWebEmailsPage() {
                   <div
                     key={msg.id}
                     onClick={() => setSelectedId(msg.id)}
-                    className={`p-3.5 sm:p-4 transition cursor-pointer flex items-start justify-between gap-3 active:bg-slate-100 ${isSelected
+                    className={`p-3.5 sm:p-4 transition cursor-pointer flex items-start justify-between gap-3 active:bg-slate-100 ${
+                      isSelected
                         ? "bg-cyan-50/60 border-l-4 border-l-cyan-600"
                         : "hover:bg-slate-50/80 border-l-4 border-l-transparent"
-                      }`}
+                    }`}
                   >
                     <div className="flex items-start gap-2.5 sm:gap-3 overflow-hidden min-w-0">
                       <div className="size-9 sm:size-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-xs grid place-items-center shrink-0 shadow-2xs mt-0.5">
@@ -365,8 +380,9 @@ function AdminWebEmailsPage() {
                       <div className="space-y-0.5 sm:space-y-1 overflow-hidden min-w-0">
                         <div className="flex items-center gap-1.5 sm:gap-2">
                           <span
-                            className={`text-xs truncate ${!msg.read ? "text-slate-900 font-black" : "text-slate-700 font-bold"
-                              }`}
+                            className={`text-xs truncate ${
+                              !msg.read ? "text-slate-900 font-black" : "text-slate-700 font-bold"
+                            }`}
                           >
                             {msg.name}
                           </span>
@@ -374,8 +390,12 @@ function AdminWebEmailsPage() {
                             <span className="size-1.5 sm:size-2 rounded-full bg-cyan-500 shrink-0 animate-pulse" />
                           )}
                         </div>
-                        <div className="text-xs font-extrabold text-slate-800 truncate">{msg.subject}</div>
-                        <p className="text-[11px] text-slate-400 line-clamp-1 font-medium">{msg.message}</p>
+                        <div className="text-xs font-extrabold text-slate-800 truncate">
+                          {msg.subject}
+                        </div>
+                        <p className="text-[11px] text-slate-400 line-clamp-1 font-medium">
+                          {msg.message}
+                        </p>
                       </div>
                     </div>
 
@@ -385,8 +405,9 @@ function AdminWebEmailsPage() {
                       </span>
                       <button
                         onClick={(e) => toggleStar(msg.id, e)}
-                        className={`p-1 rounded-md transition cursor-pointer ${isStarred ? "text-amber-500" : "text-slate-300 hover:text-slate-500"
-                          }`}
+                        className={`p-1 rounded-md transition cursor-pointer ${
+                          isStarred ? "text-amber-500" : "text-slate-300 hover:text-slate-500"
+                        }`}
                         title={isStarred ? "Unstar inquiry" : "Star inquiry"}
                       >
                         <Star className="size-3.5 fill-current" />
@@ -400,7 +421,8 @@ function AdminWebEmailsPage() {
                 <Inbox className="size-8 mx-auto text-slate-300 stroke-1" />
                 <p className="text-xs font-bold text-slate-700">No customer inquiries found</p>
                 <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
-                  New submissions submitted through the /contact portal will appear here automatically.
+                  New submissions submitted through the /contact portal will appear here
+                  automatically.
                 </p>
               </div>
             )}
@@ -434,7 +456,9 @@ function AdminWebEmailsPage() {
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                        <h3 className="font-black text-sm sm:text-base text-slate-900 truncate">{activeMessage.name}</h3>
+                        <h3 className="font-black text-sm sm:text-base text-slate-900 truncate">
+                          {activeMessage.name}
+                        </h3>
                         <span className="text-[9px] sm:text-[10px] font-extrabold text-cyan-800 bg-cyan-50 border border-cyan-200/60 px-2 py-0.5 rounded-full shrink-0">
                           Verified Contact
                         </span>
@@ -466,7 +490,11 @@ function AdminWebEmailsPage() {
                       className="p-1.5 sm:p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 transition cursor-pointer"
                       title="Copy Message Text"
                     >
-                      {copied ? <Check className="size-4 text-emerald-600" /> : <Copy className="size-3.5 sm:size-4" />}
+                      {copied ? (
+                        <Check className="size-4 text-emerald-600" />
+                      ) : (
+                        <Copy className="size-3.5 sm:size-4" />
+                      )}
                     </button>
                     <button
                       onClick={() => handleDeleteMessage(activeMessage.id)}
@@ -524,7 +552,9 @@ function AdminWebEmailsPage() {
                       >
                         <div className="font-extrabold text-slate-900 group-hover:text-cyan-900 flex items-center justify-between">
                           <span>{tmpl.title}</span>
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{tmpl.category}</span>
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                            {tmpl.category}
+                          </span>
                         </div>
                         <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 font-medium">
                           {tmpl.text}
@@ -548,7 +578,8 @@ function AdminWebEmailsPage() {
                   />
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
                     <span className="text-[11px] text-slate-400 font-medium truncate">
-                      Recipient: <span className="font-bold text-slate-700">{activeMessage.email}</span>
+                      Recipient:{" "}
+                      <span className="font-bold text-slate-700">{activeMessage.email}</span>
                     </span>
 
                     <button
@@ -566,7 +597,9 @@ function AdminWebEmailsPage() {
               <div className="p-12 sm:p-20 text-center bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl text-slate-400 text-xs font-bold space-y-2">
                 <Inbox className="size-10 mx-auto text-slate-300 stroke-1" />
                 <p className="text-sm font-bold text-slate-700">No message selected</p>
-                <p className="text-xs text-slate-400">Select an inquiry from the left stream to inspect customer details.</p>
+                <p className="text-xs text-slate-400">
+                  Select an inquiry from the left stream to inspect customer details.
+                </p>
               </div>
             )}
           </AnimatePresence>

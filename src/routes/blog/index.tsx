@@ -33,7 +33,12 @@ export const Route = createFileRoute("/blog/")({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://poolsupplywholesalers.com" },
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
         { "@type": "ListItem", position: 2, name: "Pool Equipment Blog", item: pageUrl },
       ],
     };
@@ -126,7 +131,10 @@ export const Route = createFileRoute("/blog/")({
 
     return {
       meta: [
-        { title: "Pool Equipment Blog — Buying Guides, Comparisons & Contractor Tips | Pool Supply Wholesalers" },
+        {
+          title:
+            "Pool Equipment Blog — Buying Guides, Comparisons & Contractor Tips | Pool Supply Wholesalers",
+        },
         {
           name: "description",
           content:
@@ -137,7 +145,11 @@ export const Route = createFileRoute("/blog/")({
           content:
             "pool equipment blog, pool pump buying guide, Pentair vs Hayward comparison, cartridge filter vs sand filter, pool automation system guide, salt chlorinator sizing, commercial pool supply list, pool contractor tips, variable speed pool pump guide, pool heater comparison 2026",
         },
-        { property: "og:title", content: "Pool Equipment Blog — Expert Guides & Contractor Tips | Pool Supply Wholesalers" },
+        {
+          property: "og:title",
+          content:
+            "Pool Equipment Blog — Expert Guides & Contractor Tips | Pool Supply Wholesalers",
+        },
         {
           property: "og:description",
           content:
@@ -150,7 +162,10 @@ export const Route = createFileRoute("/blog/")({
         { property: "og:image:type", content: "image/webp" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Pool Equipment Blog — Buying Guides & Contractor Tips" },
+        {
+          property: "og:image:alt",
+          content: "Pool Equipment Blog — Buying Guides & Contractor Tips",
+        },
         { property: "og:locale", content: "en_US" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
@@ -166,7 +181,12 @@ export const Route = createFileRoute("/blog/")({
       ],
       links: [
         { rel: "canonical", href: pageUrl },
-        { rel: "alternate", type: "application/rss+xml", title: "Pool Supply Wholesalers Blog", href: `${pageUrl}/feed.xml` },
+        {
+          rel: "alternate",
+          type: "application/rss+xml",
+          title: "Pool Supply Wholesalers Blog",
+          href: `${pageUrl}/feed.xml`,
+        },
       ],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
@@ -362,9 +382,7 @@ function FeaturedCard({ article }: { article: BlogArticle }) {
                 {article.title}
               </Link>
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">
-              {article.excerpt}
-            </p>
+            <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">{article.excerpt}</p>
 
             <div className="flex flex-wrap gap-1.5">
               {article.tags.slice(0, 3).map((tag) => (
@@ -471,7 +489,8 @@ function BlogPage() {
                   Guides
                 </h1>
                 <p className="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed font-medium max-w-xl">
-                  Authoritative buying guides, brand comparisons, and contractor technical resources from America's leading commercial pool equipment distributor.
+                  Authoritative buying guides, brand comparisons, and contractor technical resources
+                  from America's leading commercial pool equipment distributor.
                 </p>
 
                 {/* Search Bar */}
@@ -500,7 +519,11 @@ function BlogPage() {
               {/* Stats Block */}
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { value: `${BLOG_ARTICLES.length} Guides`, label: "In-Depth Guides", icon: BookOpen },
+                  {
+                    value: `${BLOG_ARTICLES.length} Guides`,
+                    label: "In-Depth Guides",
+                    icon: BookOpen,
+                  },
                   { value: "5,000+", label: "Contractors Served", icon: User },
                   { value: "40%", label: "Below Retail Prices", icon: TrendingUp },
                   { value: "18+", label: "Years in Industry", icon: Star },
@@ -516,7 +539,9 @@ function BlogPage() {
                     >
                       <Icon className="size-5 text-cyan-600 mx-auto" />
                       <div className="text-xl font-black text-slate-900">{stat.value}</div>
-                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{stat.label}</div>
+                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        {stat.label}
+                      </div>
                     </motion.div>
                   );
                 })}
@@ -580,7 +605,9 @@ function BlogPage() {
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
                       <BookOpen className="size-3.5 text-cyan-600" />
-                      {featured ? "All Equipment Guides" : `Matching Guides (${filteredArticles.length})`}
+                      {featured
+                        ? "All Equipment Guides"
+                        : `Matching Guides (${filteredArticles.length})`}
                     </h2>
                     {searchQuery && (
                       <span className="text-xs font-medium text-slate-500">
@@ -592,9 +619,12 @@ function BlogPage() {
                   {gridArticles.length === 0 ? (
                     <div className="p-12 text-center bg-white rounded-2xl border border-slate-200 space-y-3">
                       <Search className="size-8 text-slate-300 mx-auto" />
-                      <h3 className="text-base font-black text-slate-800">No matching articles found</h3>
+                      <h3 className="text-base font-black text-slate-800">
+                        No matching articles found
+                      </h3>
                       <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                        Try clearing your search term or selecting another category to see our complete guides.
+                        Try clearing your search term or selecting another category to see our
+                        complete guides.
                       </p>
                       <button
                         onClick={() => {
@@ -657,7 +687,9 @@ function BlogPage() {
                             <CheckCircle2 className="size-4 text-cyan-600" />
                           </div>
                           <div className="space-y-2">
-                            <h3 className="text-sm font-black text-slate-900 leading-snug">{faq.q}</h3>
+                            <h3 className="text-sm font-black text-slate-900 leading-snug">
+                              {faq.q}
+                            </h3>
                             <p className="text-xs text-slate-600 leading-relaxed">{faq.a}</p>
                           </div>
                         </div>
@@ -735,7 +767,8 @@ function BlogPage() {
                     Need equipment advice for your project?
                   </h3>
                   <p className="text-xs text-white/80 leading-relaxed">
-                    Our factory-certified technicians help contractors select the right equipment. Get a free commercial account and wholesale pricing.
+                    Our factory-certified technicians help contractors select the right equipment.
+                    Get a free commercial account and wholesale pricing.
                   </p>
                   <Link
                     to="/contact"
@@ -753,16 +786,18 @@ function BlogPage() {
                     Authorized Brands
                   </h3>
                   <div className="grid grid-cols-2 gap-2 text-xs font-bold text-slate-600">
-                    {["Pentair", "Hayward", "Jandy", "Raypak", "Zodiac", "Waterway"].map((brand) => (
-                      <Link
-                        key={brand}
-                        to={`/brands/${brand.toLowerCase()}` as any}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 hover:border-cyan-300 hover:text-cyan-700 transition-all"
-                      >
-                        <CheckCircle2 className="size-3 text-cyan-500" />
-                        {brand}
-                      </Link>
-                    ))}
+                    {["Pentair", "Hayward", "Jandy", "Raypak", "Zodiac", "Waterway"].map(
+                      (brand) => (
+                        <Link
+                          key={brand}
+                          to={`/brands/${brand.toLowerCase()}` as any}
+                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 hover:border-cyan-300 hover:text-cyan-700 transition-all"
+                        >
+                          <CheckCircle2 className="size-3 text-cyan-500" />
+                          {brand}
+                        </Link>
+                      ),
+                    )}
                   </div>
                 </div>
               </aside>
@@ -784,7 +819,9 @@ function BlogPage() {
               </span>
             </h2>
             <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Everything you read about — Pentair, Hayward, Jandy, Raypak equipment — available at up to 40% below retail MSRP, shipped same day from Nashville, LA, Dallas, and Orlando hubs.
+              Everything you read about — Pentair, Hayward, Jandy, Raypak equipment — available at
+              up to 40% below retail MSRP, shipped same day from Nashville, LA, Dallas, and Orlando
+              hubs.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <a

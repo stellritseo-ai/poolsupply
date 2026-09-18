@@ -12,12 +12,11 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
   const { add } = useCart();
   const effectivePrice = p.salePrice && p.salePrice > 0 ? p.salePrice : p.price;
   const savings = p.msrp && p.msrp > effectivePrice ? p.msrp - effectivePrice : 0;
-  const savingsPercent = p.msrp && p.msrp > effectivePrice ? Math.round((savings / p.msrp) * 100) : 0;
+  const savingsPercent =
+    p.msrp && p.msrp > effectivePrice ? Math.round((savings / p.msrp) * 100) : 0;
 
   return (
-    <article
-      className="group relative bg-white rounded-[1.25rem] sm:rounded-[1.4rem] p-2.5 sm:p-3.5 border border-slate-200/80 hover:border-cyan-500/40 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_-8px_rgba(0,137,201,0.16)] hover:-translate-y-1.5 transition-all duration-200 flex flex-col justify-between h-full"
-    >
+    <article className="group relative bg-white rounded-[1.25rem] sm:rounded-[1.4rem] p-2.5 sm:p-3.5 border border-slate-200/80 hover:border-cyan-500/40 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_-8px_rgba(0,137,201,0.16)] hover:-translate-y-1.5 transition-all duration-200 flex flex-col justify-between h-full">
       <div>
         <Link to="/products/$productId" params={{ productId: p.id }} className="block">
           {/* Backdrop Showcase Image Container */}
@@ -32,7 +31,7 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
               referrerPolicy="no-referrer"
               className="size-[82%] object-contain p-1 group-hover:scale-108 transition-transform duration-500 ease-out drop-shadow-xs"
               onError={(e) => {
-                if (!e.currentTarget.src.endsWith('/assets/commingsoon.png')) {
+                if (!e.currentTarget.src.endsWith("/assets/commingsoon.png")) {
                   e.currentTarget.src = "/assets/commingsoon.png";
                 }
               }}
@@ -57,7 +56,10 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
             </div>
 
             {/* Quick View Floating Action */}
-            <span aria-label="Quick view" className="absolute bottom-2 right-2 size-7 sm:size-8 grid place-items-center rounded-full bg-white/90 backdrop-blur text-slate-700 hover:text-cyan-600 hover:bg-white transition-all duration-300 shadow-sm opacity-0 group-hover:opacity-100 group-hover:scale-100 scale-90">
+            <span
+              aria-label="Quick view"
+              className="absolute bottom-2 right-2 size-7 sm:size-8 grid place-items-center rounded-full bg-white/90 backdrop-blur text-slate-700 hover:text-cyan-600 hover:bg-white transition-all duration-300 shadow-sm opacity-0 group-hover:opacity-100 group-hover:scale-100 scale-90"
+            >
               <Eye className="size-3.5 sm:size-4" />
             </span>
           </div>

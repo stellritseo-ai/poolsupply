@@ -45,47 +45,50 @@ function toPlainSession(doc: any): ChatSession {
 
 export const getChatSessionDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ sessionId: z.string() }))
-  .handler(async ({ data }): Promise<{ success: boolean; session: ChatSession | null; error?: string }> => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true, session: null };
-      const chatsCol = db.collection("chats");
+  .handler(
+    async ({
+      data,
+    }): Promise<{ success: boolean; session: ChatSession | null; error?: string }> => {
+      try {
+        const db = await connectDB();
+        if (!db) return { success: true, session: null };
+        const chatsCol = db.collection("chats");
 
-      const doc = await chatsCol.findOne({ sessionId: data.sessionId });
+        const doc = await chatsCol.findOne({ sessionId: data.sessionId });
 
-      if (!doc) {
-        return { success: true, session: null };
+        if (!doc) {
+          return { success: true, session: null };
+        }
+
+        // Mark user messages as read (admin replied, user opened chat)
+        if (doc.unreadUser > 0) {
+          await chatsCol.updateOne({ sessionId: data.sessionId }, { $set: { unreadUser: 0 } });
+          doc.unreadUser = 0;
+        }
+
+        return { success: true, session: toPlainSession(doc) };
+      } catch (e: any) {
+        console.error("Failed to fetch chat session:", e);
+        return { success: false, session: null, error: "Database error" };
       }
-
-      // Mark user messages as read (admin replied, user opened chat)
-      if (doc.unreadUser > 0) {
-        await chatsCol.updateOne(
-          { sessionId: data.sessionId },
-          { $set: { unreadUser: 0 } }
-        );
-        doc.unreadUser = 0;
-      }
-
-      return { success: true, session: toPlainSession(doc) };
-    } catch (e: any) {
-      console.error("Failed to fetch chat session:", e);
-      return { success: false, session: null, error: "Database error" };
-    }
-  });
+    },
+  );
 
 export const addChatMessageDb = createServerFn({ method: "POST" })
-  .inputValidator(z.object({
-    sessionId: z.string(),
-    message: z.object({
-      id: z.string(),
-      sender: z.enum(["user", "admin"]),
-      text: z.string(),
-      timestamp: z.string(),
+  .inputValidator(
+    z.object({
+      sessionId: z.string(),
+      message: z.object({
+        id: z.string(),
+        sender: z.enum(["user", "admin"]),
+        text: z.string(),
+        timestamp: z.string(),
+      }),
+      userName: z.string().optional(),
+      userEmail: z.string().optional(),
+      userPhone: z.string().optional(),
     }),
-    userName: z.string().optional(),
-    userEmail: z.string().optional(),
-    userPhone: z.string().optional(),
-  }))
+  )
   .handler(async ({ data }): Promise<{ success: boolean; error?: string }> => {
     try {
       const db = await connectDB();
@@ -128,7 +131,7 @@ export const addChatMessageDb = createServerFn({ method: "POST" })
 
         await chatsCol.updateOne(
           { sessionId: data.sessionId },
-          { $push: { messages: data.message } as any, $set: set, $inc: inc }
+          { $push: { messages: data.message } as any, $set: set, $inc: inc },
         );
       }
 
@@ -139,8 +142,8 @@ export const addChatMessageDb = createServerFn({ method: "POST" })
     }
   });
 
-export const getAdminChatSessionsDb = createServerFn({ method: "POST" })
-  .handler(async (): Promise<{ success: boolean; sessions: ChatSession[]; error?: string }> => {
+export const getAdminChatSessionsDb = createServerFn({ method: "POST" }).handler(
+  async (): Promise<{ success: boolean; sessions: ChatSession[]; error?: string }> => {
     try {
       const db = await connectDB();
       if (!db) return { success: true, sessions: [] };
@@ -154,7 +157,8 @@ export const getAdminChatSessionsDb = createServerFn({ method: "POST" })
       console.error("Failed to fetch admin chat sessions:", e);
       return { success: false, sessions: [], error: "Database error" };
     }
-  });
+  },
+);
 
 export const resolveChatSessionDb = createServerFn({ method: "POST" })
   .inputValidator(z.object({ sessionId: z.string() }))
@@ -162,10 +166,12 @@ export const resolveChatSessionDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       if (!db) return { success: false, error: "Database error" };
-      await db.collection("chats").updateOne(
-        { sessionId: data.sessionId },
-        { $set: { status: "resolved", updatedAt: new Date().toISOString(), unreadAdmin: 0 } }
-      );
+      await db
+        .collection("chats")
+        .updateOne(
+          { sessionId: data.sessionId },
+          { $set: { status: "resolved", updatedAt: new Date().toISOString(), unreadAdmin: 0 } },
+        );
       return { success: true };
     } catch (e: any) {
       return { success: false, error: "Database error" };
@@ -178,10 +184,9 @@ export const markAdminChatReadDb = createServerFn({ method: "POST" })
     try {
       const db = await connectDB();
       if (!db) return { success: false };
-      await db.collection("chats").updateOne(
-        { sessionId: data.sessionId },
-        { $set: { unreadAdmin: 0 } }
-      );
+      await db
+        .collection("chats")
+        .updateOne({ sessionId: data.sessionId }, { $set: { unreadAdmin: 0 } });
       return { success: true };
     } catch {
       return { success: false };
@@ -201,4 +206,3 @@ export const deleteChatSessionDb = createServerFn({ method: "POST" })
       return { success: false, error: "Database error" };
     }
   });
-

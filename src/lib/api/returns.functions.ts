@@ -36,15 +36,15 @@ export type ReturnRequest = {
   items: ReturnItem[];
   preferredResolution?: string;
   status:
-  | "Under Review"
-  | "Approved"
-  | "Rejected"
-  | "Processing Return"
-  | "Item Received"
-  | "Replacement Shipped"
-  | "Refund Issued"
-  | "Resolved"
-  | "Cancelled";
+    | "Under Review"
+    | "Approved"
+    | "Rejected"
+    | "Processing Return"
+    | "Item Received"
+    | "Replacement Shipped"
+    | "Refund Issued"
+    | "Resolved"
+    | "Cancelled";
   isResolved: boolean;
   adminNotes?: string;
   adminResolution?: string;
@@ -69,7 +69,7 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
       notes: z.string().optional(),
       items: z.array(z.any()).optional(),
       preferredResolution: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -90,8 +90,15 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
           const orderDoc = await ordersCol.findOne({
             $or: [
               { id: cleanOrderId },
-              { id: { $regex: new RegExp(`^${cleanOrderId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } }
-            ]
+              {
+                id: {
+                  $regex: new RegExp(
+                    `^${cleanOrderId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+                    "i",
+                  ),
+                },
+              },
+            ],
           });
           if (orderDoc) {
             orderTotal = orderTotal ?? orderDoc.total;
@@ -112,8 +119,12 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
         rmaId,
         customerIdentifier: data.customerIdentifier.trim(),
         customerName: data.customerName?.trim() || "Commercial Client",
-        customerEmail: data.customerEmail?.trim() || (data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
-        customerPhone: data.customerPhone?.trim() || (!data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
+        customerEmail:
+          data.customerEmail?.trim() ||
+          (data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
+        customerPhone:
+          data.customerPhone?.trim() ||
+          (!data.customerIdentifier.includes("@") ? data.customerIdentifier.trim() : ""),
         customerCompany: data.customerCompany?.trim() || "",
         orderId: data.orderId.trim(),
         orderTotal: orderTotal || 0,
@@ -157,45 +168,48 @@ export const createReturnRequestDb = createServerFn({ method: "POST" })
   });
 
 // ── 2. Get All Return Requests (Admin) ────────────────────────────────────────
-export const getAdminReturnsDb = createServerFn({ method: "POST" })
-  .handler(async () => {
-    try {
-      const db = await connectDB();
-      if (!db) return { success: true as const, returns: [] as ReturnRequest[] };
-      const returnsCol = db.collection("returns");
+export const getAdminReturnsDb = createServerFn({ method: "POST" }).handler(async () => {
+  try {
+    const db = await connectDB();
+    if (!db) return { success: true as const, returns: [] as ReturnRequest[] };
+    const returnsCol = db.collection("returns");
 
-      const rawReturns = await returnsCol.find().sort({ createdAt: -1 }).toArray();
+    const rawReturns = await returnsCol.find().sort({ createdAt: -1 }).toArray();
 
-      const returns: ReturnRequest[] = rawReturns.map((r: any) => ({
-        id: r._id.toString(),
-        rmaId: r.rmaId || `RMA-${r._id.toString().slice(-6)}`,
-        customerIdentifier: r.customerIdentifier || "",
-        customerName: r.customerName || "Trade Client",
-        customerEmail: r.customerEmail || "",
-        customerPhone: r.customerPhone || "",
-        customerCompany: r.customerCompany || "",
-        orderId: r.orderId || "",
-        orderTotal: typeof r.orderTotal === "number" ? r.orderTotal : 0,
-        orderPlacedAt: r.orderPlacedAt || r.createdAt,
-        reason: r.reason || "General Return",
-        notes: r.notes || "",
-        items: Array.isArray(r.items) ? r.items : [],
-        preferredResolution: r.preferredResolution || "Replacement Unit",
-        status: r.status || "Under Review",
-        isResolved: typeof r.isResolved === "boolean" ? r.isResolved : r.status === "Resolved",
-        adminNotes: r.adminNotes || "",
-        adminResolution: r.adminResolution || "",
-        createdAt: r.createdAt || new Date().toISOString(),
-        updatedAt: r.updatedAt || r.createdAt,
-        resolvedAt: r.resolvedAt,
-      }));
+    const returns: ReturnRequest[] = rawReturns.map((r: any) => ({
+      id: r._id.toString(),
+      rmaId: r.rmaId || `RMA-${r._id.toString().slice(-6)}`,
+      customerIdentifier: r.customerIdentifier || "",
+      customerName: r.customerName || "Trade Client",
+      customerEmail: r.customerEmail || "",
+      customerPhone: r.customerPhone || "",
+      customerCompany: r.customerCompany || "",
+      orderId: r.orderId || "",
+      orderTotal: typeof r.orderTotal === "number" ? r.orderTotal : 0,
+      orderPlacedAt: r.orderPlacedAt || r.createdAt,
+      reason: r.reason || "General Return",
+      notes: r.notes || "",
+      items: Array.isArray(r.items) ? r.items : [],
+      preferredResolution: r.preferredResolution || "Replacement Unit",
+      status: r.status || "Under Review",
+      isResolved: typeof r.isResolved === "boolean" ? r.isResolved : r.status === "Resolved",
+      adminNotes: r.adminNotes || "",
+      adminResolution: r.adminResolution || "",
+      createdAt: r.createdAt || new Date().toISOString(),
+      updatedAt: r.updatedAt || r.createdAt,
+      resolvedAt: r.resolvedAt,
+    }));
 
-      return { success: true, returns };
-    } catch (e: any) {
-      console.error("Get Admin Returns Error:", e);
-      return { success: false, error: "Failed to fetch returns data.", returns: [] as ReturnRequest[] };
-    }
-  });
+    return { success: true, returns };
+  } catch (e: any) {
+    console.error("Get Admin Returns Error:", e);
+    return {
+      success: false,
+      error: "Failed to fetch returns data.",
+      returns: [] as ReturnRequest[],
+    };
+  }
+});
 
 // ── 3. Update Return Status & Resolution (Admin) ──────────────────────────────
 export const updateReturnStatusDb = createServerFn({ method: "POST" })
@@ -218,7 +232,7 @@ export const updateReturnStatusDb = createServerFn({ method: "POST" })
       isResolved: z.boolean().optional(),
       adminNotes: z.string().optional(),
       adminResolution: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {
@@ -284,7 +298,7 @@ export const toggleReturnResolvedDb = createServerFn({ method: "POST" })
     z.object({
       id: z.string(),
       resolved: z.boolean(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     try {

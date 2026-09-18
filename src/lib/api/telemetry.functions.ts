@@ -28,9 +28,9 @@ export const trackPageHitDb = createServerFn({ method: "POST" })
         {
           $inc: { hits: 1 },
           $set: { updatedAt: new Date() },
-          $addToSet: { paths: data.path }
+          $addToSet: { paths: data.path },
         },
-        { upsert: true }
+        { upsert: true },
       );
 
       return { success: true };
@@ -40,8 +40,8 @@ export const trackPageHitDb = createServerFn({ method: "POST" })
   });
 
 // ── Get Telemetry & Growth Stats ─────────────────────────────────────────
-export const getTelemetryStatsDb = createServerFn({ method: "POST" })
-  .handler(async (): Promise<{ success: boolean; stats: TelemetryStats }> => {
+export const getTelemetryStatsDb = createServerFn({ method: "POST" }).handler(
+  async (): Promise<{ success: boolean; stats: TelemetryStats }> => {
     const defaultStats: TelemetryStats = {
       totalPageHits: 48290,
       todayHits: 1845,
@@ -53,9 +53,9 @@ export const getTelemetryStatsDb = createServerFn({ method: "POST" })
         { name: "Canada", percentage: 14, count: 6760 },
         { name: "United Kingdom", percentage: 9, count: 4346 },
         { name: "Australia", percentage: 6, count: 2897 },
-        { name: "Others", percentage: 3, count: 1450 }
+        { name: "Others", percentage: 3, count: 1450 },
       ],
-      deviceDistribution: { desktop: 58, mobile: 36, tablet: 6 }
+      deviceDistribution: { desktop: 58, mobile: 36, tablet: 6 },
     };
 
     try {
@@ -67,18 +67,19 @@ export const getTelemetryStatsDb = createServerFn({ method: "POST" })
 
       const dbTotalHits = allHits.reduce((sum, h) => sum + (h.hits || 0), 0);
       const today = new Date().toISOString().split("T")[0];
-      const todayHitObj = allHits.find(h => h.date === today);
+      const todayHitObj = allHits.find((h) => h.date === today);
       const dbTodayHits = todayHitObj ? todayHitObj.hits : 0;
 
       // Add DB hits on top of base seed
       const finalStats: TelemetryStats = {
         ...defaultStats,
         totalPageHits: defaultStats.totalPageHits + dbTotalHits,
-        todayHits: defaultStats.todayHits + dbTodayHits
+        todayHits: defaultStats.todayHits + dbTodayHits,
       };
 
       return { success: true, stats: finalStats };
     } catch {
       return { success: true, stats: defaultStats };
     }
-  });
+  },
+);

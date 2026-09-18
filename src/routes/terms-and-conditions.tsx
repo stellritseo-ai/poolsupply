@@ -27,8 +27,13 @@ export const Route = createFileRoute("/terms-and-conditions")({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-        { "@type": "ListItem", "position": 2, "name": "Terms and Conditions", "item": pageUrl },
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        { "@type": "ListItem", position: 2, name: "Terms and Conditions", item: pageUrl },
       ],
     };
 
@@ -37,7 +42,8 @@ export const Route = createFileRoute("/terms-and-conditions")({
       "@type": "WebPage",
       name: "Terms and Conditions — Pool Supply Wholesalers",
       url: pageUrl,
-      description: "Review the terms and conditions for using Pool Supply Wholesalers' website, commercial wholesale services, and equipment distribution.",
+      description:
+        "Review the terms and conditions for using Pool Supply Wholesalers' website, commercial wholesale services, and equipment distribution.",
     };
 
     return {
@@ -50,12 +56,14 @@ export const Route = createFileRoute("/terms-and-conditions")({
         },
         {
           name: "keywords",
-          content: "terms and conditions, pool supply terms of service, wholesale pool equipment terms, user agreement",
+          content:
+            "terms and conditions, pool supply terms of service, wholesale pool equipment terms, user agreement",
         },
         { property: "og:title", content: "Terms and Conditions — Pool Supply Wholesalers" },
         {
           property: "og:description",
-          content: "Please read these terms and conditions carefully before using our website and services.",
+          content:
+            "Please read these terms and conditions carefully before using our website and services.",
         },
         { property: "og:url", content: pageUrl },
         { property: "og:type", content: "website" },
@@ -72,7 +80,8 @@ export const Route = createFileRoute("/terms-and-conditions")({
         { name: "twitter:title", content: "Terms and Conditions — Pool Supply Wholesalers" },
         {
           name: "twitter:description",
-          content: "Please read these terms and conditions carefully before using our website and services.",
+          content:
+            "Please read these terms and conditions carefully before using our website and services.",
         },
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
@@ -96,12 +105,15 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.
+          By accessing and using this website, you accept and agree to be bound by the terms and
+          provision of this agreement.
         </p>
         <div className="p-4 rounded-xl bg-cyan-50/80 border border-cyan-200 text-xs sm:text-sm text-cyan-950 leading-relaxed flex items-start gap-3">
           <ShieldCheck className="size-5 text-cyan-600 shrink-0 mt-0.5" />
           <span>
-            If you do not agree to abide by the above and these terms, please do not use this site or any services provided through it. Continued access signifies your formal acceptance of all current conditions.
+            If you do not agree to abide by the above and these terms, please do not use this site
+            or any services provided through it. Continued access signifies your formal acceptance
+            of all current conditions.
           </span>
         </div>
       </div>
@@ -116,10 +128,13 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          Permission is granted to temporarily download one copy of the materials on this website for personal, non-commercial transitory viewing only.
+          Permission is granted to temporarily download one copy of the materials on this website
+          for personal, non-commercial transitory viewing only.
         </p>
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-700">Under this license you may not:</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-700">
+            Under this license you may not:
+          </p>
           <ul className="grid sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-600">
             <li className="flex items-center gap-2">
               <span className="size-1.5 rounded-full bg-cyan-600 shrink-0" />
@@ -140,7 +155,8 @@ const SECTIONS = [
           </ul>
         </div>
         <p className="text-xs text-slate-500 leading-relaxed">
-          This license shall automatically terminate if you violate any of these restrictions and may be terminated by Pool Supply Wholesalers at any time.
+          This license shall automatically terminate if you violate any of these restrictions and
+          may be terminated by Pool Supply Wholesalers at any time.
         </p>
       </div>
     ),
@@ -154,12 +170,18 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          The materials on this website are provided on an “as is” basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+          The materials on this website are provided on an “as is” basis. We make no warranties,
+          expressed or implied, and hereby disclaim and negate all other warranties including,
+          without limitation, implied warranties or conditions of merchantability, fitness for a
+          particular purpose, or non-infringement of intellectual property or other violation of
+          rights.
         </p>
         <div className="p-4 rounded-xl bg-amber-50/80 border border-amber-200 text-xs sm:text-sm text-amber-950 leading-relaxed flex items-start gap-3">
           <AlertTriangle className="size-5 text-amber-600 shrink-0 mt-0.5" />
           <span>
-            All pool equipment specifications, hydraulic calculations, and manufacturer warranty terms are backed directly by OEM brand manufacturers (Pentair, Hayward, Jandy, Raypak, etc.) in accordance with their respective factory coverage policies.
+            All pool equipment specifications, hydraulic calculations, and manufacturer warranty
+            terms are backed directly by OEM brand manufacturers (Pentair, Hayward, Jandy, Raypak,
+            etc.) in accordance with their respective factory coverage policies.
           </span>
         </div>
       </div>
@@ -174,10 +196,15 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          In no event shall we or our suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on this website.
+          In no event shall we or our suppliers be liable for any damages (including, without
+          limitation, damages for loss of data or profit, or due to business interruption) arising
+          out of the use or inability to use the materials on this website.
         </p>
         <p className="text-xs text-slate-500 leading-relaxed">
-          Even if Pool Supply Wholesalers or an authorized representative has been notified orally or in writing of the possibility of such damage. Because some jurisdictions do not allow limitations on implied warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you.
+          Even if Pool Supply Wholesalers or an authorized representative has been notified orally
+          or in writing of the possibility of such damage. Because some jurisdictions do not allow
+          limitations on implied warranties, or limitations of liability for consequential or
+          incidental damages, these limitations may not apply to you.
         </p>
       </div>
     ),
@@ -191,14 +218,17 @@ const SECTIONS = [
     content: (
       <div className="space-y-4">
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          We may revise these terms of service at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service.
+          We may revise these terms of service at any time without notice. By using this website you
+          are agreeing to be bound by the then current version of these terms of service.
         </p>
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4 text-xs text-slate-600">
           <div className="flex items-center gap-2">
             <Clock className="size-4 text-cyan-600" />
             <span>Regularly audited for regulatory and commercial trade compliance</span>
           </div>
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest hidden sm:inline">Version 2026.1</span>
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest hidden sm:inline">
+            Version 2026.1
+          </span>
         </div>
       </div>
     ),
@@ -251,7 +281,9 @@ const SECTIONS = [
             </div>
             <div>
               <div className="text-xs text-slate-500 font-medium">National Headquarters</div>
-              <div className="text-sm font-bold text-slate-900">410 Scott Pike, Nashville, TN 37207</div>
+              <div className="text-sm font-bold text-slate-900">
+                410 Scott Pike, Nashville, TN 37207
+              </div>
             </div>
           </div>
 
@@ -261,7 +293,9 @@ const SECTIONS = [
             </div>
             <div>
               <div className="text-xs text-slate-500 font-medium">Operating Hours</div>
-              <div className="text-sm font-bold text-slate-900">Mon – Fri: 6:00 AM – 6:00 PM CST</div>
+              <div className="text-sm font-bold text-slate-900">
+                Mon – Fri: 6:00 AM – 6:00 PM CST
+              </div>
             </div>
           </div>
         </div>
@@ -313,7 +347,8 @@ function TermsAndConditionsPage() {
                 </h1>
 
                 <p className="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed font-medium">
-                  Please read these terms and conditions carefully before using our website and services.
+                  Please read these terms and conditions carefully before using our website and
+                  services.
                 </p>
               </div>
 
@@ -378,7 +413,9 @@ function TermsAndConditionsPage() {
                         className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-cyan-700 hover:bg-cyan-50/60 transition-all group"
                       >
                         <span className="flex items-center gap-2.5 truncate">
-                          <span className="text-[11px] font-mono font-bold text-cyan-600">{s.num}.</span>
+                          <span className="text-[11px] font-mono font-bold text-cyan-600">
+                            {s.num}.
+                          </span>
                           <span className="truncate">{s.title}</span>
                         </span>
                         <ChevronRight className="size-3 text-slate-400 group-hover:text-cyan-600 group-hover:translate-x-0.5 transition-all shrink-0" />
@@ -390,7 +427,8 @@ function TermsAndConditionsPage() {
                     <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-2">
                       <p className="font-bold text-slate-900">Need Clarification?</p>
                       <p className="leading-relaxed">
-                        Our contractor support desk is available to assist pool pros with commercial terms and trade policies.
+                        Our contractor support desk is available to assist pool pros with commercial
+                        terms and trade policies.
                       </p>
                       <Link
                         to="/contact"
@@ -433,9 +471,12 @@ function TermsAndConditionsPage() {
                 {/* Additional Commercial Scope Banner */}
                 <div className="p-6 rounded-2xl bg-gradient-to-r from-cyan-50 via-sky-50 to-blue-50 border border-cyan-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="space-y-1 text-center sm:text-left">
-                    <h3 className="text-sm font-bold text-slate-900">Have a specific commercial inquiry?</h3>
+                    <h3 className="text-sm font-bold text-slate-900">
+                      Have a specific commercial inquiry?
+                    </h3>
                     <p className="text-xs text-slate-600">
-                      Reach out to our B2B commercial accounts department for custom contracting & trade credit terms.
+                      Reach out to our B2B commercial accounts department for custom contracting &
+                      trade credit terms.
                     </p>
                   </div>
                   <Link

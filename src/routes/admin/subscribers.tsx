@@ -103,15 +103,19 @@ function SubscribersList() {
     const headers = ["Email", "Joined Date"];
     const rows = subscribers.map((sub) => [sub.email, new Date(sub.createdAt).toISOString()]);
 
-    const csvContent = [headers.join(","), ...rows.map((e) => e.map((val) => `"${val.replace(/"/g, '""')}"`).join(","))].join(
-      "\n"
-    );
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((e) => e.map((val) => `"${val.replace(/"/g, '""')}"`).join(",")),
+    ].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `wholesale_subscribers_${new Date().toISOString().split("T")[0]}.csv`);
+    link.setAttribute(
+      "download",
+      `wholesale_subscribers_${new Date().toISOString().split("T")[0]}.csv`,
+    );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -144,7 +148,8 @@ function SubscribersList() {
             <span>Newsletter & Trade Leads</span>
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm font-medium mt-0.5 sm:mt-1">
-            Manage wholesale newsletter subscribers, contractor email marketing leads, and CSV export records.
+            Manage wholesale newsletter subscribers, contractor email marketing leads, and CSV
+            export records.
           </p>
         </div>
 
@@ -183,8 +188,12 @@ function SubscribersList() {
             <div className="size-14 sm:size-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-3 border border-slate-100 text-slate-300">
               <Mail className="size-7 sm:size-8" />
             </div>
-            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mb-1">No subscribers found</h3>
-            <p className="text-xs text-slate-400">There are no subscribers matching your search term.</p>
+            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mb-1">
+              No subscribers found
+            </h3>
+            <p className="text-xs text-slate-400">
+              There are no subscribers matching your search term.
+            </p>
           </div>
         ) : (
           <>
@@ -245,7 +254,9 @@ function SubscribersList() {
                           <div className="size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center font-black">
                             <Mail className="size-4" />
                           </div>
-                          <span className="font-bold text-slate-900 text-xs sm:text-sm">{sub.email}</span>
+                          <span className="font-bold text-slate-900 text-xs sm:text-sm">
+                            {sub.email}
+                          </span>
                         </div>
                       </td>
 

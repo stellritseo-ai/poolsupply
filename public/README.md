@@ -35,60 +35,60 @@
 
 ## 1. Site Overview
 
-| Item | Detail |
-|------|--------|
-| Domain | poolsupplywholesalers.com |
-| CMS | WordPress 7.0.4 |
-| Ecommerce | WooCommerce 11.0.1 |
-| Page Builder | Elementor 4.2.3 + Elementor Pro 4.2.2 |
-| SEO Plugin | Yoast SEO 28.3 |
-| Theme | Hello Elementor 3.4.9 |
-| Hosting | GoDaddy Managed WordPress |
-| Analytics | Google Analytics 4 (G-KKE5VX5B3B) + GTM (GTM-WCXCTGFG) |
-| Search Console | Verified |
-| Payment | Stripe via WooCommerce Payments |
-| Sitemap Index | https://poolsupplywholesalers.com/sitemap_index.xml |
-| Robots.txt | https://poolsupplywholesalers.com/robots.txt |
+| Item           | Detail                                                 |
+| -------------- | ------------------------------------------------------ |
+| Domain         | poolsupplywholesalers.com                              |
+| CMS            | WordPress 7.0.4                                        |
+| Ecommerce      | WooCommerce 11.0.1                                     |
+| Page Builder   | Elementor 4.2.3 + Elementor Pro 4.2.2                  |
+| SEO Plugin     | Yoast SEO 28.3                                         |
+| Theme          | Hello Elementor 3.4.9                                  |
+| Hosting        | GoDaddy Managed WordPress                              |
+| Analytics      | Google Analytics 4 (G-KKE5VX5B3B) + GTM (GTM-WCXCTGFG) |
+| Search Console | Verified                                               |
+| Payment        | Stripe via WooCommerce Payments                        |
+| Sitemap Index  | https://poolsupplywholesalers.com/sitemap_index.xml    |
+| Robots.txt     | https://poolsupplywholesalers.com/robots.txt           |
 
 ### Confirmed Category URLs
 
-| Category | URL |
-|----------|-----|
-| Electric Heat Pumps | /product-category/electric-heat-pumps/ |
-| Pool Cleaners | /product-category/pool-cleaners/ |
-| Pool Filters | /product-category/pool-filters/ |
-| Pool Heaters | /product-category/pool-heaters/ |
-| Pool Lights | /product-category/pool-lights/ |
-| Pool Pump Motors | /product-category/pool-pump-motors/ |
-| Pool Pumps | /product-category/pool-pumps/ |
-| Pool Vacuums | /product-category/pool-vacuums/ |
-| Pump (DUPLICATE - needs merge) | /product-category/pump/ |
-| Salt System Generators | /product-category/salt-system-generators/ |
+| Category                       | URL                                       |
+| ------------------------------ | ----------------------------------------- |
+| Electric Heat Pumps            | /product-category/electric-heat-pumps/    |
+| Pool Cleaners                  | /product-category/pool-cleaners/          |
+| Pool Filters                   | /product-category/pool-filters/           |
+| Pool Heaters                   | /product-category/pool-heaters/           |
+| Pool Lights                    | /product-category/pool-lights/            |
+| Pool Pump Motors               | /product-category/pool-pump-motors/       |
+| Pool Pumps                     | /product-category/pool-pumps/             |
+| Pool Vacuums                   | /product-category/pool-vacuums/           |
+| Pump (DUPLICATE - needs merge) | /product-category/pump/                   |
+| Salt System Generators         | /product-category/salt-system-generators/ |
 
 ### Confirmed Brand URLs
 
-| Brand | URL |
-|-------|-----|
+| Brand   | URL             |
+| ------- | --------------- |
 | Hayward | /brand/hayward/ |
-| Jandy | /brand/jandy/ |
+| Jandy   | /brand/jandy/   |
 | Pentair | /brand/pentair/ |
 
 ### Sitemap Files
 
-| Sitemap | Last Modified |
-|---------|--------------|
-| post-sitemap.xml | 2026-03-31 |
-| page-sitemap.xml | 2026-07-25 |
-| product-sitemap.xml | 2026-07-03 |
-| product-sitemap2.xml | 2025-07-21 |
-| product-sitemap3.xml | 2025-07-21 |
-| product-sitemap4.xml | 2025-07-22 |
-| product-sitemap5.xml | 2025-07-22 |
-| product-sitemap6.xml | 2025-07-22 |
-| product-sitemap7.xml | 2026-07-03 |
-| product_brand-sitemap.xml | 2026-07-03 |
-| product_cat-sitemap.xml | 2026-07-03 |
-| author-sitemap.xml (DISABLE) | 2025-05-20 |
+| Sitemap                      | Last Modified |
+| ---------------------------- | ------------- |
+| post-sitemap.xml             | 2026-03-31    |
+| page-sitemap.xml             | 2026-07-25    |
+| product-sitemap.xml          | 2026-07-03    |
+| product-sitemap2.xml         | 2025-07-21    |
+| product-sitemap3.xml         | 2025-07-21    |
+| product-sitemap4.xml         | 2025-07-22    |
+| product-sitemap5.xml         | 2025-07-22    |
+| product-sitemap6.xml         | 2025-07-22    |
+| product-sitemap7.xml         | 2026-07-03    |
+| product_brand-sitemap.xml    | 2026-07-03    |
+| product_cat-sitemap.xml      | 2026-07-03    |
+| author-sitemap.xml (DISABLE) | 2025-05-20    |
 
 ---
 
@@ -96,63 +96,64 @@
 
 ### CRITICAL Issues
 
-| # | Issue | Why It Matters | Fix |
-|---|-------|---------------|-----|
-| C1 | robots.txt conflict: Yoast block has empty Disallow overriding first block | Crawlers may index add-to-cart URLs | Merge into one User-agent block |
-| C2 | author-sitemap.xml submitted | Thin duplicate content + security risk | Disable in Yoast; noindex author archives |
-| C3 | /about/ has no 301 redirect (canonical is /about-us/) | Splits link equity | 301 redirect /about/ to /about-us/ |
-| C4 | Duplicate GA4: GT-TB7PJRC7 (Site Kit) AND G-KKE5VX5B3B (manual) both fire | Double-counts sessions | Remove manual GA4 tag |
-| C5 | WordPress version in meta generator tag | Security risk | Remove with remove_action in functions.php |
-| C6 | /product-category/pump/ overlaps /product-category/pool-pumps/ | Keyword cannibalization | 301 redirect /pump/ to /pool-pumps/ |
+| #   | Issue                                                                      | Why It Matters                         | Fix                                        |
+| --- | -------------------------------------------------------------------------- | -------------------------------------- | ------------------------------------------ |
+| C1  | robots.txt conflict: Yoast block has empty Disallow overriding first block | Crawlers may index add-to-cart URLs    | Merge into one User-agent block            |
+| C2  | author-sitemap.xml submitted                                               | Thin duplicate content + security risk | Disable in Yoast; noindex author archives  |
+| C3  | /about/ has no 301 redirect (canonical is /about-us/)                      | Splits link equity                     | 301 redirect /about/ to /about-us/         |
+| C4  | Duplicate GA4: GT-TB7PJRC7 (Site Kit) AND G-KKE5VX5B3B (manual) both fire  | Double-counts sessions                 | Remove manual GA4 tag                      |
+| C5  | WordPress version in meta generator tag                                    | Security risk                          | Remove with remove_action in functions.php |
+| C6  | /product-category/pump/ overlaps /product-category/pool-pumps/             | Keyword cannibalization                | 301 redirect /pump/ to /pool-pumps/        |
 
 ### HIGH Issues
 
-| # | Issue | Fix |
-|---|-------|-----|
-| H1 | No Organization schema on homepage | Add Organization schema |
-| H2 | Homepage title missing "Pool Supplies" and "Pool Equipment" | Update title: Pool Supplies & Equipment - Wholesale Prices |
-| H3 | Homepage meta description lacks product count | Rewrite to include "8,000+ pool supplies" |
-| H4 | No preconnect for Stripe.js / GTM | Add link rel=preconnect for third-party domains |
-| H5 | Pool Vacuums may overlap Pool Cleaners | Audit; merge or differentiate |
-| H6 | No Twitter handle in OG tags | Add twitter:site meta tag |
-| H7 | /xmlrpc.php exposed | Block via .htaccess or Wordfence |
+| #   | Issue                                                       | Fix                                                        |
+| --- | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| H1  | No Organization schema on homepage                          | Add Organization schema                                    |
+| H2  | Homepage title missing "Pool Supplies" and "Pool Equipment" | Update title: Pool Supplies & Equipment - Wholesale Prices |
+| H3  | Homepage meta description lacks product count               | Rewrite to include "8,000+ pool supplies"                  |
+| H4  | No preconnect for Stripe.js / GTM                           | Add link rel=preconnect for third-party domains            |
+| H5  | Pool Vacuums may overlap Pool Cleaners                      | Audit; merge or differentiate                              |
+| H6  | No Twitter handle in OG tags                                | Add twitter:site meta tag                                  |
+| H7  | /xmlrpc.php exposed                                         | Block via .htaccess or Wordfence                           |
 
 ### MEDIUM Issues
 
-| # | Issue | Fix |
-|---|-------|-----|
-| M1 | Category pages have no introductory SEO content | Add 150-250 word keyword intro to each category |
-| M2 | Brand pages have thin content | Add brand intro, product highlights, FAQs |
-| M3 | Salt System Generators slug mismatch (searched: salt chlorine generator) | Optimize category title/meta |
-| M4 | BreadcrumbList schema on products needs verification | Verify Yoast output |
-| M5 | OG image is Elementor auto-thumbnail | Upload branded 1200x630 OG image |
-| M6 | WebSite schema description field is empty | Add description to WebSite schema |
-| M7 | Schema name: "PoolSupplyWholesalers" (no space) | Fix to "Pool Supply Wholesalers" |
+| #   | Issue                                                                    | Fix                                             |
+| --- | ------------------------------------------------------------------------ | ----------------------------------------------- |
+| M1  | Category pages have no introductory SEO content                          | Add 150-250 word keyword intro to each category |
+| M2  | Brand pages have thin content                                            | Add brand intro, product highlights, FAQs       |
+| M3  | Salt System Generators slug mismatch (searched: salt chlorine generator) | Optimize category title/meta                    |
+| M4  | BreadcrumbList schema on products needs verification                     | Verify Yoast output                             |
+| M5  | OG image is Elementor auto-thumbnail                                     | Upload branded 1200x630 OG image                |
+| M6  | WebSite schema description field is empty                                | Add description to WebSite schema               |
+| M7  | Schema name: "PoolSupplyWholesalers" (no space)                          | Fix to "Pool Supply Wholesalers"                |
 
 ### LOW Issues
 
-| # | Issue | Fix |
-|---|-------|-----|
-| L1 | jQuery Migrate loaded globally | Disable if not required by Elementor |
-| L2 | Multiple Elementor CSS files per page | Enable Optimized Asset Loading |
-| L3 | wp-json REST API public | Restrict to authenticated users |
+| #   | Issue                                 | Fix                                  |
+| --- | ------------------------------------- | ------------------------------------ |
+| L1  | jQuery Migrate loaded globally        | Disable if not required by Elementor |
+| L2  | Multiple Elementor CSS files per page | Enable Optimized Asset Loading       |
+| L3  | wp-json REST API public               | Restrict to authenticated users      |
 
 ---
 
 ## 3. Business Information Audit
 
-| Field | Value Found |
-|-------|-------------|
-| Business Name (website) | Pool Supply Wholesalers |
-| Schema name field | PoolSupplyWholesalers (no space — BUG) |
-| Schema description | EMPTY — must be filled |
-| Founders | Jonathan Elio Rodriguez & David Elio Rodriguez |
-| Related company | Pools By Elio (25+ years pool building) |
-| About page inconsistency | /about/ exists but canonical is /about-us/ |
+| Field                    | Value Found                                    |
+| ------------------------ | ---------------------------------------------- |
+| Business Name (website)  | Pool Supply Wholesalers                        |
+| Schema name field        | PoolSupplyWholesalers (no space — BUG)         |
+| Schema description       | EMPTY — must be filled                         |
+| Founders                 | Jonathan Elio Rodriguez & David Elio Rodriguez |
+| Related company          | Pools By Elio (25+ years pool building)        |
+| About page inconsistency | /about/ exists but canonical is /about-us/     |
 
 ### Use This Consistently Everywhere
 
 "Pool Supply Wholesalers" (with space) in:
+
 - All schema markup
 - All title tags
 - Footer copyright
@@ -165,27 +166,27 @@
 
 ### Primary Organic Competitors
 
-| Competitor | Domain | Key Strength |
-|-----------|--------|-------------|
-| InTheSwim | intheswim.com | Massive content library |
-| Leslie's Pool Supply | lesliespool.com | Local SEO + ecommerce |
-| Pool Supply World | poolsupplyworld.com | Product SEO, model keywords |
-| Pool Parts To Go | poolpartstogo.com | Parts and MPN SEO |
-| Inyopools | inyopools.com | Buying guides + YouTube |
-| Discount Pool Supply | discountpoolsupply.com | Price-focused |
+| Competitor           | Domain                 | Key Strength                |
+| -------------------- | ---------------------- | --------------------------- |
+| InTheSwim            | intheswim.com          | Massive content library     |
+| Leslie's Pool Supply | lesliespool.com        | Local SEO + ecommerce       |
+| Pool Supply World    | poolsupplyworld.com    | Product SEO, model keywords |
+| Pool Parts To Go     | poolpartstogo.com      | Parts and MPN SEO           |
+| Inyopools            | inyopools.com          | Buying guides + YouTube     |
+| Discount Pool Supply | discountpoolsupply.com | Price-focused               |
 
 ### Keyword Gaps vs Competitors
 
-| Keyword | Volume | Difficulty | Opportunity |
-|---------|--------|------------|-------------|
-| pool pump buying guide | 2,400/mo | Medium | HIGH |
-| how to choose a pool pump | 1,900/mo | Low | HIGH |
-| best robotic pool cleaner | 14,800/mo | High | MEDIUM |
-| pool heat pump vs gas heater | 880/mo | Low | HIGH |
-| pool filter types explained | 1,200/mo | Low | HIGH |
-| Hayward pool pump reviews | 1,600/mo | Medium | HIGH |
-| Pentair IntelliFlo vs Hayward TriStar | 480/mo | Low | HIGH |
-| salt chlorine generator reviews | 1,300/mo | Medium | MEDIUM |
+| Keyword                               | Volume    | Difficulty | Opportunity |
+| ------------------------------------- | --------- | ---------- | ----------- |
+| pool pump buying guide                | 2,400/mo  | Medium     | HIGH        |
+| how to choose a pool pump             | 1,900/mo  | Low        | HIGH        |
+| best robotic pool cleaner             | 14,800/mo | High       | MEDIUM      |
+| pool heat pump vs gas heater          | 880/mo    | Low        | HIGH        |
+| pool filter types explained           | 1,200/mo  | Low        | HIGH        |
+| Hayward pool pump reviews             | 1,600/mo  | Medium     | HIGH        |
+| Pentair IntelliFlo vs Hayward TriStar | 480/mo    | Low        | HIGH        |
+| salt chlorine generator reviews       | 1,300/mo  | Medium     | MEDIUM      |
 
 ---
 
@@ -880,42 +881,42 @@ what pool equipment do I need for a new pool
 
 ## 6. Keyword Map
 
-| URL | Primary Keyword | Secondary Keywords | Intent | Recommended H1 |
-|-----|----------------|-------------------|--------|----------------|
-| / | pool supplies | pool equipment, wholesale pool supplies | Commercial | Pool Supplies & Equipment at Wholesale Prices |
-| /product-category/pool-pumps/ | pool pumps | variable speed pool pump, pool pump wholesale | Commercial | Shop Pool Pumps — Hayward, Pentair & Jandy |
-| /product-category/pool-filters/ | pool filters | cartridge pool filter, sand pool filter | Commercial | Shop Pool Filters — Cartridge, DE & Sand |
-| /product-category/pool-cleaners/ | pool cleaners | robotic pool cleaner, automatic pool cleaner | Commercial | Shop Pool Cleaners & Robotic Pool Vacuums |
-| /product-category/pool-heaters/ | pool heaters | gas pool heater, propane pool heater | Commercial | Shop Gas & Propane Pool Heaters |
-| /product-category/electric-heat-pumps/ | pool heat pump | electric pool heat pump, heat pump pool heater | Commercial | Shop Electric Pool Heat Pumps |
-| /product-category/pool-lights/ | pool lights | LED pool light, color changing pool light | Commercial | Shop LED Pool Lights — Color Changing & White |
-| /product-category/pool-pump-motors/ | pool pump motor | pool motor replacement | Commercial | Shop Pool Pump Motors & Replacements |
-| /product-category/salt-system-generators/ | salt chlorine generator | salt water pool system, salt cell replacement | Commercial | Shop Salt Chlorine Generators |
-| /brand/hayward/ | Hayward pool equipment | Hayward pool pumps, Hayward filters | Commercial | Hayward Pool Equipment — Pumps, Filters & More |
-| /brand/pentair/ | Pentair pool equipment | Pentair IntelliFlo, Pentair MasterTemp | Commercial | Pentair Pool Equipment — Pumps, Filters & More |
-| /brand/jandy/ | Jandy pool equipment | Jandy VS FloPro, Jandy LXi | Commercial | Jandy Pool Equipment — Pumps, Heaters & More |
-| /about-us/ | Pool Supply Wholesalers about | pool supply company | Navigational | About Pool Supply Wholesalers |
-| /contact/ | contact pool supply wholesalers | pool equipment support | Navigational | Contact Pool Supply Wholesalers |
+| URL                                       | Primary Keyword                 | Secondary Keywords                             | Intent       | Recommended H1                                 |
+| ----------------------------------------- | ------------------------------- | ---------------------------------------------- | ------------ | ---------------------------------------------- |
+| /                                         | pool supplies                   | pool equipment, wholesale pool supplies        | Commercial   | Pool Supplies & Equipment at Wholesale Prices  |
+| /product-category/pool-pumps/             | pool pumps                      | variable speed pool pump, pool pump wholesale  | Commercial   | Shop Pool Pumps — Hayward, Pentair & Jandy     |
+| /product-category/pool-filters/           | pool filters                    | cartridge pool filter, sand pool filter        | Commercial   | Shop Pool Filters — Cartridge, DE & Sand       |
+| /product-category/pool-cleaners/          | pool cleaners                   | robotic pool cleaner, automatic pool cleaner   | Commercial   | Shop Pool Cleaners & Robotic Pool Vacuums      |
+| /product-category/pool-heaters/           | pool heaters                    | gas pool heater, propane pool heater           | Commercial   | Shop Gas & Propane Pool Heaters                |
+| /product-category/electric-heat-pumps/    | pool heat pump                  | electric pool heat pump, heat pump pool heater | Commercial   | Shop Electric Pool Heat Pumps                  |
+| /product-category/pool-lights/            | pool lights                     | LED pool light, color changing pool light      | Commercial   | Shop LED Pool Lights — Color Changing & White  |
+| /product-category/pool-pump-motors/       | pool pump motor                 | pool motor replacement                         | Commercial   | Shop Pool Pump Motors & Replacements           |
+| /product-category/salt-system-generators/ | salt chlorine generator         | salt water pool system, salt cell replacement  | Commercial   | Shop Salt Chlorine Generators                  |
+| /brand/hayward/                           | Hayward pool equipment          | Hayward pool pumps, Hayward filters            | Commercial   | Hayward Pool Equipment — Pumps, Filters & More |
+| /brand/pentair/                           | Pentair pool equipment          | Pentair IntelliFlo, Pentair MasterTemp         | Commercial   | Pentair Pool Equipment — Pumps, Filters & More |
+| /brand/jandy/                             | Jandy pool equipment            | Jandy VS FloPro, Jandy LXi                     | Commercial   | Jandy Pool Equipment — Pumps, Heaters & More   |
+| /about-us/                                | Pool Supply Wholesalers about   | pool supply company                            | Navigational | About Pool Supply Wholesalers                  |
+| /contact/                                 | contact pool supply wholesalers | pool equipment support                         | Navigational | Contact Pool Supply Wholesalers                |
 
 ### SEO Title Templates
 
-| Page Type | Template |
-|-----------|----------|
-| Homepage | Pool Supplies & Equipment - Wholesale Prices - Pool Supply Wholesalers |
-| Category | [Category] - Shop Hayward, Pentair & More - Pool Supply Wholesalers |
-| Brand | [Brand] Pool Equipment - Pumps, Filters, Heaters - Pool Supply Wholesalers |
-| Product | [Product Name] - [Brand] - Pool Supply Wholesalers |
-| Blog Post | [Article Title] - Pool Supply Wholesalers |
+| Page Type | Template                                                                   |
+| --------- | -------------------------------------------------------------------------- |
+| Homepage  | Pool Supplies & Equipment - Wholesale Prices - Pool Supply Wholesalers     |
+| Category  | [Category] - Shop Hayward, Pentair & More - Pool Supply Wholesalers        |
+| Brand     | [Brand] Pool Equipment - Pumps, Filters, Heaters - Pool Supply Wholesalers |
+| Product   | [Product Name] - [Brand] - Pool Supply Wholesalers                         |
+| Blog Post | [Article Title] - Pool Supply Wholesalers                                  |
 
 ### Meta Description Templates
 
-| Page Type | Template |
-|-----------|----------|
-| Homepage | Shop 8,000+ pool supplies from Hayward, Pentair & Jandy at wholesale prices. Pool pumps, heaters, cleaners, lights & more. Free fast shipping. |
-| Category | Shop [category] from Hayward, Pentair & Jandy at wholesale prices. Browse [N]+ [category] with free shipping and expert support. |
-| Brand | Shop [Brand] pool equipment at wholesale prices. Pumps, filters, heaters, cleaners & lights from [Brand]. Fast shipping. |
-| Product | Shop [Product Name] by [Brand] at Pool Supply Wholesalers. View specs, compatibility, and availability. Fast shipping available. |
-| Blog Post | [155-char content summary]. Learn more at Pool Supply Wholesalers. |
+| Page Type | Template                                                                                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Homepage  | Shop 8,000+ pool supplies from Hayward, Pentair & Jandy at wholesale prices. Pool pumps, heaters, cleaners, lights & more. Free fast shipping. |
+| Category  | Shop [category] from Hayward, Pentair & Jandy at wholesale prices. Browse [N]+ [category] with free shipping and expert support.               |
+| Brand     | Shop [Brand] pool equipment at wholesale prices. Pumps, filters, heaters, cleaners & lights from [Brand]. Fast shipping.                       |
+| Product   | Shop [Product Name] by [Brand] at Pool Supply Wholesalers. View specs, compatibility, and availability. Fast shipping available.               |
+| Blog Post | [155-char content summary]. Learn more at Pool Supply Wholesalers.                                                                             |
 
 ---
 
@@ -923,28 +924,28 @@ what pool equipment do I need for a new pool
 
 ### Current vs Recommended
 
-| Element | Current | Recommended |
-|---------|---------|-------------|
-| SEO Title | Pool Pumps, Heaters & Robotic Cleaners - Wholesale Prices | Pool Supplies & Equipment - Wholesale Prices - Pool Supply Wholesalers |
-| Meta Description | Shop pool pumps, heaters & robotic cleaners from Hayward, Pentair & Jandy... | Shop 8,000+ pool supplies from Hayward, Pentair & Jandy at wholesale prices. Free fast shipping. |
-| Organization Schema | MISSING | Add Organization schema |
-| Schema name field | PoolSupplyWholesalers (no space - BUG) | Pool Supply Wholesalers |
-| OG Image | Elementor auto-thumbnail | Branded 1200x630px image |
+| Element             | Current                                                                      | Recommended                                                                                      |
+| ------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| SEO Title           | Pool Pumps, Heaters & Robotic Cleaners - Wholesale Prices                    | Pool Supplies & Equipment - Wholesale Prices - Pool Supply Wholesalers                           |
+| Meta Description    | Shop pool pumps, heaters & robotic cleaners from Hayward, Pentair & Jandy... | Shop 8,000+ pool supplies from Hayward, Pentair & Jandy at wholesale prices. Free fast shipping. |
+| Organization Schema | MISSING                                                                      | Add Organization schema                                                                          |
+| Schema name field   | PoolSupplyWholesalers (no space - BUG)                                       | Pool Supply Wholesalers                                                                          |
+| OG Image            | Elementor auto-thumbnail                                                     | Branded 1200x630px image                                                                         |
 
 ### Organization Schema to Add to Homepage
 
 {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Pool Supply Wholesalers",
-  "url": "https://poolsupplywholesalers.com",
-  "logo": "https://poolsupplywholesalers.com/wp-content/uploads/[logo].png",
-  "description": "Pool Supply Wholesalers sells 8,000+ pool supplies from Hayward, Pentair, and Jandy at wholesale prices.",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "customer service",
-    "url": "https://poolsupplywholesalers.com/contact/"
-  }
+"@context": "https://schema.org",
+"@type": "Organization",
+"name": "Pool Supply Wholesalers",
+"url": "https://poolsupplywholesalers.com",
+"logo": "https://poolsupplywholesalers.com/wp-content/uploads/[logo].png",
+"description": "Pool Supply Wholesalers sells 8,000+ pool supplies from Hayward, Pentair, and Jandy at wholesale prices.",
+"contactPoint": {
+"@type": "ContactPoint",
+"contactType": "customer service",
+"url": "https://poolsupplywholesalers.com/contact/"
+}
 }
 
 ### Recommended H2 Structure
@@ -965,11 +966,11 @@ H2: Frequently Asked Questions
 
 ### Pool Pumps
 
-URL:   /product-category/pool-pumps/
+URL: /product-category/pool-pumps/
 Title: Pool Pumps | Variable Speed, Single Speed & More | Pool Supply Wholesalers
-Meta:  Shop pool pumps from Hayward, Pentair & Jandy at wholesale prices.
-       Variable speed, single speed & dual speed pool pumps. Free fast shipping.
-H1:    Shop Pool Pumps — Hayward, Pentair & Jandy
+Meta: Shop pool pumps from Hayward, Pentair & Jandy at wholesale prices.
+Variable speed, single speed & dual speed pool pumps. Free fast shipping.
+H1: Shop Pool Pumps — Hayward, Pentair & Jandy
 
 Intro (add to category page):
 Pool Supply Wholesalers carries a complete selection of pool pumps for inground
@@ -983,7 +984,7 @@ can reduce energy consumption by up to 90% compared to single speed pumps.
 FAQ for category page:
 Q: What size pool pump do I need?
 A: Divide your pool volume by the turnover time in minutes to get GPM needed.
-   For a 20,000-gallon pool with 8-hour turnover, you need at least 41 GPM.
+For a 20,000-gallon pool with 8-hour turnover, you need at least 41 GPM.
 
 Q: Are variable speed pool pumps worth it?
 A: Yes. They qualify for energy rebates and pay for themselves in 1-2 years.
@@ -993,27 +994,27 @@ A: Hayward, Pentair, and Jandy are the three leading brands in the USA.
 
 ### Pool Filters
 
-URL:   /product-category/pool-filters/
+URL: /product-category/pool-filters/
 Title: Pool Filters | Cartridge, DE & Sand Filters | Pool Supply Wholesalers
-Meta:  Shop pool filters from Hayward, Pentair & Jandy. Cartridge, DE, and sand
-       pool filters at wholesale prices with free shipping.
-H1:    Shop Pool Filters — Cartridge, DE & Sand
+Meta: Shop pool filters from Hayward, Pentair & Jandy. Cartridge, DE, and sand
+pool filters at wholesale prices with free shipping.
+H1: Shop Pool Filters — Cartridge, DE & Sand
 
 FAQ:
 Q: What type of pool filter is best?
 A: Cartridge filters are easiest to maintain. DE filters give finest filtration
-   (5 microns). Sand filters last longest and require backwashing.
+(5 microns). Sand filters last longest and require backwashing.
 
 Q: How often should I clean my pool filter?
 A: Cartridge: every 4-6 weeks. Sand/DE: when pressure rises 8-10 PSI above normal.
 
 ### Pool Cleaners
 
-URL:   /product-category/pool-cleaners/
+URL: /product-category/pool-cleaners/
 Title: Pool Cleaners | Robotic, Pressure & Suction | Pool Supply Wholesalers
-Meta:  Shop robotic, pressure and suction pool cleaners at wholesale prices.
-       Free shipping from top brands.
-H1:    Shop Pool Cleaners & Robotic Pool Vacuums
+Meta: Shop robotic, pressure and suction pool cleaners at wholesale prices.
+Free shipping from top brands.
+H1: Shop Pool Cleaners & Robotic Pool Vacuums
 
 FAQ:
 Q: What is the best type of pool cleaner?
@@ -1024,45 +1025,45 @@ A: Most work on vinyl, fiberglass, and plaster. Check compatibility first.
 
 ### Pool Heaters
 
-URL:   /product-category/pool-heaters/
+URL: /product-category/pool-heaters/
 Title: Pool Heaters | Gas & Propane Pool Heaters | Pool Supply Wholesalers
-Meta:  Shop gas and propane pool heaters from Hayward, Pentair & Jandy.
-       Fast heating, reliable performance, wholesale prices.
-H1:    Shop Gas & Propane Pool Heaters
+Meta: Shop gas and propane pool heaters from Hayward, Pentair & Jandy.
+Fast heating, reliable performance, wholesale prices.
+H1: Shop Gas & Propane Pool Heaters
 
 FAQ:
 Q: What is the fastest way to heat a pool?
 A: Gas pool heaters — they raise pool temperature about 1 degree F per hour
-   per 10,000 gallons regardless of outdoor temperature.
+per 10,000 gallons regardless of outdoor temperature.
 
 Q: How do I size a pool heater?
 A: BTU needed = Surface Area x Temperature Rise x 12.
-   Most residential pools need 250,000-400,000 BTU.
+Most residential pools need 250,000-400,000 BTU.
 
 ### Electric Heat Pumps
 
-URL:   /product-category/electric-heat-pumps/
+URL: /product-category/electric-heat-pumps/
 Title: Electric Pool Heat Pumps | Energy Efficient Pool Heating | Pool Supply Wholesalers
-Meta:  Shop electric pool heat pumps at wholesale prices. Energy-efficient heating
-       for inground & above ground pools. Free shipping.
-H1:    Shop Electric Pool Heat Pumps
+Meta: Shop electric pool heat pumps at wholesale prices. Energy-efficient heating
+for inground & above ground pools. Free shipping.
+H1: Shop Electric Pool Heat Pumps
 
 FAQ:
 Q: How does a pool heat pump work?
 A: It extracts heat from the surrounding air and transfers it to pool water.
-   Works best when outdoor temp is above 50 degrees F.
+Works best when outdoor temp is above 50 degrees F.
 
 Q: Are heat pumps better than gas heaters?
 A: Heat pumps cost 5x less to operate but heat more slowly. Best for maintaining
-   temperature rather than rapid heating.
+temperature rather than rapid heating.
 
 ### Pool Lights
 
-URL:   /product-category/pool-lights/
+URL: /product-category/pool-lights/
 Title: LED Pool Lights | Color Changing & White Pool Lights | Pool Supply Wholesalers
-Meta:  Shop LED pool lights from Hayward, Pentair & Jandy. Color changing and
-       white underwater pool lights at wholesale prices.
-H1:    Shop LED Pool Lights — Color Changing & White
+Meta: Shop LED pool lights from Hayward, Pentair & Jandy. Color changing and
+white underwater pool lights at wholesale prices.
+H1: Shop LED Pool Lights — Color Changing & White
 
 FAQ:
 Q: Are LED pool lights worth it?
@@ -1077,11 +1078,11 @@ A: Usually yes. Check niche size and voltage (12V vs 120V) before purchasing.
 
 ### Hayward
 
-URL:   /brand/hayward/
+URL: /brand/hayward/
 Title: Hayward Pool Equipment | Pumps, Filters, Heaters & More | Pool Supply Wholesalers
-Meta:  Shop Hayward pool equipment at wholesale prices. Pumps, filters, heaters,
-       cleaners, lights and salt systems from Hayward. Fast shipping.
-H1:    Hayward Pool Equipment
+Meta: Shop Hayward pool equipment at wholesale prices. Pumps, filters, heaters,
+cleaners, lights and salt systems from Hayward. Fast shipping.
+H1: Hayward Pool Equipment
 
 About Hayward (factual):
 Hayward Industries is one of the world's leading manufacturers of residential
@@ -1089,6 +1090,7 @@ and commercial pool equipment. Founded in 1925, Hayward manufactures pool pumps,
 filters, heaters, cleaners, lights, automation systems, and salt chlorine generators.
 
 Key Hayward Product Lines:
+
 - Pool Pumps: SuperPump VS, TriStar VS, EcoStar, MaxFlo VS
 - Pool Filters: SwimClear Cartridge, Pro-Grid DE, Sand Filters
 - Pool Heaters: H-Series Natural Gas & Propane
@@ -1100,17 +1102,18 @@ Key Hayward Product Lines:
 FAQ:
 Q: Is Hayward a good pool equipment brand?
 A: Yes. Hayward has manufactured pool equipment since 1925 and is among the most
-   trusted brands in the pool industry worldwide.
+trusted brands in the pool industry worldwide.
 
 ### Pentair
 
-URL:   /brand/pentair/
+URL: /brand/pentair/
 Title: Pentair Pool Equipment | IntelliFlo Pumps, Filters & Heaters | Pool Supply Wholesalers
-Meta:  Shop Pentair pool equipment at wholesale prices. IntelliFlo pumps,
-       Clean & Clear filters, MasterTemp heaters. Fast shipping.
-H1:    Pentair Pool Equipment
+Meta: Shop Pentair pool equipment at wholesale prices. IntelliFlo pumps,
+Clean & Clear filters, MasterTemp heaters. Fast shipping.
+H1: Pentair Pool Equipment
 
 Key Pentair Product Lines:
+
 - Pool Pumps: IntelliFlo 3 VSF, IntelliFlo VS, SuperFlo VS, WhisperFlo VS
 - Pool Filters: Clean & Clear Plus Cartridge, FNS Plus DE, Quad DE
 - Pool Heaters: MasterTemp 125, 250, 400 BTU
@@ -1121,17 +1124,18 @@ Key Pentair Product Lines:
 FAQ:
 Q: Is Pentair the best pool pump brand?
 A: Pentair is consistently top-rated. The IntelliFlo variable speed pump is
-   one of the most energy-efficient available and qualifies for utility rebates.
+one of the most energy-efficient available and qualifies for utility rebates.
 
 ### Jandy
 
-URL:   /brand/jandy/
+URL: /brand/jandy/
 Title: Jandy Pool Equipment | Pumps, Heaters, Lights & More | Pool Supply Wholesalers
-Meta:  Shop Jandy pool equipment at wholesale prices. VS FloPro pumps,
-       LXi heaters, WaterColors lights and more. Fast shipping.
-H1:    Jandy Pool Equipment
+Meta: Shop Jandy pool equipment at wholesale prices. VS FloPro pumps,
+LXi heaters, WaterColors lights and more. Fast shipping.
+H1: Jandy Pool Equipment
 
 Key Jandy Product Lines:
+
 - Pool Pumps: VS FloPro, FloPro, Stealth
 - Pool Heaters: LXi, JXi Natural Gas & Propane
 - Pool Lights: WaterColors LED, Treo LED
@@ -1143,9 +1147,11 @@ Key Jandy Product Lines:
 ## 10. Product SEO System
 
 ### Product Title Formula
+
 [Brand] [Model Name] [Model Number] [Key Attribute] [Product Type]
 
 Examples:
+
 - Pentair IntelliFlo 3 VSF 342001 Variable Speed Pool Pump
 - Hayward W3SP3202VSP TriStar VS 900 Variable Speed Pool Pump
 - Pentair Clean & Clear Plus 420 sq ft Cartridge Pool Filter
@@ -1153,18 +1159,22 @@ Examples:
 - Pentair IntelliBrite 5g Color LED Pool Light
 
 ### SEO Title Formula
+
 [Product Name] - [Brand] - Pool Supply Wholesalers
 (Keep under 70 characters)
 
 ### Meta Description Formula
+
 Shop [Product Name] by [Brand] at Pool Supply Wholesalers.
 [Key spec 1]. [Key spec 2]. Free shipping available.
 (140-155 characters)
 
 ### Product Image ALT Text Formula
+
 [Brand] [Model Number] [Product Type]
 
 Examples:
+
 - Pentair 342001 IntelliFlo 3 variable speed pool pump
 - Hayward H400FDP 400000 BTU natural gas pool heater
 - Pentair Clean and Clear Plus 420 cartridge pool filter
@@ -1174,31 +1184,32 @@ Examples:
 ### Product Schema (add to all products)
 
 {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "[Product Name]",
-  "description": "[Product Description]",
-  "image": "[Product Image URL]",
-  "sku": "[SKU]",
-  "mpn": "[Model Number / MPN]",
-  "brand": {
-    "@type": "Brand",
-    "name": "[Brand Name]"
-  },
-  "offers": {
-    "@type": "Offer",
-    "url": "[Product URL]",
-    "priceCurrency": "USD",
-    "price": "[Price]",
-    "availability": "https://schema.org/InStock",
-    "seller": {
-      "@type": "Organization",
-      "name": "Pool Supply Wholesalers"
-    }
-  }
+"@context": "https://schema.org",
+"@type": "Product",
+"name": "[Product Name]",
+"description": "[Product Description]",
+"image": "[Product Image URL]",
+"sku": "[SKU]",
+"mpn": "[Model Number / MPN]",
+"brand": {
+"@type": "Brand",
+"name": "[Brand Name]"
+},
+"offers": {
+"@type": "Offer",
+"url": "[Product URL]",
+"priceCurrency": "USD",
+"price": "[Price]",
+"availability": "https://schema.org/InStock",
+"seller": {
+"@type": "Organization",
+"name": "Pool Supply Wholesalers"
+}
+}
 }
 
 ### Product Page Content Structure
+
 1. Opening: Product name + brand + key benefit (2-3 sentences)
 2. Features: Bullet list of 5-8 key features (real data only)
 3. Specifications: Table with real specs (HP, voltage, GPM, BTU)
@@ -1212,40 +1223,42 @@ Examples:
 ## 11. Blog Strategy & Keywords
 
 ### Blog URL Structure
+
 https://poolsupplywholesalers.com/pool-resources/
 https://poolsupplywholesalers.com/pool-resources/pool-pump-buying-guide/
 https://poolsupplywholesalers.com/pool-resources/how-to-choose-a-pool-filter/
 https://poolsupplywholesalers.com/pool-resources/pool-heat-pump-vs-gas-heater/
 
 ### Footer Link Structure
+
 Pool Resources
-  |-- Pool Blog
-  |-- Pool Pump Guide
-  |-- Pool Filter Guide
-  |-- Pool Cleaner Guide
-  |-- Pool Heater Guide
-  |-- Heat Pump Guide
-  |-- Pool Maintenance Guide
+|-- Pool Blog
+|-- Pool Pump Guide
+|-- Pool Filter Guide
+|-- Pool Cleaner Guide
+|-- Pool Heater Guide
+|-- Heat Pump Guide
+|-- Pool Maintenance Guide
 
 ### Priority Blog Articles
 
-| Priority | Article Title | Target Keyword | Est. Volume |
-|----------|--------------|----------------|-------------|
-| 1 | Pool Pump Buying Guide: What Size Pool Pump Do You Need? | pool pump buying guide | 2,400/mo |
-| 2 | Variable Speed vs Single Speed Pool Pump: Which Is Better? | variable speed vs single speed pool pump | 1,800/mo |
-| 3 | Common Pool Pump Problems and Solutions | pool pump problems | 1,900/mo |
-| 4 | How to Choose a Robotic Pool Cleaner | how to choose a robotic pool cleaner | 1,400/mo |
-| 5 | How to Choose the Right Pool Filter | how to choose a pool filter | 1,600/mo |
-| 6 | Pool Filter Types Explained: Sand vs Cartridge vs DE | pool filter types | 1,200/mo |
-| 7 | How to Choose the Right Pool Heater | how to choose a pool heater | 1,100/mo |
-| 8 | Hayward Pool Equipment Buying Guide | Hayward pool equipment | 1,100/mo |
-| 9 | Pentair Pool Equipment Buying Guide | Pentair pool equipment | 960/mo |
-| 10 | How Long Does a Pool Pump Last? | how long does a pool pump last | 880/mo |
-| 11 | Electric Pool Heat Pump vs Gas Pool Heater | pool heat pump vs gas heater | 880/mo |
-| 12 | Robotic vs Pressure vs Suction Pool Cleaners | robotic pool cleaner vs suction | 720/mo |
-| 13 | Signs Your Pool Pump Needs to Be Replaced | signs pool pump failing | 590/mo |
-| 14 | How to Choose LED Pool Lights | LED pool lights buying guide | 590/mo |
-| 15 | Jandy Pool Equipment Buying Guide | Jandy pool equipment | 480/mo |
+| Priority | Article Title                                              | Target Keyword                           | Est. Volume |
+| -------- | ---------------------------------------------------------- | ---------------------------------------- | ----------- |
+| 1        | Pool Pump Buying Guide: What Size Pool Pump Do You Need?   | pool pump buying guide                   | 2,400/mo    |
+| 2        | Variable Speed vs Single Speed Pool Pump: Which Is Better? | variable speed vs single speed pool pump | 1,800/mo    |
+| 3        | Common Pool Pump Problems and Solutions                    | pool pump problems                       | 1,900/mo    |
+| 4        | How to Choose a Robotic Pool Cleaner                       | how to choose a robotic pool cleaner     | 1,400/mo    |
+| 5        | How to Choose the Right Pool Filter                        | how to choose a pool filter              | 1,600/mo    |
+| 6        | Pool Filter Types Explained: Sand vs Cartridge vs DE       | pool filter types                        | 1,200/mo    |
+| 7        | How to Choose the Right Pool Heater                        | how to choose a pool heater              | 1,100/mo    |
+| 8        | Hayward Pool Equipment Buying Guide                        | Hayward pool equipment                   | 1,100/mo    |
+| 9        | Pentair Pool Equipment Buying Guide                        | Pentair pool equipment                   | 960/mo      |
+| 10       | How Long Does a Pool Pump Last?                            | how long does a pool pump last           | 880/mo      |
+| 11       | Electric Pool Heat Pump vs Gas Pool Heater                 | pool heat pump vs gas heater             | 880/mo      |
+| 12       | Robotic vs Pressure vs Suction Pool Cleaners               | robotic pool cleaner vs suction          | 720/mo      |
+| 13       | Signs Your Pool Pump Needs to Be Replaced                  | signs pool pump failing                  | 590/mo      |
+| 14       | How to Choose LED Pool Lights                              | LED pool lights buying guide             | 590/mo      |
+| 15       | Jandy Pool Equipment Buying Guide                          | Jandy pool equipment                     | 480/mo      |
 
 ---
 
@@ -1253,31 +1266,32 @@ Pool Resources
 
 ### Schema Required Per Page Type
 
-| Page | Schema Types |
-|------|-------------|
-| Homepage | Organization + WebSite + BreadcrumbList |
-| Category | BreadcrumbList + FAQPage |
-| Brand | BreadcrumbList |
-| Product | Product + Offer + BreadcrumbList |
-| Blog Article | Article + BreadcrumbList + FAQPage |
-| Contact | BreadcrumbList |
-| About | BreadcrumbList |
+| Page         | Schema Types                            |
+| ------------ | --------------------------------------- |
+| Homepage     | Organization + WebSite + BreadcrumbList |
+| Category     | BreadcrumbList + FAQPage                |
+| Brand        | BreadcrumbList                          |
+| Product      | Product + Offer + BreadcrumbList        |
+| Blog Article | Article + BreadcrumbList + FAQPage      |
+| Contact      | BreadcrumbList                          |
+| About        | BreadcrumbList                          |
 
 ### Critical Schema Fixes
 
-| Issue | Severity | Fix |
-|-------|----------|-----|
-| No Organization schema on homepage | HIGH | Add via Yoast or manually |
-| WebSite schema description is empty | MEDIUM | Add descriptive text |
-| Schema name: PoolSupplyWholesalers (no space) | MEDIUM | Fix to: Pool Supply Wholesalers |
-| Product schema audit at scale | HIGH | Verify via Search Console Rich Results |
-| No FAQPage schema on category pages | HIGH | Wrap FAQ sections in FAQPage schema |
+| Issue                                         | Severity | Fix                                    |
+| --------------------------------------------- | -------- | -------------------------------------- |
+| No Organization schema on homepage            | HIGH     | Add via Yoast or manually              |
+| WebSite schema description is empty           | MEDIUM   | Add descriptive text                   |
+| Schema name: PoolSupplyWholesalers (no space) | MEDIUM   | Fix to: Pool Supply Wholesalers        |
+| Product schema audit at scale                 | HIGH     | Verify via Search Console Rich Results |
+| No FAQPage schema on category pages           | HIGH     | Wrap FAQ sections in FAQPage schema    |
 
 ---
 
 ## 13. Internal Linking Strategy
 
 ### Rules
+
 1. Every product links to its category
 2. Every product links to its brand page
 3. Every product shows 3-6 related products
@@ -1288,17 +1302,17 @@ Pool Resources
 
 ### Priority Links to Build
 
-| Source | Anchor Text | Destination |
-|--------|-------------|-------------|
-| Homepage | Shop Pool Pumps | /product-category/pool-pumps/ |
-| Homepage | Hayward Equipment | /brand/hayward/ |
-| Homepage | Pentair Equipment | /brand/pentair/ |
-| Homepage | Jandy Equipment | /brand/jandy/ |
-| Blog pump guide | Shop Variable Speed Pool Pumps | /product-category/pool-pumps/ |
-| Blog heater guide | Shop Gas Pool Heaters | /product-category/pool-heaters/ |
-| Blog heat pump guide | Shop Electric Pool Heat Pumps | /product-category/electric-heat-pumps/ |
-| Blog filter guide | Shop Pool Filters | /product-category/pool-filters/ |
-| Blog cleaner guide | Shop Pool Cleaners | /product-category/pool-cleaners/ |
+| Source               | Anchor Text                    | Destination                            |
+| -------------------- | ------------------------------ | -------------------------------------- |
+| Homepage             | Shop Pool Pumps                | /product-category/pool-pumps/          |
+| Homepage             | Hayward Equipment              | /brand/hayward/                        |
+| Homepage             | Pentair Equipment              | /brand/pentair/                        |
+| Homepage             | Jandy Equipment                | /brand/jandy/                          |
+| Blog pump guide      | Shop Variable Speed Pool Pumps | /product-category/pool-pumps/          |
+| Blog heater guide    | Shop Gas Pool Heaters          | /product-category/pool-heaters/        |
+| Blog heat pump guide | Shop Electric Pool Heat Pumps  | /product-category/electric-heat-pumps/ |
+| Blog filter guide    | Shop Pool Filters              | /product-category/pool-filters/        |
+| Blog cleaner guide   | Shop Pool Cleaners             | /product-category/pool-cleaners/       |
 
 ---
 
@@ -1306,25 +1320,25 @@ Pool Resources
 
 ### Issues Found
 
-| Issue | Severity | Fix |
-|-------|----------|-----|
-| OG image is auto-generated Elementor thumbnail | MEDIUM | Upload branded 1200x630 OG image |
-| Product image ALT text likely empty | HIGH | Implement ALT formula for all products |
-| Images served as JPG (no WebP) | MEDIUM | Enable WebP via Imagify or ShortPixel |
-| No fetchpriority=high on LCP images | MEDIUM | Add to hero/above-fold images |
+| Issue                                          | Severity | Fix                                    |
+| ---------------------------------------------- | -------- | -------------------------------------- |
+| OG image is auto-generated Elementor thumbnail | MEDIUM   | Upload branded 1200x630 OG image       |
+| Product image ALT text likely empty            | HIGH     | Implement ALT formula for all products |
+| Images served as JPG (no WebP)                 | MEDIUM   | Enable WebP via Imagify or ShortPixel  |
+| No fetchpriority=high on LCP images            | MEDIUM   | Add to hero/above-fold images          |
 
 ### ALT Text Examples
 
 Good:
-  Pentair 342001 IntelliFlo 3 variable speed pool pump
-  Hayward H400FDP 400000 BTU natural gas pool heater
-  Pentair Clean and Clear Plus 420 cartridge pool filter
-  Hayward AquaRite W3AQR15 salt chlorine generator
+Pentair 342001 IntelliFlo 3 variable speed pool pump
+Hayward H400FDP 400000 BTU natural gas pool heater
+Pentair Clean and Clear Plus 420 cartridge pool filter
+Hayward AquaRite W3AQR15 salt chlorine generator
 
 Bad (do not do this):
-  pool pump
-  image001.jpg
-  product image
+pool pump
+image001.jpg
+product image
 
 ---
 
@@ -1332,17 +1346,18 @@ Bad (do not do this):
 
 ### Issues Found
 
-| Metric | Issue | Fix |
-|--------|-------|-----|
-| LCP | Fonts loading without preconnect | Add preconnect hints for all font origins |
-| LCP | No fetchpriority=high on hero image | Add to Elementor LCP image |
-| INP | Stripe.js loads on all pages | Load Stripe only on cart and checkout |
-| INP | jQuery Migrate loaded globally | Remove if not required |
-| CLS | Images without width/height attributes | Add explicit dimensions |
-| CLS | Multiple Elementor CSS files | Enable Improved CSS Loading experiment |
-| General | Two GA4 tags firing | Remove manual tag; keep Site Kit only |
+| Metric  | Issue                                  | Fix                                       |
+| ------- | -------------------------------------- | ----------------------------------------- |
+| LCP     | Fonts loading without preconnect       | Add preconnect hints for all font origins |
+| LCP     | No fetchpriority=high on hero image    | Add to Elementor LCP image                |
+| INP     | Stripe.js loads on all pages           | Load Stripe only on cart and checkout     |
+| INP     | jQuery Migrate loaded globally         | Remove if not required                    |
+| CLS     | Images without width/height attributes | Add explicit dimensions                   |
+| CLS     | Multiple Elementor CSS files           | Enable Improved CSS Loading experiment    |
+| General | Two GA4 tags firing                    | Remove manual tag; keep Site Kit only     |
 
 ### Recommended Actions
+
 1. Elementor > Settings > Experiments > Enable Optimized Asset Loading
 2. Elementor > Settings > Experiments > Enable Improved CSS Loading
 3. WP Rocket or LiteSpeed Cache: CSS/JS minification and defer
@@ -1358,42 +1373,43 @@ Bad (do not do this):
 
 Q: What is the best pool pump for an inground pool?
 A: Variable speed pool pumps from Pentair (IntelliFlo 3) and Hayward (TriStar VS)
-   are top-rated for inground pools. They deliver significant energy savings and
-   meet DOE efficiency standards.
+are top-rated for inground pools. They deliver significant energy savings and
+meet DOE efficiency standards.
 
 Q: How do I choose a pool pump?
 A: Choose based on pool volume in gallons, desired turnover rate (6-8 hours),
-   head pressure of your plumbing, and energy efficiency goals. Variable speed
-   pumps are recommended for most inground pools.
+head pressure of your plumbing, and energy efficiency goals. Variable speed
+pumps are recommended for most inground pools.
 
 Q: What size pool pump do I need?
 A: Divide pool volume by turnover time in minutes to get needed GPM.
-   For 20,000 gallons with 8-hour turnover, you need at least 41 GPM.
+For 20,000 gallons with 8-hour turnover, you need at least 41 GPM.
 
 Q: What is the difference between a pool heater and a heat pump?
 A: A gas pool heater burns natural gas or propane for fast heating in any weather.
-   A pool heat pump extracts heat from air and is 5x more efficient, but works
-   best when outdoor temps are above 50 degrees F.
+A pool heat pump extracts heat from air and is 5x more efficient, but works
+best when outdoor temps are above 50 degrees F.
 
 Q: How do robotic pool cleaners work?
 A: They use a self-contained motor, filter bag, and brushes to vacuum the pool
-   floor, walls, and waterline. They plug into a standard outlet and operate
-   independently from the pool pump.
+floor, walls, and waterline. They plug into a standard outlet and operate
+independently from the pool pump.
 
 Q: How long does a pool pump last?
 A: A quality pool pump typically lasts 8-12 years with proper maintenance.
-   Variable speed pumps often last longer due to lower operating RPMs.
+Variable speed pumps often last longer due to lower operating RPMs.
 
 Q: How do I choose a pool filter?
 A: Sand filters (20-40 microns, easy maintenance), cartridge (10-15 microns,
-   no backwashing), or DE (3-5 microns, finest filtration). Cartridge or DE
-   are most common in residential pools.
+no backwashing), or DE (3-5 microns, finest filtration). Cartridge or DE
+are most common in residential pools.
 
 Q: What pool equipment do I need?
 A: A complete setup: pool pump, pool filter, pool heater (optional), pool cleaner,
-   pool lights (optional), and salt chlorine generator (optional).
+pool lights (optional), and salt chlorine generator (optional).
 
 ### AEO Content Rules
+
 1. Use Q&A format in all FAQ sections
 2. Give direct 2-4 sentence answers before elaborating
 3. Apply FAQPage schema to all FAQ sections
@@ -1406,39 +1422,39 @@ A: A complete setup: pool pump, pool filter, pool heater (optional), pool cleane
 
 ## 17. Keyword Cannibalization Report
 
-| Keyword | Conflicting URLs | Recommended Action |
-|---------|----------------|-------------------|
-| pool pumps | /product-category/pool-pumps/ vs /product-category/pump/ | MERGE: 301 redirect /pump/ to /pool-pumps/ |
+| Keyword                      | Conflicting URLs                                                    | Recommended Action                                        |
+| ---------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------- |
+| pool pumps                   | /product-category/pool-pumps/ vs /product-category/pump/            | MERGE: 301 redirect /pump/ to /pool-pumps/                |
 | pool vacuums / pool cleaners | /product-category/pool-vacuums/ vs /product-category/pool-cleaners/ | AUDIT: merge if same products; differentiate if different |
-| about us | /about/ vs /about-us/ | REDIRECT: 301 /about/ to /about-us/ |
+| about us                     | /about/ vs /about-us/                                               | REDIRECT: 301 /about/ to /about-us/                       |
 
 ---
 
 ## 18. SEO Audit Summary Report
 
-| Check | Status |
-|-------|--------|
-| Sitemap | PASS - sitemap_index.xml with 12 child sitemaps |
-| Robots.txt | WARN - duplicate User-agent blocks |
-| Canonical URLs | WARN - /about/ has canonical /about-us/ but no 301 |
-| Duplicate GA4 tags | FAIL - two GA4 tags firing simultaneously |
-| Organization Schema | FAIL - missing from homepage |
-| Schema name | FAIL - PoolSupplyWholesalers vs Pool Supply Wholesalers |
-| Schema description | FAIL - empty string |
-| Duplicate category /pump/ | FAIL - cannibalizes /pool-pumps/ |
-| Author sitemap | WARN - should be disabled |
-| WordPress version tag | WARN - reveals CMS version |
-| xmlrpc.php | WARN - security risk |
-| Product count | PASS - 7 product sitemaps (7,000+ products) |
-| Category sitemap | PASS - 10 categories |
-| Brand sitemap | PASS - 3 brands |
-| Google Search Console | PASS - verified |
-| Google Analytics | PASS - GA4 active |
-| SSL/HTTPS | PASS |
-| OG Tags | WARN - image needs improvement |
-| Blog/Content section | FAIL - no blog found |
-| Category intro content | WARN - likely thin or missing |
-| Brand page content | WARN - likely thin |
+| Check                     | Status                                                  |
+| ------------------------- | ------------------------------------------------------- |
+| Sitemap                   | PASS - sitemap_index.xml with 12 child sitemaps         |
+| Robots.txt                | WARN - duplicate User-agent blocks                      |
+| Canonical URLs            | WARN - /about/ has canonical /about-us/ but no 301      |
+| Duplicate GA4 tags        | FAIL - two GA4 tags firing simultaneously               |
+| Organization Schema       | FAIL - missing from homepage                            |
+| Schema name               | FAIL - PoolSupplyWholesalers vs Pool Supply Wholesalers |
+| Schema description        | FAIL - empty string                                     |
+| Duplicate category /pump/ | FAIL - cannibalizes /pool-pumps/                        |
+| Author sitemap            | WARN - should be disabled                               |
+| WordPress version tag     | WARN - reveals CMS version                              |
+| xmlrpc.php                | WARN - security risk                                    |
+| Product count             | PASS - 7 product sitemaps (7,000+ products)             |
+| Category sitemap          | PASS - 10 categories                                    |
+| Brand sitemap             | PASS - 3 brands                                         |
+| Google Search Console     | PASS - verified                                         |
+| Google Analytics          | PASS - GA4 active                                       |
+| SSL/HTTPS                 | PASS                                                    |
+| OG Tags                   | WARN - image needs improvement                          |
+| Blog/Content section      | FAIL - no blog found                                    |
+| Category intro content    | WARN - likely thin or missing                           |
+| Brand page content        | WARN - likely thin                                      |
 
 ---
 
@@ -1446,97 +1462,97 @@ A: A complete setup: pool pump, pool filter, pool heater (optional), pool cleane
 
 ### PHASE 1 — Critical Technical Fixes (Week 1-2)
 
-| Task | Priority |
-|------|----------|
-| Remove duplicate GA4 manual script tag | CRITICAL |
-| Fix robots.txt - merge User-agent blocks | CRITICAL |
-| 301 redirect /about/ to /about-us/ | CRITICAL |
+| Task                                                                  | Priority |
+| --------------------------------------------------------------------- | -------- |
+| Remove duplicate GA4 manual script tag                                | CRITICAL |
+| Fix robots.txt - merge User-agent blocks                              | CRITICAL |
+| 301 redirect /about/ to /about-us/                                    | CRITICAL |
 | 301 redirect /product-category/pump/ to /product-category/pool-pumps/ | CRITICAL |
-| Fix schema name: PoolSupplyWholesalers to Pool Supply Wholesalers | HIGH |
-| Add description to WebSite schema | HIGH |
-| Add Organization schema to homepage | HIGH |
-| Update homepage SEO title | HIGH |
-| Update homepage meta description | HIGH |
-| Remove WordPress version generator meta tag | HIGH |
-| Block xmlrpc.php | HIGH |
-| Disable author sitemap in Yoast | HIGH |
-| Add preconnect hints for third-party origins | MEDIUM |
+| Fix schema name: PoolSupplyWholesalers to Pool Supply Wholesalers     | HIGH     |
+| Add description to WebSite schema                                     | HIGH     |
+| Add Organization schema to homepage                                   | HIGH     |
+| Update homepage SEO title                                             | HIGH     |
+| Update homepage meta description                                      | HIGH     |
+| Remove WordPress version generator meta tag                           | HIGH     |
+| Block xmlrpc.php                                                      | HIGH     |
+| Disable author sitemap in Yoast                                       | HIGH     |
+| Add preconnect hints for third-party origins                          | MEDIUM   |
 
 ### PHASE 2 — Product SEO at Scale (Week 2-4)
 
-| Task | Priority |
-|------|----------|
-| Audit all product titles for uniqueness via Yoast | CRITICAL |
-| Apply meta description template to all products | HIGH |
-| Ensure every product has Brand, SKU, MPN filled | HIGH |
-| Verify Product schema via Search Console Rich Results | HIGH |
-| Implement ALT text formula for all product images | MEDIUM |
-| Enable WebP image conversion | MEDIUM |
+| Task                                                  | Priority |
+| ----------------------------------------------------- | -------- |
+| Audit all product titles for uniqueness via Yoast     | CRITICAL |
+| Apply meta description template to all products       | HIGH     |
+| Ensure every product has Brand, SKU, MPN filled       | HIGH     |
+| Verify Product schema via Search Console Rich Results | HIGH     |
+| Implement ALT text formula for all product images     | MEDIUM   |
+| Enable WebP image conversion                          | MEDIUM   |
 
 ### PHASE 3 — Category & Brand SEO (Week 3-5)
 
-| Task | Priority |
-|------|----------|
-| Add 150-200 word intro to all category pages | HIGH |
-| Add FAQPage schema to all category pages | HIGH |
-| Update all category SEO titles | HIGH |
-| Update all category meta descriptions | HIGH |
-| Enhance Hayward brand page | MEDIUM |
-| Enhance Pentair brand page | MEDIUM |
-| Enhance Jandy brand page | MEDIUM |
+| Task                                         | Priority |
+| -------------------------------------------- | -------- |
+| Add 150-200 word intro to all category pages | HIGH     |
+| Add FAQPage schema to all category pages     | HIGH     |
+| Update all category SEO titles               | HIGH     |
+| Update all category meta descriptions        | HIGH     |
+| Enhance Hayward brand page                   | MEDIUM   |
+| Enhance Pentair brand page                   | MEDIUM   |
+| Enhance Jandy brand page                     | MEDIUM   |
 
 ### PHASE 4 — Internal Linking (Week 4-6)
 
-| Task | Priority |
-|------|----------|
-| Add related products to all product pages | HIGH |
-| Link brand pages to product categories | HIGH |
-| Link category pages to brand pages | HIGH |
-| Fix orphan product pages | MEDIUM |
+| Task                                      | Priority |
+| ----------------------------------------- | -------- |
+| Add related products to all product pages | HIGH     |
+| Link brand pages to product categories    | HIGH     |
+| Link category pages to brand pages        | HIGH     |
+| Fix orphan product pages                  | MEDIUM   |
 
 ### PHASE 5 — Blog & Content (Week 5-10)
 
-| Task | Priority |
-|------|----------|
-| Create /pool-resources/ blog section | HIGH |
-| Add Pool Resources to footer | HIGH |
-| Publish: Pool Pump Buying Guide | HIGH |
-| Publish: Pool Filter Types Explained | HIGH |
-| Publish: Pool Heater Buying Guide | HIGH |
-| Publish: How to Choose a Robotic Pool Cleaner | HIGH |
-| Publish: Heat Pump vs Gas Heater | HIGH |
-| Publish: How Long Does a Pool Pump Last | HIGH |
-| Publish: Hayward Equipment Guide | MEDIUM |
-| Publish: Pentair Equipment Guide | MEDIUM |
-| Add internal links from blog to products and categories | HIGH |
+| Task                                                    | Priority |
+| ------------------------------------------------------- | -------- |
+| Create /pool-resources/ blog section                    | HIGH     |
+| Add Pool Resources to footer                            | HIGH     |
+| Publish: Pool Pump Buying Guide                         | HIGH     |
+| Publish: Pool Filter Types Explained                    | HIGH     |
+| Publish: Pool Heater Buying Guide                       | HIGH     |
+| Publish: How to Choose a Robotic Pool Cleaner           | HIGH     |
+| Publish: Heat Pump vs Gas Heater                        | HIGH     |
+| Publish: How Long Does a Pool Pump Last                 | HIGH     |
+| Publish: Hayward Equipment Guide                        | MEDIUM   |
+| Publish: Pentair Equipment Guide                        | MEDIUM   |
+| Add internal links from blog to products and categories | HIGH     |
 
 ### PHASE 6 — Competitor & Backlink Strategy (Month 2-3)
 
-| Task | Priority |
-|------|----------|
-| Identify pool contractor websites for link partnerships | MEDIUM |
-| Submit to pool industry directories | MEDIUM |
-| Create shareable infographics | MEDIUM |
+| Task                                                    | Priority |
+| ------------------------------------------------------- | -------- |
+| Identify pool contractor websites for link partnerships | MEDIUM   |
+| Submit to pool industry directories                     | MEDIUM   |
+| Create shareable infographics                           | MEDIUM   |
 
 ### PHASE 7 — AI Search / AEO (Month 2-3)
 
-| Task | Priority |
-|------|----------|
-| Add FAQPage schema to all FAQ sections | HIGH |
-| Structure blog content with direct Q&A format | HIGH |
-| Ensure all product specs use numerical values | HIGH |
-| Add comparison tables | MEDIUM |
+| Task                                          | Priority |
+| --------------------------------------------- | -------- |
+| Add FAQPage schema to all FAQ sections        | HIGH     |
+| Structure blog content with direct Q&A format | HIGH     |
+| Ensure all product specs use numerical values | HIGH     |
+| Add comparison tables                         | MEDIUM   |
 
 ### PHASE 8 — Monthly Monitoring
 
-| Task | Frequency |
-|------|-----------|
-| Google Search Console - Coverage + Rich Results | Monthly |
-| Keyword ranking review | Monthly |
-| 404 error check | Monthly |
-| Blog article updates for freshness | Quarterly |
-| New product SEO audit on import | Per import |
-| Competitor keyword monitoring | Quarterly |
+| Task                                            | Frequency  |
+| ----------------------------------------------- | ---------- |
+| Google Search Console - Coverage + Rich Results | Monthly    |
+| Keyword ranking review                          | Monthly    |
+| 404 error check                                 | Monthly    |
+| Blog article updates for freshness              | Quarterly  |
+| New product SEO audit on import                 | Per import |
+| Competitor keyword monitoring                   | Quarterly  |
 
 ---
 

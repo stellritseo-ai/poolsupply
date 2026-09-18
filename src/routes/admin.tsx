@@ -166,10 +166,11 @@ function AdminLayout() {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${active
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-900/30"
-                  : "text-slate-300 hover:bg-white/5 hover:text-white"
-                  }`}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+                  active
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-900/30"
+                    : "text-slate-300 hover:bg-white/5 hover:text-white"
+                }`}
               >
                 <Icon className={`size-4 ${active ? "text-white" : "text-slate-400"}`} />
                 <span>{item.label}</span>
@@ -191,7 +192,9 @@ function AdminLayout() {
                   Master Admin
                   <ShieldCheck className="size-3.5 text-cyan-300 shrink-0" />
                 </div>
-                <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">Superuser</div>
+                <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
+                  Superuser
+                </div>
               </div>
             </div>
 
@@ -251,10 +254,11 @@ function AdminLayout() {
                       key={item.label}
                       to={item.to}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${active
-                        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
-                        : "text-slate-300 hover:bg-white/5 hover:text-white"
-                        }`}
+                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                        active
+                          ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
+                          : "text-slate-300 hover:bg-white/5 hover:text-white"
+                      }`}
                     >
                       <Icon className="size-4" />
                       <span>{item.label}</span>
@@ -354,13 +358,16 @@ function AdminLayout() {
                         notifications.slice(0, 5).map((n) => (
                           <div
                             key={n.id}
-                            className={`p-2.5 rounded-xl text-xs transition flex items-start justify-between gap-2 ${n.read ? "bg-white" : "bg-cyan-50/60"
-                              }`}
+                            className={`p-2.5 rounded-xl text-xs transition flex items-start justify-between gap-2 ${
+                              n.read ? "bg-white" : "bg-cyan-50/60"
+                            }`}
                           >
                             <div>
                               <div className="font-extrabold text-slate-900">{n.title}</div>
                               <div className="text-[11px] text-slate-500 mt-0.5">{n.message}</div>
-                              <div className="text-[10px] text-slate-400 mt-1">{timeAgo(n.createdAt)}</div>
+                              <div className="text-[10px] text-slate-400 mt-1">
+                                {timeAgo(n.createdAt)}
+                              </div>
                             </div>
                             {!n.read && (
                               <button
@@ -373,7 +380,9 @@ function AdminLayout() {
                           </div>
                         ))
                       ) : (
-                        <div className="py-6 text-center text-xs text-slate-400">No new notifications</div>
+                        <div className="py-6 text-center text-xs text-slate-400">
+                          No new notifications
+                        </div>
                       )}
                     </div>
                   </motion.div>

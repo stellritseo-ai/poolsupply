@@ -4,7 +4,14 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { useCart, formatUSD } from "@/components/site/cart-context";
 import { ProductCard } from "@/components/site/ProductCard";
-import { getProductById, getRelatedProducts, syncLocalProducts, getProductImage, Review, Product } from "@/lib/products";
+import {
+  getProductById,
+  getRelatedProducts,
+  syncLocalProducts,
+  getProductImage,
+  Review,
+  Product,
+} from "@/lib/products";
 import { addReviewDb, getProductByIdDb, getProductsDb } from "@/lib/api/products.functions";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -18,7 +25,7 @@ import {
   Wrench,
   MessageSquare,
   Sparkles,
-  ArrowLeft
+  ArrowLeft,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -51,33 +58,50 @@ export const Route = createFileRoute("/products/$productId")({
 
     // Build meta description: prefer details > description snippet, never use "Introducing the..." filler
     const buildDescription = () => {
-      if (!product) return "Commercial pool equipment at direct wholesale trade pricing from Pool Supply Wholesalers.";
+      if (!product)
+        return "Commercial pool equipment at direct wholesale trade pricing from Pool Supply Wholesalers.";
       const priceStr = product.price ? formatUSD(product.price) : "";
       // Use 'details' field (manufacturer spec line) when available and not a copy of name
-      const detailText = product.details && product.details !== product.name ? product.details : null;
+      const detailText =
+        product.details && product.details !== product.name ? product.details : null;
       // Check if description is the auto-generated "Introducing the..." filler
       const isFillerDesc = product.description?.startsWith("Introducing the");
-      const descSource = detailText || (!isFillerDesc ? product.description : null) || `${product.brand || ""} ${product.category || "pool"} equipment`;
+      const descSource =
+        detailText ||
+        (!isFillerDesc ? product.description : null) ||
+        `${product.brand || ""} ${product.category || "pool"} equipment`;
       const snippet = descSource.slice(0, 130).trim();
       return `Shop ${product.name}${priceStr ? ` for ${priceStr}` : ""}. ${snippet}. Fast shipping from Pool Supply Wholesalers.`;
     };
     const description = buildDescription();
 
-    const imageUrl = product?.img ? getProductImage(product.img) : "https://poolsupplywholesalers.com/about-hero.png";
+    const imageUrl = product?.img
+      ? getProductImage(product.img)
+      : "https://poolsupplywholesalers.com/about-hero.png";
     const productUrl = `https://poolsupplywholesalers.com/products/${params.productId}`;
 
     // Canonical category slug for breadcrumbs
     const catSlug = product?.category
-      ? product.category.toLowerCase().replace(/\s+&\s+/g, "-and-").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
+      ? product.category
+          .toLowerCase()
+          .replace(/\s+&\s+/g, "-and-")
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
       : "all";
     const catName = product?.category || "Pool Equipment";
 
     // Only include real user-generated reviews (filter out templated auto-generated ones)
     const allReviews = product?.reviews || [];
-    const TEMPLATED_AUTHORS = new Set(["Verified Buyer", "Certified Pool Technician", "Verified Customer", "Pool Pro"]);
+    const TEMPLATED_AUTHORS = new Set([
+      "Verified Buyer",
+      "Certified Pool Technician",
+      "Verified Customer",
+      "Pool Pro",
+    ]);
     const realReviews = allReviews.filter((r: Review) => {
       const isTemplatedAuthor = TEMPLATED_AUTHORS.has(r.author || "");
-      const isTemplatedContent = (r.content || "").includes("Exactly what I needed") ||
+      const isTemplatedContent =
+        (r.content || "").includes("Exactly what I needed") ||
         (r.content || "").includes("Stars. Outstanding product") ||
         (r.content || "").startsWith("5/5 Stars") ||
         (r.content || "").startsWith("4/5 Stars");
@@ -86,116 +110,137 @@ export const Route = createFileRoute("/products/$productId")({
 
     // Only emit AggregateRating if there are real, verified customer reviews
     // Only emit AggregateRating if there are real, verified customer reviews
-    const avgRating = realReviews.length > 0
-      ? (realReviews.reduce((acc, r) => acc + (r.rating || 5), 0) / realReviews.length).toFixed(1)
-      : undefined;
+    const avgRating =
+      realReviews.length > 0
+        ? (realReviews.reduce((acc, r) => acc + (r.rating || 5), 0) / realReviews.length).toFixed(1)
+        : undefined;
 
     const jsonLd = product
       ? [
           {
             "@context": "https://schema.org/",
             "@type": "Product",
-            "name": product.name || "Pool Equipment",
-            "image": [imageUrl],
-            "description": descText,
+            name: product.name || "Pool Equipment",
+            image: [imageUrl],
+            description: descText,
             ...(product.sku ? { sku: product.sku, mpn: product.sku } : {}),
-            "productID": product.id,
-            "category": product.category || "Pool Equipment",
-            "brand": {
+            productID: product.id,
+            category: product.category || "Pool Equipment",
+            brand: {
               "@type": "Brand",
-              "name": product.brand || "Pool Supply Wholesalers"
+              name: product.brand || "Pool Supply Wholesalers",
             },
-            "manufacturer": {
+            manufacturer: {
               "@type": "Organization",
-              "name": product.brand || "Pool Supply Wholesalers",
-              "url": `https://poolsupplywholesalers.com/brands/${(product.brand || "").toLowerCase().replace(/[^a-z0-9-]/g, "-")}`
+              name: product.brand || "Pool Supply Wholesalers",
+              url: `https://poolsupplywholesalers.com/brands/${(product.brand || "").toLowerCase().replace(/[^a-z0-9-]/g, "-")}`,
             },
-            "offers": {
+            offers: {
               "@type": "Offer",
-              "url": productUrl,
-              "priceCurrency": "USD",
-              "price": product.price || 0,
-              "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0],
-              "itemCondition": "https://schema.org/NewCondition",
-              "availability": (product.stock ?? 0) > 0
-                ? "https://schema.org/InStock"
-                : "https://schema.org/OutOfStock",
-              "seller": {
+              url: productUrl,
+              priceCurrency: "USD",
+              price: product.price || 0,
+              priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+                .toISOString()
+                .split("T")[0],
+              itemCondition: "https://schema.org/NewCondition",
+              availability:
+                (product.stock ?? 0) > 0
+                  ? "https://schema.org/InStock"
+                  : "https://schema.org/OutOfStock",
+              seller: {
                 "@type": "Organization",
-                "name": "Pool Supply Wholesalers",
-                "url": "https://poolsupplywholesalers.com"
+                name: "Pool Supply Wholesalers",
+                url: "https://poolsupplywholesalers.com",
               },
-              "shippingDetails": {
+              shippingDetails: {
                 "@type": "OfferShippingDetails",
-                "shippingRate": {
+                shippingRate: {
                   "@type": "MonetaryAmount",
-                  "value": "0",
-                  "currency": "USD"
+                  value: "0",
+                  currency: "USD",
                 },
-                "deliveryTime": {
+                deliveryTime: {
                   "@type": "ShippingDeliveryTime",
-                  "handlingTime": {
+                  handlingTime: {
                     "@type": "QuantitativeValue",
-                    "minValue": 0,
-                    "maxValue": 1,
-                    "unitCode": "DAY"
+                    minValue: 0,
+                    maxValue: 1,
+                    unitCode: "DAY",
                   },
-                  "transitTime": {
+                  transitTime: {
                     "@type": "QuantitativeValue",
-                    "minValue": 1,
-                    "maxValue": 5,
-                    "unitCode": "DAY"
-                  }
+                    minValue: 1,
+                    maxValue: 5,
+                    unitCode: "DAY",
+                  },
                 },
-                "shippingDestination": {
+                shippingDestination: {
                   "@type": "DefinedRegion",
-                  "addressCountry": "US"
-                }
+                  addressCountry: "US",
+                },
               },
-              "hasMerchantReturnPolicy": {
+              hasMerchantReturnPolicy: {
                 "@type": "MerchantReturnPolicy",
-                "applicableCountry": "US",
-                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-                "merchantReturnDays": 30,
-                "returnMethod": "https://schema.org/ReturnByMail",
-                "returnFees": "https://schema.org/FreeReturn"
-              }
-            },
-            ...(avgRating && realReviews.length > 0 ? {
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": avgRating,
-                "bestRating": "5",
-                "worstRating": "1",
-                "reviewCount": realReviews.length
+                applicableCountry: "US",
+                returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+                merchantReturnDays: 30,
+                returnMethod: "https://schema.org/ReturnByMail",
+                returnFees: "https://schema.org/FreeReturn",
               },
-              "review": realReviews.slice(0, 5).map((r: Review) => ({
-                "@type": "Review",
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": r.rating || 5,
-                  "bestRating": "5",
-                  "worstRating": "1"
-                },
-                "author": {
-                  "@type": "Person",
-                  "name": r.author || "Verified Customer"
-                },
-                "name": r.title || "",
-                "reviewBody": r.content || "",
-                "datePublished": r.date || new Date().toISOString().split("T")[0]
-              }))
-            } : {})
+            },
+            ...(avgRating && realReviews.length > 0
+              ? {
+                  aggregateRating: {
+                    "@type": "AggregateRating",
+                    ratingValue: avgRating,
+                    bestRating: "5",
+                    worstRating: "1",
+                    reviewCount: realReviews.length,
+                  },
+                  review: realReviews.slice(0, 5).map((r: Review) => ({
+                    "@type": "Review",
+                    reviewRating: {
+                      "@type": "Rating",
+                      ratingValue: r.rating || 5,
+                      bestRating: "5",
+                      worstRating: "1",
+                    },
+                    author: {
+                      "@type": "Person",
+                      name: r.author || "Verified Customer",
+                    },
+                    name: r.title || "",
+                    reviewBody: r.content || "",
+                    datePublished: r.date || new Date().toISOString().split("T")[0],
+                  })),
+                }
+              : {}),
           },
           {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
-            "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://poolsupplywholesalers.com" },
-              { "@type": "ListItem", "position": 2, "name": product.category || "Pool Equipment", "item": `https://poolsupplywholesalers.com/shop/${product.category?.toLowerCase().replace(/ /g, "-") || "all"}` },
-              { "@type": "ListItem", "position": 3, "name": product.name || "Product", "item": productUrl }
-            ]
-          }
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://poolsupplywholesalers.com",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: product.category || "Pool Equipment",
+                item: `https://poolsupplywholesalers.com/shop/${product.category?.toLowerCase().replace(/ /g, "-") || "all"}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: product.name || "Product",
+                item: productUrl,
+              },
+            ],
+          },
         ]
       : null;
 
@@ -203,7 +248,10 @@ export const Route = createFileRoute("/products/$productId")({
       meta: [
         { title },
         { name: "description", content: description },
-        { name: "keywords", content: `${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale, buy ${product?.category || "pool supply"}, commercial pool equipment, wholesale pool supply Nashville TN` },
+        {
+          name: "keywords",
+          content: `${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale, buy ${product?.category || "pool supply"}, commercial pool equipment, wholesale pool supply Nashville TN`,
+        },
         { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
@@ -217,7 +265,10 @@ export const Route = createFileRoute("/products/$productId")({
         { property: "og:locale", content: "en_US" },
         { property: "product:price:amount", content: String(product?.price || 0) },
         { property: "product:price:currency", content: "USD" },
-        { property: "product:availability", content: (product?.stock ?? 0) > 0 ? "in stock" : "out of stock" },
+        {
+          property: "product:availability",
+          content: (product?.stock ?? 0) > 0 ? "in stock" : "out of stock",
+        },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@poolsupplywholesalers" },
         { name: "twitter:creator", content: "@poolsupplywholesalers" },
@@ -225,13 +276,13 @@ export const Route = createFileRoute("/products/$productId")({
         { name: "twitter:description", content: description },
         { name: "twitter:image", content: imageUrl },
       ],
-      links: [
-        { rel: "canonical", href: productUrl }
-      ],
-      scripts: jsonLd ? jsonLd.map(ld => ({
-        type: "application/ld+json",
-        children: JSON.stringify(ld)
-      })) : []
+      links: [{ rel: "canonical", href: productUrl }],
+      scripts: jsonLd
+        ? jsonLd.map((ld) => ({
+            type: "application/ld+json",
+            children: JSON.stringify(ld),
+          }))
+        : [],
     };
   },
   component: ProductDetailPage,
@@ -313,15 +364,30 @@ function ProductDetailPage() {
     setWriteOpen(false);
   }, [productId, product?.id]);
 
-  const effectivePrice = product ? (product.salePrice && product.salePrice > 0 ? product.salePrice : product.price) : 0;
-  const savings = product && product.msrp && product.msrp > effectivePrice ? product.msrp - effectivePrice : 0;
-  const savingsPercent = product && product.msrp && product.msrp > effectivePrice ? Math.round((savings / product.msrp) * 100) : 0;
-  const related = product ? getRelatedProducts(product, 4, categoryProducts && categoryProducts.length > 0 ? categoryProducts : undefined) : [];
+  const effectivePrice = product
+    ? product.salePrice && product.salePrice > 0
+      ? product.salePrice
+      : product.price
+    : 0;
+  const savings =
+    product && product.msrp && product.msrp > effectivePrice ? product.msrp - effectivePrice : 0;
+  const savingsPercent =
+    product && product.msrp && product.msrp > effectivePrice
+      ? Math.round((savings / product.msrp) * 100)
+      : 0;
+  const related = product
+    ? getRelatedProducts(
+        product,
+        4,
+        categoryProducts && categoryProducts.length > 0 ? categoryProducts : undefined,
+      )
+    : [];
 
   // Calculate average rating
-  const avgRating = reviews.length > 0
-    ? +(reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
-    : (product?.rating || 5);
+  const avgRating =
+    reviews.length > 0
+      ? +(reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
+      : product?.rating || 5;
 
   const handleAddReview = async (e: React.FormEvent) => {
     if (!product) return;
@@ -334,7 +400,7 @@ function ProductDetailPage() {
       rating: newRating,
       date: new Date().toISOString().split("T")[0],
       title: newTitle,
-      content: newContent
+      content: newContent,
     };
 
     const updated = [review, ...reviews];
@@ -347,11 +413,11 @@ function ProductDetailPage() {
       try {
         const parsedProducts = JSON.parse(storedProducts);
         if (Array.isArray(parsedProducts)) {
-          const updatedProducts = parsedProducts.map(p => {
+          const updatedProducts = parsedProducts.map((p) => {
             if (p.id === product.id) {
               return {
                 ...p,
-                reviews: [review, ...(p.reviews || [])]
+                reviews: [review, ...(p.reviews || [])],
               };
             }
             return p;
@@ -431,9 +497,18 @@ function ProductDetailPage() {
         ) : !product ? (
           <div className="grid place-items-center px-6 py-28">
             <div className="text-center max-w-md">
-              <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Product Not Found</h1>
-              <p className="mt-3 text-muted-foreground">The product you are looking for does not exist or has been removed.</p>
-              <Link to="/shop/$category" params={{ category: "all" }} search={{ q: "" }} className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg hover:bg-slate-800 transition">
+              <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
+                Product Not Found
+              </h1>
+              <p className="mt-3 text-muted-foreground">
+                The product you are looking for does not exist or has been removed.
+              </p>
+              <Link
+                to="/shop/$category"
+                params={{ category: "all" }}
+                search={{ q: "" }}
+                className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg hover:bg-slate-800 transition"
+              >
                 <ArrowLeft className="size-4" /> Return to Shop
               </Link>
             </div>
@@ -442,13 +517,17 @@ function ProductDetailPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             {/* Breadcrumbs */}
             <nav className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 mt-4 sm:mt-8 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap scrollbar-none">
-              <Link to="/" className="hover:text-foreground transition">Home</Link>
+              <Link to="/" className="hover:text-foreground transition">
+                Home
+              </Link>
               <span className="text-muted-foreground/45 font-normal">&gt;</span>
               <span className="text-muted-foreground/50">Shop</span>
               <span className="text-muted-foreground/45 font-normal">&gt;</span>
               <span className="text-muted-foreground/50">{product.category}</span>
               <span className="text-muted-foreground/45 font-normal">&gt;</span>
-              <span className="text-foreground font-bold truncate max-w-[150px] sm:max-w-none capitalize">{product.name}</span>
+              <span className="text-foreground font-bold truncate max-w-[150px] sm:max-w-none capitalize">
+                {product.name}
+              </span>
             </nav>
 
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
@@ -491,13 +570,21 @@ function ProductDetailPage() {
                   </div>
                   <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                     <ShieldCheck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Genuine Brand</span>
-                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">100% Authorized</span>
+                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">
+                      Genuine Brand
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">
+                      100% Authorized
+                    </span>
                   </div>
                   <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                     <Wrench className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">Warranty</span>
-                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">{product.specs?.["Warranty"] || "Full Warranty"}</span>
+                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">
+                      Warranty
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">
+                      {product.specs?.["Warranty"] || "Full Warranty"}
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -511,9 +598,13 @@ function ProductDetailPage() {
               >
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">{product.brand}</span>
+                    <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">
+                      {product.brand}
+                    </span>
                   </div>
-                  <h1 className="mt-1.5 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-snug capitalize">{product.name}</h1>
+                  <h1 className="mt-1.5 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-snug capitalize">
+                    {product.name}
+                  </h1>
 
                   {/* Rating & Reviews anchor */}
                   <button
@@ -528,20 +619,25 @@ function ProductDetailPage() {
                         />
                       ))}
                     </div>
-                    <span className="group-hover:underline">({reviews.length} customer reviews)</span>
+                    <span className="group-hover:underline">
+                      ({reviews.length} customer reviews)
+                    </span>
                   </button>
                 </div>
 
                 {/* Pricing card */}
                 {(() => {
-                  const effectivePrice = product.salePrice && product.salePrice > 0 ? product.salePrice : product.price;
+                  const effectivePrice =
+                    product.salePrice && product.salePrice > 0 ? product.salePrice : product.price;
                   return (
                     <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-surface border border-border/50 space-y-3.5 sm:space-y-4">
                       <div className="flex items-baseline gap-3 flex-wrap">
                         <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
                           Sale Price
                         </div>
-                        <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">{formatUSD(effectivePrice)}</div>
+                        <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">
+                          {formatUSD(effectivePrice)}
+                        </div>
                         {product.msrp && product.msrp > effectivePrice && (
                           <div className="text-xs text-muted-foreground line-through font-medium">
                             MSRP: {formatUSD(product.msrp)}
@@ -553,11 +649,15 @@ function ProductDetailPage() {
 
                       <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
                         <div>
-                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">SKU</span>
+                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">
+                            SKU
+                          </span>
                           <p className="text-foreground mt-0.5 font-mono">{product.sku}</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">Category</span>
+                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">
+                            Category
+                          </span>
                           <p className="text-foreground mt-0.5">{product.category}</p>
                         </div>
                       </div>
@@ -592,7 +692,10 @@ function ProductDetailPage() {
 
                       {/* Add Button */}
                       {(() => {
-                        const effectivePrice = product.salePrice && product.salePrice > 0 ? product.salePrice : product.price;
+                        const effectivePrice =
+                          product.salePrice && product.salePrice > 0
+                            ? product.salePrice
+                            : product.price;
                         return (
                           <button
                             onClick={() => add({ ...product, price: effectivePrice }, qty)}
@@ -614,7 +717,8 @@ function ProductDetailPage() {
                   )}
 
                   <p className="text-xs text-muted-foreground text-center">
-                    🚚 Distance-based shipping calculated at checkout. Same day dispatch for orders before 2 PM.
+                    🚚 Distance-based shipping calculated at checkout. Same day dispatch for orders
+                    before 2 PM.
                   </p>
                 </div>
 
@@ -626,7 +730,10 @@ function ProductDetailPage() {
                   >
                     Description
                     {activeTab === "description" && (
-                      <motion.span layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                      <motion.span
+                        layoutId="tab-underline"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+                      />
                     )}
                   </button>
                   <button
@@ -635,7 +742,10 @@ function ProductDetailPage() {
                   >
                     Specifications
                     {activeTab === "specs" && (
-                      <motion.span layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                      <motion.span
+                        layoutId="tab-underline"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+                      />
                     )}
                   </button>
                 </div>
@@ -646,7 +756,10 @@ function ProductDetailPage() {
                   ) : (
                     <div className="grid gap-2 border border-border/50 rounded-2xl overflow-hidden bg-surface">
                       {Object.entries(product.specs || {}).map(([key, value]) => (
-                        <div key={key} className="grid grid-cols-1 sm:grid-cols-[160px_1fr] border-b border-border/30 last:border-b-0 p-3 hover:bg-white transition-colors gap-1 sm:gap-0">
+                        <div
+                          key={key}
+                          className="grid grid-cols-1 sm:grid-cols-[160px_1fr] border-b border-border/30 last:border-b-0 p-3 hover:bg-white transition-colors gap-1 sm:gap-0"
+                        >
                           <span className="font-bold text-foreground/80 text-xs">{key}</span>
                           <span className="text-muted-foreground text-xs">{value}</span>
                         </div>
@@ -671,14 +784,21 @@ function ProductDetailPage() {
             </div>
 
             {/* Reviews Section */}
-            <section ref={reviewsEndRef} className="mt-14 sm:mt-20 pt-8 sm:pt-12 border-t border-border">
+            <section
+              ref={reviewsEndRef}
+              className="mt-14 sm:mt-20 pt-8 sm:pt-12 border-t border-border"
+            >
               <div className="grid lg:grid-cols-[260px_1fr] gap-8 lg:gap-10">
                 {/* Ratings Summary */}
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">Customer Reviews</h2>
+                  <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+                    Customer Reviews
+                  </h2>
 
                   <div className="mt-3 sm:mt-4 flex items-center gap-3">
-                    <div className="text-4xl sm:text-5xl font-black text-foreground">{avgRating}</div>
+                    <div className="text-4xl sm:text-5xl font-black text-foreground">
+                      {avgRating}
+                    </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-0.5">
                         {[...Array(5)].map((_, i) => (
@@ -688,7 +808,9 @@ function ProductDetailPage() {
                           />
                         ))}
                       </div>
-                      <div className="text-xs text-muted-foreground font-semibold">{reviews.length} Reviews</div>
+                      <div className="text-xs text-muted-foreground font-semibold">
+                        {reviews.length} Reviews
+                      </div>
                     </div>
                   </div>
 
@@ -716,11 +838,15 @@ function ProductDetailPage() {
                       onSubmit={handleAddReview}
                       className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-surface border border-border/80 space-y-4 overflow-hidden"
                     >
-                      <h3 className="font-bold text-sm sm:text-base text-foreground">Write a Customer Review</h3>
+                      <h3 className="font-bold text-sm sm:text-base text-foreground">
+                        Write a Customer Review
+                      </h3>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <label className="block">
-                          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Your Name</span>
+                          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                            Your Name
+                          </span>
                           <input
                             type="text"
                             required
@@ -732,7 +858,9 @@ function ProductDetailPage() {
                         </label>
 
                         <div>
-                          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Rating</span>
+                          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                            Rating
+                          </span>
                           <div className="flex items-center gap-1.5 h-10">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
@@ -751,7 +879,9 @@ function ProductDetailPage() {
                       </div>
 
                       <label className="block">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Review Title</span>
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                          Review Title
+                        </span>
                         <input
                           type="text"
                           required
@@ -763,7 +893,9 @@ function ProductDetailPage() {
                       </label>
 
                       <label className="block">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Review details</span>
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                          Review details
+                        </span>
                         <textarea
                           required
                           rows={4}
@@ -807,12 +939,18 @@ function ProductDetailPage() {
                                   />
                                 ))}
                               </div>
-                              <span className="text-xs font-bold text-foreground">{rev.author}</span>
+                              <span className="text-xs font-bold text-foreground">
+                                {rev.author}
+                              </span>
                             </div>
                             <span className="text-[11px] text-muted-foreground">{rev.date}</span>
                           </div>
-                          <h4 className="text-xs sm:text-sm font-bold text-foreground">{rev.title}</h4>
-                          <p className="text-xs text-muted-foreground leading-relaxed">{rev.content}</p>
+                          <h4 className="text-xs sm:text-sm font-bold text-foreground">
+                            {rev.title}
+                          </h4>
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            {rev.content}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -820,7 +958,9 @@ function ProductDetailPage() {
                     <div className="text-center py-8 sm:py-10 bg-surface rounded-2xl sm:rounded-3xl border border-dashed border-border p-5 sm:p-6">
                       <MessageSquare className="size-8 text-muted-foreground/45 mx-auto mb-3" />
                       <p className="text-sm font-semibold text-muted-foreground">No reviews yet</p>
-                      <p className="text-xs text-muted-foreground/75 mt-1">Be the first to review this product!</p>
+                      <p className="text-xs text-muted-foreground/75 mt-1">
+                        Be the first to review this product!
+                      </p>
                     </div>
                   )}
                 </div>
@@ -830,8 +970,12 @@ function ProductDetailPage() {
             {/* Related Products */}
             {related.length > 0 && (
               <section className="mt-16 sm:mt-24 pt-8 sm:pt-12 border-t border-border">
-                <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">Recommendations</span>
-                <h2 className="mt-2 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight">Related Products</h2>
+                <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">
+                  Recommendations
+                </span>
+                <h2 className="mt-2 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight">
+                  Related Products
+                </h2>
 
                 <div className="mt-6 sm:mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
                   {related.map((p, i) => (
