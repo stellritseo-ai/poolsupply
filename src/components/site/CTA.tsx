@@ -34,7 +34,7 @@ export function CTA() {
         <div className="relative z-10 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Content Area */}
           <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400" />
@@ -86,7 +86,7 @@ export function CTA() {
                 <div className="text-xs sm:text-sm font-extrabold text-white">
                   Same-Day Freight Dispatch
                 </div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
+                <div className="text-xs text-slate-400 mt-0.5">
                   Orders placed before 2:00 PM EST ship same day
                 </div>
               </div>
@@ -100,7 +100,7 @@ export function CTA() {
                 <div className="text-xs sm:text-sm font-extrabold text-white">
                   Direct Wholesale Trade Rates
                 </div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
+                <div className="text-xs text-slate-400 mt-0.5">
                   Commercial volume margins with zero markups
                 </div>
               </div>
@@ -114,7 +114,7 @@ export function CTA() {
                 <div className="text-xs sm:text-sm font-extrabold text-white">
                   100% Authorized OEM Distributor
                 </div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
+                <div className="text-xs text-slate-400 mt-0.5">
                   Full factory serial verification and warranty
                 </div>
               </div>

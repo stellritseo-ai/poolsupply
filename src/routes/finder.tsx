@@ -356,7 +356,7 @@ function FinderPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg"
               >
                 <Calculator className="size-3.5" />
                 Intelligent Hydraulic & Equipment Sizing Engine
@@ -434,7 +434,7 @@ function FinderPage() {
                         setPoolType("residential");
                         setClimate("moderate");
                       }}
-                      className="text-[11px] font-bold text-slate-400 hover:text-cyan-700 flex items-center gap-1 cursor-pointer transition-colors"
+                      className="text-xs font-bold text-slate-400 hover:text-cyan-700 flex items-center gap-1 cursor-pointer transition-colors"
                     >
                       <RotateCcw className="size-3" /> Reset
                     </button>
@@ -450,7 +450,7 @@ function FinderPage() {
                         <span className="text-xl font-black text-slate-950 tracking-tight">
                           {gallons.toLocaleString()}
                         </span>
-                        <span className="text-[10.5px] text-cyan-700 font-extrabold ml-1">GAL</span>
+                        <span className="text-xs text-cyan-700 font-extrabold ml-1">GAL</span>
                       </div>
                     </div>
 
@@ -470,7 +470,7 @@ function FinderPage() {
                         <button
                           key={preset}
                           onClick={() => setGallons(preset)}
-                          className={`py-1.5 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                          className={`py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
                             gallons === preset
                               ? "bg-cyan-600 text-white shadow-2xs"
                               : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/80"
@@ -522,7 +522,7 @@ function FinderPage() {
                               <div className="text-xs font-extrabold leading-tight">
                                 {item.label}
                               </div>
-                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">
+                              <div className="text-xs text-slate-400 mt-0.5 font-medium">
                                 {item.turnover}
                               </div>
                             </div>
@@ -562,7 +562,7 @@ function FinderPage() {
                               <div className="text-xs font-extrabold leading-tight">
                                 {item.label}
                               </div>
-                              <div className="text-[10px] text-slate-400 mt-0.5 font-medium">
+                              <div className="text-xs text-slate-400 mt-0.5 font-medium">
                                 {item.btu}
                               </div>
                             </div>
@@ -575,47 +575,47 @@ function FinderPage() {
                   {/* Real-time Engineering HUD Summary Box */}
                   <div className="mt-4 p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white border border-slate-800 shadow-md">
                     <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
-                      <span className="text-[11px] font-extrabold uppercase tracking-widest text-cyan-400">
+                      <span className="text-xs font-extrabold uppercase tracking-widest text-cyan-400">
                         Calculated Engineering Specs
                       </span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
                         ANSI Compliant
                       </span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-xs">
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                        <div className="text-slate-400 text-xs uppercase font-bold">
                           Required Flow Rate
                         </div>
                         <div className="font-black text-cyan-300 text-sm">{gpm} GPM</div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                        <div className="text-slate-400 text-xs uppercase font-bold">
                           Turnover Cycle
                         </div>
                         <div className="font-black text-white text-sm">{turnoverHours} Hours</div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                        <div className="text-slate-400 text-xs uppercase font-bold">
                           Hydraulic Pump Spec
                         </div>
-                        <div className="font-extrabold text-white text-[11px] truncate">
+                        <div className="font-extrabold text-white text-xs truncate">
                           {hpSpec}
                         </div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-[10px] uppercase font-bold">
+                        <div className="text-slate-400 text-xs uppercase font-bold">
                           Thermal Output
                         </div>
-                        <div className="font-extrabold text-white text-[11px] truncate">
+                        <div className="font-extrabold text-white text-xs truncate">
                           {btuSpec.split(" ")[0]} BTU
                         </div>
                       </div>
                     </div>
 
                     <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between">
-                      <span className="text-[11px] text-slate-300 font-bold">
+                      <span className="text-xs text-slate-300 font-bold">
                         Estimated Annual Energy Savings:
                       </span>
                       <span className="text-xs font-black text-emerald-400">
@@ -638,7 +638,7 @@ function FinderPage() {
                       </p>
                     </div>
 
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-[11px] font-extrabold">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-extrabold">
                       <ShieldCheck className="size-3.5" /> Full Factory Warranty
                     </span>
                   </div>
@@ -657,7 +657,7 @@ function FinderPage() {
                         </div>
                         <div className="flex-1 min-w-0 text-center sm:text-left">
                           <div className="flex items-center justify-center sm:justify-start gap-2 mb-0.5">
-                            <span className="px-2 py-0.5 rounded-md bg-cyan-100/70 text-cyan-800 font-extrabold text-[10px] uppercase tracking-wider">
+                            <span className="px-2 py-0.5 rounded-md bg-cyan-100/70 text-cyan-800 font-extrabold text-xs uppercase tracking-wider">
                               Pump · {hpSpec.split(" ")[0]} HP
                             </span>
                             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -667,7 +667,7 @@ function FinderPage() {
                           <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 truncate">
                             {matchedPump.name}
                           </h3>
-                          <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                          <div className="text-xs text-slate-500 mt-0.5 font-medium">
                             Variable speed hydraulics calibrated for {gpm} GPM peak flow.
                           </div>
                         </div>
@@ -700,7 +700,7 @@ function FinderPage() {
                         </div>
                         <div className="flex-1 min-w-0 text-center sm:text-left">
                           <div className="flex items-center justify-center sm:justify-start gap-2 mb-0.5">
-                            <span className="px-2 py-0.5 rounded-md bg-amber-100/70 text-amber-900 font-extrabold text-[10px] uppercase tracking-wider">
+                            <span className="px-2 py-0.5 rounded-md bg-amber-100/70 text-amber-900 font-extrabold text-xs uppercase tracking-wider">
                               Thermal · {btuSpec.split(" ")[0]} BTU
                             </span>
                             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -710,7 +710,7 @@ function FinderPage() {
                           <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 truncate">
                             {matchedHeater.name}
                           </h3>
-                          <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                          <div className="text-xs text-slate-500 mt-0.5 font-medium">
                             Engineered for {climate} climate temperature rise.
                           </div>
                         </div>
@@ -743,7 +743,7 @@ function FinderPage() {
                         </div>
                         <div className="flex-1 min-w-0 text-center sm:text-left">
                           <div className="flex items-center justify-center sm:justify-start gap-2 mb-0.5">
-                            <span className="px-2 py-0.5 rounded-md bg-emerald-100/70 text-emerald-900 font-extrabold text-[10px] uppercase tracking-wider">
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-100/70 text-emerald-900 font-extrabold text-xs uppercase tracking-wider">
                               Filter · {filterSpec.split(" ")[0]} Sq Ft
                             </span>
                             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -753,7 +753,7 @@ function FinderPage() {
                           <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 truncate">
                             {matchedFilter.name}
                           </h3>
-                          <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                          <div className="text-xs text-slate-500 mt-0.5 font-medium">
                             Multi-element media for crystal clear water purity.
                           </div>
                         </div>
@@ -778,7 +778,7 @@ function FinderPage() {
                   {/* 1-Click Complete Bundle Checkout Card */}
                   <div className="mt-4 p-5 rounded-2xl bg-gradient-to-r from-[#061220] via-[#091f38] to-[#040d1a] text-white border border-cyan-500/30 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-cyan-400">
+                      <span className="text-xs font-extrabold uppercase tracking-widest text-cyan-400">
                         Complete OEM 3-Piece Package
                       </span>
                       <div className="flex items-baseline gap-2 mt-0.5">
@@ -846,7 +846,7 @@ function FinderPage() {
                         }`}
                       >
                         <div className="text-xs font-extrabold">{shape.label}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{shape.desc}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">{shape.desc}</div>
                       </button>
                     ))}
                   </div>
@@ -916,7 +916,7 @@ function FinderPage() {
                 {/* Calculation Result Callout */}
                 <div className="p-5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800 shadow-md">
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-cyan-400">
+                    <span className="text-xs font-extrabold uppercase tracking-widest text-cyan-400">
                       Calculated Volume
                     </span>
                     <div className="text-3xl font-black text-white mt-0.5">
@@ -942,7 +942,7 @@ function FinderPage() {
         <section className="py-[50px] bg-slate-50/80 border-t border-slate-200/80">
           <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Hydraulic Standards
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">

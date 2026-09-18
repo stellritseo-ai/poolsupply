@@ -49,7 +49,7 @@ export function Brands() {
 
       {/* Section Header */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 mb-8 sm:mb-10 text-center">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-white text-[11px] font-bold uppercase tracking-widest shadow-xl mb-4">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-white text-xs font-bold uppercase tracking-widest shadow-xl mb-4">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
@@ -88,7 +88,7 @@ export function Brands() {
                 <div className="absolute inset-0 bg-gradient-to-b from-cyan-50/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                 <div className="flex items-center justify-between z-10">
-                  <span className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 group-hover:text-cyan-700 transition-colors">
+                  <span className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-widest text-slate-400 group-hover:text-cyan-700 transition-colors">
                     <span className="size-1 rounded-full bg-slate-300 group-hover:bg-cyan-500 transition-colors" />
                     {b.specialty}
                   </span>
@@ -104,9 +104,9 @@ export function Brands() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between text-[10.5px] font-bold text-slate-600 group-hover:text-slate-900 transition-colors z-10 pt-1.5 border-t border-slate-100">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors z-10 pt-1.5 border-t border-slate-100">
                   <span>{b.name}</span>
-                  <span className="text-[9px] uppercase tracking-wider text-cyan-600 font-extrabold">
+                  <span className="text-xs uppercase tracking-wider text-cyan-600 font-extrabold">
                     Authorized
                   </span>
                 </div>

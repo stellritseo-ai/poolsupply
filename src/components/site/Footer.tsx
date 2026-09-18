@@ -119,7 +119,7 @@ export function Footer() {
         {/* Newsletter Banner Box */}
         <div className="mb-12 p-6 sm:p-8 lg:p-10 rounded-[2rem] bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-[#040d1a] border border-cyan-500/20 shadow-xl backdrop-blur-xl flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="max-w-2xl space-y-2 text-center lg:text-left">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60">
               <span className="size-1.5 rounded-full bg-cyan-400 animate-pulse" /> Exclusive Trade
               Alerts
             </span>
@@ -178,7 +178,7 @@ export function Footer() {
           <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
             {cols.map((c) => (
               <div key={c.title} className="space-y-3.5">
-                <h4 className="text-white font-extrabold text-[11px] tracking-wider uppercase border-b border-slate-800 pb-2">
+                <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-slate-800 pb-2">
                   {c.title}
                 </h4>
                 <ul className="space-y-2 text-xs font-medium text-slate-400">

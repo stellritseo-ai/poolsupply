@@ -581,7 +581,7 @@ function RootComponent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/20 border border-white/10 text-[11px] sm:text-xs font-bold text-white/90 uppercase tracking-[0.15em] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md"
+            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/20 border border-white/10 text-xs sm:text-xs font-bold text-white/90 uppercase tracking-[0.15em] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md"
           >
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>

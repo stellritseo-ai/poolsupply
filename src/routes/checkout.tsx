@@ -467,10 +467,10 @@ function CheckoutPage() {
               </div>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] font-black bg-cyan-600/80 px-2.5 py-1 rounded-lg">
+              <span className="text-xs font-black bg-cyan-600/80 px-2.5 py-1 rounded-lg">
                 Shipping: Miles-Based
               </span>
-              <span className="text-[11px] font-black bg-indigo-600/80 px-2.5 py-1 rounded-lg">
+              <span className="text-xs font-black bg-indigo-600/80 px-2.5 py-1 rounded-lg">
                 Tax: 9.25%
               </span>
             </div>
@@ -613,19 +613,19 @@ function CheckoutPage() {
                           <div className="font-extrabold text-xs text-slate-900 flex items-center gap-2">
                             <span>Standard Commercial Delivery</span>
                             {form.method === "standard" && (
-                              <span className="text-[9px] font-extrabold text-cyan-700 bg-cyan-100 border border-cyan-300 px-1.5 py-0.5 rounded-full">
+                              <span className="text-xs font-extrabold text-cyan-700 bg-cyan-100 border border-cyan-300 px-1.5 py-0.5 rounded-full">
                                 Selected
                               </span>
                             )}
                           </div>
                         </div>
-                        <div className="text-[11px] text-slate-500 font-medium">
+                        <div className="text-xs text-slate-500 font-medium">
                           Delivered in 3–5 business days via Commercial Freight &amp; Ground
                         </div>
 
                         {/* Zone label + geocode badge */}
                         <div className="flex items-center gap-2 flex-wrap">
-                          <div className="text-[11px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5">
+                          <div className="text-xs font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5">
                             {shippingLoading ? (
                               <>
                                 <Loader2 className="size-3 animate-spin" /> Calculating exact
@@ -640,7 +640,7 @@ function CheckoutPage() {
                           {!shippingLoading &&
                             shippingResult.geocoded &&
                             !shippingResult.isPending && (
-                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                                 <svg className="size-2.5" viewBox="0 0 24 24" fill="currentColor">
                                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                                 </svg>
@@ -651,7 +651,7 @@ function CheckoutPage() {
 
                         {/* Distance info */}
                         {!shippingLoading && shippingResult.distanceMiles !== undefined && (
-                          <div className="text-[10px] text-slate-500 font-medium">
+                          <div className="text-xs text-slate-500 font-medium">
                             📍 {shippingResult.distanceMiles} mi from Nashville warehouse (412 Ezell
                             Pike)
                           </div>
@@ -665,7 +665,7 @@ function CheckoutPage() {
                               {shippingResult.breakdown.map((b) => (
                                 <div
                                   key={b.cls}
-                                  className="flex items-center justify-between text-[10px] text-slate-600 font-medium"
+                                  className="flex items-center justify-between text-xs text-slate-600 font-medium"
                                 >
                                   <span className="capitalize">
                                     {b.cls} item{b.lineCount > 1 ? `s (×${b.lineCount})` : ""} ·{" "}
@@ -676,7 +676,7 @@ function CheckoutPage() {
                                   </span>
                                 </div>
                               ))}
-                              <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium border-t border-slate-200 pt-1">
+                              <div className="flex items-center justify-between text-xs text-slate-500 font-medium border-t border-slate-200 pt-1">
                                 <span>
                                   {shippingResult.multiplier >= 2
                                     ? "Outside TN: 2.0× full base rate"
@@ -690,7 +690,7 @@ function CheckoutPage() {
                           )}
 
                         {!shippingLoading && shippingResult.isPending && (
-                          <div className="text-[10px] text-slate-400 font-medium italic">
+                          <div className="text-xs text-slate-400 font-medium italic">
                             Distance rate: Small $50 · Medium $150 · Large $400 (scaled by miles
                             from Nashville, capped at 50 mi)
                           </div>
@@ -731,17 +731,17 @@ function CheckoutPage() {
                             <div className="font-extrabold text-xs text-emerald-900 flex items-center gap-2">
                               <span>Free Local Warehouse Pickup</span>
                               {form.method === "pickup" && (
-                                <span className="text-[9px] font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded-full">
+                                <span className="text-xs font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded-full">
                                   Selected
                                 </span>
                               )}
                             </div>
                           </div>
-                          <div className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                          <div className="text-xs text-emerald-700 font-medium mt-0.5">
                             Your address is within 5 miles of our warehouse (
                             {shippingResult.distanceMiles} mi) — pickup is 100% FREE!
                           </div>
-                          <div className="text-[10px] text-emerald-600 font-semibold mt-1">
+                          <div className="text-xs text-emerald-600 font-semibold mt-1">
                             📍 Warehouse: 412 Ezell Pike, Nashville, TN 37217 (Mon–Fri 8AM–5PM)
                           </div>
                         </div>
@@ -797,7 +797,7 @@ function CheckoutPage() {
                       <span className="block text-xs font-black uppercase tracking-wider text-slate-600">
                         Card Number, Expiration & CVC
                       </span>
-                      <span className="text-[10px] font-bold text-slate-400">
+                      <span className="text-xs font-bold text-slate-400">
                         End-to-End Encrypted
                       </span>
                     </div>
@@ -815,7 +815,7 @@ function CheckoutPage() {
                     </div>
                   </div>
 
-                  <p className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5 pt-1">
+                  <p className="text-xs text-slate-500 font-medium flex items-center gap-1.5 pt-1">
                     <ShieldCheck className="size-4 text-emerald-600 shrink-0" />
                     Official Stripe Live Gateway. Your card data is processed directly inside
                     Stripe's encrypted vault.
@@ -848,16 +848,16 @@ function CheckoutPage() {
                             className="size-full object-contain p-1"
                           />
                         </div>
-                        <span className="absolute -top-2 -right-2 size-5.5 rounded-full bg-slate-900 text-white text-[11px] font-black grid place-items-center shadow-md border-2 border-white z-10">
+                        <span className="absolute -top-2 -right-2 size-5.5 rounded-full bg-slate-900 text-white text-xs font-black grid place-items-center shadow-md border-2 border-white z-10">
                           {it.qty}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[10px] uppercase tracking-widest text-slate-400 font-extrabold flex items-center gap-1.5 flex-wrap">
+                        <div className="text-xs uppercase tracking-widest text-slate-400 font-extrabold flex items-center gap-1.5 flex-wrap">
                           <span>{it.brand}</span>
                         </div>
                         <div className="text-xs font-bold text-slate-800 truncate">{it.name}</div>
-                        <div className="text-[11px] text-slate-400 font-semibold">
+                        <div className="text-xs text-slate-400 font-semibold">
                           {formatUSD(it.price)} each
                         </div>
                       </div>
@@ -977,12 +977,12 @@ function CheckoutPage() {
 
                 <div className="pt-1 flex flex-col items-center gap-1.5">
                   <PaymentCardBadges className="flex items-center justify-center gap-1.5" />
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Accepted Payment Methods
                   </span>
                 </div>
 
-                <p className="text-[11px] text-slate-400 text-center font-semibold leading-relaxed">
+                <p className="text-xs text-slate-400 text-center font-semibold leading-relaxed">
                   By completing order, you agree to Pool Supply Wholesalers'{" "}
                   <Link
                     to="/terms-and-conditions"

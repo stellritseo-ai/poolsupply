@@ -148,12 +148,12 @@ function AdminLayout() {
               className="h-8 w-auto object-contain brightness-0 invert opacity-95"
             />
           </Link>
-          <span className="text-[10px] font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md border border-cyan-400/30">
+          <span className="text-xs font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md border border-cyan-400/30">
             Console
           </span>
         </div>
 
-        <div className="px-5 pt-4 pb-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        <div className="px-5 pt-4 pb-2 text-xs font-black uppercase tracking-widest text-slate-400">
           Management
         </div>
 
@@ -192,7 +192,7 @@ function AdminLayout() {
                   Master Admin
                   <ShieldCheck className="size-3.5 text-cyan-300 shrink-0" />
                 </div>
-                <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
+                <div className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
                   Superuser
                 </div>
               </div>
@@ -296,7 +296,7 @@ function AdminLayout() {
               <Menu className="size-5" />
             </button>
 
-            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-800 text-[10px] sm:text-[11px] font-bold truncate">
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-800 text-xs sm:text-xs font-bold truncate">
               <span className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
               <span className="hidden xs:inline">Production DB Active · 99.98% Uptime</span>
               <span className="xs:hidden">DB Active</span>
@@ -323,7 +323,7 @@ function AdminLayout() {
               >
                 <Bell className="size-4 sm:size-4.5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 size-4.5 sm:size-5 rounded-full bg-rose-500 text-white font-black text-[9px] sm:text-[10px] grid place-items-center shadow-md">
+                  <span className="absolute -top-1 -right-1 size-4.5 sm:size-5 rounded-full bg-rose-500 text-white font-black text-xs sm:text-xs grid place-items-center shadow-md">
                     {unreadCount}
                   </span>
                 )}
@@ -346,7 +346,7 @@ function AdminLayout() {
                       {unreadCount > 0 && (
                         <button
                           onClick={handleMarkAllRead}
-                          className="text-[11px] font-bold text-cyan-700 hover:underline cursor-pointer"
+                          className="text-xs font-bold text-cyan-700 hover:underline cursor-pointer"
                         >
                           Mark all read
                         </button>
@@ -364,15 +364,15 @@ function AdminLayout() {
                           >
                             <div>
                               <div className="font-extrabold text-slate-900">{n.title}</div>
-                              <div className="text-[11px] text-slate-500 mt-0.5">{n.message}</div>
-                              <div className="text-[10px] text-slate-400 mt-1">
+                              <div className="text-xs text-slate-500 mt-0.5">{n.message}</div>
+                              <div className="text-xs text-slate-400 mt-1">
                                 {timeAgo(n.createdAt)}
                               </div>
                             </div>
                             {!n.read && (
                               <button
                                 onClick={() => handleMarkAsRead(n.id)}
-                                className="text-[10px] font-bold text-cyan-700 hover:underline shrink-0"
+                                className="text-xs font-bold text-cyan-700 hover:underline shrink-0"
                               >
                                 Read
                               </button>

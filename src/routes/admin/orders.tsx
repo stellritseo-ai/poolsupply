@@ -462,7 +462,7 @@ function OrdersManager() {
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
                 <span>Customer Orders</span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-black uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-black uppercase tracking-wider">
                   <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Live Sync
                 </span>
@@ -508,7 +508,7 @@ function OrdersManager() {
         {/* Metric 1: Total Orders */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Total Orders
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
@@ -518,7 +518,7 @@ function OrdersManager() {
           <div className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
             {totalOrders}
           </div>
-          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 sm:mt-1 flex items-center gap-1 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-slate-400 mt-0.5 sm:mt-1 flex items-center gap-1 truncate">
             <span className="text-emerald-600 font-bold">100% verified</span> in Atlas
           </div>
         </div>
@@ -526,7 +526,7 @@ function OrdersManager() {
         {/* Metric 2: Pending Fulfillment */}
         <div className="bg-white border border-amber-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-amber-50/40 hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">
+            <span className="text-xs font-black uppercase tracking-wider text-amber-900">
               Pending Dispatch
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-amber-100 text-amber-800 grid place-items-center">
@@ -536,7 +536,7 @@ function OrdersManager() {
           <div className="text-xl sm:text-2xl lg:text-3xl font-black text-amber-950 tracking-tight">
             {pendingOrders}
           </div>
-          <div className="text-[10px] sm:text-[11px] font-semibold text-amber-800/80 mt-0.5 sm:mt-1 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-amber-800/80 mt-0.5 sm:mt-1 truncate">
             Awaiting dock
           </div>
         </div>
@@ -544,7 +544,7 @@ function OrdersManager() {
         {/* Metric 3: In Transit */}
         <div className="bg-white border border-cyan-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40 hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">
+            <span className="text-xs font-black uppercase tracking-wider text-cyan-900">
               Freight In-Transit
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
@@ -554,7 +554,7 @@ function OrdersManager() {
           <div className="text-xl sm:text-2xl lg:text-3xl font-black text-cyan-950 tracking-tight">
             {shippedOrders}
           </div>
-          <div className="text-[10px] sm:text-[11px] font-semibold text-cyan-800/80 mt-0.5 sm:mt-1 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-cyan-800/80 mt-0.5 sm:mt-1 truncate">
             Dispatched routes
           </div>
         </div>
@@ -562,7 +562,7 @@ function OrdersManager() {
         {/* Metric 4: Gross Revenue */}
         <div className="bg-white border border-emerald-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40 hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-900">
               Settled Revenue
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
@@ -572,7 +572,7 @@ function OrdersManager() {
           <div className="text-lg sm:text-2xl lg:text-3xl font-black text-emerald-950 tracking-tight truncate">
             {formatUSD(totalRevenue)}
           </div>
-          <div className="text-[10px] sm:text-[11px] font-semibold text-emerald-800/80 mt-0.5 sm:mt-1 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-emerald-800/80 mt-0.5 sm:mt-1 truncate">
             Gross wholesale sales
           </div>
         </div>
@@ -594,7 +594,7 @@ function OrdersManager() {
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 size-5 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 grid place-items-center text-[10px] font-bold"
+                className="absolute right-3 top-1/2 -translate-y-1/2 size-5 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 grid place-items-center text-xs font-bold"
               >
                 ✕
               </button>
@@ -605,7 +605,7 @@ function OrdersManager() {
           <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl sm:rounded-2xl text-xs font-bold shrink-0 overflow-x-auto">
             <button
               onClick={() => setSortBy("newest")}
-              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer flex items-center gap-1 text-[11px] sm:text-xs shrink-0 ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer flex items-center gap-1 text-xs sm:text-xs shrink-0 ${
                 sortBy === "newest"
                   ? "bg-white text-slate-900 shadow-2xs font-black"
                   : "text-slate-600 hover:text-slate-900"
@@ -616,7 +616,7 @@ function OrdersManager() {
             </button>
             <button
               onClick={() => setSortBy("oldest")}
-              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer text-xs sm:text-xs shrink-0 ${
                 sortBy === "oldest"
                   ? "bg-white text-slate-900 shadow-2xs font-black"
                   : "text-slate-600 hover:text-slate-900"
@@ -626,7 +626,7 @@ function OrdersManager() {
             </button>
             <button
               onClick={() => setSortBy("highest")}
-              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl transition cursor-pointer text-xs sm:text-xs shrink-0 ${
                 sortBy === "highest"
                   ? "bg-white text-slate-900 shadow-2xs font-black"
                   : "text-slate-600 hover:text-slate-900"
@@ -641,7 +641,7 @@ function OrdersManager() {
         <div className="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5 text-xs font-bold scrollbar-none">
           <button
             onClick={() => setStatusFilter("all")}
-            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-xs sm:text-xs ${
               statusFilter === "all"
                 ? "bg-slate-900 text-white font-black shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200/80"
@@ -649,7 +649,7 @@ function OrdersManager() {
           >
             <span>All Orders</span>
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+              className={`px-1.5 py-0.2 rounded-full text-xs font-black ${
                 statusFilter === "all" ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"
               }`}
             >
@@ -659,7 +659,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Pending")}
-            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-xs sm:text-xs ${
               statusFilter === "Pending"
                 ? "bg-amber-600 text-white font-black shadow-sm"
                 : "bg-amber-50 text-amber-900 border border-amber-200/70 hover:bg-amber-100"
@@ -668,7 +668,7 @@ function OrdersManager() {
             <Clock className="size-3" />
             <span>Pending</span>
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+              className={`px-1.5 py-0.2 rounded-full text-xs font-black ${
                 statusFilter === "Pending"
                   ? "bg-white/20 text-white"
                   : "bg-amber-200 text-amber-950"
@@ -680,7 +680,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Shipped")}
-            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-xs sm:text-xs ${
               statusFilter === "Shipped"
                 ? "bg-cyan-700 text-white font-black shadow-sm"
                 : "bg-cyan-50 text-cyan-900 border border-cyan-200/70 hover:bg-cyan-100"
@@ -689,7 +689,7 @@ function OrdersManager() {
             <Truck className="size-3" />
             <span>Shipped</span>
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+              className={`px-1.5 py-0.2 rounded-full text-xs font-black ${
                 statusFilter === "Shipped" ? "bg-white/20 text-white" : "bg-cyan-200 text-cyan-950"
               }`}
             >
@@ -699,7 +699,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Delivered")}
-            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-xs sm:text-xs ${
               statusFilter === "Delivered"
                 ? "bg-emerald-700 text-white font-black shadow-sm"
                 : "bg-emerald-50 text-emerald-900 border border-emerald-200/70 hover:bg-emerald-100"
@@ -708,7 +708,7 @@ function OrdersManager() {
             <CheckCircle2 className="size-3" />
             <span>Delivered</span>
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+              className={`px-1.5 py-0.2 rounded-full text-xs font-black ${
                 statusFilter === "Delivered"
                   ? "bg-white/20 text-white"
                   : "bg-emerald-200 text-emerald-950"
@@ -720,7 +720,7 @@ function OrdersManager() {
 
           <button
             onClick={() => setStatusFilter("Cancelled")}
-            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs ${
+            className={`px-3 sm:px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 text-xs sm:text-xs ${
               statusFilter === "Cancelled"
                 ? "bg-rose-700 text-white font-black shadow-sm"
                 : "bg-rose-50 text-rose-900 border border-rose-200/70 hover:bg-rose-100"
@@ -729,7 +729,7 @@ function OrdersManager() {
             <XCircle className="size-3" />
             <span>Cancelled</span>
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+              className={`px-1.5 py-0.2 rounded-full text-xs font-black ${
                 statusFilter === "Cancelled"
                   ? "bg-white/20 text-white"
                   : "bg-rose-200 text-rose-950"
@@ -770,13 +770,13 @@ function OrdersManager() {
                             #{o.id}
                           </span>
                           {isNew && (
-                            <span className="px-1.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-[9px] font-black uppercase tracking-wider">
+                            <span className="px-1.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-xs font-black uppercase tracking-wider">
                               NEW
                             </span>
                           )}
                         </div>
                         <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black border ${getStatusStyle(
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-black border ${getStatusStyle(
                             o.status,
                           )}`}
                         >
@@ -788,7 +788,7 @@ function OrdersManager() {
                       <div className="flex items-center justify-between text-xs">
                         <div>
                           <div className="font-black text-slate-900">{o.name}</div>
-                          <div className="text-[11px] text-slate-400 font-medium truncate max-w-[200px]">
+                          <div className="text-xs text-slate-400 font-medium truncate max-w-[200px]">
                             {o.email}
                           </div>
                         </div>
@@ -796,13 +796,13 @@ function OrdersManager() {
                           <div className="font-black text-slate-900 text-sm">
                             {formatUSD(o.total || 0)}
                           </div>
-                          <div className="text-[10px] text-slate-400 font-semibold">
+                          <div className="text-xs text-slate-400 font-semibold">
                             {items.length} item(s)
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-100 font-medium">
+                      <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-slate-100 font-medium">
                         <span>{formatRelativeTime(o.placedAt)}</span>
                         <span className="text-cyan-700 font-bold flex items-center gap-0.5">
                           View details <ChevronRight className="size-3" />
@@ -828,7 +828,7 @@ function OrdersManager() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs font-semibold border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-[10px]">
+                  <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-xs">
                     <th className="p-4 sm:px-6 font-black">Order ID</th>
                     <th className="p-4 sm:px-6 font-black">Contractor Customer</th>
                     <th className="p-4 sm:px-6 font-black">Date Placed</th>
@@ -857,12 +857,12 @@ function OrdersManager() {
                                 #{o.id}
                               </span>
                               {isNew && (
-                                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-[9px] font-black uppercase tracking-wider shadow-xs animate-pulse">
+                                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-xs font-black uppercase tracking-wider shadow-xs animate-pulse">
                                   NEW
                                 </span>
                               )}
                             </div>
-                            <div className="text-[10px] text-slate-400 font-bold mt-0.5 flex items-center gap-1">
+                            <div className="text-xs text-slate-400 font-bold mt-0.5 flex items-center gap-1">
                               <Boxes className="size-3 text-slate-400" />
                               <span>{items.length} line item(s)</span>
                             </div>
@@ -872,7 +872,7 @@ function OrdersManager() {
                           <td className="p-4 sm:px-6">
                             <div className="space-y-0.5">
                               <div className="font-black text-slate-900 text-sm">{o.name}</div>
-                              <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
+                              <div className="text-xs text-slate-400 font-medium flex items-center gap-1">
                                 <Mail className="size-3 text-slate-400 shrink-0" />
                                 <span>{o.email}</span>
                               </div>
@@ -884,7 +884,7 @@ function OrdersManager() {
                             <div className="font-bold text-slate-900 text-xs">
                               {formatRelativeTime(o.placedAt)}
                             </div>
-                            <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                            <div className="text-xs text-slate-400 font-semibold mt-0.5">
                               {new Date(o.placedAt).toLocaleDateString("en-US", {
                                 month: "short",
                                 day: "numeric",
@@ -902,7 +902,7 @@ function OrdersManager() {
                                   {o.method === "pickup" ? "Hub Pickup" : "Freight Delivery"}
                                 </span>
                               </div>
-                              <div className="text-[10px] text-slate-400 flex items-center gap-1">
+                              <div className="text-xs text-slate-400 flex items-center gap-1">
                                 <CreditCard className="size-3 text-slate-400" />
                                 <span>{o.paymentType || "Card"}</span>
                               </div>
@@ -914,7 +914,7 @@ function OrdersManager() {
                             <div className="font-black text-slate-900 text-sm">
                               {formatUSD(o.total || 0)}
                             </div>
-                            <div className="text-[10px] text-emerald-600 font-bold mt-0.5">
+                            <div className="text-xs text-emerald-600 font-bold mt-0.5">
                               {o.paymentStatus || "Paid"}
                             </div>
                           </td>
@@ -922,7 +922,7 @@ function OrdersManager() {
                           {/* Col 6: Fulfillment Status Pill */}
                           <td className="p-4 sm:px-6 text-center">
                             <span
-                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border ${getStatusStyle(
+                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border ${getStatusStyle(
                                 o.status,
                               )}`}
                             >
@@ -986,12 +986,12 @@ function OrdersManager() {
                         Order #{selectedOrder.id}
                       </h2>
                       {isRecentOrder(selectedOrder.placedAt) && (
-                        <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-500 text-slate-950 shadow-xs">
+                        <span className="text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-500 text-slate-950 shadow-xs">
                           NEW
                         </span>
                       )}
                       <span
-                        className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
+                        className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${
                           selectedOrder.status === "Delivered"
                             ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                             : selectedOrder.status === "Shipped"
@@ -1005,7 +1005,7 @@ function OrdersManager() {
                       </span>
                     </div>
 
-                    <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 flex items-center gap-2 flex-wrap">
+                    <div className="text-xs sm:text-xs text-slate-400 mt-1 flex items-center gap-2 flex-wrap">
                       <span>Placed on {new Date(selectedOrder.placedAt).toLocaleDateString()}</span>
                       <span>·</span>
                       <span className="text-emerald-400 font-bold">
@@ -1039,7 +1039,7 @@ function OrdersManager() {
               <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4 sm:space-y-6">
                 {/* 1. Fulfillment Lifecycle Progress */}
                 <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5 sm:space-y-3">
-                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-500">
+                  <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-slate-500">
                     <span>Fulfillment Progress</span>
                     <span className="text-cyan-700 font-extrabold">
                       {selectedOrder.status || "Pending Fulfillment"}
@@ -1071,7 +1071,7 @@ function OrdersManager() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-4 text-[10px] font-black text-slate-400 text-center pt-0.5">
+                  <div className="grid grid-cols-4 text-xs font-black text-slate-400 text-center pt-0.5">
                     <span className="text-cyan-800">1. Received</span>
                     <span className={selectedOrder.status !== "Pending" ? "text-cyan-800" : ""}>
                       2. Packed
@@ -1095,7 +1095,7 @@ function OrdersManager() {
 
                 {/* 2. Update Lifecycle Status Action */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center justify-between">
                     <span>Update Order Lifecycle</span>
                     {isUpdatingStatus && (
                       <span className="text-cyan-600 font-bold">Saving changes...</span>
@@ -1123,7 +1123,7 @@ function OrdersManager() {
 
                 {/* 3. Customer Profile & Address */}
                 <div className="space-y-3 p-4.5 rounded-2xl bg-slate-50 border border-slate-200/80">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Customer & Destination
                   </div>
                   <div>
@@ -1166,7 +1166,7 @@ function OrdersManager() {
                     )}
                   </div>
 
-                  <div className="text-[11px] text-slate-500 pt-2 border-t border-slate-200/80 flex justify-between">
+                  <div className="text-xs text-slate-500 pt-2 border-t border-slate-200/80 flex justify-between">
                     <span>
                       Logistics:{" "}
                       <strong>
@@ -1181,7 +1181,7 @@ function OrdersManager() {
 
                 {/* 4. Itemized Bill of Materials (BOM) */}
                 <div className="space-y-3">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center justify-between">
                     <span>Itemized Equipment SKUs ({selectedOrder.items?.length || 0})</span>
                     <span>
                       Subtotal: {formatUSD(selectedOrder.subtotal || selectedOrder.total || 0)}
@@ -1212,7 +1212,7 @@ function OrdersManager() {
                             ) : (
                               <div className="font-black text-slate-900">{item.name}</div>
                             )}
-                            <div className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                            <div className="text-xs text-slate-400 font-semibold mt-0.5">
                               {item.brand || "Pool Supply Wholesalers"} · Qty: {item.qty} ·{" "}
                               {formatUSD(item.price)} ea
                             </div>
@@ -1257,7 +1257,7 @@ function OrdersManager() {
 
               {/* Drawer Footer */}
               <div className="p-4.5 border-t border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
-                <div className="text-[11px] text-slate-400 font-mono">
+                <div className="text-xs text-slate-400 font-mono">
                   ID: <span className="font-bold text-slate-700">#{selectedOrder.id}</span>
                 </div>
 

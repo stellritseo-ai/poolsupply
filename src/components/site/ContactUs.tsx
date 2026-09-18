@@ -73,7 +73,7 @@ export function ContactUs() {
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 space-y-2.5">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-800 text-[11px] font-extrabold uppercase tracking-widest shadow-2xs">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-800 text-xs font-extrabold uppercase tracking-widest shadow-2xs">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-600" />
@@ -107,15 +107,15 @@ export function ContactUs() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">
+                  <span className="text-xs uppercase font-extrabold tracking-widest text-slate-400">
                     Corporate & Fulfillment
                   </span>
-                  <span className="text-[9.5px] font-bold text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/60">
+                  <span className="text-xs font-bold text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/60">
                     Nashville Hub
                   </span>
                 </div>
                 <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">Headquarters</h3>
-                <p className="text-[11px] text-slate-500 leading-tight">
+                <p className="text-xs text-slate-500 leading-tight">
                   412 Ezell Pike, Nashville, TN 37217
                 </p>
               </div>
@@ -128,10 +128,10 @@ export function ContactUs() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">
+                  <span className="text-xs uppercase font-extrabold tracking-widest text-slate-400">
                     Contractor Direct Line
                   </span>
-                  <span className="inline-flex items-center gap-1 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  <span className="inline-flex items-center gap-1 text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                     <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live
                     Support
                   </span>
@@ -144,7 +144,7 @@ export function ContactUs() {
                   className="inline-block text-xs sm:text-[13px] font-black text-cyan-700 hover:text-cyan-800 hover:underline"
                 >
                   (615) 477-0407{" "}
-                  <span className="text-[10px] text-slate-400 font-normal ml-1">
+                  <span className="text-xs text-slate-400 font-normal ml-1">
                     Mon–Fri 8am-6pm EST
                   </span>
                 </a>
@@ -158,10 +158,10 @@ export function ContactUs() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-[9.5px] uppercase font-extrabold tracking-widest text-slate-400">
+                  <span className="text-xs uppercase font-extrabold tracking-widest text-slate-400">
                     Electronic Helpdesk
                   </span>
-                  <span className="text-[9.5px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
                     &lt; 30m Response
                   </span>
                 </div>
@@ -170,7 +170,7 @@ export function ContactUs() {
                 </h3>
                 <a
                   href="mailto:sales@poolsupplywholesalers.com"
-                  className="inline-block text-[11px] sm:text-xs font-black text-cyan-700 hover:text-cyan-800 hover:underline truncate max-w-full"
+                  className="inline-block text-xs sm:text-xs font-black text-cyan-700 hover:text-cyan-800 hover:underline truncate max-w-full"
                 >
                   sales@poolsupplywholesalers.com
                 </a>
@@ -209,7 +209,7 @@ export function ContactUs() {
                   Fill out your inquiry and a dedicated pool tech will respond promptly.
                 </p>
               </div>
-              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
+              <span className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
                 <ShieldCheck className="size-3 text-emerald-600" /> SSL Secured
               </span>
             </div>

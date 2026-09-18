@@ -87,12 +87,12 @@ export function Hero() {
               transition={{ duration: 0.6 }}
               className="mt-6 sm:mt-16 lg:mt-24"
             >
-              <span className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-xl">
+              <span className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl text-white text-xs sm:text-xs font-bold uppercase tracking-widest shadow-xl">
                 <span className="relative flex h-2 w-2 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
                 </span>
-                <span className="truncate">Trusted by 5,000+ Certified Pool Professionals</span>
+                <span className="truncate">Trusted by 5,000+ certified pool professionals</span>
               </span>
             </motion.div>
 
@@ -152,7 +152,7 @@ export function Hero() {
               {features.map((f) => (
                 <li
                   key={f.label}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-[11px] sm:text-xs font-bold text-white shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-xs sm:text-xs font-bold text-white shadow-sm"
                 >
                   <Check className="size-3 text-cyan-400 shrink-0" />
                   {f.label}
@@ -191,7 +191,7 @@ export function Hero() {
                     </div>
                   </div>
 
-                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 group-hover:text-white transition-colors truncate">
+                  <div className="text-xs font-extrabold uppercase tracking-wider text-slate-300 group-hover:text-white transition-colors truncate">
                     {s.label}
                   </div>
                 </div>

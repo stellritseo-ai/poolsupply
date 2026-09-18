@@ -209,21 +209,21 @@ const SECTIONS = [
               <Lock className="size-3.5" />
             </div>
             <div className="text-xs font-bold text-slate-900">256-Bit SSL</div>
-            <div className="text-[11px] text-slate-500">End-to-end transport encryption</div>
+            <div className="text-xs text-slate-500">End-to-end transport encryption</div>
           </div>
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center space-y-1">
             <div className="size-7 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-600 mx-auto flex items-center justify-center">
               <ShieldCheck className="size-3.5" />
             </div>
             <div className="text-xs font-bold text-slate-900">PCI-DSS Compliant</div>
-            <div className="text-[11px] text-slate-500">Certified payment gateway safety</div>
+            <div className="text-xs text-slate-500">Certified payment gateway safety</div>
           </div>
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center space-y-1">
             <div className="size-7 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-600 mx-auto flex items-center justify-center">
               <KeyRound className="size-3.5" />
             </div>
             <div className="text-xs font-bold text-slate-900">Restricted Access</div>
-            <div className="text-[11px] text-slate-500">Role-based internal authorization</div>
+            <div className="text-xs text-slate-500">Role-based internal authorization</div>
           </div>
         </div>
       </div>
@@ -297,7 +297,7 @@ const SECTIONS = [
             <Clock className="size-4 text-cyan-600 shrink-0" />
             <span>Last reviewed: September 2026. Prior versions archived upon request.</span>
           </div>
-          <span className="text-[10px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider hidden sm:inline">
+          <span className="text-xs font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider hidden sm:inline">
             Active
           </span>
         </div>
@@ -484,7 +484,7 @@ function PrivacyPolicyPage() {
                         className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-cyan-700 hover:bg-cyan-50/60 transition-all group"
                       >
                         <span className="flex items-center gap-2.5 truncate">
-                          <span className="text-[11px] font-mono font-bold text-cyan-600">
+                          <span className="text-xs font-mono font-bold text-cyan-600">
                             {s.num}.
                           </span>
                           <span className="truncate">{s.title}</span>
@@ -530,7 +530,7 @@ function PrivacyPolicyPage() {
                           {section.title}
                         </h2>
                       </div>
-                      <span className="self-start sm:self-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200">
+                      <span className="self-start sm:self-center px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200">
                         {section.badge}
                       </span>
                     </div>

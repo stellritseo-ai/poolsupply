@@ -55,7 +55,7 @@ function AdminSEOHealthPage() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
               SEO Intelligence
-              <span className="text-[10px] font-black uppercase tracking-widest bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-md border border-cyan-200 translate-y-0.5">
+              <span className="text-xs font-black uppercase tracking-widest bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-md border border-cyan-200 translate-y-0.5">
                 Live
               </span>
             </h1>
@@ -152,7 +152,7 @@ function AdminSEOHealthPage() {
         <div className="p-0 overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
-              <tr className="bg-slate-50 text-[10px] font-black tracking-widest text-slate-500 uppercase">
+              <tr className="bg-slate-50 text-xs font-black tracking-widest text-slate-500 uppercase">
                 <th className="p-4 sm:p-5 border-b border-slate-200">System Check</th>
                 <th className="p-4 sm:p-5 border-b border-slate-200">Status</th>
                 <th className="p-4 sm:p-5 border-b border-slate-200">Technical Details</th>
@@ -207,7 +207,7 @@ function StatCard({ title, value, icon: Icon, color, loading, delay, subtitle }:
       className="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden"
     >
       <div className="flex items-start justify-between mb-4 sm:mb-6">
-        <h3 className="text-[11px] font-black text-slate-500 uppercase tracking-widest">{title}</h3>
+        <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest">{title}</h3>
         <div className={`p-2.5 rounded-xl border ${colorMap[color]}`}>
           <Icon className="size-4" />
         </div>
@@ -233,7 +233,7 @@ function StatusRow({ title, status, color, desc }: any) {
       <td className="p-4 sm:p-5 font-bold text-slate-800">{title}</td>
       <td className="p-4 sm:p-5">
         <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase border ${
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase border ${
             color === "emerald"
               ? "bg-emerald-50 text-emerald-700 border-emerald-200"
               : color === "cyan"

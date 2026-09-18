@@ -364,7 +364,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                             <div className="text-xs font-bold text-foreground truncate">
                               {user.name}
                             </div>
-                            <div className="text-[10px] text-muted-foreground truncate">
+                            <div className="text-xs text-muted-foreground truncate">
                               {user.email || user.phone}
                             </div>
                           </div>
@@ -403,7 +403,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             >
               <ShoppingBag className="size-[18px]" />
               {cart.count > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-ocean text-white text-[10px] font-bold grid place-items-center">
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-ocean text-white text-xs font-bold grid place-items-center">
                   {cart.count}
                 </span>
               )}
@@ -443,7 +443,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                     className="absolute right-0 top-full mt-3 w-64 rounded-[1.25rem] bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2),0_10px_20px_-5px_rgba(0,0,0,0.08)] border border-border/60 z-50 grid gap-1"
                   >
                     <div className="flex items-center justify-between px-3 py-1.5 border-b border-border/40 mb-1">
-                      <span className="text-[11px] font-extrabold text-muted-foreground uppercase tracking-widest">
+                      <span className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest">
                         Navigation & Info
                       </span>
                       <span className="size-1.5 rounded-full bg-primary animate-pulse" />
@@ -526,7 +526,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                       Clear
                     </button>
                   ) : (
-                    <span className="hidden sm:inline-block text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground/60 bg-muted/60 px-2 py-1 rounded">
+                    <span className="hidden sm:inline-block text-xs font-extrabold uppercase tracking-widest text-muted-foreground/60 bg-muted/60 px-2 py-1 rounded">
                       Press Enter
                     </span>
                   )}
@@ -541,7 +541,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                 {/* Popular Tags when search is empty */}
                 {!searchQuery && (
                   <div className="flex items-center gap-2 flex-wrap text-xs pt-1">
-                    <span className="font-extrabold text-muted-foreground uppercase text-[10px] tracking-wider">
+                    <span className="font-extrabold text-muted-foreground uppercase text-xs tracking-wider">
                       Popular Searches:
                     </span>
                     {["Pentair", "Hayward", "Pool Pumps", "Heaters", "Filters", "Automation"].map(
@@ -550,7 +550,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                           key={tag}
                           type="button"
                           onClick={() => setSearchQuery(tag)}
-                          className="px-2.5 py-1 rounded-full bg-white/80 border border-border/80 text-foreground/80 hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition text-[11px] font-bold cursor-pointer"
+                          className="px-2.5 py-1 rounded-full bg-white/80 border border-border/80 text-foreground/80 hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition text-xs font-bold cursor-pointer"
                         >
                           {tag}
                         </button>
@@ -608,17 +608,17 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                                  <span className="text-[9px] uppercase font-black text-[oklch(0.50_0.14_232)] tracking-widest">
+                                  <span className="text-xs uppercase font-black text-[oklch(0.50_0.14_232)] tracking-widest">
                                     {product.brand}
                                   </span>
                                   {product.sku && (
-                                    <span className="text-[9px] font-mono font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                    <span className="text-xs font-mono font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                                       SKU: {product.sku}
                                     </span>
                                   )}
                                 </div>
                                 <h4 className="text-xs sm:text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors capitalize">
-                                  {product.name}
+                                  {product.name?.toLowerCase()}
                                 </h4>
                               </div>
                               <div className="text-right shrink-0">
@@ -699,7 +699,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
 
                 {/* Main Product Categories Accordion */}
                 <div className="space-y-2">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-widest text-slate-500 px-1 mb-2">
+                  <span className="block text-xs font-extrabold uppercase tracking-widest text-slate-500 px-1 mb-2">
                     Product Categories
                   </span>
 
@@ -737,7 +737,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                                         key={sub.label}
                                         to={sub.to}
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex items-center gap-2 p-2 rounded-xl hover:bg-slate-800 text-[11px] font-semibold text-slate-300 hover:text-cyan-400 transition"
+                                        className="flex items-center gap-2 p-2 rounded-xl hover:bg-slate-800 text-xs font-semibold text-slate-300 hover:text-cyan-400 transition"
                                       >
                                         {Icon && (
                                           <Icon className="size-3.5 text-cyan-400 shrink-0" />
@@ -766,7 +766,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
 
                 {/* Additional Quick Pages */}
                 <div className="space-y-2 pt-2 border-t border-slate-800">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-widest text-slate-500 px-1 mb-2">
+                  <span className="block text-xs font-extrabold uppercase tracking-widest text-slate-500 px-1 mb-2">
                     Quick Navigation
                   </span>
 
@@ -790,7 +790,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
 
                 {/* Phone & Support Footer in Mobile Drawer */}
                 <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-950/60 to-slate-900 border border-cyan-800/50 space-y-2">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-cyan-400 block">
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block">
                     Wholesale Hotline
                   </span>
                   <a
@@ -829,7 +829,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <div className="text-xs font-bold text-white truncate">Hi, {user.name}</div>
-                      <div className="text-[10px] text-slate-400 truncate">{user.email}</div>
+                      <div className="text-xs text-slate-400 truncate">{user.email}</div>
                     </div>
                     <button
                       onClick={() => {

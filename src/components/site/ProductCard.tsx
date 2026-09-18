@@ -41,7 +41,7 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
             <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
               <div className="flex items-center gap-1 flex-wrap max-w-[70%]">
                 {p.category ? (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[8.5px] sm:text-[9.5px] font-extrabold uppercase tracking-wider text-slate-700 bg-white/95 backdrop-blur-md rounded-full shadow-2xs border border-white/80 truncate">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs sm:text-xs font-extrabold uppercase tracking-wider text-slate-700 bg-white/95 backdrop-blur-md rounded-full shadow-2xs border border-white/80 truncate">
                     <span className="size-1 rounded-full bg-cyan-500 shrink-0" />
                     {p.category}
                   </span>
@@ -49,7 +49,7 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
               </div>
 
               {savingsPercent > 5 && (
-                <span className="px-1.5 py-0.5 text-[8.5px] sm:text-[9px] font-black uppercase tracking-tight text-emerald-700 bg-emerald-50/95 backdrop-blur-md border border-emerald-200/80 rounded-full shadow-2xs">
+                <span className="px-1.5 py-0.5 text-xs sm:text-xs font-black uppercase tracking-tight text-emerald-700 bg-emerald-50/95 backdrop-blur-md border border-emerald-200/80 rounded-full shadow-2xs">
                   Save {savingsPercent}%
                 </span>
               )}
@@ -66,13 +66,13 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
 
           {/* Brand & Rating Row */}
           <div className="flex items-center justify-between mb-1 gap-1">
-            <span className="text-[10px] sm:text-[10.5px] uppercase tracking-wider text-cyan-800/90 font-extrabold truncate max-w-[65%]">
+            <span className="text-xs sm:text-xs uppercase tracking-wider text-cyan-800/90 font-extrabold truncate max-w-[65%]">
               {p.brand || "Commercial"}
             </span>
 
             <div className="inline-flex items-center gap-1 bg-amber-50/80 px-1.5 py-0.5 rounded-md border border-amber-200/40 shrink-0">
               <Star className="size-3 fill-amber-400 text-amber-400" />
-              <span className="text-[10.5px] font-bold text-amber-900 leading-none">
+              <span className="text-xs font-bold text-amber-900 leading-none">
                 {(p.rating || 5).toFixed(1)}
               </span>
             </div>
@@ -80,7 +80,7 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
 
           {/* Product Title */}
           <h3 className="font-extrabold text-slate-900 text-xs sm:text-[13px] leading-snug min-h-[2.2rem] sm:min-h-[2.4rem] group-hover:text-cyan-700 transition-colors line-clamp-2 capitalize">
-            {p.name}
+            {p.name?.toLowerCase()}
           </h3>
         </Link>
       </div>
@@ -93,12 +93,12 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
               {formatUSD(effectivePrice)}
             </span>
             {p.msrp && p.msrp > effectivePrice && (
-              <span className="text-[10.5px] text-slate-400 line-through font-medium">
+              <span className="text-xs text-slate-400 line-through font-medium">
                 {formatUSD(p.msrp)}
               </span>
             )}
           </div>
-          <span className="text-[8.5px] uppercase font-extrabold text-emerald-600 tracking-wider block">
+          <span className="text-xs uppercase font-extrabold text-emerald-600 tracking-wider block">
             Sale Price
           </span>
         </div>
@@ -108,7 +108,7 @@ export function ProductCard({ product: p, index = 0 }: ProductCardProps) {
             e.preventDefault();
             add({ ...p, price: effectivePrice }, 1);
           }}
-          className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white text-[10.5px] sm:text-xs font-bold transition-all duration-200 shadow-2xs hover:shadow-cyan-500/20 cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-600 active:scale-95 text-white text-xs sm:text-xs font-bold transition-all duration-200 shadow-2xs hover:shadow-cyan-500/20 cursor-pointer shrink-0"
         >
           <ShoppingBag className="size-3 sm:size-3.5" />
           <span>Add</span>

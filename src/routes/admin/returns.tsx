@@ -408,11 +408,11 @@ function ReturnsManagerPage() {
               <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
                 Returns & RMA Management
               </h1>
-              <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-amber-100 text-amber-900 border border-amber-200">
+              <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-xs sm:text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-200">
                 {metrics.total} Requests
               </span>
             </div>
-            <p className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">
+            <p className="text-xs sm:text-xs text-slate-500 font-medium mt-0.5">
               Review warranty claims, approve RMA slips, and manage resolution lifecycles
             </p>
           </div>
@@ -434,56 +434,56 @@ function ReturnsManagerPage() {
       {/* ── Metric KPI Cards ── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5">
         <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+          <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
             Total Returns
           </div>
           <div className="text-xl sm:text-2xl font-black text-slate-900">{metrics.total}</div>
-          <div className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">
+          <div className="text-xs sm:text-xs text-slate-500 mt-0.5 truncate">
             All time claims
           </div>
         </div>
 
         <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 shadow-2xs">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700 mb-1 flex items-center gap-1">
+          <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-amber-700 mb-1 flex items-center gap-1">
             <Clock className="size-3" />
             <span>Under Review</span>
           </div>
           <div className="text-xl sm:text-2xl font-black text-amber-900">{metrics.underReview}</div>
-          <div className="text-[10px] sm:text-[11px] text-amber-700 font-medium mt-0.5 truncate">
+          <div className="text-xs sm:text-xs text-amber-700 font-medium mt-0.5 truncate">
             Needs action
           </div>
         </div>
 
         <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 shadow-2xs">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-700 mb-1 flex items-center gap-1">
+          <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1 flex items-center gap-1">
             <CheckCircle2 className="size-3" />
             <span>Resolved</span>
           </div>
           <div className="text-xl sm:text-2xl font-black text-emerald-900">{metrics.resolved}</div>
-          <div className="text-[10px] sm:text-[11px] text-emerald-700 font-medium mt-0.5 truncate">
+          <div className="text-xs sm:text-xs text-emerald-700 font-medium mt-0.5 truncate">
             Case closed
           </div>
         </div>
 
         <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 shadow-2xs">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-rose-700 mb-1 flex items-center gap-1">
+          <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-rose-700 mb-1 flex items-center gap-1">
             <AlertTriangle className="size-3" />
             <span>Unresolved</span>
           </div>
           <div className="text-xl sm:text-2xl font-black text-rose-900">{metrics.unresolved}</div>
-          <div className="text-[10px] sm:text-[11px] text-rose-700 font-medium mt-0.5 truncate">
+          <div className="text-xs sm:text-xs text-rose-700 font-medium mt-0.5 truncate">
             Open cases
           </div>
         </div>
 
         <div className="col-span-2 sm:col-span-1 p-3.5 sm:p-4 rounded-2xl bg-blue-50/70 border border-blue-200/80 shadow-2xs">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-700 mb-1">
+          <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-blue-700 mb-1">
             RMA Total Value
           </div>
           <div className="text-lg sm:text-2xl font-black text-blue-950 truncate">
             {formatUSD(metrics.totalValue)}
           </div>
-          <div className="text-[10px] sm:text-[11px] text-blue-700 font-medium mt-0.5 truncate">
+          <div className="text-xs sm:text-xs text-blue-700 font-medium mt-0.5 truncate">
             Claim volume
           </div>
         </div>
@@ -551,7 +551,7 @@ function ReturnsManagerPage() {
 
         {/* Status Chips */}
         <div className="flex items-center gap-1.5 pt-1 border-t border-slate-100 text-xs overflow-x-auto scrollbar-none pb-0.5">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mr-1 flex items-center gap-1 shrink-0">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-wide mr-1 flex items-center gap-1 shrink-0">
             <Filter className="size-3" />
             <span>Filter:</span>
           </span>
@@ -567,7 +567,7 @@ function ReturnsManagerPage() {
             <button
               key={chip.id}
               onClick={() => setStatusFilter(chip.id)}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl font-bold transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+              className={`px-2.5 sm:px-3 py-1 rounded-xl font-bold transition cursor-pointer text-xs sm:text-xs shrink-0 ${
                 statusFilter === chip.id
                   ? "bg-slate-900 text-white shadow-xs"
                   : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200"
@@ -588,7 +588,7 @@ function ReturnsManagerPage() {
               Showing {filteredReturns.length} of {returnsList.length} Returns
             </div>
             {isRefetching && (
-              <span className="text-[11px] text-cyan-600 font-bold">Refreshing...</span>
+              <span className="text-xs text-cyan-600 font-bold">Refreshing...</span>
             )}
           </div>
 
@@ -627,18 +627,18 @@ function ReturnsManagerPage() {
                         <span className="font-mono font-black text-xs text-slate-900">
                           {ret.rmaId}
                         </span>
-                        <span className="text-[11px] font-semibold text-slate-500">
+                        <span className="text-xs font-semibold text-slate-500">
                           Order #{ret.orderId}
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         {isResolved ? (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
                             <Check className="size-2.5" />
                             <span>Resolved</span>
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-200 flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-200 flex items-center gap-1">
                             <Clock className="size-2.5" />
                             <span>{ret.status || "Under Review"}</span>
                           </span>
@@ -652,7 +652,7 @@ function ReturnsManagerPage() {
                         <User className="size-3 text-slate-400 shrink-0" />
                         <span className="truncate">{ret.customerName || "Trade Customer"}</span>
                         {ret.customerCompany && (
-                          <span className="text-slate-400 font-normal text-[11px] truncate">
+                          <span className="text-slate-400 font-normal text-xs truncate">
                             ({ret.customerCompany})
                           </span>
                         )}
@@ -663,7 +663,7 @@ function ReturnsManagerPage() {
                     </div>
 
                     {/* Footer row: Date + Amount */}
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-100/60">
+                    <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-slate-100/60">
                       <span>
                         {new Date(ret.createdAt).toLocaleDateString("en-US", {
                           month: "short",
@@ -694,18 +694,18 @@ function ReturnsManagerPage() {
                       {selectedReturn.rmaId}
                     </h2>
                     {selectedReturn.isResolved || selectedReturn.status === "Resolved" ? (
-                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5 shadow-2xs">
+                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5 shadow-2xs">
                         <CheckCircle2 className="size-3.5" />
                         <span>RESOLVED</span>
                       </span>
                     ) : (
-                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5 shadow-2xs">
+                      <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5 shadow-2xs">
                         <Clock className="size-3.5" />
                         <span>IN PROGRESS</span>
                       </span>
                     )}
                   </div>
-                  <div className="text-[11px] sm:text-xs text-slate-400 font-medium mt-1">
+                  <div className="text-xs sm:text-xs text-slate-400 font-medium mt-1">
                     Submitted on{" "}
                     {new Date(selectedReturn.createdAt).toLocaleString("en-US", {
                       dateStyle: "medium",
@@ -791,7 +791,7 @@ function ReturnsManagerPage() {
 
               {/* ── Status Lifecycle Selector ── */}
               <div className="space-y-2">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
                   Lifecycle Status Stage
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -834,7 +834,7 @@ function ReturnsManagerPage() {
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Customer Information */}
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                     <User className="size-3.5 text-slate-500" />
                     <span>Customer Details</span>
                   </div>
@@ -875,7 +875,7 @@ function ReturnsManagerPage() {
 
                 {/* Order Information */}
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                     <ShoppingBag className="size-3.5 text-slate-500" />
                     <span>Order Reference</span>
                   </div>
@@ -900,7 +900,7 @@ function ReturnsManagerPage() {
                     <div className="pt-1">
                       <Link
                         to="/admin/orders"
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-700 hover:underline"
+                        className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 hover:underline"
                       >
                         <span>View in Orders Manager</span>
                         <ArrowUpRight className="size-3" />
@@ -913,10 +913,10 @@ function ReturnsManagerPage() {
               {/* ── Return Reason & Statement ── */}
               <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/50 border border-amber-200/80 space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-amber-800">
+                  <div className="text-xs font-bold uppercase tracking-wider text-amber-800">
                     Return Reason & Preferred Resolution
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
                     {selectedReturn.preferredResolution || "Replacement Unit"}
                   </span>
                 </div>
@@ -930,7 +930,7 @@ function ReturnsManagerPage() {
 
               {/* ── Returned Items List ── */}
               <div className="space-y-2.5">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                   <Package className="size-3.5 text-slate-500" />
                   <span>Authorized Return Line Items</span>
                 </div>
@@ -938,7 +938,7 @@ function ReturnsManagerPage() {
                 <div className="rounded-2xl border border-slate-200 overflow-hidden">
                   <table className="w-full text-left text-xs text-slate-700">
                     <thead>
-                      <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px]">
+                      <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs">
                         <th className="px-4 py-2.5 font-bold">Item / Equipment</th>
                         <th className="px-4 py-2.5 font-bold text-center">Qty</th>
                         <th className="px-4 py-2.5 font-bold text-right">Unit Price</th>
@@ -960,7 +960,7 @@ function ReturnsManagerPage() {
                               <div>
                                 <div>{it.name || "Commercial Equipment Unit"}</div>
                                 {it.brand && (
-                                  <div className="text-[10px] text-slate-400 font-normal">
+                                  <div className="text-xs text-slate-400 font-normal">
                                     {it.brand}
                                   </div>
                                 )}
@@ -997,14 +997,14 @@ function ReturnsManagerPage() {
                     <ShieldCheck className="size-4 text-cyan-400" />
                     <span>Admin Resolution & Internal Remarks</span>
                   </div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                  <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
                     Internal Audit Log
                   </span>
                 </div>
 
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Resolution Summary (e.g. Issued 100% refund / Shipped replacement UPS 1Z999)
                     </label>
                     <input
@@ -1017,7 +1017,7 @@ function ReturnsManagerPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Internal Admin Notes
                     </label>
                     <textarea

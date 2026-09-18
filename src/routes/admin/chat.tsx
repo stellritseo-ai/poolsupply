@@ -251,7 +251,7 @@ function AdminChat() {
 
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
           <div className="space-y-1 sm:space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[10px] font-extrabold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest">
               <Headphones className="size-3 text-cyan-400" />
               Live Trade Support Operations
             </div>
@@ -270,7 +270,7 @@ function AdminChat() {
           {/* Quick Metrics HUD */}
           <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 sm:gap-3 w-full lg:w-auto shrink-0">
             <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">
+              <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-slate-400 truncate">
                 Total
               </div>
               <div className="text-base sm:text-lg font-black text-white mt-0.5">
@@ -279,7 +279,7 @@ function AdminChat() {
             </div>
 
             <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-400 truncate">
+              <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-emerald-400 truncate">
                 Live
               </div>
               <div className="text-base sm:text-lg font-black text-emerald-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
@@ -291,7 +291,7 @@ function AdminChat() {
             </div>
 
             <div className="p-2 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">
+              <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-cyan-400 truncate">
                 Unread
               </div>
               <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
@@ -342,7 +342,7 @@ function AdminChat() {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-[10px] sm:text-xs font-bold overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-xs sm:text-xs font-bold overflow-x-auto scrollbar-none">
               <button
                 onClick={() => setStatusFilter("all")}
                 className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${
@@ -418,19 +418,19 @@ function AdminChat() {
                             {session.userName || `Customer #${session.sessionId.substring(0, 5)}`}
                           </span>
                           {(session.unreadAdmin ?? 0) > 0 && (
-                            <span className="size-4 rounded-full bg-rose-500 text-white font-black text-[9px] grid place-items-center shrink-0">
+                            <span className="size-4 rounded-full bg-rose-500 text-white font-black text-xs grid place-items-center shrink-0">
                               {session.unreadAdmin}
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-slate-500 line-clamp-1 font-medium">
+                        <p className="text-xs text-slate-500 line-clamp-1 font-medium">
                           {lastMessage?.text || "Session initialized"}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex flex-col items-end gap-1.5 sm:gap-2 shrink-0">
-                      <span className="text-[9px] sm:text-[10px] text-slate-400 font-bold whitespace-nowrap">
+                      <span className="text-xs sm:text-xs text-slate-400 font-bold whitespace-nowrap">
                         {lastMessage ? timeAgo(lastMessage.timestamp) : "Now"}
                       </span>
 
@@ -450,7 +450,7 @@ function AdminChat() {
               <div className="py-12 sm:py-16 text-center text-slate-400 space-y-2 p-6 bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl">
                 <MessageSquare className="size-8 mx-auto text-slate-300 stroke-1" />
                 <p className="text-xs font-bold text-slate-700">No chat sessions found</p>
-                <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
+                <p className="text-xs text-slate-400 max-w-xs mx-auto">
                   New live chat sessions started by customers will appear here in real time.
                 </p>
               </div>
@@ -498,11 +498,11 @@ function AdminChat() {
                             `Customer #${selectedSession.sessionId.substring(0, 5)}`}
                         </span>
                         {selectedSession.status === "active" ? (
-                          <span className="text-[9px] sm:text-[10px] font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                          <span className="text-xs sm:text-xs font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
                             Active
                           </span>
                         ) : (
-                          <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                          <span className="text-xs sm:text-xs font-bold text-slate-500 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
                             Resolved
                           </span>
                         )}
@@ -511,20 +511,20 @@ function AdminChat() {
                         {selectedSession.userEmail ? (
                           <a
                             href={`mailto:${selectedSession.userEmail}`}
-                            className="hover:text-cyan-600 text-cyan-700 font-bold flex items-center gap-1 text-[10px] sm:text-[11px] truncate"
+                            className="hover:text-cyan-600 text-cyan-700 font-bold flex items-center gap-1 text-xs sm:text-xs truncate"
                           >
                             <Mail className="size-3 shrink-0" />
                             <span className="truncate">{selectedSession.userEmail}</span>
                           </a>
                         ) : (
-                          <span className="text-[10px] sm:text-[11px] text-slate-400">
+                          <span className="text-xs sm:text-xs text-slate-400">
                             Guest Visitor
                           </span>
                         )}
                         {selectedSession.userPhone && (
                           <a
                             href={`tel:${selectedSession.userPhone}`}
-                            className="hover:text-cyan-600 text-slate-600 flex items-center gap-1 text-[10px] sm:text-[11px] truncate hidden xs:flex"
+                            className="hover:text-cyan-600 text-slate-600 flex items-center gap-1 text-xs sm:text-xs truncate hidden xs:flex"
                           >
                             <Phone className="size-3 shrink-0" />
                             <span>{selectedSession.userPhone}</span>
@@ -574,14 +574,14 @@ function AdminChat() {
                               : "bg-white text-slate-900 border border-slate-200/90 rounded-bl-none"
                           }`}
                         >
-                          <div className="text-[10px] font-bold opacity-75">
+                          <div className="text-xs font-bold opacity-75">
                             {isAdmin
                               ? "Support Representative"
                               : selectedSession.userName || "Customer"}
                           </div>
                           <div className="leading-relaxed whitespace-pre-wrap">{msg.text}</div>
                           <div
-                            className={`text-[9px] font-bold text-right ${
+                            className={`text-xs font-bold text-right ${
                               isAdmin ? "text-cyan-300" : "text-slate-400"
                             }`}
                           >
@@ -600,7 +600,7 @@ function AdminChat() {
                     <button
                       key={idx}
                       onClick={() => setReplyText(tmpl.text)}
-                      className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-200 hover:border-cyan-400 hover:bg-cyan-50 text-[10px] sm:text-[11px] font-bold text-slate-700 hover:text-cyan-900 transition shrink-0 cursor-pointer shadow-2xs flex items-center gap-1"
+                      className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-200 hover:border-cyan-400 hover:bg-cyan-50 text-xs sm:text-xs font-bold text-slate-700 hover:text-cyan-900 transition shrink-0 cursor-pointer shadow-2xs flex items-center gap-1"
                     >
                       <Sparkles className="size-3 text-cyan-600" />
                       <span>{tmpl.label}</span>

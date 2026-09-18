@@ -246,7 +246,7 @@ export function FloatingChat() {
                     </h3>
                     <ShieldCheck className="size-3.5 text-cyan-400" />
                   </div>
-                  <p className="text-cyan-200/80 text-[11px] font-medium flex items-center gap-1.5 mt-0.5">
+                  <p className="text-cyan-200/80 text-xs font-medium flex items-center gap-1.5 mt-0.5">
                     <span className="size-1.5 rounded-full bg-emerald-400 inline-block" />
                     <span>Online · Instant Technical Advisory</span>
                   </p>
@@ -277,7 +277,7 @@ export function FloatingChat() {
 
                 <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                    <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-1">
                       Full Name <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
@@ -297,7 +297,7 @@ export function FloatingChat() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                    <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-1">
                       Email Address
                     </label>
                     <div className="relative">
@@ -315,12 +315,12 @@ export function FloatingChat() {
                     </div>
                   </div>
 
-                  <div className="text-center text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                  <div className="text-center text-xs font-black text-slate-300 uppercase tracking-widest">
                     — OR —
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                    <label className="block text-xs font-black uppercase tracking-wider text-slate-400 mb-1">
                       Phone Number
                     </label>
                     <div className="relative">
@@ -339,7 +339,7 @@ export function FloatingChat() {
                   </div>
 
                   {formError && (
-                    <p className="text-[11px] text-rose-500 font-bold mt-1 text-center">
+                    <p className="text-xs text-rose-500 font-bold mt-1 text-center">
                       {formError}
                     </p>
                   )}
@@ -410,7 +410,7 @@ export function FloatingChat() {
                           }`}
                         >
                           {!isUser && (
-                            <div className="text-[9px] font-black text-cyan-700 tracking-wider uppercase mb-0.5">
+                            <div className="text-xs font-black text-cyan-700 tracking-wider uppercase mb-0.5">
                               Support Representative
                             </div>
                           )}
@@ -418,7 +418,7 @@ export function FloatingChat() {
                             {msg.text}
                           </p>
                           <div
-                            className={`text-[9px] mt-0.5 font-bold flex items-center justify-end gap-1 ${
+                            className={`text-xs mt-0.5 font-bold flex items-center justify-end gap-1 ${
                               isUser ? "text-cyan-100/75" : "text-slate-400"
                             }`}
                           >
@@ -437,7 +437,7 @@ export function FloatingChat() {
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                         <span>This conversation has been resolved.</span>
                       </div>
-                      <p className="text-[11px] text-slate-500 max-w-[260px] font-medium">
+                      <p className="text-xs text-slate-500 max-w-[260px] font-medium">
                         Need assistance with another product or order? Click below to start a new
                         chat.
                       </p>
@@ -457,7 +457,7 @@ export function FloatingChat() {
                 {/* Quick Actions (only before first message) */}
                 {messages.length === 0 && !isResolved && (
                   <div className="px-4 pb-3 bg-slate-50/70 shrink-0">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">
                       Quick Inquiries
                     </p>
                     <div className="grid grid-cols-3 gap-1.5">
@@ -465,7 +465,7 @@ export function FloatingChat() {
                         <button
                           key={i}
                           onClick={() => handleSend(action.message)}
-                          className="flex items-center gap-1.5 bg-white hover:bg-cyan-50/80 active:scale-95 transition-all px-2.5 py-2 rounded-xl border border-slate-200/80 shadow-2xs text-[11px] font-bold text-slate-700 hover:text-cyan-900 cursor-pointer"
+                          className="flex items-center gap-1.5 bg-white hover:bg-cyan-50/80 active:scale-95 transition-all px-2.5 py-2 rounded-xl border border-slate-200/80 shadow-2xs text-xs font-bold text-slate-700 hover:text-cyan-900 cursor-pointer"
                         >
                           {action.icon}
                           <span className="truncate">{action.label}</span>
@@ -543,7 +543,7 @@ export function FloatingChat() {
 
         {/* Unread indicator */}
         {session && (session.unreadUser ?? 0) > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center ring-2 ring-white">
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-xs font-black rounded-full flex items-center justify-center ring-2 ring-white">
             {session.unreadUser}
           </span>
         )}

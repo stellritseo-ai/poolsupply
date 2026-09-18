@@ -254,7 +254,7 @@ function WhyUsPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg"
               >
                 <Award className="size-3.5" />
                 The Professional Contractor Choice · Est. 2008
@@ -330,7 +330,7 @@ function WhyUsPage() {
                     <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                       {stat.value}
                     </div>
-                    <div className="text-[11px] font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
+                    <div className="text-xs font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -344,7 +344,7 @@ function WhyUsPage() {
         <section className="py-[50px] bg-slate-50/70 border-y border-slate-200/80">
           <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Core Standards
               </span>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
@@ -412,7 +412,7 @@ function WhyUsPage() {
         <section className="py-[50px] bg-background">
           <div className="mx-auto max-w-[1000px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Direct Comparison
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -439,12 +439,12 @@ function WhyUsPage() {
                   </div>
                 </div>
                 <div className="col-span-3 p-4 sm:p-5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white border-r border-slate-200">
-                  <div className="text-[11px] sm:text-xs font-black uppercase tracking-wider">
+                  <div className="text-xs sm:text-xs font-black uppercase tracking-wider">
                     Pool Supply Wholesalers
                   </div>
                 </div>
                 <div className="col-span-3 p-4 sm:p-5 bg-slate-50">
-                  <div className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <div className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider">
                     Typical Retailers
                   </div>
                 </div>
@@ -468,11 +468,11 @@ function WhyUsPage() {
                     {row.them === true ? (
                       <CheckCircle2 className="size-4 sm:size-5 text-emerald-500" />
                     ) : row.them === false ? (
-                      <span className="size-5 rounded-full bg-rose-100 text-rose-600 grid place-items-center font-black text-[10px]">
+                      <span className="size-5 rounded-full bg-rose-100 text-rose-600 grid place-items-center font-black text-xs">
                         ✕
                       </span>
                     ) : (
-                      <span className="text-[10px] font-bold text-amber-700 bg-amber-100/70 px-2 py-0.5 rounded-full border border-amber-200">
+                      <span className="text-xs font-bold text-amber-700 bg-amber-100/70 px-2 py-0.5 rounded-full border border-amber-200">
                         {row.them}
                       </span>
                     )}
@@ -487,7 +487,7 @@ function WhyUsPage() {
         <section className="py-[50px] bg-slate-50/70 border-t border-slate-200/80">
           <div className="mx-auto max-w-[900px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Dealer Answers
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -553,7 +553,7 @@ function WhyUsPage() {
               <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
               <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg">
                   <Sparkles className="size-3.5" />
                   Instant Trade Access
                 </span>

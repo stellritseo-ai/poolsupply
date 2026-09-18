@@ -446,7 +446,7 @@ function AdminQuotesPage() {
         className={`flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-200/80 pb-4 sm:pb-5 ${selectedQuoteId ? "hidden lg:flex" : "flex"}`}
       >
         <div>
-          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-1">
             <Link to="/admin" className="hover:text-cyan-700 transition">
               Admin Console
             </Link>
@@ -488,7 +488,7 @@ function AdminQuotesPage() {
         {/* Metric 1 */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-5 shadow-2xs">
           <div className="flex items-center justify-between mb-1 sm:mb-2">
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs sm:text-xs font-black uppercase tracking-wider text-slate-400">
               Total Quotes
             </span>
             <div className="size-6 sm:size-8 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
@@ -498,7 +498,7 @@ function AdminQuotesPage() {
           <div className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
             {totalQuotesCount}
           </div>
-          <div className="text-[9px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-slate-400 mt-0.5 truncate">
             All project requests
           </div>
         </div>
@@ -506,7 +506,7 @@ function AdminQuotesPage() {
         {/* Metric 2 */}
         <div className="bg-white border border-amber-200/90 rounded-2xl p-3 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-amber-50/40">
           <div className="flex items-center justify-between mb-1 sm:mb-2">
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-amber-900">
+            <span className="text-xs sm:text-xs font-black uppercase tracking-wider text-amber-900">
               Under Review
             </span>
             <div className="size-6 sm:size-8 rounded-xl bg-amber-100 text-amber-800 grid place-items-center">
@@ -516,7 +516,7 @@ function AdminQuotesPage() {
           <div className="text-lg sm:text-2xl font-black text-amber-950 tracking-tight">
             {underReviewCount}
           </div>
-          <div className="text-[9px] sm:text-[11px] font-semibold text-amber-800/80 mt-0.5 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-amber-800/80 mt-0.5 truncate">
             Engineering review
           </div>
         </div>
@@ -524,7 +524,7 @@ function AdminQuotesPage() {
         {/* Metric 3 */}
         <div className="bg-white border border-cyan-200/90 rounded-2xl p-3 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-cyan-50/40">
           <div className="flex items-center justify-between mb-1 sm:mb-2">
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-cyan-900">
+            <span className="text-xs sm:text-xs font-black uppercase tracking-wider text-cyan-900">
               Pricing Ready
             </span>
             <div className="size-6 sm:size-8 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
@@ -534,7 +534,7 @@ function AdminQuotesPage() {
           <div className="text-lg sm:text-2xl font-black text-cyan-950 tracking-tight">
             {pricingReadyCount}
           </div>
-          <div className="text-[9px] sm:text-[11px] font-semibold text-cyan-800/80 mt-0.5 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-cyan-800/80 mt-0.5 truncate">
             Proposals ready
           </div>
         </div>
@@ -542,7 +542,7 @@ function AdminQuotesPage() {
         {/* Metric 4 */}
         <div className="bg-white border border-emerald-200/90 rounded-2xl p-3 sm:p-5 shadow-2xs bg-gradient-to-br from-white to-emerald-50/40">
           <div className="flex items-center justify-between mb-1 sm:mb-2">
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-emerald-900">
+            <span className="text-xs sm:text-xs font-black uppercase tracking-wider text-emerald-900">
               Accepted
             </span>
             <div className="size-6 sm:size-8 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
@@ -552,7 +552,7 @@ function AdminQuotesPage() {
           <div className="text-lg sm:text-2xl font-black text-emerald-950 tracking-tight">
             {acceptedCount}
           </div>
-          <div className="text-[9px] sm:text-[11px] font-semibold text-emerald-800/80 mt-0.5 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-emerald-800/80 mt-0.5 truncate">
             Converted to jobs
           </div>
         </div>
@@ -560,7 +560,7 @@ function AdminQuotesPage() {
         {/* Metric 5 */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-5 shadow-2xs col-span-2 sm:col-span-1">
           <div className="flex items-center justify-between mb-1 sm:mb-2">
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs sm:text-xs font-black uppercase tracking-wider text-slate-400">
               Pipeline Value
             </span>
             <div className="size-6 sm:size-8 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center">
@@ -570,7 +570,7 @@ function AdminQuotesPage() {
           <div className="text-base sm:text-2xl font-black text-slate-900 tracking-tight truncate">
             {formatUSD(totalPipelineValue)}
           </div>
-          <div className="text-[9px] sm:text-[11px] font-semibold text-slate-400 mt-0.5 truncate">
+          <div className="text-xs sm:text-xs font-semibold text-slate-400 mt-0.5 truncate">
             Cumulative volume
           </div>
         </div>
@@ -644,7 +644,7 @@ function AdminQuotesPage() {
         <div
           className={`lg:col-span-5 space-y-3 w-full min-w-0 ${selectedQuoteId ? "hidden lg:block" : "block"}`}
         >
-          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-slate-400 px-1">
+          <div className="flex items-center justify-between text-xs sm:text-xs font-bold text-slate-400 px-1">
             <span>SHOWING {filteredQuotes.length} PROPOSALS</span>
             <span>SORTED BY DATE</span>
           </div>
@@ -681,11 +681,11 @@ function AdminQuotesPage() {
                           #{q.quoteId}
                         </span>
                         {isResolved ? (
-                          <span className="text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300">
+                          <span className="text-xs sm:text-xs font-extrabold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300">
                             Resolved
                           </span>
                         ) : (
-                          <span className="text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
+                          <span className="text-xs sm:text-xs font-extrabold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
                             {q.status || "Under Review"}
                           </span>
                         )}
@@ -711,7 +711,7 @@ function AdminQuotesPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 pt-2 border-t border-slate-100">
+                    <div className="flex items-center justify-between text-xs sm:text-xs text-slate-400 pt-2 border-t border-slate-100">
                       <span className="flex items-center gap-1">
                         <Calendar className="size-3" />
                         {new Date(q.createdAt).toLocaleDateString()}
@@ -726,7 +726,7 @@ function AdminQuotesPage() {
             <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center text-slate-400 space-y-3">
               <FileText className="size-10 mx-auto text-slate-300 stroke-1" />
               <p className="text-xs font-bold text-slate-700">No quote requests found</p>
-              <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
+              <p className="text-xs text-slate-400 max-w-xs mx-auto">
                 No proposals match your search or filter settings. Clear filters to see all quotes.
               </p>
             </div>
@@ -757,12 +757,12 @@ function AdminQuotesPage() {
                         #{activeQuote.quoteId}
                       </span>
                       {activeQuote.isResolved ? (
-                        <span className="text-[10px] sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1 shrink-0">
+                        <span className="text-xs sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1 shrink-0">
                           <Check className="size-3 sm:size-3.5" />
                           <span>Resolved</span>
                         </span>
                       ) : (
-                        <span className="text-[10px] sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1 shrink-0">
+                        <span className="text-xs sm:text-xs font-extrabold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1 shrink-0">
                           <Clock className="size-3 sm:size-3.5" />
                           <span>{activeQuote.status || "Under Review"}</span>
                         </span>
@@ -771,7 +771,7 @@ function AdminQuotesPage() {
                     <h2 className="text-sm sm:text-lg font-black text-slate-900 tracking-tight mt-1 truncate">
                       {activeQuote.projectName}
                     </h2>
-                    <p className="text-[10px] sm:text-xs text-slate-400">
+                    <p className="text-xs sm:text-xs text-slate-400">
                       Submitted {new Date(activeQuote.createdAt).toLocaleString()}
                     </p>
                   </div>
@@ -812,7 +812,7 @@ function AdminQuotesPage() {
               {/* Customer & Job Site Card */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 sm:space-y-2 min-w-0">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Client / Contractor Profile
                   </div>
                   <div className="font-extrabold text-xs sm:text-sm text-slate-900 flex items-center gap-2 truncate">
@@ -848,7 +848,7 @@ function AdminQuotesPage() {
                 </div>
 
                 <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 sm:space-y-2 min-w-0">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Project Details
                   </div>
                   {activeQuote.projectLocation && (
@@ -877,7 +877,7 @@ function AdminQuotesPage() {
 
               {/* Requested Scope & Items List */}
               <div className="space-y-2.5 sm:space-y-3 w-full min-w-0">
-                <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-slate-400">
+                <div className="text-xs sm:text-xs font-black uppercase tracking-wider text-slate-400">
                   Requested Bill of Materials (BOM)
                 </div>
                 {activeQuote.items && activeQuote.items.length > 0 ? (
@@ -888,7 +888,7 @@ function AdminQuotesPage() {
                         className="p-2.5 sm:p-3 bg-white flex flex-col xs:flex-row xs:items-center justify-between gap-2 text-xs min-w-0"
                       >
                         <div className="flex items-start xs:items-center gap-2 min-w-0 flex-1">
-                          <span className="size-5 sm:size-6 rounded-lg bg-slate-100 text-slate-600 font-mono font-bold grid place-items-center text-[9px] sm:text-[10px] shrink-0 mt-0.5 xs:mt-0">
+                          <span className="size-5 sm:size-6 rounded-lg bg-slate-100 text-slate-600 font-mono font-bold grid place-items-center text-xs sm:text-xs shrink-0 mt-0.5 xs:mt-0">
                             {idx + 1}
                           </span>
                           <div className="min-w-0 flex-1">
@@ -896,7 +896,7 @@ function AdminQuotesPage() {
                               {it.name || "Equipment Unit"}
                             </div>
                             {it.brand && (
-                              <div className="text-[10px] text-slate-400 truncate">{it.brand}</div>
+                              <div className="text-xs text-slate-400 truncate">{it.brand}</div>
                             )}
                           </div>
                         </div>
@@ -905,7 +905,7 @@ function AdminQuotesPage() {
                             Qty: {it.qty || 1}
                           </div>
                           {it.price && (
-                            <div className="text-[10px] text-slate-500 whitespace-nowrap">
+                            <div className="text-xs text-slate-500 whitespace-nowrap">
                               {formatUSD(it.price)} ea
                             </div>
                           )}
@@ -938,7 +938,7 @@ function AdminQuotesPage() {
                     <DollarSign className="size-4 text-cyan-400 shrink-0" />
                     <span>Pricing & Scope Controls</span>
                   </h3>
-                  <span className="text-[9px] sm:text-[10px] font-bold text-cyan-300 uppercase tracking-wider">
+                  <span className="text-xs sm:text-xs font-bold text-cyan-300 uppercase tracking-wider">
                     Live DB Sync
                   </span>
                 </div>
@@ -946,7 +946,7 @@ function AdminQuotesPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full min-w-0">
                   {/* Quoted Amount */}
                   <div className="space-y-1 min-w-0">
-                    <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">
+                    <label className="text-xs sm:text-xs font-extrabold text-slate-300">
                       Quoted Package Price ($ USD)
                     </label>
                     <div className="relative">
@@ -964,7 +964,7 @@ function AdminQuotesPage() {
 
                   {/* Status Dropdown */}
                   <div className="space-y-1 min-w-0">
-                    <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">
+                    <label className="text-xs sm:text-xs font-extrabold text-slate-300">
                       Lifecycle Status
                     </label>
                     <select
@@ -986,7 +986,7 @@ function AdminQuotesPage() {
 
                   {/* Lead Time */}
                   <div className="space-y-1 min-w-0">
-                    <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">
+                    <label className="text-xs sm:text-xs font-extrabold text-slate-300">
                       Estimated Lead Time / ETA
                     </label>
                     <input
@@ -1000,7 +1000,7 @@ function AdminQuotesPage() {
 
                   {/* Freight Terms */}
                   <div className="space-y-1 min-w-0">
-                    <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">
+                    <label className="text-xs sm:text-xs font-extrabold text-slate-300">
                       Freight & Logistics Terms
                     </label>
                     <input
@@ -1015,7 +1015,7 @@ function AdminQuotesPage() {
 
                 {/* Proposal Notes (Visible on Proposal) */}
                 <div className="space-y-1 min-w-0">
-                  <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">
+                  <label className="text-xs sm:text-xs font-extrabold text-slate-300">
                     Proposal Remarks (Visible on Printable Quote)
                   </label>
                   <textarea
@@ -1029,7 +1029,7 @@ function AdminQuotesPage() {
 
                 {/* Internal Admin Notes */}
                 <div className="space-y-1 min-w-0">
-                  <label className="text-[10px] sm:text-[11px] font-extrabold text-slate-300">
+                  <label className="text-xs sm:text-xs font-extrabold text-slate-300">
                     Internal Admin Notes (Private)
                   </label>
                   <textarea

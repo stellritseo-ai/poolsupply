@@ -1400,7 +1400,7 @@ function ProductsManager() {
         <div>
           <h1 className="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2 sm:gap-3 flex-wrap">
             <span>Products Catalog</span>
-            <span className="text-[10px] sm:text-xs font-bold bg-slate-100 text-slate-600 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-slate-200">
+            <span className="text-xs sm:text-xs font-bold bg-slate-100 text-slate-600 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-slate-200">
               {dbLoading
                 ? "Loading..."
                 : searchTerm || selectedCategory !== "all"
@@ -1418,21 +1418,21 @@ function ProductsManager() {
           {productsList.length > 0 && (
             <button
               onClick={handleDeleteAllProducts}
-              className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+              className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white font-extrabold text-xs sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
             >
               <Trash2 className="size-3.5" /> <span>Delete All</span>
             </button>
           )}
           <button
             onClick={() => setPriceAdjustModalOpen(true)}
-            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-600 hover:text-white font-extrabold text-xs sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
           >
             <TrendingUp className="size-3.5" /> <span>Bulk Prices</span>
           </button>
           <button
             onClick={handleExportExcel}
             disabled={isExporting}
-            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-700 hover:bg-teal-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-700 hover:bg-teal-600 hover:text-white font-extrabold text-xs sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             title="Export all products to Excel file (.xlsx)"
           >
             {isExporting ? (
@@ -1447,13 +1447,13 @@ function ProductsManager() {
           </button>
           <button
             onClick={() => setImportModalOpen(true)}
-            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-600 hover:text-white font-extrabold text-[11px] sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+            className="py-2 sm:py-2.5 px-3 sm:px-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-600 hover:text-white font-extrabold text-xs sm:text-xs shadow-xs hover:shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
           >
             <FileSpreadsheet className="size-3.5" /> <span>Import Excel</span>
           </button>
           <button
             onClick={openAddModal}
-            className="py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-[11px] sm:text-xs shadow-md hover:shadow-lg hover:brightness-110 flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer border border-cyan-400/40"
+            className="py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-xs sm:text-xs shadow-md hover:shadow-lg hover:brightness-110 flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer border border-cyan-400/40"
           >
             <Plus className="size-4" /> <span>Add Product</span>
           </button>
@@ -1575,14 +1575,14 @@ function ProductsManager() {
                       <div className="font-bold text-xs text-slate-900 truncate capitalize">
                         {p.name}
                       </div>
-                      <div className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                      <div className="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
                         <span className="font-semibold text-slate-600">{p.brand}</span>
                         <span>•</span>
                         <span className="font-mono text-slate-700">SKU: {p.sku}</span>
                         {p.productSize && (
                           <>
                             <span>•</span>
-                            <span className="px-1.5 py-0.5 rounded text-[9.5px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+                            <span className="px-1.5 py-0.5 rounded text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
                               Size: {p.productSize}
                             </span>
                           </>
@@ -1593,7 +1593,7 @@ function ProductsManager() {
                         <div>
                           <div className="flex items-baseline gap-2.5 flex-wrap">
                             <div>
-                              <span className="text-[9.5px] uppercase font-bold text-slate-400 block leading-none mb-0.5">
+                              <span className="text-xs uppercase font-bold text-slate-400 block leading-none mb-0.5">
                                 Price
                               </span>
                               <span className="font-black text-sm text-slate-900">
@@ -1602,7 +1602,7 @@ function ProductsManager() {
                             </div>
                             {p.salePrice && p.salePrice > 0 && (
                               <div>
-                                <span className="text-[9.5px] uppercase font-bold text-emerald-600 block leading-none mb-0.5">
+                                <span className="text-xs uppercase font-bold text-emerald-600 block leading-none mb-0.5">
                                   Sale Price
                                 </span>
                                 <div className="flex items-center gap-1">
@@ -1610,12 +1610,12 @@ function ProductsManager() {
                                     {formatUSD(p.salePrice)}
                                   </span>
                                   {p.salePrice > p.price && (
-                                    <span className="text-[9px] font-black bg-emerald-100 text-emerald-700 border border-emerald-300/60 px-1 py-0.2 rounded">
+                                    <span className="text-xs font-black bg-emerald-100 text-emerald-700 border border-emerald-300/60 px-1 py-0.2 rounded">
                                       +{Math.round(((p.salePrice - p.price) / p.price) * 100)}%
                                     </span>
                                   )}
                                   {p.salePrice < p.price && (
-                                    <span className="text-[9px] font-black bg-amber-100 text-amber-700 border border-amber-300/60 px-1 py-0.2 rounded">
+                                    <span className="text-xs font-black bg-amber-100 text-amber-700 border border-amber-300/60 px-1 py-0.2 rounded">
                                       -{Math.round(((p.price - p.salePrice) / p.price) * 100)}%
                                     </span>
                                   )}
@@ -1628,7 +1628,7 @@ function ProductsManager() {
                               <AlertTriangle className="size-3 text-rose-500 animate-pulse" />
                             )}
                             <span
-                              className={`text-[10px] ${isLow ? "text-rose-600 font-bold" : "text-slate-500"}`}
+                              className={`text-xs ${isLow ? "text-rose-600 font-bold" : "text-slate-500"}`}
                             >
                               {p.stock} in stock
                             </span>
@@ -1729,17 +1729,17 @@ function ProductsManager() {
                       </td>
                       <td className="p-4 max-w-[280px]">
                         <div className="font-bold text-slate-900 truncate capitalize">{p.name}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{p.brand}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">{p.brand}</div>
                       </td>
                       <td className="p-4 font-bold text-slate-800 font-mono">{p.sku}</td>
                       <td className="p-4">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600">
+                        <span className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-600">
                           {p.category}
                         </span>
                       </td>
                       <td className="p-4 text-center">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${p.productSize ? "bg-sky-50 text-sky-700 border-sky-200" : "bg-slate-50 text-slate-400 border-slate-200"}`}
+                          className={`px-2 py-0.5 rounded text-xs font-semibold border ${p.productSize ? "bg-sky-50 text-sky-700 border-sky-200" : "bg-slate-50 text-slate-400 border-slate-200"}`}
                         >
                           {p.productSize || "—"}
                         </span>
@@ -1754,12 +1754,12 @@ function ProductsManager() {
                               {formatUSD(p.salePrice)}
                             </div>
                             {p.salePrice > p.price && (
-                              <span className="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/80 border border-emerald-300/60 px-1.5 py-0.5 rounded-md mt-0.5 shadow-2xs">
+                              <span className="inline-flex items-center gap-0.5 text-xs font-extrabold text-emerald-700 bg-emerald-100/80 border border-emerald-300/60 px-1.5 py-0.5 rounded-md mt-0.5 shadow-2xs">
                                 +{Math.round(((p.salePrice - p.price) / p.price) * 100)}%
                               </span>
                             )}
                             {p.salePrice < p.price && (
-                              <span className="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-amber-700 bg-amber-100/80 border border-amber-300/60 px-1.5 py-0.5 rounded-md mt-0.5 shadow-2xs">
+                              <span className="inline-flex items-center gap-0.5 text-xs font-extrabold text-amber-700 bg-amber-100/80 border border-amber-300/60 px-1.5 py-0.5 rounded-md mt-0.5 shadow-2xs">
                                 -{Math.round(((p.price - p.salePrice) / p.price) * 100)}%
                               </span>
                             )}
@@ -1813,7 +1813,7 @@ function ProductsManager() {
         {/* Pagination Controls */}
         {totalPages > 1 && (
           <div className="flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 px-4 sm:px-5 py-3 bg-slate-50/50 gap-2.5 sm:gap-0">
-            <span className="text-[10px] sm:text-[11px] text-slate-400 font-semibold">
+            <span className="text-xs sm:text-xs text-slate-400 font-semibold">
               Showing {(currentPage - 1) * pageSize + 1}–
               {Math.min(currentPage * pageSize, totalProducts)} of {totalProducts.toLocaleString()}{" "}
               products
@@ -1837,7 +1837,7 @@ function ProductsManager() {
                   <button
                     key={page}
                     onClick={() => setCurrentPage(page)}
-                    className={`size-7 sm:size-8 rounded-lg text-[10px] sm:text-[11px] font-bold transition cursor-pointer ${page === currentPage ? "bg-slate-900 text-white" : "hover:bg-slate-200 text-slate-600"}`}
+                    className={`size-7 sm:size-8 rounded-lg text-xs sm:text-xs font-bold transition cursor-pointer ${page === currentPage ? "bg-slate-900 text-white" : "hover:bg-slate-200 text-slate-600"}`}
                   >
                     {page}
                   </button>
@@ -1881,7 +1881,7 @@ function ProductsManager() {
                     <h3 className="font-extrabold text-base sm:text-lg text-slate-900">
                       Bulk Import Products
                     </h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500">
+                    <p className="text-xs sm:text-xs text-slate-500">
                       Upload product list CSV or Excel export into database.
                     </p>
                   </div>
@@ -1898,7 +1898,7 @@ function ProductsManager() {
               <div className="bg-emerald-50/70 border border-emerald-200/60 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="text-xs">
                   <span className="font-bold text-emerald-900 block">Need a sample format?</span>
-                  <span className="text-emerald-700 text-[11px]">
+                  <span className="text-emerald-700 text-xs">
                     Download our 16-column sample template (.xlsx) with preconfigured pool
                     categories, shipping sizes & schemas.
                   </span>
@@ -1931,7 +1931,7 @@ function ProductsManager() {
                     "Click to select or drag & drop Excel (.csv, .xlsx, .json)"
                   )}
                 </div>
-                <p className="text-[10px] text-slate-400 font-semibold">
+                <p className="text-xs text-slate-400 font-semibold">
                   Supports CSV (UTF-8), Excel CSV, or JSON exports
                 </p>
               </div>
@@ -1941,7 +1941,7 @@ function ProductsManager() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-800 px-1">
                     <span>Parsed Catalog Preview</span>
-                    <span className="text-emerald-600 bg-emerald-50 px-2 sm:px-2.5 py-0.5 rounded-full border border-emerald-200 text-[11px]">
+                    <span className="text-emerald-600 bg-emerald-50 px-2 sm:px-2.5 py-0.5 rounded-full border border-emerald-200 text-xs">
                       {parsedProducts.length} items ready
                     </span>
                   </div>
@@ -1951,7 +1951,7 @@ function ProductsManager() {
                       <div key={idx} className="p-2.5 flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <div className="font-bold text-slate-900 truncate">{p.name}</div>
-                          <div className="text-[10px] text-slate-400 flex items-center gap-1.5 flex-wrap">
+                          <div className="text-xs text-slate-400 flex items-center gap-1.5 flex-wrap">
                             <span>
                               {p.brand} • {p.category}
                             </span>
@@ -1964,12 +1964,12 @@ function ProductsManager() {
                         </div>
                         <div className="text-right shrink-0">
                           <div className="font-bold text-emerald-700">${p.price}</div>
-                          <div className="text-[10px] text-slate-400 font-mono">SKU: {p.sku}</div>
+                          <div className="text-xs text-slate-400 font-mono">SKU: {p.sku}</div>
                         </div>
                       </div>
                     ))}
                     {parsedProducts.length > 6 && (
-                      <div className="p-2 text-center text-[11px] font-bold text-slate-400 bg-slate-50">
+                      <div className="p-2 text-center text-xs font-bold text-slate-400 bg-slate-50">
                         ...and {parsedProducts.length - 6} more products
                       </div>
                     )}
@@ -2060,12 +2060,12 @@ function ProductsManager() {
               <form onSubmit={saveProduct} className="space-y-3.5 sm:space-y-4">
                 {/* Section 1: Classification */}
                 <div className="bg-slate-50 border border-slate-200/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl space-y-2.5 sm:space-y-3">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                  <span className="block text-xs font-extrabold uppercase tracking-wider text-slate-400">
                     1. Categorization & Brand
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-slate-600 mb-1">
+                      <span className="block text-xs font-bold text-slate-600 mb-1">
                         Parent Category
                       </span>
                       <select
@@ -2082,7 +2082,7 @@ function ProductsManager() {
                     </label>
 
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-slate-600 mb-1">
+                      <span className="block text-xs font-bold text-slate-600 mb-1">
                         Sub Category
                       </span>
                       <select
@@ -2099,7 +2099,7 @@ function ProductsManager() {
                     </label>
 
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-slate-600 mb-1">
+                      <span className="block text-xs font-bold text-slate-600 mb-1">
                         Manufacturer (Brand)
                       </span>
                       <input
@@ -2117,7 +2117,7 @@ function ProductsManager() {
                 {/* Section 2: Product Titles & Identifiers */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       System Name
                     </span>
                     <input
@@ -2131,7 +2131,7 @@ function ProductsManager() {
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Display Name (Public)
                     </span>
                     <input
@@ -2144,7 +2144,7 @@ function ProductsManager() {
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       SKU Code
                     </span>
                     <input
@@ -2161,7 +2161,7 @@ function ProductsManager() {
                 {/* Section 3: Pricing, Stock & Product Size */}
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Wholesale Price ($)
                     </span>
                     <input
@@ -2176,7 +2176,7 @@ function ProductsManager() {
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-600 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-emerald-600 mb-1">
                       Sale Price ($)
                     </span>
                     <input
@@ -2193,7 +2193,7 @@ function ProductsManager() {
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Qty Available (Stock)
                     </span>
                     <input
@@ -2207,7 +2207,7 @@ function ProductsManager() {
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Product Size (Shipping Tier)
                     </span>
                     <input
@@ -2232,7 +2232,7 @@ function ProductsManager() {
                 {/* Section 4: Details & Image */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Feature Details / Short Summary
                     </span>
                     <input
@@ -2245,7 +2245,7 @@ function ProductsManager() {
                   </label>
 
                   <div className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Image Link (URL or Upload)
                     </span>
                     <div className="flex gap-2">
@@ -2277,7 +2277,7 @@ function ProductsManager() {
                 {/* Section 5: SEO Keywords & Specs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       SEO Keywords
                     </span>
                     <input
@@ -2290,7 +2290,7 @@ function ProductsManager() {
                   </label>
 
                   <label className="block">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                       Specifications
                     </span>
                     <input
@@ -2305,7 +2305,7 @@ function ProductsManager() {
 
                 {/* Section 6: Product Description */}
                 <label className="block">
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  <span className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                     Product Description
                   </span>
                   <textarea
@@ -2321,13 +2321,13 @@ function ProductsManager() {
                 <div className="bg-amber-50/60 border border-amber-200/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl space-y-2.5 sm:space-y-3">
                   <div className="flex items-center gap-2">
                     <Star className="size-4 text-amber-500 fill-amber-500" />
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-900">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-amber-900">
                       5-Star Verified Customer Reviews
                     </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-amber-800 mb-1">
+                      <span className="block text-xs font-bold text-amber-800 mb-1">
                         5-Star Review 1
                       </span>
                       <textarea
@@ -2340,7 +2340,7 @@ function ProductsManager() {
                     </label>
 
                     <label className="block">
-                      <span className="block text-[10px] font-bold text-amber-800 mb-1">
+                      <span className="block text-xs font-bold text-amber-800 mb-1">
                         5-Star Review 2
                       </span>
                       <textarea
@@ -2445,7 +2445,7 @@ function ProductsManager() {
                   <h3 className="font-extrabold text-sm sm:text-base text-slate-900">
                     Delete {selectedIds.length} Products?
                   </h3>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs sm:text-xs text-slate-500 mt-0.5">
                     This will permanently remove the selected items from database & catalog.
                   </p>
                 </div>
@@ -2457,11 +2457,11 @@ function ProductsManager() {
                   .slice(0, 6)
                   .map((p) => (
                     <div key={p.id} className="font-semibold text-slate-700 truncate">
-                      • {p.name} <span className="text-[10px] text-slate-400">({p.sku})</span>
+                      • {p.name} <span className="text-xs text-slate-400">({p.sku})</span>
                     </div>
                   ))}
                 {selectedIds.length > 6 && (
-                  <div className="text-slate-400 font-bold pt-1 text-[11px]">
+                  <div className="text-slate-400 font-bold pt-1 text-xs">
                     ...and {selectedIds.length - 6} more items
                   </div>
                 )}
@@ -2520,7 +2520,7 @@ function ProductsManager() {
                     <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
                       Bulk Price Adjuster
                     </h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs sm:text-xs text-slate-500 mt-0.5">
                       Adjust pricing across catalog by percentage or fixed dollar amounts
                     </p>
                   </div>
@@ -2536,11 +2536,11 @@ function ProductsManager() {
               {/* Step 1: Target Scope */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                  <span className="block text-xs font-extrabold uppercase tracking-wider text-slate-500">
                     1. Target Scope
                   </span>
                   {isLoadingAllProducts && (
-                    <span className="text-[10px] text-indigo-600 font-bold flex items-center gap-1">
+                    <span className="text-xs text-indigo-600 font-bold flex items-center gap-1">
                       <Loader2 className="size-3 animate-spin" /> Loading all products...
                     </span>
                   )}
@@ -2568,7 +2568,7 @@ function ProductsManager() {
                         }`}
                       >
                         <div className="text-xs font-bold">{s.label}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">
+                        <div className="text-xs text-slate-400 mt-0.5">
                           {s.count.toLocaleString()} items
                         </div>
                       </button>
@@ -2579,7 +2579,7 @@ function ProductsManager() {
                 {/* Category Dropdown when Category scope is active */}
                 {adjustScope === "category" && (
                   <div className="pt-2">
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
                       Select Target Category:
                     </label>
                     <select
@@ -2608,7 +2608,7 @@ function ProductsManager() {
 
               {/* Step 2: Adjustment Mode */}
               <div className="space-y-2">
-                <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                <span className="block text-xs font-extrabold uppercase tracking-wider text-slate-500">
                   2. Adjustment Method
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -2632,7 +2632,7 @@ function ProductsManager() {
                       >
                         <div className="text-xs">{m.label}</div>
                         <div
-                          className={`text-[10px] ${active ? "text-indigo-100" : "text-slate-400"}`}
+                          className={`text-xs ${active ? "text-indigo-100" : "text-slate-400"}`}
                         >
                           {m.sub}
                         </div>
@@ -2644,7 +2644,7 @@ function ProductsManager() {
 
               {/* Step 3: Value Input & Presets */}
               <div className="space-y-2">
-                <span className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                <span className="block text-xs font-extrabold uppercase tracking-wider text-slate-500">
                   3. Enter{" "}
                   {adjustMode.startsWith("percent") ? "Percentage Value (%)" : "Dollar Amount ($)"}
                 </span>
@@ -2700,7 +2700,7 @@ function ProductsManager() {
                     <div className="text-xs font-bold text-slate-800">
                       Proportionally Adjust MSRP Retail Price
                     </div>
-                    <div className="text-[11px] text-slate-500">
+                    <div className="text-xs text-slate-500">
                       Applies the same percentage or fixed delta to manufacturer list price
                     </div>
                   </div>
@@ -2724,10 +2724,10 @@ function ProductsManager() {
                   return (
                     <div className="border border-indigo-100 bg-indigo-50/50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 space-y-2.5">
                       <div className="flex items-center justify-between flex-wrap gap-2">
-                        <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-indigo-900">
+                        <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-indigo-900">
                           Live Preview ({affectedProducts.length.toLocaleString()} items affected)
                         </span>
-                        <span className="text-[10px] text-slate-500 font-semibold">
+                        <span className="text-xs text-slate-500 font-semibold">
                           Showing {shownItems.length} of {filteredPreview.length.toLocaleString()}
                         </span>
                       </div>
@@ -2757,17 +2757,17 @@ function ProductsManager() {
                             >
                               <div className="truncate font-semibold text-slate-700 max-w-[240px]">
                                 {p.name}{" "}
-                                <span className="text-[10px] text-slate-400">({p.sku})</span>
+                                <span className="text-xs text-slate-400">({p.sku})</span>
                               </div>
                               <div className="text-left xs:text-right shrink-0">
-                                <span className="text-slate-400 text-[11px] mr-1.5 font-medium">
+                                <span className="text-slate-400 text-xs mr-1.5 font-medium">
                                   Cost: ${p.price.toFixed(2)}
                                 </span>
                                 <span className="font-extrabold text-emerald-700">
                                   Sale Price: ${newP.toFixed(2)}
                                 </span>
                                 <span
-                                  className={`ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${diff >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
+                                  className={`ml-1.5 text-xs font-bold px-1.5 py-0.5 rounded ${diff >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
                                 >
                                   {diff >= 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2)}
                                 </span>
@@ -2785,7 +2785,7 @@ function ProductsManager() {
                             onClick={() =>
                               setPreviewLimit((prev) => Math.min(prev + 50, filteredPreview.length))
                             }
-                            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-indigo-200 px-3 py-1 rounded-lg hover:bg-indigo-50 transition cursor-pointer"
+                            className="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-indigo-200 px-3 py-1 rounded-lg hover:bg-indigo-50 transition cursor-pointer"
                           >
                             Show 50 More (Remaining:{" "}
                             {(filteredPreview.length - previewLimit).toLocaleString()})

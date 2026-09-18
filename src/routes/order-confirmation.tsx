@@ -527,7 +527,7 @@ function ConfirmationPage() {
               {/* Order Reference Pill & Metadata */}
               <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
                 <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-700 shadow-inner">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Order ID
                   </span>
                   <span className="font-mono font-black text-slate-900 text-sm tracking-wide">
@@ -566,7 +566,7 @@ function ConfirmationPage() {
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-cyan-600 mb-0.5 block">
+                <span className="text-xs font-black uppercase tracking-widest text-cyan-600 mb-0.5 block">
                   Commercial Logistics Pipeline
                 </span>
                 <h2 className="text-xl font-black text-slate-900 tracking-tight">
@@ -582,7 +582,7 @@ function ConfirmationPage() {
                   <strong className="text-slate-900 font-extrabold">
                     {estDeliveryStart} – {estDeliveryEnd}
                   </strong>
-                  <span className="ml-1 text-[10px] font-bold text-cyan-700 bg-cyan-100/60 px-1.5 py-0.5 rounded">
+                  <span className="ml-1 text-xs font-bold text-cyan-700 bg-cyan-100/60 px-1.5 py-0.5 rounded">
                     4–7 Days
                   </span>
                 </span>
@@ -670,7 +670,7 @@ function ConfirmationPage() {
                             {step.title}
                           </span>
                           {step.active && (
-                            <span className="sm:hidden text-[9px] font-black text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-100">
+                            <span className="sm:hidden text-xs font-black text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-100">
                               Active
                             </span>
                           )}
@@ -681,7 +681,7 @@ function ConfirmationPage() {
                           {step.desc}
                         </p>
                         <span
-                          className={`text-[10px] font-black uppercase tracking-wider block pt-0.5 ${
+                          className={`text-xs font-black uppercase tracking-wider block pt-0.5 ${
                             step.active
                               ? "text-cyan-600"
                               : step.done
@@ -737,7 +737,7 @@ function ConfirmationPage() {
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                      <span className="text-[10px] font-black uppercase text-slate-400 block">
+                      <span className="text-xs font-black uppercase text-slate-400 block">
                         Freight Carrier
                       </span>
                       <strong className="text-slate-900 text-xs">
@@ -745,7 +745,7 @@ function ConfirmationPage() {
                       </strong>
                     </div>
                     <div>
-                      <span className="text-[10px] font-black uppercase text-slate-400 block">
+                      <span className="text-xs font-black uppercase text-slate-400 block">
                         PRO Tracking Reference
                       </span>
                       <span className="font-mono font-bold text-cyan-700 text-xs">
@@ -753,7 +753,7 @@ function ConfirmationPage() {
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-black uppercase text-slate-400 block">
+                      <span className="text-xs font-black uppercase text-slate-400 block">
                         Delivery Appointment
                       </span>
                       <span className="text-slate-700 text-xs font-semibold">
@@ -807,7 +807,7 @@ function ConfirmationPage() {
                             (e.currentTarget as HTMLImageElement).src = getProductImage("");
                           }}
                         />
-                        <span className="absolute -top-1 -right-1 size-5.5 rounded-full bg-slate-900 text-white text-[11px] font-black grid place-items-center shadow-sm border border-white">
+                        <span className="absolute -top-1 -right-1 size-5.5 rounded-full bg-slate-900 text-white text-xs font-black grid place-items-center shadow-sm border border-white">
                           {item.qty}
                         </span>
                       </div>
@@ -815,10 +815,10 @@ function ConfirmationPage() {
                       {/* Product Metadata */}
                       <div className="flex-1 min-w-0 space-y-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-100">
+                          <span className="text-xs font-black uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-100">
                             {item.brand || "Commercial Grade"}
                           </span>
-                          <span className="text-[10px] font-mono text-slate-400">
+                          <span className="text-xs font-mono text-slate-400">
                             SKU: {item.id ? item.id.replace("p-", "").toUpperCase() : "PSW-OEM"}
                           </span>
                         </div>
@@ -844,7 +844,7 @@ function ConfirmationPage() {
                         <div className="text-base font-black text-slate-900 font-mono tracking-tight">
                           {formatUSD(item.price * (item.qty || 1))}
                         </div>
-                        <span className="text-[10px] font-bold text-emerald-600 block mt-0.5">
+                        <span className="text-xs font-bold text-emerald-600 block mt-0.5">
                           Allocated
                         </span>
                       </div>
@@ -879,7 +879,7 @@ function ConfirmationPage() {
                     <Building2 className="size-5" />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">
                       Primary Dispatch Facility
                     </h4>
                     <p className="text-sm font-black text-slate-900 tracking-tight">
@@ -910,7 +910,7 @@ function ConfirmationPage() {
                     <HelpCircle className="size-5" />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-cyan-400">
+                    <h4 className="text-xs font-black uppercase tracking-widest text-cyan-400">
                       Logistics Hotline
                     </h4>
                     <p className="text-sm font-bold text-white tracking-tight">
@@ -955,7 +955,7 @@ function ConfirmationPage() {
                     </div>
                     Financial Breakdown
                   </h3>
-                  <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                  <span className="text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
                     {order.paymentStatus ? "Paid in Full" : "Authorized"}
                   </span>
                 </div>
@@ -978,7 +978,7 @@ function ConfirmationPage() {
                   <div className="flex items-center justify-between text-slate-600">
                     <div className="flex items-center gap-1.5">
                       <span>LTL Freight & Liftgate</span>
-                      <span className="text-[9px] bg-emerald-50 border border-emerald-200 text-emerald-700 px-1.5 py-0.2 rounded font-bold uppercase">
+                      <span className="text-xs bg-emerald-50 border border-emerald-200 text-emerald-700 px-1.5 py-0.2 rounded font-bold uppercase">
                         Free Freight
                       </span>
                     </div>
@@ -990,7 +990,7 @@ function ConfirmationPage() {
                   <div className="flex items-center justify-between text-slate-600">
                     <div className="flex items-center gap-1.5">
                       <span>Commercial Sales Tax</span>
-                      <span className="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.2 rounded font-semibold">
+                      <span className="text-xs bg-slate-100 text-slate-500 px-1.5 py-0.2 rounded font-semibold">
                         9.25%
                       </span>
                     </div>
@@ -1004,7 +1004,7 @@ function ConfirmationPage() {
                       <span className="text-sm font-black text-slate-900 block tracking-tight">
                         Total Amount Paid
                       </span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
                         USD / Cleared
                       </span>
                     </div>
@@ -1038,7 +1038,7 @@ function ConfirmationPage() {
                     </div>
                     Delivery Destination
                   </h3>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                     Commercial
                   </span>
                 </div>

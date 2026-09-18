@@ -1165,7 +1165,7 @@ function AccountPage() {
                       {isUploadingAvatar ? (
                         <div className="size-full flex flex-col items-center justify-center gap-1 bg-[#061220]/90">
                           <Loader2 className="size-6 text-cyan-400 animate-spin" />
-                          <span className="text-[8.5px] font-bold text-cyan-300 uppercase">
+                          <span className="text-xs font-bold text-cyan-300 uppercase">
                             Saving
                           </span>
                         </div>
@@ -1211,7 +1211,7 @@ function AccountPage() {
                   <p className="text-xs text-slate-300 font-medium">
                     {user.email || user.phone} {profile.company ? `· ${profile.company}` : ""}
                   </p>
-                  <p className="text-[11px] text-slate-400 flex items-center gap-1.5 pt-0.5">
+                  <p className="text-xs text-slate-400 flex items-center gap-1.5 pt-0.5">
                     <ShieldCheck className="size-3.5 text-cyan-400" />
                     <span>Tier-1 Wholesale Pricing Active · Multi-Hub Freight Enabled</span>
                   </p>
@@ -1221,7 +1221,7 @@ function AccountPage() {
               {/* Quick HUD Metrics */}
               <div className="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:items-center gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0">
                 <div className="p-3 px-3.5 sm:px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
                     Total Orders
                   </div>
                   <div className="text-base sm:text-lg font-black text-white mt-0.5">
@@ -1230,7 +1230,7 @@ function AccountPage() {
                 </div>
 
                 <div className="p-3 px-3.5 sm:px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">
+                  <div className="text-xs font-bold uppercase tracking-wider text-cyan-400">
                     Lifetime Volume
                   </div>
                   <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 truncate">
@@ -1239,7 +1239,7 @@ function AccountPage() {
                 </div>
 
                 <div className="p-3 px-3.5 sm:px-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                  <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
                     Active Quotes
                   </div>
                   <div className="text-base sm:text-lg font-black text-emerald-300 mt-0.5">
@@ -1275,7 +1275,7 @@ function AccountPage() {
                   {activeTab.startsWith("settings") && <Settings className="size-4" />}
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
                     Current Section
                   </div>
                   <div className="text-xs font-extrabold text-slate-900 truncate capitalize">
@@ -1362,7 +1362,7 @@ function AccountPage() {
                     <span>{item.label}</span>
                     {item.count !== undefined && item.count > 0 && (
                       <span
-                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                        className={`text-xs px-1.5 py-0.2 rounded-full font-black ${
                           isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
                         }`}
                       >
@@ -1382,7 +1382,7 @@ function AccountPage() {
               <div className="bg-white border border-slate-200/90 rounded-3xl p-5 shadow-2xs space-y-6">
                 {/* 1. Overview */}
                 <div className="space-y-1">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-3 py-1">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400 px-3 py-1">
                     Overview
                   </div>
                   <button
@@ -1403,7 +1403,7 @@ function AccountPage() {
 
                 {/* 2. Purchases */}
                 <div className="space-y-1">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-3 py-1">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400 px-3 py-1">
                     Purchases
                   </div>
                   <button
@@ -1418,7 +1418,7 @@ function AccountPage() {
                       <Package className="size-4" />
                       <span>Purchase History</span>
                     </div>
-                    <span className="text-[11px] opacity-75">{orders.length}</span>
+                    <span className="text-xs opacity-75">{orders.length}</span>
                   </button>
 
                   <button
@@ -1433,7 +1433,7 @@ function AccountPage() {
                       <RotateCcw className="size-4" />
                       <span>Returns</span>
                     </div>
-                    <span className="text-[11px] opacity-75">{returns.length}</span>
+                    <span className="text-xs opacity-75">{returns.length}</span>
                   </button>
 
                   <button
@@ -1448,7 +1448,7 @@ function AccountPage() {
                       <Repeat className="size-4" />
                       <span>Reorder Items</span>
                     </div>
-                    <span className="text-[11px] opacity-75">{allOrderedItems.length}</span>
+                    <span className="text-xs opacity-75">{allOrderedItems.length}</span>
                   </button>
 
                   <button
@@ -1463,13 +1463,13 @@ function AccountPage() {
                       <FileText className="size-4" />
                       <span>Quotes</span>
                     </div>
-                    <span className="text-[11px] opacity-75">{quotes.length}</span>
+                    <span className="text-xs opacity-75">{quotes.length}</span>
                   </button>
                 </div>
 
                 {/* 3. Wishlist */}
                 <div className="space-y-1">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-3 py-1">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400 px-3 py-1">
                     Wishlist
                   </div>
                   <button
@@ -1484,7 +1484,7 @@ function AccountPage() {
                       <ListPlus className="size-4" />
                       <span>All My Lists</span>
                     </div>
-                    <span className="text-[11px] opacity-75">
+                    <span className="text-xs opacity-75">
                       {Object.keys(profile.wishlists || {}).length}
                     </span>
                   </button>
@@ -1501,13 +1501,13 @@ function AccountPage() {
                       <Heart className="size-4" />
                       <span>My List</span>
                     </div>
-                    <span className="text-[11px] opacity-75">{activeWishlistItems.length}</span>
+                    <span className="text-xs opacity-75">{activeWishlistItems.length}</span>
                   </button>
                 </div>
 
                 {/* 4. Billing */}
                 <div className="space-y-1">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-3 py-1">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400 px-3 py-1">
                     Billing
                   </div>
                   <button
@@ -1522,7 +1522,7 @@ function AccountPage() {
                       <Receipt className="size-4" />
                       <span>Invoices</span>
                     </div>
-                    <span className="text-[11px] opacity-75">{orders.length}</span>
+                    <span className="text-xs opacity-75">{orders.length}</span>
                   </button>
 
                   <button
@@ -1556,7 +1556,7 @@ function AccountPage() {
 
                 {/* 5. Settings */}
                 <div className="space-y-1">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-3 py-1">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400 px-3 py-1">
                     Settings
                   </div>
                   <button
@@ -1599,7 +1599,7 @@ function AccountPage() {
                       <MapPin className="size-4" />
                       <span>Address Book</span>
                     </div>
-                    <span className="text-[11px] opacity-75">
+                    <span className="text-xs opacity-75">
                       {(profile.addresses || []).length}
                     </span>
                   </button>
@@ -1616,7 +1616,7 @@ function AccountPage() {
                       <CreditCard className="size-4" />
                       <span>Credit Cards</span>
                     </div>
-                    <span className="text-[11px] opacity-75">{(profile.cards || []).length}</span>
+                    <span className="text-xs opacity-75">{(profile.cards || []).length}</span>
                   </button>
 
                   <button
@@ -1672,7 +1672,7 @@ function AccountPage() {
                                 <span className="font-mono font-black text-sm text-slate-900">
                                   #{order.id}
                                 </span>
-                                <span className="text-[11px] font-bold text-slate-400">
+                                <span className="text-xs font-bold text-slate-400">
                                   ·{" "}
                                   {new Date(order.placedAt).toLocaleDateString("en-US", {
                                     month: "short",
@@ -1681,7 +1681,7 @@ function AccountPage() {
                                   })}
                                 </span>
                                 <span
-                                  className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
+                                  className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${
                                     order.status === "Delivered"
                                       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                       : order.status === "Shipped"
@@ -1733,7 +1733,7 @@ function AccountPage() {
                                       <div className="font-extrabold text-xs text-slate-900 truncate">
                                         {it.name}
                                       </div>
-                                      <div className="text-[10px] text-slate-400 font-semibold">
+                                      <div className="text-xs text-slate-400 font-semibold">
                                         Qty: {it.qty} · {formatUSD(it.price)}
                                       </div>
                                     </div>
@@ -1768,7 +1768,7 @@ function AccountPage() {
                           <h3 className="text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
                             <RotateCcw className="size-4.5 text-cyan-600" />
                             <span>Active Returns & RMA Claims</span>
-                            <span className="text-[10px] font-extrabold text-cyan-800 bg-cyan-100 px-2 py-0.5 rounded-full">
+                            <span className="text-xs font-extrabold text-cyan-800 bg-cyan-100 px-2 py-0.5 rounded-full">
                               {returns.length}
                             </span>
                           </h3>
@@ -1802,7 +1802,7 @@ function AccountPage() {
                                     <span>·</span>
                                     <span>Order #{ret.orderId}</span>
                                   </div>
-                                  <div className="text-[11px] text-slate-500 mt-0.5">
+                                  <div className="text-xs text-slate-500 mt-0.5">
                                     {ret.reason} · Requested:{" "}
                                     {ret.preferredResolution || "Replacement"}
                                   </div>
@@ -1811,11 +1811,11 @@ function AccountPage() {
 
                               <div className="flex items-center gap-2">
                                 {isResolved ? (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
                                     Resolved
                                   </span>
                                 ) : (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
                                     {ret.status || "Under Review"}
                                   </span>
                                 )}
@@ -1835,7 +1835,7 @@ function AccountPage() {
                           <h3 className="text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
                             <FileText className="size-4.5 text-blue-600" />
                             <span>Active Commercial Quotes & Proposals</span>
-                            <span className="text-[10px] font-extrabold text-blue-900 bg-blue-100 px-2 py-0.5 rounded-full">
+                            <span className="text-xs font-extrabold text-blue-900 bg-blue-100 px-2 py-0.5 rounded-full">
                               {quotes.length}
                             </span>
                           </h3>
@@ -1872,7 +1872,7 @@ function AccountPage() {
                                     <span>{q.projectName}</span>
                                     <span className="font-mono text-slate-400">#{q.quoteId}</span>
                                   </div>
-                                  <div className="text-[11px] text-slate-500 mt-0.5">
+                                  <div className="text-xs text-slate-500 mt-0.5">
                                     Target: {q.targetCompletionDate || "30 Days"} · Quoted:{" "}
                                     <strong className="text-slate-900">
                                       {formatUSD(
@@ -1885,17 +1885,17 @@ function AccountPage() {
 
                               <div className="flex items-center gap-2">
                                 {isResolved ? (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
                                     {q.status || "Resolved"}
                                   </span>
                                 ) : (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200">
                                     {q.status || "Engineering Review"}
                                   </span>
                                 )}
                                 <button
                                   onClick={() => printQuote(q)}
-                                  className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 text-[10px] font-extrabold hover:bg-slate-50 transition cursor-pointer"
+                                  className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-extrabold hover:bg-slate-50 transition cursor-pointer"
                                 >
                                   Print
                                 </button>
@@ -1953,7 +1953,7 @@ function AccountPage() {
                               >
                                 {prod.name}
                               </Link>
-                              <div className="text-[11px] text-slate-400">
+                              <div className="text-xs text-slate-400">
                                 {prod.brand} · {formatUSD(prod.price)}
                               </div>
                             </div>
@@ -2014,7 +2014,7 @@ function AccountPage() {
                           <div className="p-3.5 sm:p-4 sm:px-5 bg-slate-50/80 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                             <div className="grid grid-cols-3 sm:flex sm:items-center gap-3 sm:gap-6 text-xs">
                               <div>
-                                <div className="text-[9.5px] sm:text-[10px] uppercase font-bold text-slate-400">
+                                <div className="text-xs sm:text-xs uppercase font-bold text-slate-400">
                                   Order ID
                                 </div>
                                 <div className="font-mono font-black text-xs sm:text-sm text-slate-900 truncate">
@@ -2022,10 +2022,10 @@ function AccountPage() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-[9.5px] sm:text-[10px] uppercase font-bold text-slate-400">
+                                <div className="text-xs sm:text-xs uppercase font-bold text-slate-400">
                                   Date Placed
                                 </div>
-                                <div className="font-bold text-slate-700 text-[11px] sm:text-xs">
+                                <div className="font-bold text-slate-700 text-xs sm:text-xs">
                                   {new Date(order.placedAt).toLocaleDateString("en-US", {
                                     month: "short",
                                     day: "numeric",
@@ -2034,7 +2034,7 @@ function AccountPage() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-[9.5px] sm:text-[10px] uppercase font-bold text-slate-400">
+                                <div className="text-xs sm:text-xs uppercase font-bold text-slate-400">
                                   Total
                                 </div>
                                 <div className="font-black text-xs sm:text-sm text-slate-900">
@@ -2045,7 +2045,7 @@ function AccountPage() {
 
                             <div className="flex items-center gap-2 flex-wrap pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
                               <span
-                                className={`text-[9.5px] sm:text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${
+                                className={`text-xs sm:text-xs font-extrabold px-2.5 py-1 rounded-full border ${
                                   order.status === "Delivered"
                                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                     : order.status === "Shipped"
@@ -2118,8 +2118,8 @@ function AccountPage() {
                                       >
                                         {it.name}
                                       </Link>
-                                      <div className="text-[10px] sm:text-[11px] text-slate-500 flex items-center gap-2 flex-wrap">
-                                        <span className="font-bold text-slate-700 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded text-[9.5px] sm:text-[10px] uppercase">
+                                      <div className="text-xs sm:text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+                                        <span className="font-bold text-slate-700 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded text-xs sm:text-xs uppercase">
                                           {it.brand || "PSW"}
                                         </span>
                                         <span>
@@ -2136,7 +2136,7 @@ function AccountPage() {
                                       <div className="font-black text-xs sm:text-sm text-slate-900">
                                         {formatUSD((it.price || 0) * (it.qty || 1))}
                                       </div>
-                                      <span className="text-[9.5px] sm:text-[10px] font-bold text-emerald-600">
+                                      <span className="text-xs sm:text-xs font-bold text-emerald-600">
                                         In Stock
                                       </span>
                                     </div>
@@ -2209,12 +2209,12 @@ function AccountPage() {
                               </div>
                               <div className="flex items-center gap-2">
                                 {isResolved ? (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
                                     <Check className="size-3" />
                                     <span>Resolved</span>
                                   </span>
                                 ) : (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
                                     <Clock className="size-3" />
                                     <span>{ret.status || "Under Review"}</span>
                                   </span>
@@ -2251,7 +2251,7 @@ function AccountPage() {
                               </div>
                             )}
 
-                            <div className="text-[11px] text-slate-400 pt-1 border-t border-slate-200/60 flex justify-between items-center">
+                            <div className="text-xs text-slate-400 pt-1 border-t border-slate-200/60 flex justify-between items-center">
                               <span>Submitted {new Date(ret.createdAt).toLocaleDateString()}</span>
                               <span className="font-medium text-slate-600">
                                 RMA Status: {ret.status}
@@ -2312,7 +2312,7 @@ function AccountPage() {
                             >
                               {prod.name}
                             </Link>
-                            <div className="text-[11px] text-slate-400">
+                            <div className="text-xs text-slate-400">
                               {prod.brand} · In Stock
                             </div>
                             <div className="text-sm font-black text-cyan-700">
@@ -2379,7 +2379,7 @@ function AccountPage() {
                                     {q.projectName}
                                   </span>
                                 </div>
-                                <div className="text-[11px] text-slate-400 mt-0.5">
+                                <div className="text-xs text-slate-400 mt-0.5">
                                   Submitted {new Date(q.createdAt).toLocaleDateString()} · Target:{" "}
                                   {q.targetCompletionDate || "30 Days"}
                                   {q.projectLocation && ` · Location: ${q.projectLocation}`}
@@ -2394,7 +2394,7 @@ function AccountPage() {
                                     )}
                                   </div>
                                   <span
-                                    className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                                    className={`text-xs font-extrabold px-2 py-0.5 rounded-full border ${
                                       isResolved
                                         ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                                         : "bg-cyan-50 text-cyan-800 border-cyan-200"
@@ -2433,7 +2433,7 @@ function AccountPage() {
                                   {q.adminProposalNotes}
                                 </div>
                                 {q.adminLeadTime && (
-                                  <div className="text-[11px] text-blue-800 pt-1">
+                                  <div className="text-xs text-blue-800 pt-1">
                                     <strong>Lead Time:</strong> {q.adminLeadTime}{" "}
                                     {q.adminFreightTerms && `· Freight: ${q.adminFreightTerms}`}
                                   </div>
@@ -2500,7 +2500,7 @@ function AccountPage() {
                           <div className="text-xs text-slate-500 font-medium">
                             {(profile.wishlists?.[listName] || []).length} Saved Items
                           </div>
-                          <div className="text-[11px] font-bold text-cyan-700 pt-1 flex items-center gap-1">
+                          <div className="text-xs font-bold text-cyan-700 pt-1 flex items-center gap-1">
                             <span>Open List</span>
                             <ArrowRight className="size-3" />
                           </div>
@@ -2570,7 +2570,7 @@ function AccountPage() {
                             >
                               {prod.name}
                             </Link>
-                            <div className="text-[11px] text-slate-400">
+                            <div className="text-xs text-slate-400">
                               {prod.brand} · In Stock
                             </div>
                             <div className="text-sm font-black text-cyan-700">
@@ -2664,7 +2664,7 @@ function AccountPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead>
-                        <tr className="border-b border-slate-100 text-slate-400 font-black uppercase text-[10px]">
+                        <tr className="border-b border-slate-100 text-slate-400 font-black uppercase text-xs">
                           <th className="pb-3">Transaction Date</th>
                           <th className="pb-3">Reference</th>
                           <th className="pb-3">Payment Method</th>
@@ -2684,7 +2684,7 @@ function AccountPage() {
                               {formatUSD(o.total)}
                             </td>
                             <td className="py-3 text-center">
-                              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <span className="text-xs font-extrabold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 Settled
                               </span>
                             </td>
@@ -2713,7 +2713,7 @@ function AccountPage() {
 
                   {/* ── Period Filter Chips ── */}
                   <div className="space-y-3">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
                       Statement Period
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -2746,7 +2746,7 @@ function AccountPage() {
                     {statementPeriod === "custom" && (
                       <div className="flex flex-wrap items-center gap-3 pt-1">
                         <div className="flex items-center gap-2">
-                          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">
                             From
                           </label>
                           <input
@@ -2757,7 +2757,7 @@ function AccountPage() {
                           />
                         </div>
                         <div className="flex items-center gap-2">
-                          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">
                             To
                           </label>
                           <input
@@ -2774,7 +2774,7 @@ function AccountPage() {
                   {/* ── Summary Preview Bar ── */}
                   <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 xs:gap-4 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100">
                     <div className="text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                         Orders
                       </div>
                       <div className="text-base sm:text-lg font-black text-slate-900">
@@ -2782,7 +2782,7 @@ function AccountPage() {
                       </div>
                     </div>
                     <div className="text-center xs:border-x border-y xs:border-y-0 py-2.5 xs:py-0 border-slate-200">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                         Total Spent
                       </div>
                       <div className="text-base sm:text-lg font-black text-cyan-700">
@@ -2790,7 +2790,7 @@ function AccountPage() {
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                         Avg Order
                       </div>
                       <div className="text-base sm:text-lg font-black text-slate-900">
@@ -2806,19 +2806,19 @@ function AccountPage() {
                     <table className="w-full text-left text-xs text-slate-700">
                       <thead>
                         <tr className="bg-slate-50 border-b border-slate-200">
-                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-[10px]">
+                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-xs">
                             Date
                           </th>
-                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-[10px]">
+                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-xs">
                             Order #
                           </th>
-                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-[10px]">
+                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-xs">
                             Items
                           </th>
-                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-[10px] text-right">
+                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-xs text-right">
                             Amount
                           </th>
-                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-[10px] text-center">
+                          <th className="px-4 py-3 font-bold text-slate-500 uppercase tracking-wide text-xs text-center">
                             Status
                           </th>
                         </tr>
@@ -2854,7 +2854,7 @@ function AccountPage() {
                                 {formatUSD(o.total)}
                               </td>
                               <td className="px-4 py-3 text-center">
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                   {o.status || "Paid"}
                                 </span>
                               </td>
@@ -2962,7 +2962,7 @@ function AccountPage() {
                         {/* From / Bill To grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 py-8 border-b border-slate-200">
                           <div className="space-y-0.5 text-sm leading-relaxed">
-                            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
                               From
                             </div>
                             <div className="font-bold text-black text-base">
@@ -2977,7 +2977,7 @@ function AccountPage() {
                             <div className="text-slate-600">sales@poolsupplywholesalers.com</div>
                           </div>
                           <div className="space-y-0.5 text-sm leading-relaxed">
-                            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
                               Prepared For
                             </div>
                             <div className="font-bold text-black text-base">{user?.name}</div>
@@ -2991,7 +2991,7 @@ function AccountPage() {
                         {/* Summary boxes */}
                         <div className="grid grid-cols-3 gap-4 py-6 border-b border-slate-200">
                           <div className="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-center">
-                            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">
+                            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">
                               Total Orders
                             </div>
                             <div className="text-2xl font-black text-slate-900">
@@ -2999,7 +2999,7 @@ function AccountPage() {
                             </div>
                           </div>
                           <div className="rounded-xl bg-blue-50 border border-blue-100 px-4 py-3 text-center">
-                            <div className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-1">
+                            <div className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-1">
                               Total Spent
                             </div>
                             <div className="text-2xl font-black text-blue-800">
@@ -3007,7 +3007,7 @@ function AccountPage() {
                             </div>
                           </div>
                           <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-3 text-center">
-                            <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-500 mb-1">
+                            <div className="text-xs font-bold uppercase tracking-widest text-emerald-500 mb-1">
                               Avg Order
                             </div>
                             <div className="text-2xl font-black text-emerald-800">
@@ -3020,7 +3020,7 @@ function AccountPage() {
 
                         {/* Orders table */}
                         <div className="pt-6">
-                          <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">
+                          <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
                             Order Detail
                           </div>
                           <table className="w-full text-left text-sm text-black border-collapse">
@@ -3084,7 +3084,7 @@ function AccountPage() {
                         </div>
 
                         {/* Footer */}
-                        <div className="mt-10 pt-6 border-t border-slate-200 flex justify-between items-end text-[10px] text-slate-400">
+                        <div className="mt-10 pt-6 border-t border-slate-200 flex justify-between items-end text-xs text-slate-400">
                           <div>
                             <div className="font-bold text-slate-600">Pool Supply Wholesalers</div>
                             <div>sales@poolsupplywholesalers.com · (615) 477-0407</div>
@@ -3179,7 +3179,7 @@ function AccountPage() {
 
                   <form onSubmit={handleSaveProfile} className="space-y-4 max-w-xl">
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                         Full Name / Principal
                       </label>
                       <input
@@ -3193,7 +3193,7 @@ function AccountPage() {
 
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                           Company / Business Name
                         </label>
                         <input
@@ -3208,7 +3208,7 @@ function AccountPage() {
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                           Contractor / Trade ID
                         </label>
                         <input
@@ -3225,7 +3225,7 @@ function AccountPage() {
 
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                           Email Address
                         </label>
                         <input
@@ -3239,7 +3239,7 @@ function AccountPage() {
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                           Mobile / Phone Number
                         </label>
                         <input
@@ -3309,7 +3309,7 @@ function AccountPage() {
                       <div key={item.key} className="py-4 flex items-center justify-between gap-4">
                         <div className="space-y-0.5">
                           <div className="font-extrabold text-xs text-slate-900">{item.title}</div>
-                          <p className="text-[11px] text-slate-400">{item.desc}</p>
+                          <p className="text-xs text-slate-400">{item.desc}</p>
                         </div>
                         <button
                           onClick={() => handleToggleEmailPref(item.key)}
@@ -3363,7 +3363,7 @@ function AccountPage() {
                                 {addr.title}
                               </span>
                               {addr.isDefault && (
-                                <span className="text-[10px] font-bold text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded-md border border-cyan-200">
+                                <span className="text-xs font-bold text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded-md border border-cyan-200">
                                   Default
                                 </span>
                               )}
@@ -3438,7 +3438,7 @@ function AccountPage() {
                               {card.brand}
                             </span>
                             {card.isDefault && (
-                              <span className="text-[10px] font-bold text-white bg-white/10 px-2 py-0.5 rounded-md border border-white/20">
+                              <span className="text-xs font-bold text-white bg-white/10 px-2 py-0.5 rounded-md border border-white/20">
                                 Default
                               </span>
                             )}
@@ -3448,7 +3448,7 @@ function AccountPage() {
                             <div className="font-mono text-base font-black tracking-wider">
                               •••• •••• •••• {card.last4}
                             </div>
-                            <div className="text-[11px] text-slate-300 flex items-center justify-between pt-1">
+                            <div className="text-xs text-slate-300 flex items-center justify-between pt-1">
                               <span>{card.cardholderName}</span>
                               <span>
                                 Exp: {card.expMonth}/{card.expYear}
@@ -3495,7 +3495,7 @@ function AccountPage() {
 
                   <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                         Current Password
                       </label>
                       <input
@@ -3510,7 +3510,7 @@ function AccountPage() {
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                         New Password (Min 6 Characters)
                       </label>
                       <input
@@ -3525,7 +3525,7 @@ function AccountPage() {
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                         Confirm New Password
                       </label>
                       <input
@@ -4027,7 +4027,7 @@ function AccountPage() {
                     <RotateCcw className="size-4 text-cyan-600" />
                     <span>Submit Return (RMA) Request</span>
                   </h3>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400">
+                  <p className="text-xs sm:text-xs text-slate-400">
                     Our commercial RMA desk will process replacement or credit within 24 hours
                   </p>
                 </div>

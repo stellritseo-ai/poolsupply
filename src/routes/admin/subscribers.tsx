@@ -218,7 +218,7 @@ function SubscribersList() {
                     </button>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                  <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
                     <span>
                       {new Date(sub.createdAt).toLocaleDateString("en-US", {
                         month: "short",
@@ -226,7 +226,7 @@ function SubscribersList() {
                         year: "numeric",
                       })}
                     </span>
-                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2 py-0.5 rounded-full text-[9px] font-extrabold">
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2 py-0.5 rounded-full text-xs font-extrabold">
                       <CheckCircle className="size-2.5 text-emerald-600" />
                       Active Lead
                     </span>
@@ -239,7 +239,7 @@ function SubscribersList() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-black uppercase tracking-wider text-slate-400">
                     <th className="p-4 sm:px-6">Email Address</th>
                     <th className="p-4 sm:px-6">Subscription Date</th>
                     <th className="p-4 sm:px-6 text-center">Lead Status</th>
@@ -271,7 +271,7 @@ function SubscribersList() {
                       </td>
 
                       <td className="p-4 sm:px-6 text-center">
-                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2.5 py-1 rounded-full text-[10px] font-extrabold">
+                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2.5 py-1 rounded-full text-xs font-extrabold">
                           <CheckCircle className="size-3 text-emerald-600" />
                           Active Subscriber
                         </span>

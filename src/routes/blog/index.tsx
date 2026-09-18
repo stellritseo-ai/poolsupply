@@ -250,21 +250,21 @@ function ArticleCard({ article, index }: { article: BlogArticle; index: number }
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 
         {/* Category Badge */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-white/20 backdrop-blur-md text-white text-[10px] font-extrabold uppercase tracking-wider">
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-white/20 backdrop-blur-md text-white text-xs font-extrabold uppercase tracking-wider">
           <CategoryIcon className="size-3 text-cyan-300" />
           <span>{article.categoryLabel}</span>
         </div>
 
         {/* Highlight Tag */}
         {article.highlight && (
-          <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm">
+          <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-sm">
             {article.highlight}
           </div>
         )}
 
         {/* Date and Read Time in preview */}
         <div className="absolute bottom-0 left-0 right-0 p-3.5">
-          <div className="flex items-center gap-2 text-[10px] font-bold text-white/90 drop-shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-white/90 drop-shadow-sm">
             <Clock className="size-3 text-cyan-300" />
             <span>{article.readTime}</span>
             <span className="mx-1 opacity-50">·</span>
@@ -296,7 +296,7 @@ function ArticleCard({ article, index }: { article: BlogArticle; index: number }
           {article.tags.slice(0, 2).map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold text-slate-500 bg-slate-100 border border-slate-200"
             >
               <Tag className="size-2.5 text-slate-400" />
               {tag}
@@ -306,14 +306,14 @@ function ArticleCard({ article, index }: { article: BlogArticle; index: number }
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
             <User className="size-3 text-cyan-600" />
             <span>{article.author}</span>
           </div>
           <Link
             to="/blog/$slug"
             params={{ slug: article.slug }}
-            className="text-[11px] font-extrabold text-cyan-700 hover:text-cyan-800 flex items-center gap-1.5 group-hover:gap-2 transition-all"
+            className="text-xs font-extrabold text-cyan-700 hover:text-cyan-800 flex items-center gap-1.5 group-hover:gap-2 transition-all"
           >
             Read Guide <ArrowRight className="size-3.5 transition-transform" />
           </Link>
@@ -352,19 +352,19 @@ function FeaturedCard({ article }: { article: BlogArticle }) {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 
           {/* Featured badge */}
-          <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-[11px] font-black uppercase tracking-wider shadow-md">
+          <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-black uppercase tracking-wider shadow-md">
             <Star className="size-3.5 fill-white" />
             Featured Article
           </div>
 
           {/* Category */}
-          <div className="absolute bottom-4 left-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-white/20 backdrop-blur-md text-white text-[10px] font-extrabold uppercase tracking-wider">
+          <div className="absolute bottom-4 left-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-white/20 backdrop-blur-md text-white text-xs font-extrabold uppercase tracking-wider">
             <CategoryIcon className="size-3 text-cyan-300" />
             <span>{article.categoryLabel}</span>
           </div>
 
           {/* Read time top right */}
-          <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-black/60 border border-white/20 backdrop-blur-md text-[10px] font-bold text-white/90">
+          <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-black/60 border border-white/20 backdrop-blur-md text-xs font-bold text-white/90">
             {article.readTime}
           </div>
         </Link>
@@ -372,7 +372,7 @@ function FeaturedCard({ article }: { article: BlogArticle }) {
         {/* Content Side */}
         <div className="p-7 sm:p-8 flex flex-col justify-between">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-700 text-[11px] font-extrabold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-700 text-xs font-extrabold uppercase tracking-wider">
               <TrendingUp className="size-3.5" />
               Most Popular This Month
             </div>
@@ -388,7 +388,7 @@ function FeaturedCard({ article }: { article: BlogArticle }) {
               {article.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200"
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold text-slate-500 bg-slate-100 border border-slate-200"
                 >
                   <Tag className="size-2.5 text-slate-400" />
                   {tag}
@@ -539,7 +539,7 @@ function BlogPage() {
                     >
                       <Icon className="size-5 text-cyan-600 mx-auto" />
                       <div className="text-xl font-black text-slate-900">{stat.value}</div>
-                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                         {stat.label}
                       </div>
                     </motion.div>
@@ -712,7 +712,7 @@ function BlogPage() {
                       <button
                         key={topic}
                         onClick={() => setSearchQuery(topic)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-bold text-slate-600 bg-slate-50 border border-slate-200 hover:border-cyan-400 hover:text-cyan-700 hover:bg-cyan-50/50 transition-all cursor-pointer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200 hover:border-cyan-400 hover:text-cyan-700 hover:bg-cyan-50/50 transition-all cursor-pointer"
                       >
                         <Tag className="size-2.5 text-cyan-600" />
                         {topic}
@@ -747,7 +747,7 @@ function BlogPage() {
                             {cat.label}
                           </span>
                           <span
-                            className={`size-5 rounded-full text-[10px] font-black flex items-center justify-center transition-colors ${
+                            className={`size-5 rounded-full text-xs font-black flex items-center justify-center transition-colors ${
                               isSelected
                                 ? "bg-cyan-600 text-white"
                                 : "bg-slate-100 text-slate-500 group-hover:bg-cyan-100 group-hover:text-cyan-700"

@@ -78,7 +78,7 @@ export function CartDrawer() {
                         />
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold flex items-center gap-1.5 flex-wrap">
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground font-semibold flex items-center gap-1.5 flex-wrap">
                           <span>{it.brand}</span>
                         </div>
                         <Link
@@ -135,7 +135,7 @@ export function CartDrawer() {
                 <Row label="Sales Tax (9.25%)" value={formatUSD(tax)} muted />
                 <div className="h-px bg-border my-1" />
                 <Row label="Estimated Total" value={formatUSD(subtotal + tax)} bold />
-                <p className="text-[11px] text-muted-foreground text-center">
+                <p className="text-xs text-muted-foreground text-center">
                   Shipping & delivery options calculated at checkout
                 </p>
                 <Link

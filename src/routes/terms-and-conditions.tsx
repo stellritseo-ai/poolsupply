@@ -226,7 +226,7 @@ const SECTIONS = [
             <Clock className="size-4 text-cyan-600" />
             <span>Regularly audited for regulatory and commercial trade compliance</span>
           </div>
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest hidden sm:inline">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-widest hidden sm:inline">
             Version 2026.1
           </span>
         </div>
@@ -413,7 +413,7 @@ function TermsAndConditionsPage() {
                         className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-cyan-700 hover:bg-cyan-50/60 transition-all group"
                       >
                         <span className="flex items-center gap-2.5 truncate">
-                          <span className="text-[11px] font-mono font-bold text-cyan-600">
+                          <span className="text-xs font-mono font-bold text-cyan-600">
                             {s.num}.
                           </span>
                           <span className="truncate">{s.title}</span>
@@ -459,7 +459,7 @@ function TermsAndConditionsPage() {
                           {section.title}
                         </h2>
                       </div>
-                      <span className="self-start sm:self-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200">
+                      <span className="self-start sm:self-center px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200">
                         {section.badge}
                       </span>
                     </div>

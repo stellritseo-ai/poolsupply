@@ -522,7 +522,7 @@ function DashboardIndex() {
 
         <div className="relative z-10 space-y-2 sm:space-y-2.5">
           {/* Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 text-[9px] sm:text-[10px] font-black tracking-widest uppercase shadow-inner max-w-full">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 text-xs sm:text-xs font-black tracking-widest uppercase shadow-inner max-w-full">
             <Sparkles className="size-3 text-cyan-400 shrink-0" />
             <span className="truncate">Live Database Telemetry Control Panel</span>
           </div>
@@ -548,12 +548,12 @@ function DashboardIndex() {
 
             <Link
               to="/admin/emails"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-[11px] sm:text-xs text-slate-900 bg-white hover:bg-slate-100 transition-all shadow-lg cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-xs text-slate-900 bg-white hover:bg-slate-100 transition-all shadow-lg cursor-pointer shrink-0"
             >
               <Mail className="size-3.5 text-cyan-700" />
               <span>Inbox</span>
               {m.unreadEmails > 0 && (
-                <span className="size-4 sm:size-4.5 rounded-full bg-rose-500 text-white text-[9px] font-black grid place-items-center ml-0.5">
+                <span className="size-4 sm:size-4.5 rounded-full bg-rose-500 text-white text-xs font-black grid place-items-center ml-0.5">
                   {m.unreadEmails}
                 </span>
               )}
@@ -561,7 +561,7 @@ function DashboardIndex() {
 
             <Link
               to="/admin/chat"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-[11px] sm:text-xs text-white bg-white/10 hover:bg-white/15 border border-white/15 backdrop-blur-md transition-all shadow-md cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-xs text-white bg-white/10 hover:bg-white/15 border border-white/15 backdrop-blur-md transition-all shadow-md cursor-pointer shrink-0"
             >
               <MessageCircle className="size-3.5 text-cyan-400" />
               <span>Live Chat</span>
@@ -570,7 +570,7 @@ function DashboardIndex() {
 
             <Link
               to="/admin/orders"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-[11px] sm:text-xs text-white bg-[#00B4D8] hover:bg-[#0096C7] transition-all shadow-lg shadow-cyan-500/20 cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-xs text-white bg-[#00B4D8] hover:bg-[#0096C7] transition-all shadow-lg shadow-cyan-500/20 cursor-pointer shrink-0"
             >
               <ShoppingBag className="size-3.5 text-white" />
               <span>Orders Log</span>
@@ -578,22 +578,22 @@ function DashboardIndex() {
 
             <Link
               to="/admin/returns"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-[11px] sm:text-xs text-slate-950 bg-[#F59E0B] hover:bg-[#D97706] transition-all shadow-lg shadow-amber-500/30 cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-xs text-slate-950 bg-[#F59E0B] hover:bg-[#D97706] transition-all shadow-lg shadow-amber-500/30 cursor-pointer shrink-0"
             >
               <RotateCcw className="size-3.5 text-slate-950" />
               <span>Returns & RMA</span>
-              <span className="size-4.5 sm:size-5 rounded-full bg-slate-950 text-white text-[9px] sm:text-[10px] font-black grid place-items-center ml-0.5">
+              <span className="size-4.5 sm:size-5 rounded-full bg-slate-950 text-white text-xs sm:text-xs font-black grid place-items-center ml-0.5">
                 {returnsList.length || 1}
               </span>
             </Link>
 
             <Link
               to="/admin/quotes"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-[11px] sm:text-xs text-white bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] hover:from-[#2563EB] hover:to-[#7C3AED] transition-all shadow-lg shadow-blue-500/30 cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-xs text-white bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] hover:from-[#2563EB] hover:to-[#7C3AED] transition-all shadow-lg shadow-blue-500/30 cursor-pointer shrink-0"
             >
               <FileText className="size-3.5 text-white" />
               <span>Quotes & Bids</span>
-              <span className="size-4.5 sm:size-5 rounded-full bg-[#00F0FF] text-slate-950 text-[9px] sm:text-[10px] font-black grid place-items-center ml-0.5">
+              <span className="size-4.5 sm:size-5 rounded-full bg-[#00F0FF] text-slate-950 text-xs sm:text-xs font-black grid place-items-center ml-0.5">
                 {quotesList.length || 1}
               </span>
             </Link>
@@ -620,7 +620,7 @@ function DashboardIndex() {
           className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs hover:border-cyan-500/30 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Total Revenue
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center group-hover:scale-110 transition-transform">
@@ -636,11 +636,11 @@ function DashboardIndex() {
           )}
           <div className="mt-2 flex items-center gap-1.5 text-xs">
             {qs.revenueMoMChange !== 0 ? (
-              <span className="inline-flex items-center gap-1 font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md text-[10px] sm:text-[11px]">
+              <span className="inline-flex items-center gap-1 font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md text-xs sm:text-xs">
                 <TrendingUp className="size-3" /> +{qs.revenueMoMChange}% MoM
               </span>
             ) : (
-              <span className="text-[10px] text-slate-400 font-bold">Synchronized DB</span>
+              <span className="text-xs text-slate-400 font-bold">Synchronized DB</span>
             )}
           </div>
         </motion.div>
@@ -651,7 +651,7 @@ function DashboardIndex() {
           className="bg-gradient-to-br from-[#061220] to-[#091f38] border border-cyan-500/20 rounded-2xl p-4 sm:p-5 text-white shadow-md hover:shadow-lg transition-all group"
         >
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400">
+            <span className="text-xs font-black uppercase tracking-wider text-cyan-400">
               Customer Orders
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-cyan-500/20 text-cyan-300 grid place-items-center group-hover:scale-110 transition-transform">
@@ -666,7 +666,7 @@ function DashboardIndex() {
               <span className="text-xs font-bold text-slate-300">Orders</span>
             </div>
           )}
-          <div className="mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold text-cyan-300">
+          <div className="mt-2 flex items-center gap-1.5 text-xs sm:text-xs font-extrabold text-cyan-300">
             <span>Avg {formatUSD(qs.avgOrderValue)}</span>
           </div>
         </motion.div>
@@ -677,7 +677,7 @@ function DashboardIndex() {
           className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs hover:border-cyan-500/30 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Active SKUs
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-indigo-50 text-indigo-700 grid place-items-center group-hover:scale-110 transition-transform">
@@ -690,13 +690,13 @@ function DashboardIndex() {
             <div className="text-lg xs:text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
               {qs.totalProducts}
               {qs.lowStockCount > 0 && (
-                <span className="text-[10px] font-black text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded-md border border-rose-200">
+                <span className="text-xs font-black text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded-md border border-rose-200">
                   {qs.lowStockCount} Low
                 </span>
               )}
             </div>
           )}
-          <div className="mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] text-slate-400 font-bold">
+          <div className="mt-2 flex items-center gap-1.5 text-xs sm:text-xs text-slate-400 font-bold">
             <Globe className="size-3 text-cyan-600" /> Active in Catalog
           </div>
         </motion.div>
@@ -707,7 +707,7 @@ function DashboardIndex() {
           className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs hover:border-cyan-500/30 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Pro Accounts
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center group-hover:scale-110 transition-transform">
@@ -721,7 +721,7 @@ function DashboardIndex() {
               {qs.totalCustomers.toLocaleString()}
             </div>
           )}
-          <div className="mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] text-emerald-700 font-extrabold">
+          <div className="mt-2 flex items-center gap-1.5 text-xs sm:text-xs text-emerald-700 font-extrabold">
             <span>Verified Trade Users</span>
           </div>
         </motion.div>
@@ -732,7 +732,7 @@ function DashboardIndex() {
           className="col-span-1 xs:col-span-2 md:col-span-1 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs hover:border-cyan-500/30 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Website Traffic
             </span>
             <div className="size-8 sm:size-9 rounded-xl bg-amber-50 text-amber-700 grid place-items-center group-hover:scale-110 transition-transform">
@@ -746,7 +746,7 @@ function DashboardIndex() {
               {qs.totalPageHits.toLocaleString()}
             </div>
           )}
-          <div className="mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] text-amber-700 font-extrabold">
+          <div className="mt-2 flex items-center gap-1.5 text-xs sm:text-xs text-amber-700 font-extrabold">
             <span>+{qs.todayHits.toLocaleString()} Today</span>
           </div>
         </motion.div>
@@ -763,12 +763,12 @@ function DashboardIndex() {
               <div>
                 <h3 className="text-sm xs:text-base sm:text-lg font-black text-slate-900 tracking-tight flex items-center gap-2 flex-wrap">
                   <span>Revenue Telemetry & Growth Curve</span>
-                  <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-extrabold text-cyan-800 bg-cyan-100/80 px-2 sm:px-2.5 py-0.5 rounded-full">
+                  <span className="inline-flex items-center gap-1 text-xs sm:text-xs font-extrabold text-cyan-800 bg-cyan-100/80 px-2 sm:px-2.5 py-0.5 rounded-full">
                     <span className="size-1.5 rounded-full bg-cyan-600 animate-pulse" />
                     Live Telemetry
                   </span>
                 </h3>
-                <p className="text-[11px] sm:text-xs text-slate-400 font-medium mt-0.5">
+                <p className="text-xs sm:text-xs text-slate-400 font-medium mt-0.5">
                   Dynamic benchmark across real contractor sales & pipeline orders
                 </p>
               </div>
@@ -781,7 +781,7 @@ function DashboardIndex() {
                     <button
                       key={tf}
                       onClick={() => setChartTimeframe(tf)}
-                      className={`px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+                      className={`px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl text-xs sm:text-xs font-black transition-all cursor-pointer ${
                         chartTimeframe === tf
                           ? "bg-slate-900 text-white shadow-sm"
                           : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/50"
@@ -797,7 +797,7 @@ function DashboardIndex() {
             {/* Quick Period Summary Mini-HUD */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-slate-50/80 border border-slate-100 text-xs">
               <div>
-                <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                <div className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-slate-400">
                   Period Revenue
                 </div>
                 <div className="text-xs sm:text-sm font-black text-slate-900 mt-0.5 truncate">
@@ -805,7 +805,7 @@ function DashboardIndex() {
                 </div>
               </div>
               <div>
-                <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                <div className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-slate-400">
                   Orders Logged
                 </div>
                 <div className="text-xs sm:text-sm font-black text-slate-900 mt-0.5">
@@ -813,7 +813,7 @@ function DashboardIndex() {
                 </div>
               </div>
               <div>
-                <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                <div className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-slate-400">
                   {chartMetric === "orders" ? "Peak Orders" : "Peak Spike"}
                 </div>
                 <div className="text-xs sm:text-sm font-black text-cyan-700 mt-0.5 truncate">
@@ -823,7 +823,7 @@ function DashboardIndex() {
                 </div>
               </div>
               <div>
-                <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                <div className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-slate-400">
                   Avg Ticket
                 </div>
                 <div className="text-xs sm:text-sm font-black text-emerald-700 mt-0.5 truncate">
@@ -877,7 +877,7 @@ function DashboardIndex() {
                         const data = payload[0].payload;
                         return (
                           <div className="bg-[#020b18]/95 backdrop-blur-md text-white p-3 sm:p-3.5 rounded-2xl shadow-2xl border border-cyan-500/30 text-xs space-y-1.5 min-w-[160px]">
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                               {data.fullDate || label}
                             </div>
                             <div className="text-sm sm:text-base font-black text-[#00F0FF]">
@@ -885,7 +885,7 @@ function DashboardIndex() {
                                 ? `${data.ordersCount} Order${data.ordersCount === 1 ? "" : "s"}`
                                 : formatUSD(data.revenue)}
                             </div>
-                            <div className="flex items-center justify-between text-[11px] text-slate-300 font-semibold pt-1 border-t border-white/10">
+                            <div className="flex items-center justify-between text-xs text-slate-300 font-semibold pt-1 border-t border-white/10">
                               <span>
                                 {chartMetric === "orders" ? "Total Revenue:" : "Order Volume:"}
                               </span>
@@ -896,7 +896,7 @@ function DashboardIndex() {
                               </span>
                             </div>
                             {data.ordersCount > 0 && chartMetric === "revenue" && (
-                              <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+                              <div className="flex items-center justify-between text-xs text-slate-400 pt-0.5">
                                 <span>Avg Ticket:</span>
                                 <span className="text-emerald-400 font-mono font-bold">
                                   {formatUSD(data.revenue / data.ordersCount)}
@@ -940,7 +940,7 @@ function DashboardIndex() {
                     <h3 className="text-sm xs:text-base sm:text-lg font-black text-slate-900 tracking-tight">
                       Recent Customer Orders
                     </h3>
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200/80 shadow-2xs">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200/80 shadow-2xs">
                       <span className="relative flex size-1.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                         <span className="relative inline-flex rounded-full size-1.5 bg-emerald-500" />
@@ -948,7 +948,7 @@ function DashboardIndex() {
                       Live Stream
                     </span>
                   </div>
-                  <p className="text-[11px] sm:text-xs text-slate-400 font-medium mt-0.5">
+                  <p className="text-xs sm:text-xs text-slate-400 font-medium mt-0.5">
                     Real-time wholesale fulfillment and contractor purchasing stream
                   </p>
                 </div>
@@ -969,7 +969,7 @@ function DashboardIndex() {
                       <button
                         key={filterKey}
                         onClick={() => setRecentOrdersFilter(filterKey)}
-                        className={`px-2 sm:px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-black transition-all cursor-pointer ${
+                        className={`px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-xs font-black transition-all cursor-pointer ${
                           isActive
                             ? "bg-white text-slate-900 shadow-2xs"
                             : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/60"
@@ -983,7 +983,7 @@ function DashboardIndex() {
 
                 <Link
                   to="/admin/orders"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[11px] sm:text-xs shadow-xs transition-all cursor-pointer shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs sm:text-xs shadow-xs transition-all cursor-pointer shrink-0"
                 >
                   <span>Orders Console</span>
                   <ArrowUpRight className="size-3.5 text-cyan-400" />
@@ -995,20 +995,20 @@ function DashboardIndex() {
             {displayOrders.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 p-3 rounded-2xl bg-gradient-to-r from-slate-50/90 via-cyan-50/20 to-slate-50/90 border border-slate-100 text-xs">
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Stream Volume
                   </div>
                   <div className="text-xs sm:text-sm font-black text-slate-900 mt-0.5 flex items-center gap-1">
                     <span>{displayOrders.length} Orders</span>
                     {filteredOrders.length !== displayOrders.length && (
-                      <span className="text-[10px] font-bold text-cyan-600">
+                      <span className="text-xs font-bold text-cyan-600">
                         ({filteredOrders.length})
                       </span>
                     )}
                   </div>
                 </div>
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Stream Total
                   </div>
                   <div className="text-xs sm:text-sm font-black text-slate-900 mt-0.5">
@@ -1016,7 +1016,7 @@ function DashboardIndex() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Average Value
                   </div>
                   <div className="text-xs sm:text-sm font-black text-slate-900 mt-0.5">
@@ -1024,7 +1024,7 @@ function DashboardIndex() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Dispatch State
                   </div>
                   <div className="text-xs sm:text-sm font-black text-emerald-600 mt-0.5 flex items-center gap-1 truncate">
@@ -1134,7 +1134,7 @@ function DashboardIndex() {
                             </span>
 
                             {order.company && (
-                              <span className="text-[10px] font-extrabold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/60 truncate flex items-center gap-1">
+                              <span className="text-xs font-extrabold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/60 truncate flex items-center gap-1">
                                 <Building2 className="size-2.5 text-slate-400" />
                                 {order.company}
                               </span>
@@ -1148,7 +1148,7 @@ function DashboardIndex() {
                                 handleCopyOrderId(orderIdStr);
                               }}
                               title="Click to copy Order ID"
-                              className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-slate-500 hover:text-slate-900 bg-slate-100/90 hover:bg-slate-200/80 px-1.5 py-0.5 rounded transition cursor-pointer"
+                              className="inline-flex items-center gap-1 font-mono text-xs font-bold text-slate-500 hover:text-slate-900 bg-slate-100/90 hover:bg-slate-200/80 px-1.5 py-0.5 rounded transition cursor-pointer"
                             >
                               <span>#{orderIdStr}</span>
                               {copiedOrderId === orderIdStr ? (
@@ -1160,7 +1160,7 @@ function DashboardIndex() {
                           </div>
 
                           {/* Metadata row */}
-                          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-slate-400 mt-1">
+                          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-slate-400 mt-1">
                             <span className="flex items-center gap-1 text-slate-500 font-medium">
                               <Clock className="size-3 text-slate-400 shrink-0" />
                               <span>{formatOrderTime(order.placedAt || order.createdAt)}</span>
@@ -1200,14 +1200,14 @@ function DashboardIndex() {
                           <div className="font-black text-xs sm:text-sm text-slate-900 font-mono tracking-tight">
                             {formatUSD(order.total || 0)}
                           </div>
-                          <div className="text-[10px] text-slate-400 font-semibold">
+                          <div className="text-xs text-slate-400 font-semibold">
                             {order.shipping === 0 ? "Free Freight" : "LTL Freight"}
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2">
                           <span
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-extrabold border ${badge.bg} ${badge.text} ${badge.border} shadow-2xs`}
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs sm:text-xs font-extrabold border ${badge.bg} ${badge.text} ${badge.border} shadow-2xs`}
                           >
                             <BadgeIcon className="size-3" />
                             <span>{badge.label}</span>
@@ -1237,7 +1237,7 @@ function DashboardIndex() {
                         ? `No ${recentOrdersFilter} orders found`
                         : "Awaiting Live Trade Checkout Orders"}
                     </p>
-                    <p className="text-[11px] sm:text-xs text-slate-400 max-w-md mx-auto leading-relaxed font-medium">
+                    <p className="text-xs sm:text-xs text-slate-400 max-w-md mx-auto leading-relaxed font-medium">
                       {recentOrdersFilter !== "all"
                         ? `There are currently no customer orders tagged as '${recentOrdersFilter}' in the active stream.`
                         : "Wholesale equipment purchases and commercial contracts completed through checkout synchronize directly into this feed."}
@@ -1265,7 +1265,7 @@ function DashboardIndex() {
             </div>
 
             {/* Card Footer Bar */}
-            <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-400">
+            <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs text-slate-400">
               <div className="flex items-center gap-1.5 font-medium">
                 <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-slate-600 font-semibold">MongoDB Synchronized</span>
@@ -1297,7 +1297,7 @@ function DashboardIndex() {
                   />
                   Global Traffic Telemetry
                 </h4>
-                <p className="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">
+                <p className="text-xs sm:text-xs text-slate-400 mt-0.5">
                   Live Database Hit Feed
                 </p>
               </div>
@@ -1307,7 +1307,7 @@ function DashboardIndex() {
             <div className="space-y-2.5 sm:space-y-3">
               <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
                 <div>
-                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase">
+                  <div className="text-xs sm:text-xs font-bold text-slate-400 uppercase">
                     Total Hits
                   </div>
                   <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5">
@@ -1315,7 +1315,7 @@ function DashboardIndex() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase">
+                  <div className="text-xs sm:text-xs font-bold text-slate-400 uppercase">
                     Today's Traffic
                   </div>
                   <div className="text-base sm:text-lg font-black text-emerald-400 mt-0.5">
@@ -1326,7 +1326,7 @@ function DashboardIndex() {
 
               <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
                 <div>
-                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase">
+                  <div className="text-xs sm:text-xs font-bold text-slate-400 uppercase">
                     Active Sessions
                   </div>
                   <div className="text-base sm:text-lg font-black text-white mt-0.5 flex items-center gap-1.5">
@@ -1335,10 +1335,10 @@ function DashboardIndex() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase">
+                  <div className="text-xs sm:text-xs font-bold text-slate-400 uppercase">
                     Security
                   </div>
-                  <div className="text-[11px] sm:text-xs font-bold text-emerald-400 mt-1 flex items-center gap-1">
+                  <div className="text-xs sm:text-xs font-bold text-emerald-400 mt-1 flex items-center gap-1">
                     <ShieldCheck className="size-3.5" /> Guard Active
                   </div>
                 </div>
@@ -1354,19 +1354,19 @@ function DashboardIndex() {
                   <FileText className="size-4 text-blue-600 shrink-0" />
                   <span>Recent Engineering & Project Quotes</span>
                   {quotesList.length > 0 && (
-                    <span className="text-[9px] sm:text-[10px] font-extrabold text-blue-900 bg-blue-100 px-2 py-0.5 rounded-full shrink-0">
+                    <span className="text-xs sm:text-xs font-extrabold text-blue-900 bg-blue-100 px-2 py-0.5 rounded-full shrink-0">
                       {quotesList.length}
                     </span>
                   )}
                 </h3>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium">
+                <p className="text-xs sm:text-xs text-slate-400 font-medium">
                   Commercial contractor proposals, custom specs, and equipment quotes
                 </p>
               </div>
 
               <Link
                 to="/admin/quotes"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 font-extrabold text-[11px] border border-blue-200 transition cursor-pointer shrink-0 self-start xs:self-auto"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 font-extrabold text-xs border border-blue-200 transition cursor-pointer shrink-0 self-start xs:self-auto"
               >
                 <span>Console</span>
                 <ArrowRight className="size-3" />
@@ -1395,11 +1395,11 @@ function DashboardIndex() {
                           <div className="min-w-0">
                             <div className="font-extrabold text-xs text-slate-900 flex items-center gap-1.5 truncate">
                               <span className="truncate">{q.projectName}</span>
-                              <span className="text-[9px] font-mono text-slate-400 font-bold shrink-0">
+                              <span className="text-xs font-mono text-slate-400 font-bold shrink-0">
                                 #{q.quoteId}
                               </span>
                             </div>
-                            <div className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 flex items-center gap-1.5 truncate">
+                            <div className="text-xs sm:text-xs text-slate-500 mt-0.5 flex items-center gap-1.5 truncate">
                               <span className="font-semibold text-slate-700 truncate">
                                 {q.customerName || "Customer"}
                               </span>
@@ -1416,11 +1416,11 @@ function DashboardIndex() {
                             {formatUSD(q.quotedAmount || q.estimatedBudget || 0)}
                           </div>
                           {isResolved ? (
-                            <span className="inline-block text-[9px] sm:text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200 mt-0.5">
+                            <span className="inline-block text-xs sm:text-xs font-extrabold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200 mt-0.5">
                               {q.status || "Resolved"}
                             </span>
                           ) : (
-                            <span className="inline-block text-[9px] sm:text-[10px] font-extrabold text-cyan-900 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200 mt-0.5">
+                            <span className="inline-block text-xs sm:text-xs font-extrabold text-cyan-900 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200 mt-0.5">
                               {q.status || "Review"}
                             </span>
                           )}
@@ -1432,7 +1432,7 @@ function DashboardIndex() {
                 <div className="py-6 text-center text-slate-400 space-y-1.5">
                   <FileText className="size-7 mx-auto text-slate-300 stroke-1" />
                   <p className="text-xs font-bold text-slate-700">No quote requests submitted</p>
-                  <p className="text-[10px] text-slate-400">
+                  <p className="text-xs text-slate-400">
                     When contractors request custom project quotes, they will appear here and in the
                     Quotes Console.
                   </p>
@@ -1449,19 +1449,19 @@ function DashboardIndex() {
                   <RotateCcw className="size-4 text-amber-600 shrink-0" />
                   <span>Recent Return & RMA Claims</span>
                   {returnsList.length > 0 && (
-                    <span className="text-[9px] sm:text-[10px] font-extrabold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full shrink-0">
+                    <span className="text-xs sm:text-xs font-extrabold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full shrink-0">
                       {returnsList.length}
                     </span>
                   )}
                 </h3>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium">
+                <p className="text-xs sm:text-xs text-slate-400 font-medium">
                   Customer warranty replacements, refunds & returns
                 </p>
               </div>
 
               <Link
                 to="/admin/returns"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-extrabold text-[11px] border border-amber-200 transition cursor-pointer shrink-0 self-start xs:self-auto"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-extrabold text-xs border border-amber-200 transition cursor-pointer shrink-0 self-start xs:self-auto"
               >
                 <span>Console</span>
                 <ArrowRight className="size-3" />
@@ -1488,11 +1488,11 @@ function DashboardIndex() {
                         <div className="min-w-0">
                           <div className="font-extrabold text-xs text-slate-900 flex items-center gap-1.5 truncate">
                             <span className="truncate">{ret.customerName || "Customer"}</span>
-                            <span className="text-[9px] font-mono text-slate-400 font-bold shrink-0">
+                            <span className="text-xs font-mono text-slate-400 font-bold shrink-0">
                               #{ret.rmaId}
                             </span>
                           </div>
-                          <div className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 flex items-center gap-1.5 truncate">
+                          <div className="text-xs sm:text-xs text-slate-500 mt-0.5 flex items-center gap-1.5 truncate">
                             <span className="font-semibold text-slate-700 truncate">
                               {ret.reason}
                             </span>
@@ -1512,11 +1512,11 @@ function DashboardIndex() {
                           {formatUSD(ret.orderTotal || 0)}
                         </div>
                         {isResolved ? (
-                          <span className="inline-block text-[9px] sm:text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200 mt-0.5">
+                          <span className="inline-block text-xs sm:text-xs font-extrabold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200 mt-0.5">
                             Resolved
                           </span>
                         ) : (
-                          <span className="inline-block text-[9px] sm:text-[10px] font-extrabold text-amber-900 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-200 mt-0.5">
+                          <span className="inline-block text-xs sm:text-xs font-extrabold text-amber-900 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-200 mt-0.5">
                             {ret.status || "Review"}
                           </span>
                         )}
@@ -1528,7 +1528,7 @@ function DashboardIndex() {
                 <div className="py-6 text-center text-slate-400 space-y-1.5">
                   <RotateCcw className="size-7 mx-auto text-slate-300 stroke-1" />
                   <p className="text-xs font-bold text-slate-700">No return claims submitted</p>
-                  <p className="text-[10px] text-slate-400">
+                  <p className="text-xs text-slate-400">
                     When customers submit RMA requests, they will appear here and in the Returns
                     Console.
                   </p>
@@ -1541,7 +1541,7 @@ function DashboardIndex() {
           <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xs space-y-3.5 sm:space-y-4">
             <h4 className="text-xs sm:text-sm font-black text-slate-900 flex items-center justify-between">
               <span>Customer Inquiries</span>
-              <span className="text-[10px] font-bold text-slate-400">Live Channels</span>
+              <span className="text-xs font-bold text-slate-400">Live Channels</span>
             </h4>
 
             <div className="space-y-2 sm:space-y-2.5">
@@ -1554,16 +1554,16 @@ function DashboardIndex() {
                     <Mail className="size-3.5 sm:size-4" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[11px] sm:text-xs font-extrabold text-slate-900 truncate">
+                    <div className="text-xs sm:text-xs font-extrabold text-slate-900 truncate">
                       Web Form Inquiries
                     </div>
-                    <div className="text-[9px] sm:text-[10px] text-slate-400 truncate">
+                    <div className="text-xs sm:text-xs text-slate-400 truncate">
                       Trade inquiries & quotes
                     </div>
                   </div>
                 </div>
                 {m.unreadEmails > 0 ? (
-                  <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[9px] sm:text-[10px] font-black shrink-0">
+                  <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white text-xs sm:text-xs font-black shrink-0">
                     {m.unreadEmails} New
                   </span>
                 ) : (
@@ -1580,16 +1580,16 @@ function DashboardIndex() {
                     <MessageCircle className="size-3.5 sm:size-4" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[11px] sm:text-xs font-extrabold text-slate-900 truncate">
+                    <div className="text-xs sm:text-xs font-extrabold text-slate-900 truncate">
                       Live Customer Chat
                     </div>
-                    <div className="text-[9px] sm:text-[10px] text-slate-400 truncate">
+                    <div className="text-xs sm:text-xs text-slate-400 truncate">
                       Real-time trade messaging
                     </div>
                   </div>
                 </div>
                 {m.activeChats > 0 ? (
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] sm:text-[10px] font-black animate-pulse shrink-0">
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-xs sm:text-xs font-black animate-pulse shrink-0">
                     {m.activeChats} Active
                   </span>
                 ) : (
@@ -1606,10 +1606,10 @@ function DashboardIndex() {
                     <RotateCcw className="size-3.5 sm:size-4" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[11px] sm:text-xs font-extrabold text-slate-900 truncate">
+                    <div className="text-xs sm:text-xs font-extrabold text-slate-900 truncate">
                       Returns & Warranty (RMA)
                     </div>
-                    <div className="text-[9px] sm:text-[10px] text-slate-500 truncate">
+                    <div className="text-xs sm:text-xs text-slate-500 truncate">
                       Resolve claims & dispatch replacements
                     </div>
                   </div>

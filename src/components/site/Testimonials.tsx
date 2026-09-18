@@ -200,7 +200,7 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
                 <span className="truncate">{review.name}</span>
                 <CheckCircle2 className="size-3 sm:size-3.5 text-blue-500 shrink-0" />
               </div>
-              <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 truncate">
+              <div className="text-xs sm:text-xs font-semibold text-slate-500 truncate">
                 {review.role} · <span className="text-slate-400">{review.location}</span>
               </div>
             </div>
@@ -208,7 +208,7 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
 
           <div className="flex items-center gap-1 px-2 py-0.5 sm:py-1 rounded-full bg-slate-50 border border-slate-200/80 shrink-0 shadow-2xs">
             <GoogleGIcon className="size-3 sm:size-3.5" />
-            <span className="text-[9px] sm:text-[10px] font-bold text-slate-600">Google</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-600">Google</span>
           </div>
         </div>
 
@@ -218,9 +218,9 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
             {Array.from({ length: review.rating }).map((_, k) => (
               <Star key={k} className="size-3 sm:size-3.5 fill-amber-400 text-amber-400" />
             ))}
-            <span className="text-[10px] sm:text-[11px] font-black text-slate-800 ml-1">5.0</span>
+            <span className="text-xs sm:text-xs font-black text-slate-800 ml-1">5.0</span>
           </div>
-          <span className="text-[9.5px] sm:text-[10.5px] font-semibold text-slate-400">
+          <span className="text-xs sm:text-xs font-semibold text-slate-400">
             {review.date}
           </span>
         </div>
@@ -232,13 +232,13 @@ function ReviewCard({ review }: { review: (typeof row1Reviews)[0] }) {
       </div>
 
       {/* Card Footer: Verified Product Tag */}
-      <figcaption className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1.5 text-[10px] sm:text-[11px] relative z-10">
-        <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-cyan-50/70 border border-cyan-200/60 text-cyan-900 font-extrabold text-[9.5px] sm:text-[10.5px] truncate max-w-[180px] sm:max-w-[260px]">
+      <figcaption className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1.5 text-xs sm:text-xs relative z-10">
+        <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-cyan-50/70 border border-cyan-200/60 text-cyan-900 font-extrabold text-xs sm:text-xs truncate max-w-[180px] sm:max-w-[260px]">
           <ShieldCheck className="size-2.5 sm:size-3 text-cyan-600 shrink-0" />
           <span className="truncate">{review.product}</span>
         </span>
 
-        <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
+        <span className="inline-flex items-center gap-1 text-xs sm:text-xs font-extrabold text-emerald-700 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
           <CheckCircle2 className="size-2.5 text-emerald-600" /> Verified
         </span>
       </figcaption>
@@ -263,11 +263,11 @@ export function Testimonials() {
             <div className="flex flex-wrap items-center gap-2">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs">
                 <GoogleGIcon className="size-3.5 sm:size-4 shrink-0" />
-                <span className="text-[11px] sm:text-xs font-extrabold text-slate-800 tracking-wide">
+                <span className="text-xs sm:text-xs font-extrabold text-slate-800 tracking-wide">
                   Google Verified Customer Reviews
                 </span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 shadow-2xs text-emerald-800 text-[11px] sm:text-xs font-extrabold">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 shadow-2xs text-emerald-800 text-xs sm:text-xs font-extrabold">
                 <CheckCircle2 className="size-3 sm:size-3.5 text-emerald-600 shrink-0" />
                 <span>100% Authentic Trade Accounts</span>
               </div>
@@ -298,7 +298,7 @@ export function Testimonials() {
                   ))}
                 </div>
               </div>
-              <div className="text-[11px] sm:text-xs font-bold text-slate-600 mt-0.5 flex items-center gap-1.5">
+              <div className="text-xs sm:text-xs font-bold text-slate-600 mt-0.5 flex items-center gap-1.5">
                 <span>480+ Google Reviews</span>
                 <span className="size-1 rounded-full bg-slate-300" />
                 <span className="text-emerald-600 font-extrabold">Excellent</span>

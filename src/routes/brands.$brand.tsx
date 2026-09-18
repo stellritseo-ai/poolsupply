@@ -213,7 +213,7 @@ function BrandPage() {
         <section className="bg-gradient-to-b from-surface to-background border-b border-border/50 py-8 md:py-10 mb-6 md:mb-8">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
+              <span className="text-xs sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
                 Authorized Brand Dealer
               </span>
               <h1 className="mt-1.5 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">

@@ -211,7 +211,7 @@ function renderBlock(block: ContentBlock, index: number) {
               key={i}
               className="flex items-start gap-3 text-[15px] text-slate-700 leading-relaxed"
             >
-              <span className="size-5 rounded-full bg-cyan-600 text-white text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">
+              <span className="size-5 rounded-full bg-cyan-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
                 {i + 1}
               </span>
               <span>{item}</span>
@@ -232,7 +232,7 @@ function renderBlock(block: ContentBlock, index: number) {
                 {block.headers.map((h, i) => (
                   <th
                     key={i}
-                    className="text-left px-4 py-3 text-white font-extrabold uppercase tracking-wide text-[11px] first:rounded-tl-xl last:rounded-tr-xl"
+                    className="text-left px-4 py-3 text-white font-extrabold uppercase tracking-wide text-xs first:rounded-tl-xl last:rounded-tr-xl"
                   >
                     {h}
                   </th>
@@ -283,7 +283,7 @@ function renderBlock(block: ContentBlock, index: number) {
         <div key={index} className={`my-5 p-4 rounded-xl border ${v.bg} flex gap-3`}>
           <div className="shrink-0 mt-0.5">{v.icon}</div>
           <div>
-            <div className={`text-[11px] font-black uppercase tracking-wider mb-1 ${v.titleColor}`}>
+            <div className={`text-xs font-black uppercase tracking-wider mb-1 ${v.titleColor}`}>
               {block.title}
             </div>
             <p className={`text-[13px] leading-relaxed ${v.textColor}`}>{block.text}</p>
@@ -327,17 +327,17 @@ function ArticlePage() {
 
             {/* Category + highlight badges */}
             <div className="flex items-center gap-2 flex-wrap mb-4">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[10px] font-extrabold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-extrabold uppercase tracking-wider">
                 <BookOpen className="size-3" />
                 {article.categoryLabel}
               </span>
               {article.highlight && (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-cyan-400/90 text-slate-950 text-[10px] font-black uppercase tracking-wider">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-cyan-400/90 text-slate-950 text-xs font-black uppercase tracking-wider">
                   {article.highlight}
                 </span>
               )}
               {article.featured && (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-[10px] font-black uppercase tracking-wider">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-black uppercase tracking-wider">
                   Featured
                 </span>
               )}
@@ -378,7 +378,7 @@ function ArticlePage() {
               {article.tags.slice(0, 4).map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white/60 bg-white/10 border border-white/15"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold text-white/60 bg-white/10 border border-white/15"
                 >
                   <Tag className="size-2.5" />
                   {tag}
@@ -480,7 +480,7 @@ function ArticlePage() {
                             href={`#${id}`}
                             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-slate-600 hover:text-cyan-700 hover:bg-cyan-50 transition-all"
                           >
-                            <span className="size-4 rounded-full bg-slate-100 text-slate-500 text-[9px] font-black flex items-center justify-center shrink-0">
+                            <span className="size-4 rounded-full bg-slate-100 text-slate-500 text-xs font-black flex items-center justify-center shrink-0">
                               {i + 1}
                             </span>
                             <span className="line-clamp-2 leading-snug">{b.text}</span>
@@ -517,7 +517,7 @@ function ArticlePage() {
 
                 {/* Article Info */}
                 <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3 text-xs text-slate-500">
-                  <h3 className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">
                     Article Details
                   </h3>
                   <div className="space-y-2">
@@ -578,7 +578,7 @@ function ArticlePage() {
                             loading="lazy"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900/60 border border-white/20 backdrop-blur-md text-[10px] font-extrabold uppercase tracking-wider text-white">
+                          <div className="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900/60 border border-white/20 backdrop-blur-md text-xs font-extrabold uppercase tracking-wider text-white">
                             <BookOpen className="size-2.5 text-cyan-300" />
                             {related.categoryLabel}
                           </div>
@@ -587,7 +587,7 @@ function ArticlePage() {
                           <h3 className="text-sm font-black text-slate-900 leading-snug group-hover:text-cyan-700 transition-colors line-clamp-2">
                             {related.title}
                           </h3>
-                          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 pt-2 border-t border-slate-100">
+                          <div className="flex items-center gap-1.5 text-xs text-slate-400 pt-2 border-t border-slate-100">
                             <Clock className="size-3" />
                             <span>{related.readTime}</span>
                             <span className="ml-auto text-cyan-600 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-1">

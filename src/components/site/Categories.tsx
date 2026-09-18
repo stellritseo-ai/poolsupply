@@ -95,7 +95,7 @@ export function Categories() {
                   />
 
                   {/* Floating pill badge */}
-                  <span className="absolute top-4 left-4 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-white/90 backdrop-blur border border-white/50 rounded-full shadow-sm flex items-center gap-1.5">
+                  <span className="absolute top-4 left-4 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary bg-white/90 backdrop-blur border border-white/50 rounded-full shadow-sm flex items-center gap-1.5">
                     {getCount(c)}
                   </span>
                 </div>

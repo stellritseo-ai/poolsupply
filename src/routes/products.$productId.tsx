@@ -516,7 +516,7 @@ function ProductDetailPage() {
         ) : (
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             {/* Breadcrumbs */}
-            <nav className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 mt-4 sm:mt-8 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap scrollbar-none">
+            <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 mt-4 sm:mt-8 mb-6 sm:mb-8 overflow-x-auto whitespace-nowrap scrollbar-none">
               <Link to="/" className="hover:text-foreground transition">
                 Home
               </Link>
@@ -561,28 +561,28 @@ function ProductDetailPage() {
                 <div className="grid grid-cols-3 gap-2 sm:gap-3">
                   <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                     <Truck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">
+                    <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
                       Fast Shipping
                     </span>
-                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">
+                    <span className="text-[8px] sm:text-xs text-muted-foreground mt-0.5">
                       Distance Calculated
                     </span>
                   </div>
                   <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                     <ShieldCheck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">
+                    <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
                       Genuine Brand
                     </span>
-                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">
+                    <span className="text-[8px] sm:text-xs text-muted-foreground mt-0.5">
                       100% Authorized
                     </span>
                   </div>
                   <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
                     <Wrench className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-foreground">
+                    <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
                       Warranty
                     </span>
-                    <span className="text-[8px] sm:text-[9px] text-muted-foreground mt-0.5">
+                    <span className="text-[8px] sm:text-xs text-muted-foreground mt-0.5">
                       {product.specs?.["Warranty"] || "Full Warranty"}
                     </span>
                   </div>
@@ -632,7 +632,7 @@ function ProductDetailPage() {
                   return (
                     <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-surface border border-border/50 space-y-3.5 sm:space-y-4">
                       <div className="flex items-baseline gap-3 flex-wrap">
-                        <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+                        <div className="text-xs uppercase font-bold tracking-wider text-muted-foreground">
                           Sale Price
                         </div>
                         <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[oklch(0.50_0.14_232)]">
@@ -649,13 +649,13 @@ function ProductDetailPage() {
 
                       <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
                         <div>
-                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">
+                          <span className="text-muted-foreground uppercase tracking-wider text-xs">
                             SKU
                           </span>
                           <p className="text-foreground mt-0.5 font-mono">{product.sku}</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground uppercase tracking-wider text-[10px]">
+                          <span className="text-muted-foreground uppercase tracking-wider text-xs">
                             Category
                           </span>
                           <p className="text-foreground mt-0.5">{product.category}</p>
@@ -844,7 +844,7 @@ function ProductDetailPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <label className="block">
-                          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                          <span className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                             Your Name
                           </span>
                           <input
@@ -858,7 +858,7 @@ function ProductDetailPage() {
                         </label>
 
                         <div>
-                          <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                          <span className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                             Rating
                           </span>
                           <div className="flex items-center gap-1.5 h-10">
@@ -879,7 +879,7 @@ function ProductDetailPage() {
                       </div>
 
                       <label className="block">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                        <span className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                           Review Title
                         </span>
                         <input
@@ -893,7 +893,7 @@ function ProductDetailPage() {
                       </label>
 
                       <label className="block">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                        <span className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                           Review details
                         </span>
                         <textarea
@@ -943,7 +943,7 @@ function ProductDetailPage() {
                                 {rev.author}
                               </span>
                             </div>
-                            <span className="text-[11px] text-muted-foreground">{rev.date}</span>
+                            <span className="text-xs text-muted-foreground">{rev.date}</span>
                           </div>
                           <h4 className="text-xs sm:text-sm font-bold text-foreground">
                             {rev.title}

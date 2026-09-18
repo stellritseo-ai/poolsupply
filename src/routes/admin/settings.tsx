@@ -813,21 +813,21 @@ export function SystemSettings() {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 <Radio className="size-3 text-cyan-400 animate-pulse" />
                 Live Control Center
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                 <ShieldCheck className="size-3 text-emerald-400" />
                 MongoDB Atlas Connected
               </span>
               {maintenanceMode ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   <AlertTriangle className="size-3 text-amber-400" />
                   Maintenance Mode Active
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30">
                   <Globe className="size-3 text-sky-400" />
                   Public Storefront Live
                 </span>
@@ -876,47 +876,47 @@ export function SystemSettings() {
         {/* ── Top HUD Metrics ──────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-7 pt-5 border-t border-slate-800/80">
           <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
+            <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
               <span>Super Admin</span>
               <Shield className="size-3.5 text-cyan-400" />
             </div>
             <div className="mt-1 text-base sm:text-lg font-black text-white truncate">
               {currentUsername} (Master)
             </div>
-            <div className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5 truncate">
+            <div className="text-xs text-emerald-400 font-semibold flex items-center gap-1 mt-0.5 truncate">
               <CheckCircle className="size-2.5" /> Bcrypt Salt 10 Active
             </div>
           </div>
 
           <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
+            <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
               <span>Staff Accounts</span>
               <Users className="size-3.5 text-blue-400" />
             </div>
             <div className="mt-1 text-base sm:text-lg font-black text-white">
               {users.length} Team Members
             </div>
-            <div className="text-[10px] text-slate-400 font-semibold mt-0.5 truncate">
+            <div className="text-xs text-slate-400 font-semibold mt-0.5 truncate">
               {users.filter((u) => u.role === "admin").length} Admins ·{" "}
               {users.filter((u) => u.status === "active").length} Active
             </div>
           </div>
 
           <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
+            <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
               <span>Storefront</span>
               <Globe className="size-3.5 text-emerald-400" />
             </div>
             <div className="mt-1 text-base sm:text-lg font-black text-white truncate">
               {maintenanceMode ? "Maintenance" : "Live Storefront"}
             </div>
-            <div className="text-[10px] text-slate-400 font-semibold mt-0.5 truncate">
+            <div className="text-xs text-slate-400 font-semibold mt-0.5 truncate">
               {paymentMethods.filter((p) => p.active).length} Gateways Active
             </div>
           </div>
 
           <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-[11px] font-bold">
+            <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
               <span>Database Docs</span>
               <Database className="size-3.5 text-purple-400" />
             </div>
@@ -926,7 +926,7 @@ export function SystemSettings() {
                 : "Loading..."}{" "}
               Docs
             </div>
-            <div className="text-[10px] text-cyan-400 font-semibold mt-0.5 truncate">
+            <div className="text-xs text-cyan-400 font-semibold mt-0.5 truncate">
               10 Managed Collections
             </div>
           </div>
@@ -952,7 +952,7 @@ export function SystemSettings() {
               <span>{tab.label}</span>
               {tab.badge && (
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                  className={`px-1.5 py-0.5 rounded-full text-xs font-black uppercase ${
                     isActive
                       ? "bg-cyan-50 text-cyan-700 border border-cyan-200"
                       : "bg-slate-200 text-slate-600"
@@ -963,7 +963,7 @@ export function SystemSettings() {
               )}
               {tab.count !== undefined && !tab.badge && (
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold font-mono ${
+                  className={`px-1.5 py-0.5 rounded-full text-xs font-bold font-mono ${
                     isActive ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-600"
                   }`}
                 >
@@ -1032,7 +1032,7 @@ export function SystemSettings() {
 
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">
-                  <span className="px-2 text-[10px] uppercase font-black text-slate-400">
+                  <span className="px-2 text-xs uppercase font-black text-slate-400">
                     Role:
                   </span>
                   {(["all", "admin", "manager", "viewer"] as const).map((r) => (
@@ -1051,7 +1051,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">
-                  <span className="px-2 text-[10px] uppercase font-black text-slate-400">
+                  <span className="px-2 text-xs uppercase font-black text-slate-400">
                     Status:
                   </span>
                   {(["all", "active", "inactive"] as const).map((s) => (
@@ -1075,7 +1075,7 @@ export function SystemSettings() {
             <div className="rounded-2xl border border-slate-200 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-xs">
                     <tr>
                       <th className="px-4 py-3.5">Staff Member</th>
                       <th className="px-4 py-3.5">Assigned Role</th>
@@ -1091,7 +1091,7 @@ export function SystemSettings() {
                         <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
                           <Users className="size-8 mx-auto mb-2 opacity-40" />
                           <p className="font-bold">No staff accounts match the filter criteria</p>
-                          <p className="text-[11px] text-slate-400 mt-1">
+                          <p className="text-xs text-slate-400 mt-1">
                             Try resetting search or filters
                           </p>
                         </td>
@@ -1118,12 +1118,12 @@ export function SystemSettings() {
                                   <div className="font-bold text-slate-900 flex items-center gap-2">
                                     <span>{u.fullName || u.username}</span>
                                     {isPrimaryAdmin && (
-                                      <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-amber-100 text-amber-800">
+                                      <span className="px-1.5 py-0.5 rounded text-xs font-black uppercase bg-amber-100 text-amber-800">
                                         Primary
                                       </span>
                                     )}
                                   </div>
-                                  <div className="text-[11px] text-slate-400 font-mono flex items-center gap-1.5">
+                                  <div className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
                                     <span>@{u.username}</span>
                                     {u.email && <span>· {u.email}</span>}
                                   </div>
@@ -1133,7 +1133,7 @@ export function SystemSettings() {
 
                             <td className="px-4 py-3.5">
                               <span
-                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider ${
                                   u.role === "admin"
                                     ? "bg-purple-50 text-purple-700 border border-purple-200"
                                     : u.role === "manager"
@@ -1150,7 +1150,7 @@ export function SystemSettings() {
                               <button
                                 onClick={() => !isPrimaryAdmin && handleToggleUserStatus(u)}
                                 disabled={isPrimaryAdmin}
-                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase transition ${
+                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase transition ${
                                   u.status === "active"
                                     ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                                     : "bg-slate-100 text-slate-500 border border-slate-200"
@@ -1168,13 +1168,13 @@ export function SystemSettings() {
                               </button>
                             </td>
 
-                            <td className="px-4 py-3.5 text-slate-500 text-[11px]">
+                            <td className="px-4 py-3.5 text-slate-500 text-xs">
                               {u.lastLoginAt
                                 ? new Date(u.lastLoginAt).toLocaleString()
                                 : "Never logged in"}
                             </td>
 
-                            <td className="px-4 py-3.5 text-slate-500 text-[11px]">
+                            <td className="px-4 py-3.5 text-slate-500 text-xs">
                               {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "System"}
                             </td>
 
@@ -1248,7 +1248,7 @@ export function SystemSettings() {
                   <form onSubmit={handleUpdateSecurity} className="space-y-4">
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                        <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                           Current Username
                         </label>
                         <input
@@ -1260,7 +1260,7 @@ export function SystemSettings() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                        <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                           New Username (Optional)
                         </label>
                         <input
@@ -1274,9 +1274,9 @@ export function SystemSettings() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
+                      <label className="text-xs font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
                         <span>Current Master Password *</span>
-                        <span className="text-[10px] text-slate-400 font-normal">
+                        <span className="text-xs text-slate-400 font-normal">
                           Required for verification
                         </span>
                       </label>
@@ -1305,7 +1305,7 @@ export function SystemSettings() {
 
                     <div className="grid sm:grid-cols-2 gap-4 pt-2">
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                        <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                           New Master Password
                         </label>
                         <div className="relative">
@@ -1331,7 +1331,7 @@ export function SystemSettings() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                        <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                           Confirm New Password
                         </label>
                         <div className="relative">
@@ -1360,7 +1360,7 @@ export function SystemSettings() {
                     {/* Password Strength Meter */}
                     {secNewPassword && (
                       <div className="space-y-1.5 pt-1">
-                        <div className="flex items-center justify-between text-[11px] font-bold">
+                        <div className="flex items-center justify-between text-xs font-bold">
                           <span className="text-slate-500">Password Strength:</span>
                           <span className={passwordStrength.textColor}>
                             {passwordStrength.label}
@@ -1426,7 +1426,7 @@ export function SystemSettings() {
 
                   <div className="grid sm:grid-cols-3 gap-4 pt-1">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-slate-500">
+                      <label className="text-xs font-black uppercase text-slate-500">
                         Session Inactivity (Min)
                       </label>
                       <input
@@ -1445,7 +1445,7 @@ export function SystemSettings() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-slate-500">
+                      <label className="text-xs font-black uppercase text-slate-500">
                         Max Failed Logins
                       </label>
                       <input
@@ -1464,7 +1464,7 @@ export function SystemSettings() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-slate-500">
+                      <label className="text-xs font-black uppercase text-slate-500">
                         Lockout Duration (Min)
                       </label>
                       <input
@@ -1512,7 +1512,7 @@ export function SystemSettings() {
                     <div className="py-8 text-center text-slate-400 text-xs">
                       <ShieldCheck className="size-8 text-emerald-400 mx-auto mb-2 opacity-80" />
                       <p className="font-bold text-white">No Active Security Lockouts</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-400 mt-0.5">
                         All administrative IP gates and user accounts are clear.
                       </p>
                     </div>
@@ -1528,7 +1528,7 @@ export function SystemSettings() {
                               <span className="size-1.5 rounded-full bg-rose-400 animate-pulse" />
                               <span>{lock.key}</span>
                             </div>
-                            <div className="text-[10px] text-slate-400 mt-0.5">
+                            <div className="text-xs text-slate-400 mt-0.5">
                               {lock.failedAttempts} Failed Attempts · Locked until{" "}
                               {lock.lockedUntil
                                 ? new Date(lock.lockedUntil).toLocaleTimeString()
@@ -1539,7 +1539,7 @@ export function SystemSettings() {
                           <button
                             onClick={() => handleClearLockout(lock.key)}
                             disabled={clearingLockKey === lock.key}
-                            className="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-[10px] font-bold uppercase transition cursor-pointer shrink-0"
+                            className="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold uppercase transition cursor-pointer shrink-0"
                           >
                             {clearingLockKey === lock.key ? "Clearing..." : "Release"}
                           </button>
@@ -1565,9 +1565,9 @@ export function SystemSettings() {
                         <div className="flex items-center gap-2">
                           <span className="size-2 rounded-full bg-emerald-500" />
                           <span className="font-bold text-slate-900">{staff.username}</span>
-                          <span className="text-[10px] text-slate-400">({staff.role})</span>
+                          <span className="text-xs text-slate-400">({staff.role})</span>
                         </div>
-                        <span className="text-[10px] font-mono text-slate-500">
+                        <span className="text-xs font-mono text-slate-500">
                           {staff.lastLoginAt
                             ? new Date(staff.lastLoginAt).toLocaleTimeString()
                             : "Never"}
@@ -1660,9 +1660,9 @@ export function SystemSettings() {
               {/* Maintenance Notice Input & Live Preview */}
               <div className="pt-2 border-t border-slate-200/60 grid sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase text-slate-700 flex items-center justify-between">
+                  <label className="text-xs font-black uppercase text-slate-700 flex items-center justify-between">
                     <span>Custom Maintenance Notice</span>
-                    <span className="text-[10px] text-slate-400 font-normal">
+                    <span className="text-xs text-slate-400 font-normal">
                       Displayed on public screen
                     </span>
                   </label>
@@ -1676,16 +1676,16 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase text-slate-500">
+                  <label className="text-xs font-black uppercase text-slate-500">
                     Visitor Screen Preview
                   </label>
                   <div className="p-3.5 rounded-xl bg-slate-900 text-white text-xs space-y-1.5 border border-slate-800">
-                    <div className="flex items-center gap-1.5 text-[10px] text-amber-400 font-bold uppercase">
+                    <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold uppercase">
                       <span className="size-1.5 rounded-full bg-amber-400 animate-ping" />
                       Under Maintenance
                     </div>
                     <div className="font-bold text-white text-sm">System Upgrade</div>
-                    <p className="text-slate-300 text-[11px] line-clamp-2">
+                    <p className="text-slate-300 text-xs line-clamp-2">
                       {maintenanceNotice ||
                         "We are currently performing scheduled maintenance to serve you better. We'll be back online shortly with exciting new updates."}
                     </p>
@@ -1708,7 +1708,7 @@ export function SystemSettings() {
 
               <div className="grid sm:grid-cols-3 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">
+                  <label className="text-xs font-black uppercase text-slate-500">
                     Store Brand Name
                   </label>
                   <input
@@ -1720,7 +1720,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">
+                  <label className="text-xs font-black uppercase text-slate-500">
                     Support Phone
                   </label>
                   <input
@@ -1732,7 +1732,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">
+                  <label className="text-xs font-black uppercase text-slate-500">
                     Support Email
                   </label>
                   <input
@@ -1746,7 +1746,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="sm:col-span-2 space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">
+                  <label className="text-xs font-black uppercase text-slate-500">
                     Physical Warehouse / Fulfillment Address
                   </label>
                   <input
@@ -1758,7 +1758,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-500">
+                  <label className="text-xs font-black uppercase text-slate-500">
                     Support Operating Hours
                   </label>
                   <input
@@ -1788,7 +1788,7 @@ export function SystemSettings() {
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Free Freight Threshold ($)
                     </label>
                     <input
@@ -1802,13 +1802,13 @@ export function SystemSettings() {
                       }
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold font-mono text-slate-900"
                     />
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-xs text-slate-400">
                       Orders above this amount receive free freight.
                     </span>
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Standard Freight Rate (%)
                     </label>
                     <input
@@ -1826,7 +1826,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Estimated Delivery Timeline
                     </label>
                     <input
@@ -1855,7 +1855,7 @@ export function SystemSettings() {
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Standard Sales Tax Rate (%)
                     </label>
                     <input
@@ -1877,7 +1877,7 @@ export function SystemSettings() {
                       <div className="font-bold text-xs text-slate-800">
                         Resale Certificate Exemption
                       </div>
-                      <div className="text-[10px] text-slate-400">
+                      <div className="text-xs text-slate-400">
                         Permit tax waiver for contractors with valid EIN
                       </div>
                     </div>
@@ -1899,7 +1899,7 @@ export function SystemSettings() {
                       <div className="font-bold text-xs text-slate-800">
                         Require Business Tax ID
                       </div>
-                      <div className="text-[10px] text-slate-400">
+                      <div className="text-xs text-slate-400">
                         Mandate company EIN during guest order submission
                       </div>
                     </div>
@@ -1945,7 +1945,7 @@ export function SystemSettings() {
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-black text-sm text-slate-900">{pm.name}</span>
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                          className={`px-2 py-0.5 rounded-full text-xs font-black uppercase ${
                             pm.active
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : "bg-slate-200 text-slate-500"
@@ -1954,11 +1954,11 @@ export function SystemSettings() {
                           {pm.active ? "Enabled" : "Disabled"}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-1 font-mono">{pm.mode}</p>
+                      <p className="text-xs text-slate-400 mt-1 font-mono">{pm.mode}</p>
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-slate-600">Checkout Option</span>
+                      <span className="text-xs font-bold text-slate-600">Checkout Option</span>
                       <button
                         type="button"
                         onClick={() => handleTogglePaymentMethod(pm.id)}
@@ -2049,18 +2049,18 @@ export function SystemSettings() {
                       <span className="font-mono text-cyan-300 text-sm font-black">
                         {lastPingResult.latencyMs}ms
                       </span>
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500/20 text-emerald-300">
+                      <span className="px-2 py-0.5 rounded-full text-xs font-black uppercase bg-emerald-500/20 text-emerald-300">
                         {lastPingResult.status}
                       </span>
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">
+                    <div className="text-xs text-slate-400 mt-0.5">
                       {lastPingResult.collectionsCount} collections accessible · Checked at{" "}
                       {lastPingResult.timestamp}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-slate-400 font-mono text-[11px]">
+                <div className="flex items-center gap-2 text-slate-400 font-mono text-xs">
                   <span>mongodb+srv://atlas-cluster</span>
                 </div>
               </div>
@@ -2162,7 +2162,7 @@ export function SystemSettings() {
                       <div className="mt-2 text-2xl font-black text-slate-900 font-mono">
                         {count}
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono mt-1 truncate">
+                      <div className="text-xs text-slate-400 font-mono mt-1 truncate">
                         {c.col}
                       </div>
                     </div>
@@ -2286,7 +2286,7 @@ export function SystemSettings() {
                     <span>Stripe Payment Processing Keys</span>
                   </div>
 
-                  <div className="flex items-center gap-1 p-1 bg-slate-200 rounded-lg text-[10px] font-black uppercase">
+                  <div className="flex items-center gap-1 p-1 bg-slate-200 rounded-lg text-xs font-black uppercase">
                     <button
                       type="button"
                       onClick={() => setStripeConfig({ ...stripeConfig, mode: "test" })}
@@ -2313,7 +2313,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500">
                     Publishable API Key
                   </label>
                   <div className="flex items-center gap-2">
@@ -2324,7 +2324,7 @@ export function SystemSettings() {
                         setStripeConfig({ ...stripeConfig, publishableKey: e.target.value })
                       }
                       placeholder="pk_live_..."
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-[11px] text-slate-700"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-700"
                     />
                     <button
                       type="button"
@@ -2344,7 +2344,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500">
                     Secret API Key
                   </label>
                   <div className="flex items-center gap-2">
@@ -2355,7 +2355,7 @@ export function SystemSettings() {
                         setStripeConfig({ ...stripeConfig, secretKey: e.target.value })
                       }
                       placeholder="sk_live_..."
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-[11px] text-slate-700"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-700"
                     />
                     <button
                       type="button"
@@ -2373,7 +2373,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500">
                     Webhook Secret Key
                   </label>
                   <div className="flex items-center gap-2">
@@ -2384,7 +2384,7 @@ export function SystemSettings() {
                         setStripeConfig({ ...stripeConfig, webhookSecret: e.target.value })
                       }
                       placeholder="whsec_..."
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-[11px] text-slate-700"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-700"
                     />
                     <button
                       type="button"
@@ -2402,7 +2402,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500">
                     Endpoint URL (Copy for Stripe Dashboard)
                   </label>
                   <div className="flex items-center gap-2">
@@ -2410,7 +2410,7 @@ export function SystemSettings() {
                       type="text"
                       readOnly
                       value="https://poolsupplywholesalers.com/api/stripe/webhook"
-                      className="w-full px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 font-mono text-[11px] text-slate-700 select-all"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 font-mono text-xs text-slate-700 select-all"
                     />
                     <button
                       type="button"
@@ -2440,14 +2440,14 @@ export function SystemSettings() {
                     <Zap className="size-4 text-amber-500" />
                     <span>Transactional Email (SMTP / Nodemailer)</span>
                   </div>
-                  <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-emerald-100 text-emerald-800">
+                  <span className="px-2 py-0.5 rounded-md text-xs font-black uppercase bg-emerald-100 text-emerald-800">
                     SSL 465 Active
                   </span>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       SMTP Host Server
                     </label>
                     <input
@@ -2459,7 +2459,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Port & Security
                     </label>
                     <input
@@ -2473,7 +2473,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Authenticated User
                     </label>
                     <input
@@ -2485,7 +2485,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Sender Display Name
                     </label>
                     <input
@@ -2497,7 +2497,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="sm:col-span-2 space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Admin Notification Alert Recipients
                     </label>
                     <input
@@ -2508,7 +2508,7 @@ export function SystemSettings() {
                       }
                       className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800"
                     />
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-xs text-slate-400">
                       Comma-separated emails that receive real-time order alerts.
                     </span>
                   </div>
@@ -2560,7 +2560,7 @@ export function SystemSettings() {
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Google Analytics 4 Measurement ID
                     </label>
                     <input
@@ -2575,7 +2575,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Google Tag Manager Container ID
                     </label>
                     <input
@@ -2590,7 +2590,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Meta / Facebook Pixel ID
                     </label>
                     <input
@@ -2620,7 +2620,7 @@ export function SystemSettings() {
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Slack Incoming Webhook URL
                     </label>
                     <input
@@ -2638,7 +2638,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-slate-500">
+                    <label className="text-xs font-black uppercase text-slate-500">
                       Discord Channel Webhook URL
                     </label>
                     <input
@@ -2660,7 +2660,7 @@ export function SystemSettings() {
                       <div className="font-bold text-xs text-slate-800">
                         Dispatch Instant Order Webhooks
                       </div>
-                      <div className="text-[10px] text-slate-400">
+                      <div className="text-xs text-slate-400">
                         Trigger on each successful checkout completion
                       </div>
                     </div>
@@ -2703,7 +2703,7 @@ export function SystemSettings() {
                   </div>
                   <div>
                     <h3 className="text-base font-black text-slate-900">Add Staff Account</h3>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-xs text-slate-400">
                       Authorize a new team member with specific role rights.
                     </p>
                   </div>
@@ -2719,7 +2719,7 @@ export function SystemSettings() {
 
               <form onSubmit={handleAddUser} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                     Username *
                   </label>
                   <input
@@ -2733,7 +2733,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                     Full Name
                   </label>
                   <input
@@ -2746,7 +2746,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                     Email Address
                   </label>
                   <input
@@ -2759,7 +2759,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                     Password *
                   </label>
                   <input
@@ -2774,7 +2774,7 @@ export function SystemSettings() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                       Access Role
                     </label>
                     <select
@@ -2789,7 +2789,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                       Initial Status
                     </label>
                     <select
@@ -2852,7 +2852,7 @@ export function SystemSettings() {
                   </div>
                   <div>
                     <h3 className="text-base font-black text-slate-900">Edit Staff Account</h3>
-                    <p className="text-[11px] text-slate-400">Updating @{userToEdit.username}</p>
+                    <p className="text-xs text-slate-400">Updating @{userToEdit.username}</p>
                   </div>
                 </div>
 
@@ -2866,7 +2866,7 @@ export function SystemSettings() {
 
               <form onSubmit={handleUpdateUserSubmit} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                     Full Name
                   </label>
                   <input
@@ -2878,7 +2878,7 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                     Email Address
                   </label>
                   <input
@@ -2891,7 +2891,7 @@ export function SystemSettings() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                       Role
                     </label>
                     <select
@@ -2906,7 +2906,7 @@ export function SystemSettings() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-600">
                       Status
                     </label>
                     <select
@@ -2921,9 +2921,9 @@ export function SystemSettings() {
                 </div>
 
                 <div className="space-y-1.5 pt-1">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-600 flex items-center justify-between">
                     <span>Reset Password</span>
-                    <span className="text-[10px] text-slate-400 font-normal">
+                    <span className="text-xs text-slate-400 font-normal">
                       Leave blank to keep current
                     </span>
                   </label>
@@ -3102,7 +3102,7 @@ export function SystemSettings() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-3 gap-3">
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
                         Current in DB
                       </div>
                       <div className="text-lg font-black text-slate-800 mt-0.5">
@@ -3110,7 +3110,7 @@ export function SystemSettings() {
                       </div>
                     </div>
                     <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-100 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-rose-500">
+                      <div className="text-xs font-bold uppercase tracking-wider text-rose-500">
                         Duplicate Clones
                       </div>
                       <div className="text-lg font-black text-rose-600 mt-0.5">
@@ -3118,7 +3118,7 @@ export function SystemSettings() {
                       </div>
                     </div>
                     <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100 text-center">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">
+                      <div className="text-xs font-bold uppercase tracking-wider text-emerald-600">
                         Clean Inventory
                       </div>
                       <div className="text-lg font-black text-emerald-700 mt-0.5">
@@ -3132,7 +3132,7 @@ export function SystemSettings() {
                       <AlertTriangle className="size-3.5 text-amber-600 shrink-0" />
                       <span>Why did the product count increase?</span>
                     </div>
-                    <p className="text-[11px] text-amber-800/90">
+                    <p className="text-xs text-amber-800/90">
                       When a wholesale catalog or backup sync runs, documents with differing ID
                       types can create new records alongside existing ones. Running clean
                       deduplication preserves the primary items (with verified images, review
@@ -3143,14 +3143,14 @@ export function SystemSettings() {
                   {duplicateAuditInfo.sampleDuplicates &&
                     duplicateAuditInfo.sampleDuplicates.length > 0 && (
                       <div className="space-y-1.5">
-                        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                        <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
                           Sample Duplicate SKUs Detected
                         </div>
                         <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto p-2 rounded-xl bg-slate-50 border border-slate-100">
                           {duplicateAuditInfo.sampleDuplicates.map((s: any, idx: number) => (
                             <span
                               key={idx}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-mono font-bold text-slate-700"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-slate-200 text-xs font-mono font-bold text-slate-700"
                             >
                               <span>{s.sku}</span>
                               <span className="text-rose-500 font-semibold">({s.count}x)</span>

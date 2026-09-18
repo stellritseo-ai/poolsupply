@@ -280,7 +280,7 @@ function AboutPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
@@ -357,7 +357,7 @@ function AboutPage() {
                     {stat.value}
                     <span className="text-cyan-600 text-lg font-black">{stat.suffix}</span>
                   </div>
-                  <div className="text-[11px] font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
+                  <div className="text-xs font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
                     {stat.label}
                   </div>
                 </motion.div>
@@ -378,7 +378,7 @@ function AboutPage() {
                 transition={{ duration: 0.5 }}
                 className="lg:col-span-6 space-y-5"
               >
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                   <Sparkles className="size-3 text-cyan-600" /> Authorized Distributor Story
                 </span>
 
@@ -412,7 +412,7 @@ function AboutPage() {
                     <div className="flex items-center gap-2 text-cyan-700 font-extrabold text-xs">
                       <CheckCircle2 className="size-4" /> Direct OEM Warranty
                     </div>
-                    <div className="text-[11px] text-slate-500 mt-1">
+                    <div className="text-xs text-slate-500 mt-1">
                       Full factory warranty registration support
                     </div>
                   </div>
@@ -420,7 +420,7 @@ function AboutPage() {
                     <div className="flex items-center gap-2 text-cyan-700 font-extrabold text-xs">
                       <Truck className="size-4" /> Liftgate Freight Delivery
                     </div>
-                    <div className="text-[11px] text-slate-500 mt-1">
+                    <div className="text-xs text-slate-500 mt-1">
                       Commercial job site & warehouse drop-off
                     </div>
                   </div>
@@ -453,12 +453,12 @@ function AboutPage() {
                         <div className="text-xs font-extrabold text-white">
                           Nashville Central Distribution Hub
                         </div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-xs text-slate-400">
                           412 Ezell Pike, Nashville, TN 37217
                         </div>
                       </div>
                     </div>
-                    <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-400 text-[10px] font-bold">
+                    <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-400 text-xs font-bold">
                       <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active
                       Hub
                     </span>
@@ -473,7 +473,7 @@ function AboutPage() {
         <section className="py-[50px] bg-background">
           <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Core Standards
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -502,7 +502,7 @@ function AboutPage() {
                         <div className="size-10 rounded-xl bg-cyan-500/10 text-cyan-700 border border-cyan-500/20 grid place-items-center group-hover:bg-cyan-600 group-hover:text-white transition-colors">
                           <Icon className="size-5" />
                         </div>
-                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 uppercase tracking-wider">
+                        <span className="text-xs font-extrabold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 uppercase tracking-wider">
                           {v.tag}
                         </span>
                       </div>
@@ -526,7 +526,7 @@ function AboutPage() {
 
           <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60">
                 Logistics Infrastructure
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -553,22 +553,22 @@ function AboutPage() {
                       <div className="size-8 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 grid place-items-center font-bold text-xs">
                         <MapPin className="size-4" />
                       </div>
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                      <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                         {hub.leadTime}
                       </span>
                     </div>
 
                     <div>
                       <h3 className="text-sm font-extrabold text-white">{hub.city}</h3>
-                      <div className="text-[11px] text-cyan-400 font-semibold">{hub.region}</div>
+                      <div className="text-xs text-cyan-400 font-semibold">{hub.region}</div>
                     </div>
 
-                    <p className="text-[11px] text-slate-400 leading-relaxed font-medium">
+                    <p className="text-xs text-slate-400 leading-relaxed font-medium">
                       {hub.coverage}
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-slate-400 flex items-center justify-between">
+                  <div className="mt-4 pt-3 border-t border-white/10 text-xs text-slate-400 flex items-center justify-between">
                     <span>Freight Dispatch</span>
                     <span className="text-emerald-400 font-bold">Same Day</span>
                   </div>
@@ -582,7 +582,7 @@ function AboutPage() {
         <section className="py-[50px] bg-background">
           <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Direct Partnerships
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -610,7 +610,7 @@ function AboutPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-1">
                       <h3 className="text-sm font-extrabold text-slate-900">{b.name}</h3>
-                      <span className="text-[10px] font-extrabold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/60">
+                      <span className="text-xs font-extrabold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/60">
                         {b.spec}
                       </span>
                     </div>
@@ -618,7 +618,7 @@ function AboutPage() {
                     <Link
                       to="/brands/$brand"
                       params={{ brand: b.name.toLowerCase() }}
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-700 hover:text-cyan-800 hover:underline mt-2"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-cyan-700 hover:text-cyan-800 hover:underline mt-2"
                     >
                       <span>View {b.name} Catalog</span>
                       <ArrowRight className="size-3" />
@@ -634,7 +634,7 @@ function AboutPage() {
         <section className="py-[50px] bg-slate-50/70 border-y border-slate-200/80">
           <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Milestones
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -675,7 +675,7 @@ function AboutPage() {
         <section className="py-[50px] bg-background">
           <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-cyan-800 bg-cyan-500/10 border border-cyan-500/20">
                 Executive Leadership
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -705,9 +705,9 @@ function AboutPage() {
                       <div className="text-xs sm:text-sm font-extrabold text-white">
                         {item.name}
                       </div>
-                      <div className="text-[11px] text-cyan-400 font-semibold">{item.title}</div>
+                      <div className="text-xs text-cyan-400 font-semibold">{item.title}</div>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2.5 py-1 rounded-md">
+                    <span className="text-xs font-bold text-slate-400 bg-slate-800 px-2.5 py-1 rounded-md">
                       {item.role}
                     </span>
                   </div>
@@ -731,7 +731,7 @@ function AboutPage() {
               <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
               <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg">
                   <Users className="size-3.5" />
                   Contractor Direct Accounts
                 </span>
@@ -767,7 +767,7 @@ function AboutPage() {
                   </Link>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-4 sm:gap-6 pt-4 text-[11px] font-semibold text-slate-400">
+                <div className="flex flex-wrap justify-center gap-4 sm:gap-6 pt-4 text-xs font-semibold text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="size-3.5 text-cyan-400" />
                     Zero Account Setup Fees

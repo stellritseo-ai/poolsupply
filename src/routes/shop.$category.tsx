@@ -495,7 +495,7 @@ function CategoryPage() {
         <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           Filter by Brand
           {availableBrands.length > 0 && (
-            <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-full">
               {availableBrands.length}
             </span>
           )}
@@ -504,7 +504,7 @@ function CategoryPage() {
           <button
             type="button"
             onClick={() => setSelectedBrands([])}
-            className="text-[11px] font-bold text-cyan-600 hover:text-cyan-700 cursor-pointer"
+            className="text-xs font-bold text-cyan-600 hover:text-cyan-700 cursor-pointer"
           >
             Clear ({selectedBrands.length})
           </button>
@@ -519,7 +519,7 @@ function CategoryPage() {
             placeholder="Search brands..."
             value={brandSearch}
             onChange={(e) => setBrandSearch(e.target.value)}
-            className="w-full pl-8 pr-6 h-8 text-[11px] border border-slate-200 bg-slate-50/70 rounded-lg focus:outline-none focus:border-cyan-500 focus:bg-white transition-all font-medium placeholder:text-slate-400"
+            className="w-full pl-8 pr-6 h-8 text-xs border border-slate-200 bg-slate-50/70 rounded-lg focus:outline-none focus:border-cyan-500 focus:bg-white transition-all font-medium placeholder:text-slate-400"
           />
           {brandSearch && (
             <button
@@ -563,7 +563,7 @@ function CategoryPage() {
           })}
         </div>
       ) : (
-        <p className="text-[11px] text-slate-400 italic py-1">
+        <p className="text-xs text-slate-400 italic py-1">
           {brandSearch ? "No matching brands" : "No brands found"}
         </p>
       )}
@@ -579,7 +579,7 @@ function CategoryPage() {
         <section className="bg-gradient-to-b from-surface to-background border-b border-border/50 py-8 md:py-10 mb-6 md:mb-8">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
+              <span className="text-xs sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
                 Wholesale Catalog
               </span>
               <h1 className="mt-1.5 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
@@ -630,7 +630,7 @@ function CategoryPage() {
               <Filter className="size-4 text-cyan-600" />
               {mobileFiltersOpen ? "Hide Filters" : "Filter Products"}
               {(selectedBrands.length > 0 || inStockOnly) && (
-                <span className="size-5 rounded-full bg-cyan-600 text-white text-[10px] grid place-items-center font-bold">
+                <span className="size-5 rounded-full bg-cyan-600 text-white text-xs grid place-items-center font-bold">
                   {selectedBrands.length + (inStockOnly ? 1 : 0)}
                 </span>
               )}

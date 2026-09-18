@@ -185,7 +185,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 className="h-7 sm:h-9 w-auto object-contain brightness-0 invert opacity-95 group-hover:opacity-100 transition-opacity"
               />
             </Link>
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-cyan-400/30">
+            <span className="text-xs sm:text-xs font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-cyan-400/30">
               Master Admin Console
             </span>
           </div>
@@ -211,7 +211,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 <Database className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">Multi-Hub Inventory</span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+              <p className="text-xs text-slate-300 leading-relaxed font-medium">
                 Real-time stock feeds across Nashville, LA, Dallas, and Orlando warehouses.
               </p>
             </div>
@@ -221,7 +221,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 <Truck className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">Freight Logistics</span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+              <p className="text-xs text-slate-300 leading-relaxed font-medium">
                 Live carrier dispatch, electronic BOLs, and automated shipment tracking.
               </p>
             </div>
@@ -231,7 +231,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 <Layers className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">8,000+ OEM SKUs</span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+              <p className="text-xs text-slate-300 leading-relaxed font-medium">
                 Pentair, Hayward, Jandy & Raypak distributor pricing and margin management.
               </p>
             </div>
@@ -241,7 +241,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 <ShieldCheck className="size-4 text-cyan-400 shrink-0" />
                 <span className="font-extrabold text-xs text-white">256-Bit Protection</span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+              <p className="text-xs text-slate-300 leading-relaxed font-medium">
                 End-to-end encrypted session controls with brute-force lockout guard.
               </p>
             </div>
@@ -277,7 +277,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
 
             {/* Header */}
             <div className="text-center mb-6 space-y-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[10px] font-extrabold uppercase tracking-widest">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest">
                 <ShieldCheck className="size-3 text-cyan-400" />
                 Authorized Access Only
               </div>
@@ -324,7 +324,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                     <AlertTriangle className="size-3.5 text-rose-400" />
                     <span>Authentication Failed</span>
                   </div>
-                  <div className="text-[11px] text-rose-200 font-medium">{error}</div>
+                  <div className="text-xs text-rose-200 font-medium">{error}</div>
                 </motion.div>
               ) : null}
             </AnimatePresence>
@@ -332,7 +332,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             {/* Attempt Indicator Badge */}
             {!isLocked && attemptsLeft !== null && attemptsLeft < 3 && (
               <div className="mb-4 text-center">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-extrabold">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-extrabold">
                   <AlertTriangle className="size-3.5" />
                   {attemptsLeft} Attempt{attemptsLeft === 1 ? "" : "s"} Remaining Before 3-Hour
                   Lockout
@@ -344,7 +344,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             <form onSubmit={handleLogin} className="space-y-4">
               {/* Username Input */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-wider text-slate-300 pl-1">
+                <label className="text-xs font-black uppercase tracking-wider text-slate-300 pl-1">
                   Admin Username
                 </label>
                 <div className="relative group">
@@ -365,7 +365,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
 
               {/* Password Input */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-wider text-slate-300 pl-1">
+                <label className="text-xs font-black uppercase tracking-wider text-slate-300 pl-1">
                   Security Password
                 </label>
                 <div className="relative group">
@@ -418,7 +418,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             </form>
 
             {/* Encrypted Footer Badge */}
-            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-extrabold text-slate-400 uppercase tracking-wider">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="size-3.5 text-cyan-400" /> 256-Bit TLS Protected
               </span>

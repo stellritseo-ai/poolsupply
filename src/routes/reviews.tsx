@@ -371,7 +371,7 @@ function ReviewsPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-[11px] font-extrabold uppercase tracking-widest shadow-lg backdrop-blur-md"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-extrabold uppercase tracking-widest shadow-lg backdrop-blur-md"
               >
                 {/* Official Google G Logo */}
                 <svg className="size-4 shrink-0" viewBox="0 0 24 24">
@@ -463,7 +463,7 @@ function ReviewsPage() {
                       {stat.value}
                       <span className="text-cyan-600 text-sm font-bold">{stat.suffix}</span>
                     </div>
-                    <div className="text-[11px] font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
+                    <div className="text-xs font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -509,7 +509,7 @@ function ReviewsPage() {
                               style={{ width: `${pct}%` }}
                             />
                           </div>
-                          <span className="w-9 text-right text-slate-400 text-[11px]">{pct}%</span>
+                          <span className="w-9 text-right text-slate-400 text-xs">{pct}%</span>
                         </div>
                       );
                     })}
@@ -550,7 +550,7 @@ function ReviewsPage() {
                         >
                           <span>{cat.label}</span>
                           <span
-                            className={`text-[10px] px-2 py-0.5 rounded-md ${active ? "bg-cyan-200/60 text-cyan-900 font-black" : "bg-slate-100 text-slate-500 font-semibold"}`}
+                            className={`text-xs px-2 py-0.5 rounded-md ${active ? "bg-cyan-200/60 text-cyan-900 font-black" : "bg-slate-100 text-slate-500 font-semibold"}`}
                           >
                             {count}
                           </span>
@@ -612,12 +612,12 @@ function ReviewsPage() {
                                     {rev.author}
                                   </span>
                                   {rev.verified && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full">
+                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full">
                                       <CheckCircle2 className="size-2.5" /> Verified Contractor
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-[11px] text-slate-400 font-medium">
+                                <div className="text-xs text-slate-400 font-medium">
                                   {rev.role}
                                   {rev.location && <span> · {rev.location}</span>}
                                 </div>
@@ -633,7 +633,7 @@ function ReviewsPage() {
                                   />
                                 ))}
                               </div>
-                              <div className="text-[10px] text-slate-400 font-medium">
+                              <div className="text-xs text-slate-400 font-medium">
                                 {formatDate(rev.date)}
                               </div>
                             </div>
@@ -642,7 +642,7 @@ function ReviewsPage() {
                           {/* Equipment Tag */}
                           {rev.equipmentTag && (
                             <div className="mb-2">
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-bold">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-bold">
                                 <Package className="size-3 text-cyan-600" />
                                 <span>Verified Purchase: {rev.equipmentTag}</span>
                               </span>
@@ -660,12 +660,12 @@ function ReviewsPage() {
 
                         {/* Footer */}
                         <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-                          <span className="text-[11px] text-slate-400 font-medium">
+                          <span className="text-xs text-slate-400 font-medium">
                             Was this review helpful?
                           </span>
                           <button
                             onClick={() => markHelpful(rev.id)}
-                            className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-slate-600 hover:text-cyan-700 transition px-2.5 py-1 rounded-lg hover:bg-slate-50 border border-slate-200/80 cursor-pointer"
+                            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-slate-600 hover:text-cyan-700 transition px-2.5 py-1 rounded-lg hover:bg-slate-50 border border-slate-200/80 cursor-pointer"
                           >
                             <ThumbsUp className="size-3 text-slate-400" />
                             <span>Helpful ({rev.helpful || 0})</span>
@@ -701,7 +701,7 @@ function ReviewsPage() {
               <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
               <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg">
                   <Sparkles className="size-3.5" />
                   Instant Trade Access
                 </span>
@@ -765,7 +765,7 @@ function ReviewsPage() {
                     <h3 className="font-extrabold text-sm text-slate-900">
                       Write a Verified Review
                     </h3>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-xs text-slate-400">
                       Share your wholesale equipment experience
                     </p>
                   </div>
@@ -781,7 +781,7 @@ function ReviewsPage() {
               <form onSubmit={handleSubmit} className="space-y-3.5">
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">
                       Your Full Name *
                     </label>
                     <input
@@ -794,7 +794,7 @@ function ReviewsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">
                       Company / Role
                     </label>
                     <input
@@ -809,7 +809,7 @@ function ReviewsPage() {
 
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">
                       City, State
                     </label>
                     <input
@@ -821,7 +821,7 @@ function ReviewsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">
                       Review Topic
                     </label>
                     <select
@@ -839,7 +839,7 @@ function ReviewsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">
                     Equipment Installed / Purchased
                   </label>
                   <input
@@ -852,7 +852,7 @@ function ReviewsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1.5">
+                  <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1.5">
                     Rating *
                   </label>
                   <div className="flex items-center gap-1">
@@ -885,7 +885,7 @@ function ReviewsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">
                     Headline / Summary *
                   </label>
                   <input
@@ -899,7 +899,7 @@ function ReviewsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="block text-xs font-black uppercase tracking-wider text-slate-600 mb-1">
                     Your Detailed Review *
                   </label>
                   <textarea

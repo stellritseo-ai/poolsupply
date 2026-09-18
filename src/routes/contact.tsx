@@ -266,7 +266,7 @@ function ContactPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg"
               >
                 <Zap className="size-3.5 text-cyan-400" />
                 Wholesale Trade Support Desk · 2-Hour Response SLA
@@ -313,7 +313,7 @@ function ContactPage() {
                   <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                     {stat.value}
                   </div>
-                  <div className="text-[11px] font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
+                  <div className="text-xs font-extrabold text-slate-500 mt-1 uppercase tracking-wider">
                     {stat.label}
                   </div>
                 </motion.div>
@@ -340,7 +340,7 @@ function ContactPage() {
                       <div className="size-10 rounded-xl bg-cyan-500/10 text-cyan-700 border border-cyan-500/20 grid place-items-center mb-3 group-hover:bg-cyan-600 group-hover:text-white transition-colors">
                         <Icon className="size-5" />
                       </div>
-                      <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">
+                      <div className="text-xs font-black uppercase tracking-wider text-slate-400 mb-0.5">
                         {ch.title}
                       </div>
                       <div className="font-extrabold text-sm text-slate-900 leading-snug group-hover:text-cyan-700 transition-colors">
@@ -403,7 +403,7 @@ function ContactPage() {
                     >
                       {/* Department Selector */}
                       <div>
-                        <label className="block text-[11px] font-black uppercase tracking-wider text-slate-700 mb-2">
+                        <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-2">
                           Select Topic or Department
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -424,14 +424,14 @@ function ContactPage() {
                                 <Icon
                                   className={`size-4 shrink-0 ${active ? "text-cyan-600" : "text-slate-400"}`}
                                 />
-                                <span className="text-[11px] truncate leading-tight">
+                                <span className="text-xs truncate leading-tight">
                                   {dept.label}
                                 </span>
                               </button>
                             );
                           })}
                         </div>
-                        <p className="text-[11px] text-cyan-700 font-semibold mt-2">
+                        <p className="text-xs text-cyan-700 font-semibold mt-2">
                           • {activeDept.desc}
                         </p>
                       </div>
@@ -439,7 +439,7 @@ function ContactPage() {
                       {/* Name & Company */}
                       <div className="grid sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                          <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">
                             Your Full Name <span className="text-rose-500">*</span>
                           </label>
                           <input
@@ -452,7 +452,7 @@ function ContactPage() {
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                          <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">
                             Business / Contractor Name
                           </label>
                           <input
@@ -468,7 +468,7 @@ function ContactPage() {
                       {/* Email & Phone */}
                       <div className="grid sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                          <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">
                             Email Address <span className="text-rose-500">*</span>
                           </label>
                           <input
@@ -481,7 +481,7 @@ function ContactPage() {
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                          <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">
                             Direct Phone Number
                           </label>
                           <input
@@ -496,7 +496,7 @@ function ContactPage() {
 
                       {/* Message */}
                       <div>
-                        <label className="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-1">
+                        <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1">
                           Message & Equipment Specifications{" "}
                           <span className="text-rose-500">*</span>
                         </label>
@@ -568,7 +568,7 @@ function ContactPage() {
                         Nashville Central Hub
                       </span>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold">
                       Active Facility
                     </span>
                   </div>
@@ -587,7 +587,7 @@ function ContactPage() {
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 font-medium pt-1">
+                  <div className="flex items-center justify-between text-xs text-slate-500 font-medium pt-1">
                     <span>412 Ezell Pike, Nashville, TN 37217</span>
                     <a
                       href="https://maps.google.com/?q=412+Ezell+Pike+Nashville+TN+37217"
@@ -625,9 +625,9 @@ function ContactPage() {
                       >
                         <div>
                           <div className="font-extrabold text-slate-900">{hub.city}</div>
-                          <div className="text-[10px] text-slate-400 font-medium">{hub.role}</div>
+                          <div className="text-xs text-slate-400 font-medium">{hub.role}</div>
                         </div>
-                        <span className="text-[10px] font-black text-cyan-800 bg-cyan-100/60 px-2 py-0.5 rounded-md">
+                        <span className="text-xs font-black text-cyan-800 bg-cyan-100/60 px-2 py-0.5 rounded-md">
                           {hub.lead}
                         </span>
                       </div>
@@ -652,7 +652,7 @@ function ContactPage() {
               <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
               <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[11px] font-extrabold uppercase tracking-widest shadow-lg">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest shadow-lg">
                   <Sparkles className="size-3.5" />
                   Ready to Start?
                 </span>

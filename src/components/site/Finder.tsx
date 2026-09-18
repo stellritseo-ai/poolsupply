@@ -216,7 +216,7 @@ export function Finder() {
             {/* Left Controls Column */}
             <div className="lg:col-span-6 space-y-5 sm:space-y-6">
               <div>
-                <span className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-800 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest shadow-2xs mb-2.5 sm:mb-3">
+                <span className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-800 text-xs sm:text-xs font-extrabold uppercase tracking-widest shadow-2xs mb-2.5 sm:mb-3">
                   <span className="relative flex h-2 w-2 shrink-0">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-600" />
@@ -283,7 +283,7 @@ export function Finder() {
                       >
                         <span className="leading-none">{p.label}</span>
                         <span
-                          className={`text-[9.5px] mt-0.5 font-medium leading-none ${gallons === p.val ? "text-cyan-300" : "text-slate-400"}`}
+                          className={`text-xs mt-0.5 font-medium leading-none ${gallons === p.val ? "text-cyan-300" : "text-slate-400"}`}
                         >
                           {p.sub}
                         </span>
@@ -327,7 +327,7 @@ export function Finder() {
                             <span className="truncate">{t.label}</span>
                           </div>
                           <div
-                            className={`text-[10px] sm:mt-1 font-medium ${isActive ? "text-cyan-300" : "text-slate-400"}`}
+                            className={`text-xs sm:mt-1 font-medium ${isActive ? "text-cyan-300" : "text-slate-400"}`}
                           >
                             {t.desc}
                           </div>
@@ -377,7 +377,7 @@ export function Finder() {
                             <span className="truncate">{c.label}</span>
                           </div>
                           <div
-                            className={`text-[10px] sm:mt-1 font-medium ${isActive ? "text-cyan-100" : "text-slate-400"}`}
+                            className={`text-xs sm:mt-1 font-medium ${isActive ? "text-cyan-100" : "text-slate-400"}`}
                           >
                             {c.desc}
                           </div>
@@ -390,7 +390,7 @@ export function Finder() {
                 {/* Live Engineering Metrics Gauge HUD */}
                 <div className="grid grid-cols-3 gap-2 p-2.5 sm:p-3.5 rounded-2xl bg-cyan-50/70 border border-cyan-200/60 text-center">
                   <div className="flex flex-col items-center">
-                    <span className="text-[8.5px] sm:text-[9.5px] uppercase font-bold text-slate-500 flex items-center gap-1">
+                    <span className="text-xs sm:text-xs uppercase font-bold text-slate-500 flex items-center gap-1">
                       <Gauge className="size-3 text-cyan-600 shrink-0" />
                       <span className="truncate">Min. Flow</span>
                     </span>
@@ -399,7 +399,7 @@ export function Finder() {
                     </span>
                   </div>
                   <div className="flex flex-col items-center border-x border-cyan-200/50 px-1">
-                    <span className="text-[8.5px] sm:text-[9.5px] uppercase font-bold text-slate-500 flex items-center gap-1">
+                    <span className="text-xs sm:text-xs uppercase font-bold text-slate-500 flex items-center gap-1">
                       <Clock className="size-3 text-cyan-600 shrink-0" />
                       <span className="truncate">Turnover</span>
                     </span>
@@ -408,7 +408,7 @@ export function Finder() {
                     </span>
                   </div>
                   <div className="flex flex-col items-center">
-                    <span className="text-[8.5px] sm:text-[9.5px] uppercase font-bold text-slate-500 flex items-center gap-1">
+                    <span className="text-xs sm:text-xs uppercase font-bold text-slate-500 flex items-center gap-1">
                       <DollarSign className="size-3 text-emerald-600 shrink-0" />
                       <span className="truncate">Est. Savings</span>
                     </span>
@@ -424,11 +424,11 @@ export function Finder() {
             <div className="lg:col-span-6 w-full">
               <div className="rounded-2xl sm:rounded-[2rem] bg-gradient-to-b from-[#f8fbfe] via-white to-white border border-slate-200/90 p-4 sm:p-6 lg:p-7 shadow-lg space-y-3.5 sm:space-y-4 relative">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3 gap-2">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-cyan-800 bg-cyan-100/80 px-2.5 sm:px-3 py-1 rounded-full border border-cyan-200">
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-xs font-extrabold uppercase tracking-wider text-cyan-800 bg-cyan-100/80 px-2.5 sm:px-3 py-1 rounded-full border border-cyan-200">
                     <Sparkles className="size-3.5 text-cyan-600 shrink-0" />
                     <span>Live System Match</span>
                   </span>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1 shrink-0">
+                  <span className="text-xs sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1 shrink-0">
                     <CheckCircle2 className="size-3 text-emerald-600 shrink-0" />
                     <span>Hydraulic Certified</span>
                   </span>
@@ -454,10 +454,10 @@ export function Finder() {
                         </Link>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                            <span className="text-[9px] uppercase font-extrabold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/50">
+                            <span className="text-xs uppercase font-extrabold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full border border-cyan-200/50">
                               Pump • {hpSpec}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                            <span className="text-xs font-bold text-slate-400 uppercase">
                               {matchedPump.brand}
                             </span>
                           </div>
@@ -466,9 +466,9 @@ export function Finder() {
                             params={{ productId: matchedPump.id }}
                             className="block"
                           >
-                            <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors">
-                              {matchedPump.name}
-                            </h4>
+                            <h3 className="text-xs font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors capitalize">
+                              {matchedPump.name?.toLowerCase()}
+                            </h3>
                           </Link>
                           <span className="text-xs sm:text-sm font-black text-slate-900">
                             {formatUSD(matchedPump.price)}
@@ -504,10 +504,10 @@ export function Finder() {
                         </Link>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                            <span className="text-[9px] uppercase font-extrabold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/50">
+                            <span className="text-xs uppercase font-extrabold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/50">
                               Heating • {btuSpec}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                            <span className="text-xs font-bold text-slate-400 uppercase">
                               {matchedHeater.brand}
                             </span>
                           </div>
@@ -516,9 +516,9 @@ export function Finder() {
                             params={{ productId: matchedHeater.id }}
                             className="block"
                           >
-                            <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors">
-                              {matchedHeater.name}
-                            </h4>
+                            <h3 className="text-xs font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors capitalize">
+                              {matchedHeater.name?.toLowerCase()}
+                            </h3>
                           </Link>
                           <span className="text-xs sm:text-sm font-black text-slate-900">
                             {formatUSD(matchedHeater.price)}
@@ -554,10 +554,10 @@ export function Finder() {
                         </Link>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                            <span className="text-[9px] uppercase font-extrabold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/50">
+                            <span className="text-xs uppercase font-extrabold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/50">
                               Filter • {filterSpec}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                            <span className="text-xs font-bold text-slate-400 uppercase">
                               {matchedFilter.brand}
                             </span>
                           </div>
@@ -566,9 +566,9 @@ export function Finder() {
                             params={{ productId: matchedFilter.id }}
                             className="block"
                           >
-                            <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors">
-                              {matchedFilter.name}
-                            </h4>
+                            <h3 className="text-xs font-bold text-slate-900 line-clamp-1 hover:text-cyan-700 transition-colors capitalize">
+                              {matchedFilter.name?.toLowerCase()}
+                            </h3>
                           </Link>
                           <span className="text-xs sm:text-sm font-black text-slate-900">
                             {formatUSD(matchedFilter.price)}
@@ -591,14 +591,14 @@ export function Finder() {
                 <div className="pt-3 border-t border-slate-100 space-y-2.5">
                   <div className="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200/70 gap-2">
                     <div>
-                      <span className="text-[10px] uppercase font-extrabold text-slate-500 block">
+                      <span className="text-xs uppercase font-extrabold text-slate-500 block">
                         3-Piece Package Total
                       </span>
                       <span className="text-sm sm:text-base font-black text-slate-900">
                         {formatUSD(bundleTotal)}
                       </span>
                     </div>
-                    <span className="text-[10px] sm:text-[10.5px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200/60 flex items-center gap-1 shrink-0">
+                    <span className="text-xs sm:text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200/60 flex items-center gap-1 shrink-0">
                       <Check className="size-3 text-emerald-600" />
                       <span>Wholesale Tier Unlocked</span>
                     </span>

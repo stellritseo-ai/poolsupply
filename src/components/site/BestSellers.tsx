@@ -246,7 +246,7 @@ export function BestSellers() {
               <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold">
                 Curated Pro Equipment
               </span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
                 Auto Cleaners #1
               </span>
             </div>
@@ -290,7 +290,7 @@ export function BestSellers() {
                 <span>{tab.label}</span>
                 {tab.badge && (
                   <span
-                    className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded-full ${
+                    className={`text-xs font-black uppercase px-1.5 py-0.2 rounded-full ${
                       isActive
                         ? "bg-cyan-400 text-slate-900"
                         : "bg-cyan-50 text-cyan-700 border border-cyan-200"

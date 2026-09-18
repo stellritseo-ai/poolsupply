@@ -426,7 +426,7 @@ function CustomersAdmin() {
         {/* Pillar 1: Total Directory */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Total Directory
             </span>
             <div className="size-8 rounded-xl bg-slate-100 text-slate-700 grid place-items-center">
@@ -434,7 +434,7 @@ function CustomersAdmin() {
             </div>
           </div>
           <div className="text-2xl font-black text-slate-900 tracking-tight">{totalCustomers}</div>
-          <div className="text-[11px] font-semibold text-slate-500 mt-0.5 truncate">
+          <div className="text-xs font-semibold text-slate-500 mt-0.5 truncate">
             Omnichannel database
           </div>
         </div>
@@ -442,7 +442,7 @@ function CustomersAdmin() {
         {/* Pillar 2: Guest Checkout (Without Login) */}
         <div className="bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/40 border border-indigo-200 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-indigo-900">
+            <span className="text-xs font-black uppercase tracking-wider text-indigo-900">
               Guest Checkout
             </span>
             <div className="size-8 rounded-xl bg-indigo-100 text-indigo-700 grid place-items-center">
@@ -450,7 +450,7 @@ function CustomersAdmin() {
             </div>
           </div>
           <div className="text-2xl font-black text-indigo-950 tracking-tight">{guestBuyers}</div>
-          <div className="text-[11px] font-bold text-indigo-700 mt-0.5 truncate flex items-center gap-1">
+          <div className="text-xs font-bold text-indigo-700 mt-0.5 truncate flex items-center gap-1">
             <span className="size-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
             <span>Without portal login</span>
           </div>
@@ -459,7 +459,7 @@ function CustomersAdmin() {
         {/* Pillar 3: Registered Portal */}
         <div className="bg-white border border-emerald-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition bg-gradient-to-br from-white to-emerald-50/40">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-900">
               Portal Accounts
             </span>
             <div className="size-8 rounded-xl bg-emerald-100 text-emerald-800 grid place-items-center">
@@ -469,7 +469,7 @@ function CustomersAdmin() {
           <div className="text-2xl font-black text-emerald-950 tracking-tight">
             {portalAccounts}
           </div>
-          <div className="text-[11px] font-semibold text-emerald-800/80 mt-0.5 truncate">
+          <div className="text-xs font-semibold text-emerald-800/80 mt-0.5 truncate">
             Client portal logins
           </div>
         </div>
@@ -477,7 +477,7 @@ function CustomersAdmin() {
         {/* Pillar 4: Trade Contractors */}
         <div className="bg-white border border-cyan-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition bg-gradient-to-br from-white to-cyan-50/40">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-900">
+            <span className="text-xs font-black uppercase tracking-wider text-cyan-900">
               Contractors
             </span>
             <div className="size-8 rounded-xl bg-cyan-100 text-cyan-800 grid place-items-center">
@@ -487,7 +487,7 @@ function CustomersAdmin() {
           <div className="text-2xl font-black text-cyan-950 tracking-tight">
             {verifiedContractors}
           </div>
-          <div className="text-[11px] font-semibold text-cyan-800/80 mt-0.5 truncate">
+          <div className="text-xs font-semibold text-cyan-800/80 mt-0.5 truncate">
             Licensed commercial pros
           </div>
         </div>
@@ -495,7 +495,7 @@ function CustomersAdmin() {
         {/* Pillar 5: Total Spend */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition col-span-2 sm:col-span-1">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Total Customer Spend
             </span>
             <div className="size-8 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center">
@@ -505,7 +505,7 @@ function CustomersAdmin() {
           <div className="text-2xl font-black text-slate-900 tracking-tight truncate">
             {formatUSD(totalLifetimeRevenue)}
           </div>
-          <div className="text-[11px] font-semibold text-slate-500 mt-0.5 truncate">
+          <div className="text-xs font-semibold text-slate-500 mt-0.5 truncate">
             Cumulative transaction vol.
           </div>
         </div>
@@ -538,7 +538,7 @@ function CustomersAdmin() {
         <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold overflow-x-auto scrollbar-none">
           <button
             onClick={() => setFilterType("all")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-xs sm:text-xs shrink-0 ${
               filterType === "all"
                 ? "bg-white text-slate-900 shadow-2xs font-black"
                 : "text-slate-600 hover:text-slate-900"
@@ -549,7 +549,7 @@ function CustomersAdmin() {
 
           <button
             onClick={() => setFilterType("guest")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-xs sm:text-xs shrink-0 flex items-center gap-1.5 ${
               filterType === "guest"
                 ? "bg-indigo-600 text-white shadow-2xs font-black"
                 : "text-indigo-800 hover:bg-indigo-50/70"
@@ -561,7 +561,7 @@ function CustomersAdmin() {
 
           <button
             onClick={() => setFilterType("portal")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-xs sm:text-xs shrink-0 flex items-center gap-1.5 ${
               filterType === "portal"
                 ? "bg-emerald-600 text-white shadow-2xs font-black"
                 : "text-emerald-800 hover:bg-emerald-50/70"
@@ -573,7 +573,7 @@ function CustomersAdmin() {
 
           <button
             onClick={() => setFilterType("contractors")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-xs sm:text-xs shrink-0 ${
               filterType === "contractors"
                 ? "bg-white text-slate-900 shadow-2xs font-black"
                 : "text-slate-600 hover:text-slate-900"
@@ -584,7 +584,7 @@ function CustomersAdmin() {
 
           <button
             onClick={() => setFilterType("buyers")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-xs sm:text-xs shrink-0 ${
               filterType === "buyers"
                 ? "bg-white text-slate-900 shadow-2xs font-black"
                 : "text-slate-600 hover:text-slate-900"
@@ -595,7 +595,7 @@ function CustomersAdmin() {
 
           <button
             onClick={() => setFilterType("recent")}
-            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-[11px] sm:text-xs shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg transition cursor-pointer text-xs sm:text-xs shrink-0 ${
               filterType === "recent"
                 ? "bg-white text-slate-900 shadow-2xs font-black"
                 : "text-slate-600 hover:text-slate-900"
@@ -672,12 +672,12 @@ function CustomersAdmin() {
                               {customer.name}
                             </span>
                             {isGuest ? (
-                              <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                              <span className="inline-flex items-center gap-1 text-xs font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
                                 <ShoppingBag className="size-2.5" />
                                 Guest
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <span className="inline-flex items-center gap-1 text-xs font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 <ShieldCheck className="size-2.5" />
                                 Portal
                               </span>
@@ -685,11 +685,11 @@ function CustomersAdmin() {
                           </div>
 
                           {customer.company ? (
-                            <span className="text-[10px] font-bold text-cyan-800 truncate block">
+                            <span className="text-xs font-bold text-cyan-800 truncate block">
                               {customer.company}
                             </span>
                           ) : isGuest ? (
-                            <span className="text-[10px] font-medium text-slate-400 truncate block">
+                            <span className="text-xs font-medium text-slate-400 truncate block">
                               Direct Storefront Buyer
                             </span>
                           ) : null}
@@ -700,11 +700,11 @@ function CustomersAdmin() {
                         <div className="font-black text-sm text-slate-900">
                           {formatUSD(customer.lifetimeValue || customer.totalSpent || 0)}
                         </div>
-                        <div className="text-[10px] text-emerald-600 font-bold">Total Spend</div>
+                        <div className="text-xs text-emerald-600 font-bold">Total Spend</div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+                    <div className="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
                       <div className="flex items-center gap-3">
                         <span>
                           <strong>{ordersCount}</strong> Order{ordersCount !== 1 ? "s" : ""}
@@ -729,7 +729,7 @@ function CustomersAdmin() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-black uppercase tracking-wider text-slate-400">
                     <th className="p-4 sm:px-6">Customer & Account Type</th>
                     <th className="p-4 sm:px-6">Contact & Logistics</th>
                     <th className="p-4 sm:px-6 text-center">Orders Placed</th>
@@ -794,23 +794,23 @@ function CustomersAdmin() {
                                 <div className="font-black text-slate-900 text-sm flex items-center gap-2">
                                   <span>{customer.name}</span>
                                   {isGuest ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
+                                    <span className="inline-flex items-center gap-1 text-xs font-extrabold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
                                       <ShoppingBag className="size-3" />
                                       Guest
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+                                    <span className="inline-flex items-center gap-1 text-xs font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
                                       <ShieldCheck className="size-3" />
                                       Portal Member
                                     </span>
                                   )}
                                   {customer.company && (
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-900 shrink-0">
+                                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-900 shrink-0">
                                       {customer.company}
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-[10px] font-semibold text-slate-400 flex items-center gap-2 mt-0.5">
+                                <div className="text-xs font-semibold text-slate-400 flex items-center gap-2 mt-0.5">
                                   {isGuest ? (
                                     <span className="text-slate-500 flex items-center gap-1">
                                       <Clock className="size-3 text-indigo-500" />
@@ -854,14 +854,14 @@ function CustomersAdmin() {
                                 <a
                                   href={`tel:${customer.phone}`}
                                   onClick={(e) => e.stopPropagation()}
-                                  className="text-slate-500 hover:text-slate-800 flex items-center gap-1.5 text-[11px] font-mono"
+                                  className="text-slate-500 hover:text-slate-800 flex items-center gap-1.5 text-xs font-mono"
                                 >
                                   <Phone className="size-3 text-slate-400 shrink-0" />
                                   <span>{customer.phone}</span>
                                 </a>
                               )}
                               {primaryAddr?.city && (
-                                <div className="text-[10px] text-slate-400 flex items-center gap-1">
+                                <div className="text-xs text-slate-400 flex items-center gap-1">
                                   <MapPin className="size-2.5 text-slate-400 shrink-0" />
                                   <span className="truncate max-w-[180px]">
                                     {primaryAddr.city}, {primaryAddr.state || ""}{" "}
@@ -876,7 +876,7 @@ function CustomersAdmin() {
                           <td className="p-4 sm:px-6 text-center">
                             <div className="font-black text-slate-900 text-sm">{ordersCount}</div>
                             {isGuest && (
-                              <div className="text-[9px] font-extrabold text-indigo-600 uppercase tracking-wider">
+                              <div className="text-xs font-extrabold text-indigo-600 uppercase tracking-wider">
                                 Direct Order
                               </div>
                             )}
@@ -885,7 +885,7 @@ function CustomersAdmin() {
                           {/* RMA Claims */}
                           <td className="p-4 sm:px-6 text-center">
                             {returnsCount > 0 ? (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+                              <span className="px-2 py-0.5 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
                                 {returnsCount} RMA
                               </span>
                             ) : (
@@ -896,7 +896,7 @@ function CustomersAdmin() {
                           {/* Quotes */}
                           <td className="p-4 sm:px-6 text-center">
                             {quotesCount > 0 ? (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-cyan-100 text-cyan-900 border border-cyan-300">
+                              <span className="px-2 py-0.5 rounded-full text-xs font-extrabold bg-cyan-100 text-cyan-900 border border-cyan-300">
                                 {quotesCount} RFQ
                               </span>
                             ) : (
@@ -909,7 +909,7 @@ function CustomersAdmin() {
                             <div className="font-black text-sm text-slate-900">
                               {formatUSD(customer.lifetimeValue || customer.totalSpent || 0)}
                             </div>
-                            <div className="text-[10px] font-extrabold text-emerald-600">
+                            <div className="text-xs font-extrabold text-emerald-600">
                               Verified Spend
                             </div>
                           </td>
@@ -991,12 +991,12 @@ function CustomersAdmin() {
                         {activeCustomer.name}
                       </h2>
                       {isCustomerGuest ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/40">
+                        <span className="inline-flex items-center gap-1 text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/40">
                           <ShoppingBag className="size-3 text-indigo-300" />
                           Guest Checkout Buyer (No Portal Login)
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 border border-emerald-400/40">
+                        <span className="inline-flex items-center gap-1 text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 border border-emerald-400/40">
                           <ShieldCheck className="size-3 text-emerald-300" />
                           Verified Client Portal Member
                         </span>
@@ -1015,7 +1015,7 @@ function CustomersAdmin() {
                       </div>
                     )}
 
-                    <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 flex items-center gap-2 sm:gap-3 flex-wrap">
+                    <div className="text-xs sm:text-xs text-slate-400 mt-1 flex items-center gap-2 sm:gap-3 flex-wrap">
                       {activeCustomer.email && (
                         <a
                           href={`mailto:${activeCustomer.email}`}
@@ -1041,7 +1041,7 @@ function CustomersAdmin() {
                 {/* KPI Bar */}
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10 text-center">
                   <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">
+                    <div className="text-xs sm:text-xs font-black uppercase text-slate-400">
                       Lifetime Spend
                     </div>
                     <div className="text-xs sm:text-base font-black text-cyan-300 mt-0.5 truncate">
@@ -1049,7 +1049,7 @@ function CustomersAdmin() {
                     </div>
                   </div>
                   <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">
+                    <div className="text-xs sm:text-xs font-black uppercase text-slate-400">
                       Total Orders
                     </div>
                     <div className="text-xs sm:text-base font-black text-white mt-0.5">
@@ -1057,7 +1057,7 @@ function CustomersAdmin() {
                     </div>
                   </div>
                   <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
-                    <div className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400">
+                    <div className="text-xs sm:text-xs font-black uppercase text-slate-400">
                       RMA Claims
                     </div>
                     <div className="text-xs sm:text-base font-black text-amber-400 mt-0.5">
@@ -1071,7 +1071,7 @@ function CustomersAdmin() {
               <div className="flex items-center gap-1 px-4 sm:px-6 pt-3 border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto text-xs font-bold scrollbar-none">
                 <button
                   onClick={() => setActiveTab("orders")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-xs sm:text-xs ${
                     activeTab === "orders"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -1083,7 +1083,7 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("addresses")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-xs sm:text-xs ${
                     activeTab === "addresses"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -1095,7 +1095,7 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("returns")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-xs sm:text-xs ${
                     activeTab === "returns"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -1107,7 +1107,7 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("quotes")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-xs sm:text-xs ${
                     activeTab === "quotes"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -1119,7 +1119,7 @@ function CustomersAdmin() {
 
                 <button
                   onClick={() => setActiveTab("info")}
-                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-[11px] sm:text-xs ${
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-t-xl transition cursor-pointer border-b-2 flex items-center gap-1.5 sm:gap-2 shrink-0 text-xs sm:text-xs ${
                     activeTab === "info"
                       ? "border-cyan-600 text-cyan-900 bg-white shadow-2xs font-black"
                       : "border-transparent text-slate-600 hover:text-slate-900"
@@ -1141,7 +1141,7 @@ function CustomersAdmin() {
                     <div className="text-xs space-y-1">
                       <div className="font-black text-indigo-950 flex items-center gap-2">
                         <span>Direct Guest Checkout Customer Profile</span>
-                        <span className="text-[9px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-md bg-indigo-200/70 text-indigo-900">
+                        <span className="text-xs uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-md bg-indigo-200/70 text-indigo-900">
                           Without Portal Login
                         </span>
                       </div>
@@ -1170,20 +1170,20 @@ function CustomersAdmin() {
                                 <span className="font-mono font-black text-sm text-cyan-800">
                                   #{order.id}
                                 </span>
-                                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
                                   {order.paymentStatus || "Paid"}
                                 </span>
-                                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200">
+                                <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200">
                                   {order.status || "Pending"}
                                 </span>
                               </div>
-                              <div className="text-[11px] text-slate-400 mt-1">
+                              <div className="text-xs text-slate-400 mt-1">
                                 Placed {new Date(order.placedAt).toLocaleDateString()} · Method:{" "}
                                 {order.method || "Standard Freight"} · Payment:{" "}
                                 {order.paymentType || "Card"}
                               </div>
                               {order.address && (
-                                <div className="text-[11px] text-slate-600 mt-1 flex items-center gap-1">
+                                <div className="text-xs text-slate-600 mt-1 flex items-center gap-1">
                                   <MapPin className="size-3 text-slate-400 shrink-0" />
                                   <span>
                                     Deliver to: {order.address.street || order.address.line1 || ""},{" "}
@@ -1199,7 +1199,7 @@ function CustomersAdmin() {
                                 <div className="font-black text-base text-slate-900">
                                   {formatUSD(order.total || 0)}
                                 </div>
-                                <div className="text-[10px] text-slate-400">
+                                <div className="text-xs text-slate-400">
                                   {(order.items || []).length} Item(s)
                                 </div>
                               </div>
@@ -1233,14 +1233,14 @@ function CustomersAdmin() {
                                     <div className="font-extrabold text-slate-900 truncate">
                                       {it.name}
                                     </div>
-                                    <div className="text-[10px] text-slate-400">
+                                    <div className="text-xs text-slate-400">
                                       {it.brand || "Commercial Equipment"}
                                     </div>
                                   </div>
                                 </div>
                                 <div className="text-right font-black text-slate-900 shrink-0">
                                   <div>Qty: {it.qty || 1}</div>
-                                  <div className="text-[10px] text-slate-500 font-semibold">
+                                  <div className="text-xs text-slate-500 font-semibold">
                                     {formatUSD(it.price || 0)} ea
                                   </div>
                                 </div>
@@ -1253,7 +1253,7 @@ function CustomersAdmin() {
                       <div className="py-16 text-center text-slate-400 space-y-2">
                         <ShoppingBag className="size-10 mx-auto text-slate-300 stroke-1" />
                         <p className="text-xs font-bold text-slate-700">No orders placed yet</p>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="text-xs text-slate-400">
                           When this customer completes checkout, their order logs will appear here.
                         </p>
                       </div>
@@ -1286,7 +1286,7 @@ function CustomersAdmin() {
                                 {addr.title || `Destination #${idx + 1}`}
                               </span>
                               {addr.isDefault && (
-                                <span className="text-[10px] font-black text-cyan-800 bg-cyan-100 px-2 py-0.5 rounded-full">
+                                <span className="text-xs font-black text-cyan-800 bg-cyan-100 px-2 py-0.5 rounded-full">
                                   Primary
                                 </span>
                               )}
@@ -1298,7 +1298,7 @@ function CustomersAdmin() {
                             <div className="text-slate-600">
                               {addr.city}, {addr.state} {addr.zip}
                             </div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                               {addr.country || "USA"} · {addr.type || "Freight Shipping"}
                             </div>
                           </div>
@@ -1310,7 +1310,7 @@ function CustomersAdmin() {
                         <p className="text-xs font-bold text-slate-700">
                           No destination addresses found
                         </p>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="text-xs text-slate-400">
                           Destination addresses will appear here once captured from checkout.
                         </p>
                       </div>
@@ -1339,11 +1339,11 @@ function CustomersAdmin() {
                                 </span>
                               </div>
                               {isResolved ? (
-                                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
                                   Resolved
                                 </span>
                               ) : (
-                                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                                <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
                                   {ret.status || "Under Review"}
                                 </span>
                               )}
@@ -1374,7 +1374,7 @@ function CustomersAdmin() {
                               </div>
                             )}
 
-                            <div className="pt-2 border-t border-slate-200 flex justify-between items-center text-[11px] text-slate-400">
+                            <div className="pt-2 border-t border-slate-200 flex justify-between items-center text-xs text-slate-400">
                               <span>Submitted {new Date(ret.createdAt).toLocaleDateString()}</span>
                               <Link
                                 to="/admin/returns"
@@ -1391,7 +1391,7 @@ function CustomersAdmin() {
                       <div className="py-16 text-center text-slate-400 space-y-2">
                         <RotateCcw className="size-10 mx-auto text-slate-300 stroke-1" />
                         <p className="text-xs font-bold text-slate-700">No return requests filed</p>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="text-xs text-slate-400">
                           This account has zero return claims.
                         </p>
                       </div>
@@ -1430,11 +1430,11 @@ function CustomersAdmin() {
                                   )}
                                 </span>
                                 {isResolved ? (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
                                     {q.status || "Resolved"}
                                   </span>
                                 ) : (
-                                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-900 border border-cyan-200">
+                                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-900 border border-cyan-200">
                                     {q.status || "Engineering Review"}
                                   </span>
                                 )}
@@ -1469,7 +1469,7 @@ function CustomersAdmin() {
                               </div>
                             )}
 
-                            <div className="pt-2 border-t border-slate-200 flex justify-between items-center text-[11px] text-slate-400">
+                            <div className="pt-2 border-t border-slate-200 flex justify-between items-center text-xs text-slate-400">
                               <span>Submitted {new Date(q.createdAt).toLocaleDateString()}</span>
                               <Link
                                 to="/admin/quotes"
@@ -1488,7 +1488,7 @@ function CustomersAdmin() {
                         <p className="text-xs font-bold text-slate-700">
                           No project quotes requested
                         </p>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="text-xs text-slate-400">
                           Commercial project bids will appear here.
                         </p>
                       </div>
@@ -1501,7 +1501,7 @@ function CustomersAdmin() {
                   <div className="space-y-4 text-xs">
                     {isCustomerGuest ? (
                       <div className="p-5 rounded-2xl border border-indigo-200 bg-indigo-50/40 space-y-4">
-                        <div className="text-[10px] font-black uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
+                        <div className="text-xs font-black uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
                           <Sparkles className="size-3.5 text-indigo-600" />
                           <span>Guest Checkout Customer Profile Analytics</span>
                         </div>
@@ -1591,7 +1591,7 @@ function CustomersAdmin() {
                     ) : (
                       <>
                         <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3">
-                          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                          <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                             Account Credentials & Verification
                           </div>
                           <div className="grid grid-cols-2 gap-3">
@@ -1623,7 +1623,7 @@ function CustomersAdmin() {
                         </div>
 
                         <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3">
-                          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                          <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                             Email Notification Preferences
                           </div>
                           <div className="grid grid-cols-2 gap-2 text-slate-700 font-semibold">
@@ -1661,7 +1661,7 @@ function CustomersAdmin() {
 
               {/* Drawer Footer */}
               <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
-                <div className="text-[11px] text-slate-400">
+                <div className="text-xs text-slate-400">
                   Customer Reference:{" "}
                   <span className="font-mono font-bold text-slate-700">{activeCustomer.id}</span>
                 </div>

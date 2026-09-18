@@ -244,7 +244,7 @@ function AdminWebEmailsPage() {
 
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
           <div className="space-y-1 sm:space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-[10px] font-extrabold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-widest">
               <Mail className="size-3 text-cyan-400" />
               Live Contractor Inquiries Feed
             </div>
@@ -263,7 +263,7 @@ function AdminWebEmailsPage() {
           {/* Quick Metrics HUD */}
           <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-3 w-full lg:w-auto shrink-0">
             <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">
+              <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-slate-400 truncate">
                 Total Inquiries
               </div>
               <div className="text-base sm:text-lg font-black text-white mt-0.5">
@@ -272,7 +272,7 @@ function AdminWebEmailsPage() {
             </div>
 
             <div className="p-2.5 sm:p-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center sm:text-left">
-              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-cyan-400 truncate">
+              <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-cyan-400 truncate">
                 Unread Queue
               </div>
               <div className="text-base sm:text-lg font-black text-cyan-300 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
@@ -323,7 +323,7 @@ function AdminWebEmailsPage() {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-[11px] sm:text-xs font-bold overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl sm:rounded-2xl border border-slate-100 text-xs sm:text-xs font-bold overflow-x-auto scrollbar-none">
               <button
                 onClick={() => setFilterTab("all")}
                 className={`flex-1 py-1.5 sm:py-2 px-2 rounded-lg sm:rounded-xl transition text-center cursor-pointer whitespace-nowrap ${
@@ -393,14 +393,14 @@ function AdminWebEmailsPage() {
                         <div className="text-xs font-extrabold text-slate-800 truncate">
                           {msg.subject}
                         </div>
-                        <p className="text-[11px] text-slate-400 line-clamp-1 font-medium">
+                        <p className="text-xs text-slate-400 line-clamp-1 font-medium">
                           {msg.message}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex flex-col items-end gap-1.5 sm:gap-2 shrink-0">
-                      <span className="text-[10px] text-slate-400 font-bold whitespace-nowrap">
+                      <span className="text-xs text-slate-400 font-bold whitespace-nowrap">
                         {timeAgo(msg.createdAt)}
                       </span>
                       <button
@@ -420,7 +420,7 @@ function AdminWebEmailsPage() {
               <div className="py-16 text-center text-slate-400 space-y-2 p-6">
                 <Inbox className="size-8 mx-auto text-slate-300 stroke-1" />
                 <p className="text-xs font-bold text-slate-700">No customer inquiries found</p>
-                <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
+                <p className="text-xs text-slate-400 max-w-xs mx-auto">
                   New submissions submitted through the /contact portal will appear here
                   automatically.
                 </p>
@@ -459,14 +459,14 @@ function AdminWebEmailsPage() {
                         <h3 className="font-black text-sm sm:text-base text-slate-900 truncate">
                           {activeMessage.name}
                         </h3>
-                        <span className="text-[9px] sm:text-[10px] font-extrabold text-cyan-800 bg-cyan-50 border border-cyan-200/60 px-2 py-0.5 rounded-full shrink-0">
+                        <span className="text-xs sm:text-xs font-extrabold text-cyan-800 bg-cyan-50 border border-cyan-200/60 px-2 py-0.5 rounded-full shrink-0">
                           Verified Contact
                         </span>
                       </div>
                       <div className="text-xs text-slate-500 font-medium flex items-center gap-2 sm:gap-3 mt-0.5 sm:mt-1 flex-wrap">
                         <a
                           href={`mailto:${activeMessage.email}`}
-                          className="hover:text-cyan-600 text-cyan-700 font-bold flex items-center gap-1 text-[11px] truncate"
+                          className="hover:text-cyan-600 text-cyan-700 font-bold flex items-center gap-1 text-xs truncate"
                         >
                           <Mail className="size-3 shrink-0" />
                           <span className="truncate">{activeMessage.email}</span>
@@ -474,7 +474,7 @@ function AdminWebEmailsPage() {
                         {activeMessage.phone && (
                           <a
                             href={`tel:${activeMessage.phone}`}
-                            className="hover:text-cyan-600 text-slate-600 flex items-center gap-1 text-[11px] truncate"
+                            className="hover:text-cyan-600 text-slate-600 flex items-center gap-1 text-xs truncate"
                           >
                             <Phone className="size-3 text-slate-400 shrink-0" />
                             <span>{activeMessage.phone}</span>
@@ -509,13 +509,13 @@ function AdminWebEmailsPage() {
 
                 {/* Subject & Timeline Header */}
                 <div className="space-y-1">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Inquiry Subject
                   </div>
                   <h2 className="text-base sm:text-xl font-black text-slate-900 tracking-tight">
                     {activeMessage.subject}
                   </h2>
-                  <div className="text-[11px] sm:text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                  <div className="text-xs sm:text-xs text-slate-400 font-medium flex items-center gap-1.5">
                     <Calendar className="size-3 sm:size-3.5 text-slate-400" />
                     <span>
                       Received on{" "}
@@ -538,7 +538,7 @@ function AdminWebEmailsPage() {
                 {/* Smart Response Chips */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                       <Sparkles className="size-3 text-cyan-600" />
                       <span>One-Click Smart Response Presets</span>
                     </label>
@@ -552,11 +552,11 @@ function AdminWebEmailsPage() {
                       >
                         <div className="font-extrabold text-slate-900 group-hover:text-cyan-900 flex items-center justify-between">
                           <span>{tmpl.title}</span>
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                             {tmpl.category}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 font-medium">
+                        <p className="text-xs text-slate-500 line-clamp-2 mt-1 font-medium">
                           {tmpl.text}
                         </p>
                       </button>
@@ -566,7 +566,7 @@ function AdminWebEmailsPage() {
 
                 {/* Response Composer */}
                 <div className="space-y-2.5 sm:space-y-3 pt-1">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Dispatch Response to Contractor
                   </label>
                   <textarea
@@ -577,7 +577,7 @@ function AdminWebEmailsPage() {
                     className="w-full p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition"
                   />
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-                    <span className="text-[11px] text-slate-400 font-medium truncate">
+                    <span className="text-xs text-slate-400 font-medium truncate">
                       Recipient:{" "}
                       <span className="font-bold text-slate-700">{activeMessage.email}</span>
                     </span>

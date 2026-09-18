@@ -574,7 +574,7 @@ function ReviewsModerator() {
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
           <div className="space-y-1.5 sm:space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/40 text-cyan-400 text-[10px] font-black tracking-widest uppercase shadow-inner">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/40 text-cyan-400 text-xs font-black tracking-widest uppercase shadow-inner">
               <Sparkles className="size-3 text-cyan-400" />
               <span>Product Feedback & Moderation</span>
             </div>
@@ -616,7 +616,7 @@ function ReviewsModerator() {
         {/* Metric 1: Total Reviews */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Total Published
             </span>
             <div className="size-7 sm:size-9 rounded-xl bg-cyan-50 text-cyan-700 grid place-items-center group-hover:scale-110 transition">
@@ -626,7 +626,7 @@ function ReviewsModerator() {
           <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {stats.total}
           </div>
-          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-slate-400 truncate">
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-xs sm:text-xs font-bold text-slate-400 truncate">
             <span className="text-emerald-600 font-extrabold flex items-center gap-0.5 shrink-0">
               <TrendingUp className="size-3" /> Live Feed
             </span>
@@ -637,7 +637,7 @@ function ReviewsModerator() {
         {/* Metric 2: Average Score */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Catalog Score
             </span>
             <div className="size-7 sm:size-9 rounded-xl bg-amber-50 text-amber-600 grid place-items-center group-hover:scale-110 transition">
@@ -648,7 +648,7 @@ function ReviewsModerator() {
             {stats.avgRating.toFixed(1)}
             <span className="text-xs font-bold text-amber-500">/ 5.0 ★</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-slate-400 truncate">
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-xs sm:text-xs font-bold text-slate-400 truncate">
             <span className="text-amber-700 font-extrabold">{stats.fiveStarRatio}%</span>
             <span>Rated 5-Stars</span>
           </div>
@@ -657,7 +657,7 @@ function ReviewsModerator() {
         {/* Metric 3: Verified Contractors */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Verified Pros
             </span>
             <div className="size-7 sm:size-9 rounded-xl bg-emerald-50 text-emerald-700 grid place-items-center group-hover:scale-110 transition">
@@ -667,7 +667,7 @@ function ReviewsModerator() {
           <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {stats.verifiedCount}
           </div>
-          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold text-emerald-700 truncate">
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-xs sm:text-xs font-extrabold text-emerald-700 truncate">
             <span>Verified Buyers</span>
           </div>
         </div>
@@ -675,7 +675,7 @@ function ReviewsModerator() {
         {/* Metric 4: Moderation Status */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:border-cyan-500/30 transition group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
               Moderation Queue
             </span>
             <div className="size-7 sm:size-9 rounded-xl bg-indigo-50 text-indigo-700 grid place-items-center group-hover:scale-110 transition">
@@ -685,7 +685,7 @@ function ReviewsModerator() {
           <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {stats.pendingCount + stats.flaggedCount}
           </div>
-          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-slate-400 truncate">
+          <div className="mt-1.5 sm:mt-2 flex items-center gap-1.5 text-xs sm:text-xs font-bold text-slate-400 truncate">
             <span className="text-emerald-700 font-extrabold">All Clear</span>
             <span>· Compliance</span>
           </div>
@@ -787,14 +787,14 @@ function ReviewsModerator() {
                           <div className="font-extrabold text-xs text-slate-900 line-clamp-1">
                             {r.productName}
                           </div>
-                          <div className="text-[10px] font-mono text-slate-400">
+                          <div className="text-xs font-mono text-slate-400">
                             SKU: {r.productSku}
                           </div>
                         </div>
                       </div>
 
                       <span
-                        className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-black border shrink-0 ${
+                        className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-black border shrink-0 ${
                           r.status === "Published"
                             ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                             : r.status === "Pending"
@@ -812,7 +812,7 @@ function ReviewsModerator() {
                         {r.verifiedPurchase && (
                           <ShieldCheck className="size-3 text-cyan-600 shrink-0" />
                         )}
-                        <span className="text-[10px] text-slate-400 truncate">
+                        <span className="text-xs text-slate-400 truncate">
                           ({r.role || "Buyer"})
                         </span>
                       </div>
@@ -833,12 +833,12 @@ function ReviewsModerator() {
 
                     <div>
                       <div className="font-black text-xs text-slate-900">{r.title}</div>
-                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 leading-relaxed">
+                      <p className="text-xs text-slate-500 line-clamp-2 mt-0.5 leading-relaxed">
                         {r.content || "No detailed review body submitted."}
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-400">
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-400">
                       <span>{formatReviewDate(r.date)}</span>
                       <div className="flex items-center gap-2">
                         <button
@@ -879,7 +879,7 @@ function ReviewsModerator() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs font-semibold border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-[10px]">
+                  <tr className="border-b border-slate-100 bg-slate-50/90 text-slate-400 uppercase tracking-wider text-xs">
                     <th className="p-4 sm:px-6 font-black">Equipment Model & SKU</th>
                     <th className="p-4 sm:px-6 font-black">Trade Reviewer</th>
                     <th className="p-4 sm:px-6 font-black">Rating</th>
@@ -914,10 +914,10 @@ function ReviewsModerator() {
                               <div className="font-black text-slate-900 text-xs sm:text-sm truncate group-hover:text-cyan-800 transition">
                                 {r.productName}
                               </div>
-                              <div className="text-[11px] text-slate-400 font-bold flex items-center gap-1.5 mt-0.5">
+                              <div className="text-xs text-slate-400 font-bold flex items-center gap-1.5 mt-0.5">
                                 <span className="font-mono">{r.productSku}</span>
                                 {r.productBrand && (
-                                  <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">
+                                  <span className="text-xs font-black uppercase px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">
                                     {r.productBrand}
                                   </span>
                                 )}
@@ -940,7 +940,7 @@ function ReviewsModerator() {
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-emerald-700 font-bold flex items-center gap-1">
+                            <div className="text-xs text-emerald-700 font-bold flex items-center gap-1">
                               <UserCheck className="size-3 text-emerald-600" />
                               <span>{r.role || "Verified Buyer"}</span>
                             </div>
@@ -973,7 +973,7 @@ function ReviewsModerator() {
                           <div className="font-black text-slate-900 text-xs truncate">
                             {r.title}
                           </div>
-                          <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 font-medium leading-relaxed">
+                          <p className="text-xs text-slate-500 line-clamp-2 mt-0.5 font-medium leading-relaxed">
                             {r.content || "No detailed review body submitted."}
                           </p>
                         </td>
@@ -983,7 +983,7 @@ function ReviewsModerator() {
                           <div className="font-bold text-slate-900 text-xs">
                             {formatReviewDate(r.date)}
                           </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">
+                          <div className="text-xs text-slate-400 mt-0.5">
                             Verified Timestamp
                           </div>
                         </td>
@@ -991,7 +991,7 @@ function ReviewsModerator() {
                         {/* Col 6: Moderation Status Pill */}
                         <td className="p-4 sm:px-6 text-center">
                           <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black border ${
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black border ${
                               r.status === "Published"
                                 ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                                 : r.status === "Pending"
@@ -1012,7 +1012,7 @@ function ReviewsModerator() {
                                 e.stopPropagation();
                                 setSelectedReview(r);
                               }}
-                              className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-cyan-50 text-slate-700 hover:text-cyan-800 border border-slate-200 transition cursor-pointer font-bold text-[11px] flex items-center gap-1 shadow-2xs"
+                              className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-cyan-50 text-slate-700 hover:text-cyan-800 border border-slate-200 transition cursor-pointer font-bold text-xs flex items-center gap-1 shadow-2xs"
                             >
                               <span>Inspect</span>
                               <ChevronRight className="size-3.5" />
@@ -1079,7 +1079,7 @@ function ReviewsModerator() {
               {/* Drawer Header */}
               <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/90 flex items-center justify-between">
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-cyan-800 flex items-center gap-1.5">
+                  <div className="text-xs font-black uppercase tracking-wider text-cyan-800 flex items-center gap-1.5">
                     <Sparkles className="size-3 text-cyan-600" />
                     <span>Review Audit & Moderation</span>
                   </div>
@@ -1100,7 +1100,7 @@ function ReviewsModerator() {
               <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
                 {/* 1. Target Equipment Card */}
                 <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Target Product
                   </div>
                   <div className="flex items-center gap-3">
@@ -1118,7 +1118,7 @@ function ReviewsModerator() {
                       <div className="font-black text-slate-900 text-xs sm:text-sm leading-snug truncate">
                         {selectedReview.productName}
                       </div>
-                      <div className="text-[11px] text-slate-500 font-medium mt-0.5 flex items-center gap-2 truncate">
+                      <div className="text-xs text-slate-500 font-medium mt-0.5 flex items-center gap-2 truncate">
                         <span>SKU: {selectedReview.productSku}</span>
                         {selectedReview.productBrand && (
                           <span>· {selectedReview.productBrand}</span>
@@ -1141,7 +1141,7 @@ function ReviewsModerator() {
 
                 {/* 2. Reviewer Profile */}
                 <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Trade Reviewer
                   </div>
                   <div className="flex items-center justify-between gap-2">
@@ -1149,7 +1149,7 @@ function ReviewsModerator() {
                       <div className="font-black text-slate-900 text-sm flex items-center gap-1.5 truncate">
                         <span className="truncate">{selectedReview.author}</span>
                         {selectedReview.verifiedPurchase && (
-                          <span className="text-[10px] font-black text-cyan-900 bg-cyan-100 px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0">
+                          <span className="text-xs font-black text-cyan-900 bg-cyan-100 px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0">
                             <ShieldCheck className="size-3 text-cyan-700" />
                             Verified Pro
                           </span>
@@ -1171,7 +1171,7 @@ function ReviewsModerator() {
 
                 {/* 3. Review Content */}
                 <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 text-white space-y-2 sm:space-y-3 shadow-md">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-cyan-400">
+                  <div className="text-xs font-black uppercase tracking-widest text-cyan-400">
                     Published Review
                   </div>
                   <div className="text-sm sm:text-base font-black text-white">
@@ -1184,7 +1184,7 @@ function ReviewsModerator() {
 
                 {/* 4. Lifecycle Moderation Status */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-400">
                     Moderation Status
                   </label>
                   <div className="grid grid-cols-3 gap-2">

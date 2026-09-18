@@ -74,7 +74,7 @@ export function WhyUs() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <div className="max-w-5xl mb-12 sm:mb-16">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] uppercase tracking-[0.25em] text-cyan-700 font-extrabold bg-cyan-500/10 rounded-full mb-3 border border-cyan-500/20">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs uppercase tracking-[0.25em] text-cyan-700 font-extrabold bg-cyan-500/10 rounded-full mb-3 border border-cyan-500/20">
             <Sparkles className="size-3.5 text-cyan-600" />
             The Poolsby Advantage
           </span>
@@ -107,7 +107,7 @@ export function WhyUs() {
                   <div className="size-12 sm:size-13 rounded-2xl bg-gradient-to-tr from-[#0089C9] to-[#59D2F3] text-white flex items-center justify-center shadow-[0_6px_18px_-2px_rgba(0,137,201,0.35)] group-hover:scale-108 group-hover:rotate-1 transition-all duration-300">
                     <it.icon className="size-5 sm:size-6" />
                   </div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-800 bg-cyan-50/90 px-2.5 py-1 rounded-full border border-cyan-200/60 shadow-2xs">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-cyan-800 bg-cyan-50/90 px-2.5 py-1 rounded-full border border-cyan-200/60 shadow-2xs">
                     {it.badge}
                   </span>
                 </div>
