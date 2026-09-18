@@ -18,7 +18,7 @@ export const Route = createFileRoute("/shop/$category")({
       q: (search.q as string) || "",
     };
   },
-  head: ({ params }) => {
+  head: ({ params, search }) => {
     const name = getCategoryName(params.category);
     const title = `${name} Wholesale to Retail | Commercial Pool Supplies`;
     const description = `Shop wholesale to retail commercial-grade ${name} at direct trade pricing. Buy ${name} from Pentair, Hayward, Jandy & Raypak with fast shipping from Nashville TN, LA, Dallas & Orlando.`;
@@ -34,11 +34,15 @@ export const Route = createFileRoute("/shop/$category")({
       ]
     };
 
+    // If there is a search parameter, we noindex to avoid infinite crawl spaces
+    const isSearchActive = !!(search && search.q);
+
     return {
       meta: [
         { title },
         { name: "description", content: description },
         { name: "keywords", content: `wholesale to retail ${name}, buy wholesale ${name} at retail, ${name} wholesale supplier, ${name} Nashville TN, pentair ${name}, hayward ${name}, trade price pool equipment` },
+        { name: "robots", content: isSearchActive ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1" },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: categoryUrl },
@@ -108,12 +112,82 @@ function getCategoryName(slug: string): string {
   }
 }
 
+function getCategoryContent(slug: string) {
+  const content = {
+    "pool-pumps": {
+      heading: "Wholesale Pool Pumps & Motors",
+      intro: "Keep your commercial or residential pool operating at peak efficiency with our complete selection of pool pumps. We stock everything from energy-efficient variable speed pumps to heavy-duty commercial single speed models. Whether you need a direct replacement for an existing setup or are upgrading to comply with new energy regulations, our inventory from top brands like Pentair, Hayward, and Jandy ensures reliable water circulation.",
+      subcategories: ["Variable Speed Pumps", "Single Speed Pumps", "Commercial Pumps", "Replacement Motors"],
+      faqs: [
+        { q: "Do I need a variable speed pool pump?", a: "Yes, in most cases. Department of Energy (DOE) regulations mandate that most new pool pumps must be variable speed to meet minimum efficiency standards. They also save up to 80% on energy costs compared to single speed models." },
+        { q: "How do I size a pool pump?", a: "Sizing depends on your pool's volume and the required turnover rate. Generally, you want a pump that can circulate all the water in your pool in 6-8 hours. A pump that is too large will waste energy and potentially damage your filter." }
+      ]
+    },
+    "pool-heaters": {
+      heading: "Pool Heaters & Heat Pumps at Trade Prices",
+      intro: "Extend your swimming season with high-performance pool heating solutions. Our selection includes gas heaters (natural gas and propane), energy-efficient electric heat pumps, and replacement heating elements. Sourced from industry leaders like Raypak, Pentair MasterTemp, and Jandy JXi, these heaters offer rapid heat-up times and superior energy efficiency for both residential and commercial applications.",
+      subcategories: ["Natural Gas Heaters", "Propane Heaters", "Electric Heat Pumps", "Heater Parts"],
+      faqs: [
+        { q: "What size heater do I need for my pool?", a: "Heater size is measured in BTUs. As a general rule, you need 100,000 BTUs per 10,000 gallons of pool water, but this varies based on your climate, whether you use a pool cover, and how quickly you want the water to heat." },
+        { q: "Gas heater vs. Heat pump: Which is better?", a: "Gas heaters heat water quickly and work regardless of air temperature, making them ideal for quick heating and colder climates. Heat pumps are more energy-efficient and cost less to operate, but they rely on ambient heat and work best when air temperatures are above 50°F." }
+      ]
+    },
+    "pool-filters": {
+      heading: "Commercial & Residential Pool Filters",
+      intro: "Maintain crystal clear water with our professional-grade pool filtration systems. We offer a full range of cartridge filters, sand filters, and D.E. (Diatomaceous Earth) filters for any pool size. Choose from trusted models like the Pentair Clean & Clear, Hayward SwimClear, and Jandy DEV series for superior particulate removal and extended cleaning cycles.",
+      subcategories: ["Cartridge Filters", "Sand Filters", "D.E. Filters", "Filter Elements"],
+      faqs: [
+        { q: "Which type of pool filter is best?", a: "D.E. filters offer the finest filtration (down to 2-5 microns) but require the most maintenance. Cartridge filters provide excellent filtration (10-20 microns) and are easy to maintain by hosing off. Sand filters are the easiest to maintain (just backwash) but offer the least fine filtration (20-40 microns)." },
+        { q: "How often should I clean my pool filter?", a: "Clean your filter when the pressure gauge reads 8-10 PSI above the clean starting pressure. For cartridge filters, this is typically every 3-6 months; for sand and D.E. filters, backwashing is usually required every 1-3 months depending on usage." }
+      ]
+    },
+    "automation-systems": {
+      heading: "Smart Pool Automation Systems",
+      intro: "Take complete control of your pool and spa equipment from anywhere with advanced automation systems. Our smart controllers allow you to manage pumps, heaters, lighting, and water features from your smartphone. Upgrade to Pentair IntelliCenter, Hayward OmniLogic, or Jandy AquaLink systems for the ultimate in convenience, energy savings, and modern pool management.",
+      subcategories: ["Smart Controllers", "Valve Actuators", "Wireless Remotes", "Control Boards"],
+      faqs: [
+        { q: "Can I upgrade my existing pool to an automation system?", a: "Yes. Most existing pools can be retrofitted with an automation system. The main requirement is ensuring your new controller is compatible with your existing variable speed pump and heater." },
+        { q: "Do pool automation systems save money?", a: "Absolutely. Automation allows you to run equipment only when needed, optimize pump speeds for different tasks, and prevent heaters from running unnecessarily, significantly reducing energy consumption." }
+      ]
+    },
+    "salt-systems": {
+      heading: "Salt Chlorine Generators & Cells",
+      intro: "Enjoy softer, clearer water without the harsh smell of traditional liquid chlorine. Our wholesale salt chlorine generators automatically convert dissolved salt into pure chlorine, maintaining perfect sanitization levels. We carry complete systems and replacement salt cells for popular brands like Pentair IntelliChlor, Hayward AquaRite, and AutoPilot.",
+      subcategories: ["Complete Salt Systems", "Replacement Salt Cells", "Flow Switches", "Control Modules"],
+      faqs: [
+        { q: "How long does a salt cell last?", a: "A typical salt cell lasts 3-7 years (or roughly 10,000 hours of operation) depending on usage, water chemistry balance, and how often it is cleaned." },
+        { q: "Do salt pools still use chlorine?", a: "Yes. A salt system is actually a small chlorine factory on your equipment pad. It uses electrolysis to separate the chlorine from the salt molecule (NaCl), providing a steady stream of pure chlorine to the pool." }
+      ]
+    },
+    "pool-cleaners": {
+      heading: "Robotic, Suction & Pressure Pool Cleaners",
+      intro: "Keep your pool floor and walls spotless with our range of automatic pool cleaners. We stock advanced robotic cleaners that operate independently of your pool system, powerful pressure-side cleaners for heavy debris, and reliable suction-side cleaners. Featuring industry favorites like Dolphin, Polaris, and Pentair Kreepy Krauly.",
+      subcategories: ["Robotic Cleaners", "Pressure-Side Cleaners", "Suction-Side Cleaners", "Cleaner Parts"],
+      faqs: [
+        { q: "Are robotic pool cleaners worth it?", a: "Yes. Robotic cleaners are the most energy-efficient option as they don't rely on your pool pump. They also have their own filtration system, which reduces the load on your main pool filter." },
+        { q: "What's the difference between suction and pressure cleaners?", a: "Suction cleaners connect to your skimmer or dedicated suction line and use the pump's suction to move and vacuum debris into your pool filter. Pressure cleaners connect to the return line (often requiring a booster pump) and use water pressure to push debris into an attached bag, saving your main filter from filling up." }
+      ]
+    }
+  };
+  
+  // Normalize slug to match keys
+  let normalizedSlug = slug.toLowerCase();
+  if (normalizedSlug === 'pumps') normalizedSlug = 'pool-pumps';
+  if (normalizedSlug === 'heaters') normalizedSlug = 'pool-heaters';
+  if (normalizedSlug === 'filters') normalizedSlug = 'pool-filters';
+  if (normalizedSlug === 'cleaners') normalizedSlug = 'pool-cleaners';
+  if (normalizedSlug === 'automation') normalizedSlug = 'automation-systems';
+
+  return content[normalizedSlug as keyof typeof content] || null;
+}
+
 const PAGE_SIZE = 35;
 
 function CategoryPage() {
   const { category } = useParams({ from: "/shop/$category" });
   const { q: urlSearch } = Route.useSearch();
   const categoryName = getCategoryName(category);
+  const categoryContent = getCategoryContent(category);
 
   // State: filters & pagination
   const [page, setPage] = useState(1);
@@ -578,6 +652,47 @@ function CategoryPage() {
           </div>
         </div>
       </main>
+
+      {/* SEO Content Section - Displayed below products to avoid pushing commerce down */}
+      {categoryContent && !isPlaceholderData && page === 1 && !searchQuery && selectedBrands.length === 0 && (
+        <section className="border-t border-slate-200 bg-slate-50 py-16 mt-8">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="max-w-4xl mx-auto space-y-12">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">{categoryContent.heading}</h2>
+                <p className="text-slate-600 leading-relaxed text-lg">{categoryContent.intro}</p>
+              </div>
+
+              {categoryContent.subcategories && categoryContent.subcategories.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold text-slate-900">Types of {categoryName}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {categoryContent.subcategories.map((sub, idx) => (
+                      <span key={idx} className="bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium text-slate-700 shadow-sm">
+                        {sub}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {categoryContent.faqs && categoryContent.faqs.length > 0 && (
+                <div className="space-y-6">
+                  <h3 className="text-xl font-bold text-slate-900">Frequently Asked Questions</h3>
+                  <div className="space-y-4">
+                    {categoryContent.faqs.map((faq, idx) => (
+                      <div key={idx} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+                        <h4 className="font-bold text-slate-900 mb-2">{faq.q}</h4>
+                        <p className="text-slate-600 text-sm leading-relaxed">{faq.a}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       <Footer />
     </div>

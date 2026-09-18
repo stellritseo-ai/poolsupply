@@ -24,14 +24,19 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GuidesIndexRouteImport } from './routes/guides/index'
+import { Route as ComparisonsIndexRouteImport } from './routes/comparisons/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as ProductsProductIdRouteImport } from './routes/products.$productId'
+import { Route as GuidesGuideRouteImport } from './routes/guides/$guide'
+import { Route as ComparisonsComparisonRouteImport } from './routes/comparisons/$comparison'
 import { Route as BrandsBrandRouteImport } from './routes/brands.$brand'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin/subscribers'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminSeoRouteImport } from './routes/admin/seo'
 import { Route as AdminReviewsRouteImport } from './routes/admin/reviews'
 import { Route as AdminReturnsRouteImport } from './routes/admin/returns'
 import { Route as AdminQuotesRouteImport } from './routes/admin/quotes'
@@ -116,6 +121,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesIndexRoute = GuidesIndexRouteImport.update({
+  id: '/guides/',
+  path: '/guides/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComparisonsIndexRoute = ComparisonsIndexRouteImport.update({
+  id: '/comparisons/',
+  path: '/comparisons/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -136,6 +151,16 @@ const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
   path: '/products/$productId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesGuideRoute = GuidesGuideRouteImport.update({
+  id: '/guides/$guide',
+  path: '/guides/$guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComparisonsComparisonRoute = ComparisonsComparisonRouteImport.update({
+  id: '/comparisons/$comparison',
+  path: '/comparisons/$comparison',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandsBrandRoute = BrandsBrandRouteImport.update({
   id: '/brands/$brand',
   path: '/brands/$brand',
@@ -154,6 +179,11 @@ const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSeoRoute = AdminSeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminReviewsRoute = AdminReviewsRouteImport.update({
@@ -221,14 +251,19 @@ export interface FileRoutesByFullPath {
   '/admin/quotes': typeof AdminQuotesRoute
   '/admin/returns': typeof AdminReturnsRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$brand': typeof BrandsBrandRoute
+  '/comparisons/$comparison': typeof ComparisonsComparisonRoute
+  '/guides/$guide': typeof GuidesGuideRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/comparisons/': typeof ComparisonsIndexRoute
+  '/guides/': typeof GuidesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -252,14 +287,19 @@ export interface FileRoutesByTo {
   '/admin/quotes': typeof AdminQuotesRoute
   '/admin/returns': typeof AdminReturnsRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$brand': typeof BrandsBrandRoute
+  '/comparisons/$comparison': typeof ComparisonsComparisonRoute
+  '/guides/$guide': typeof GuidesGuideRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/comparisons': typeof ComparisonsIndexRoute
+  '/guides': typeof GuidesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -286,14 +326,19 @@ export interface FileRoutesById {
   '/admin/quotes': typeof AdminQuotesRoute
   '/admin/returns': typeof AdminReturnsRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$brand': typeof BrandsBrandRoute
+  '/comparisons/$comparison': typeof ComparisonsComparisonRoute
+  '/guides/$guide': typeof GuidesGuideRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/comparisons/': typeof ComparisonsIndexRoute
+  '/guides/': typeof GuidesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -321,14 +366,19 @@ export interface FileRouteTypes {
     | '/admin/quotes'
     | '/admin/returns'
     | '/admin/reviews'
+    | '/admin/seo'
     | '/admin/settings'
     | '/admin/subscribers'
     | '/blog/$slug'
     | '/brands/$brand'
+    | '/comparisons/$comparison'
+    | '/guides/$guide'
     | '/products/$productId'
     | '/shop/$category'
     | '/admin/'
     | '/blog/'
+    | '/comparisons/'
+    | '/guides/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -352,14 +402,19 @@ export interface FileRouteTypes {
     | '/admin/quotes'
     | '/admin/returns'
     | '/admin/reviews'
+    | '/admin/seo'
     | '/admin/settings'
     | '/admin/subscribers'
     | '/blog/$slug'
     | '/brands/$brand'
+    | '/comparisons/$comparison'
+    | '/guides/$guide'
     | '/products/$productId'
     | '/shop/$category'
     | '/admin'
     | '/blog'
+    | '/comparisons'
+    | '/guides'
   id:
     | '__root__'
     | '/'
@@ -385,14 +440,19 @@ export interface FileRouteTypes {
     | '/admin/quotes'
     | '/admin/returns'
     | '/admin/reviews'
+    | '/admin/seo'
     | '/admin/settings'
     | '/admin/subscribers'
     | '/blog/$slug'
     | '/brands/$brand'
+    | '/comparisons/$comparison'
+    | '/guides/$guide'
     | '/products/$productId'
     | '/shop/$category'
     | '/admin/'
     | '/blog/'
+    | '/comparisons/'
+    | '/guides/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -412,8 +472,12 @@ export interface RootRouteChildren {
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   WhyUsRoute: typeof WhyUsRoute
   BrandsBrandRoute: typeof BrandsBrandRoute
+  ComparisonsComparisonRoute: typeof ComparisonsComparisonRoute
+  GuidesGuideRoute: typeof GuidesGuideRoute
   ProductsProductIdRoute: typeof ProductsProductIdRoute
   ShopCategoryRoute: typeof ShopCategoryRoute
+  ComparisonsIndexRoute: typeof ComparisonsIndexRoute
+  GuidesIndexRoute: typeof GuidesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -523,6 +587,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/': {
+      id: '/guides/'
+      path: '/guides'
+      fullPath: '/guides/'
+      preLoaderRoute: typeof GuidesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparisons/': {
+      id: '/comparisons/'
+      path: '/comparisons'
+      fullPath: '/comparisons/'
+      preLoaderRoute: typeof ComparisonsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/'
@@ -551,6 +629,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/$guide': {
+      id: '/guides/$guide'
+      path: '/guides/$guide'
+      fullPath: '/guides/$guide'
+      preLoaderRoute: typeof GuidesGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparisons/$comparison': {
+      id: '/comparisons/$comparison'
+      path: '/comparisons/$comparison'
+      fullPath: '/comparisons/$comparison'
+      preLoaderRoute: typeof ComparisonsComparisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brands/$brand': {
       id: '/brands/$brand'
       path: '/brands/$brand'
@@ -577,6 +669,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/seo': {
+      id: '/admin/seo'
+      path: '/seo'
+      fullPath: '/admin/seo'
+      preLoaderRoute: typeof AdminSeoRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/reviews': {
@@ -647,6 +746,7 @@ interface AdminRouteChildren {
   AdminQuotesRoute: typeof AdminQuotesRoute
   AdminReturnsRoute: typeof AdminReturnsRoute
   AdminReviewsRoute: typeof AdminReviewsRoute
+  AdminSeoRoute: typeof AdminSeoRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -661,6 +761,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminQuotesRoute: AdminQuotesRoute,
   AdminReturnsRoute: AdminReturnsRoute,
   AdminReviewsRoute: AdminReviewsRoute,
+  AdminSeoRoute: AdminSeoRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -697,8 +798,12 @@ const rootRouteChildren: RootRouteChildren = {
   TermsAndConditionsRoute: TermsAndConditionsRoute,
   WhyUsRoute: WhyUsRoute,
   BrandsBrandRoute: BrandsBrandRoute,
+  ComparisonsComparisonRoute: ComparisonsComparisonRoute,
+  GuidesGuideRoute: GuidesGuideRoute,
   ProductsProductIdRoute: ProductsProductIdRoute,
   ShopCategoryRoute: ShopCategoryRoute,
+  ComparisonsIndexRoute: ComparisonsIndexRoute,
+  GuidesIndexRoute: GuidesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

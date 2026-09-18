@@ -37,17 +37,57 @@ export const Route = createFileRoute("/products/$productId")({
   },
   head: ({ loaderData, params }) => {
     const product = loaderData?.product || getProductById(params.productId);
-    const title = product?.name
-      ? `${product.name} Wholesale Pricing | ${product.brand || "Pool Supply Wholesalers"}`
-      : "Pool Equipment Product Details — Pool Supply Wholesalers";
-    const descText = product?.description || "Commercial pool equipment at direct wholesale trade pricing.";
-    const description = `Buy ${product?.name || "equipment"} online for ${product?.price ? formatUSD(product.price) : ""}. ${descText.slice(0, 140)}... Fast same-day dispatch from Pool Supply Wholesalers.`;
+
+    // Build a rich, natural SEO title: Brand + Name + SKU (truncated if needed)
+    const buildTitle = () => {
+      if (!product?.name) return "Pool Equipment Product Details — Pool Supply Wholesalers";
+      const brand = product.brand ? `${product.brand} ` : "";
+      const sku = product.sku ? ` | ${product.sku}` : "";
+      const base = `${brand}${product.name}${sku}`;
+      // Trim to 65 chars max for title tag
+      return base.length > 65 ? `${base.slice(0, 62)}...` : base;
+    };
+    const title = buildTitle();
+
+    // Build meta description: prefer details > description snippet, never use "Introducing the..." filler
+    const buildDescription = () => {
+      if (!product) return "Commercial pool equipment at direct wholesale trade pricing from Pool Supply Wholesalers.";
+      const priceStr = product.price ? formatUSD(product.price) : "";
+      // Use 'details' field (manufacturer spec line) when available and not a copy of name
+      const detailText = product.details && product.details !== product.name ? product.details : null;
+      // Check if description is the auto-generated "Introducing the..." filler
+      const isFillerDesc = product.description?.startsWith("Introducing the");
+      const descSource = detailText || (!isFillerDesc ? product.description : null) || `${product.brand || ""} ${product.category || "pool"} equipment`;
+      const snippet = descSource.slice(0, 130).trim();
+      return `Shop ${product.name}${priceStr ? ` for ${priceStr}` : ""}. ${snippet}. Fast shipping from Pool Supply Wholesalers.`;
+    };
+    const description = buildDescription();
+
     const imageUrl = product?.img ? getProductImage(product.img) : "https://poolsupplywholesalers.com/about-hero.png";
     const productUrl = `https://poolsupplywholesalers.com/products/${params.productId}`;
 
-    const reviews = product?.reviews || [];
-    const avgRating = reviews.length > 0
-      ? (reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / reviews.length).toFixed(1)
+    // Canonical category slug for breadcrumbs
+    const catSlug = product?.category
+      ? product.category.toLowerCase().replace(/\s+&\s+/g, "-and-").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
+      : "all";
+    const catName = product?.category || "Pool Equipment";
+
+    // Only include real user-generated reviews (filter out templated auto-generated ones)
+    const allReviews = product?.reviews || [];
+    const TEMPLATED_AUTHORS = new Set(["Verified Buyer", "Certified Pool Technician", "Verified Customer", "Pool Pro"]);
+    const realReviews = allReviews.filter((r: Review) => {
+      const isTemplatedAuthor = TEMPLATED_AUTHORS.has(r.author || "");
+      const isTemplatedContent = (r.content || "").includes("Exactly what I needed") ||
+        (r.content || "").includes("Stars. Outstanding product") ||
+        (r.content || "").startsWith("5/5 Stars") ||
+        (r.content || "").startsWith("4/5 Stars");
+      return !isTemplatedAuthor && !isTemplatedContent;
+    });
+
+    // Only emit AggregateRating if there are real, verified customer reviews
+    // Only emit AggregateRating if there are real, verified customer reviews
+    const avgRating = realReviews.length > 0
+      ? (realReviews.reduce((acc, r) => acc + (r.rating || 5), 0) / realReviews.length).toFixed(1)
       : undefined;
 
     const jsonLd = product
@@ -58,9 +98,8 @@ export const Route = createFileRoute("/products/$productId")({
             "name": product.name || "Pool Equipment",
             "image": [imageUrl],
             "description": descText,
-            "sku": product.sku || product.id,
-            "mpn": product.sku || product.id,
-            "productID": product.sku || product.id,
+            ...(product.sku ? { sku: product.sku, mpn: product.sku } : {}),
+            "productID": product.id,
             "category": product.category || "Pool Equipment",
             "brand": {
               "@type": "Brand",
@@ -69,7 +108,7 @@ export const Route = createFileRoute("/products/$productId")({
             "manufacturer": {
               "@type": "Organization",
               "name": product.brand || "Pool Supply Wholesalers",
-              "url": `https://poolsupplywholesalers.com/brands/${(product.brand || "").toLowerCase()}`
+              "url": `https://poolsupplywholesalers.com/brands/${(product.brand || "").toLowerCase().replace(/[^a-z0-9-]/g, "-")}`
             },
             "offers": {
               "@type": "Offer",
@@ -122,15 +161,15 @@ export const Route = createFileRoute("/products/$productId")({
                 "returnFees": "https://schema.org/FreeReturn"
               }
             },
-            ...(avgRating ? {
+            ...(avgRating && realReviews.length > 0 ? {
               "aggregateRating": {
                 "@type": "AggregateRating",
                 "ratingValue": avgRating,
                 "bestRating": "5",
                 "worstRating": "1",
-                "reviewCount": reviews.length
+                "reviewCount": realReviews.length
               },
-              "review": reviews.slice(0, 5).map((r: Review) => ({
+              "review": realReviews.slice(0, 5).map((r: Review) => ({
                 "@type": "Review",
                 "reviewRating": {
                   "@type": "Rating",

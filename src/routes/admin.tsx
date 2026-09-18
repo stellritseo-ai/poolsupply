@@ -107,6 +107,7 @@ function AdminLayout() {
 
   const menuItems = [
     { label: "Dashboard", to: "/admin", icon: LayoutDashboard },
+    { label: "SEO Health Dashboard", to: "/admin/seo", icon: Globe },
     { label: "Products Catalog", to: "/admin/products", icon: Package },
     { label: "Customer Orders", to: "/admin/orders", icon: ShoppingBag },
     { label: "Returns & RMA", to: "/admin/returns", icon: RotateCcw },

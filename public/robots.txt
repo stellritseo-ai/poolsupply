@@ -10,5 +10,13 @@ Disallow: /account/*
 Disallow: /checkout
 Disallow: /order-confirmation
 
+# Block search/filter parameters to prevent infinite duplicate URLs
+Disallow: /*?q=*
+Disallow: /*?brand=*
+Disallow: /*?sort=*
+Disallow: /*?min=*
+Disallow: /*?max=*
+Disallow: /*?page=*
+
 # Sitemap Location
-Sitemap: https://poolsupplywholesalers.com/sitemap.xml
+Sitemap: https://www.poolsupplywholesalers.com/sitemap.xml
