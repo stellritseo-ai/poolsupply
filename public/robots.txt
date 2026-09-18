@@ -10,9 +10,5 @@ Disallow: /account/*
 Disallow: /checkout
 Disallow: /order-confirmation
 
-# Bing crawl rate
-User-agent: Bingbot
-Crawl-delay: 1
-
 # Sitemap Location
 Sitemap: https://poolsupplywholesalers.com/sitemap.xml
