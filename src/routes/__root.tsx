@@ -21,6 +21,7 @@ import { getProductsDb } from "@/lib/api/products.functions";
 import { syncLocalProducts } from "@/lib/products";
 import { Toaster } from "@/components/ui/sonner";
 import { FloatingChat } from "@/components/FloatingChat";
+import { Analytics } from "@vercel/analytics/react";
 
 // Suppress benign third-party browser extension message passing errors & hydration noise
 if (typeof window !== "undefined") {
@@ -603,6 +604,7 @@ function RootComponent() {
           <CartDrawer />
           <Toaster />
           <FloatingChat />
+          <Analytics />
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>
