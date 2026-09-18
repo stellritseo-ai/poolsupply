@@ -288,10 +288,10 @@ export function getShippingClass(
 /**
  * Distance multiplier based on Idea 2:
  * - Inside TN: miles / 50 (capped at 1.0)
- * - Outside TN: 2.0 (double the full base rate)
+ * - Outside TN: 1.0 (flat base rate)
  */
 export function getDistanceMultiplier(miles: number, isOutsideTN: boolean): number {
-  if (isOutsideTN) return 2.0;
+  if (isOutsideTN) return 1.0;
   return +Math.min(Math.max(miles, 0) / BASE_DISTANCE_MILES, 1.0).toFixed(4);
 }
 
@@ -341,7 +341,7 @@ export const ZONE_MULTIPLIERS: Record<number, number> = {
   6: 1.0, // 1.00
   7: 1.0, // 1.00
   8: 1.0, // 1.00
-  9: 2.0, // 2.00 (Outside TN)
+  9: 1.0, // 1.00 (Outside TN Flat Rate)
 };
 
 export const ZONE_LABELS: Record<number, string> = {
@@ -735,7 +735,7 @@ function _buildResult(
 
     let rateLabel = "";
     if (isOutsideTN) {
-      rateLabel = `$${baseRate} base × 2.0 (outside TN) = $${perItemCost.toFixed(2)} each`;
+      rateLabel = `$${baseRate} Flat Rate (Outside TN) = $${perItemCost.toFixed(2)} each`;
     } else if (miles >= BASE_DISTANCE_MILES) {
       rateLabel = `$${baseRate} base at 50+ mi (capped) = $${perItemCost.toFixed(2)} each`;
     } else {
