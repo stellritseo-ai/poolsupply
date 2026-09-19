@@ -69,6 +69,7 @@ export const Route = createFileRoute("/finder")({
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
+        validFrom: "2024-01-01",
       },
     };
 

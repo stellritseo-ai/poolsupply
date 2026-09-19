@@ -91,6 +91,7 @@ export const Route = createFileRoute("/shop/$category")({
             "@type": "Offer",
             price: prod.price,
             priceCurrency: "USD",
+            validFrom: "2024-01-01",
             availability: prod.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
           }
         }

@@ -139,6 +139,7 @@ export const Route = createFileRoute("/products/$productId")({
               "@type": "Offer",
               url: productUrl,
               priceCurrency: "USD",
+              validFrom: "2024-01-01",
               price: product.price || 0,
               priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
                 .toISOString()
