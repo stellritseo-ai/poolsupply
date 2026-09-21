@@ -251,7 +251,7 @@ export const Route = createFileRoute("/products/$productId")({
         { name: "description", content: description },
         {
           name: "keywords",
-          content: `${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale, buy ${product?.category || "pool supply"}, commercial pool equipment, wholesale pool supply Nashville TN`,
+          content: `${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale USA, buy ${product?.category || "pool supply"} USA, commercial pool equipment United States, wholesale pool supplies USA, fast nationwide shipping`,
         },
         { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
         { property: "og:title", content: title },

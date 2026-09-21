@@ -57,7 +57,7 @@ export const Route = createFileRoute("/brands/$brand")({
         { name: "description", content: description },
         {
           name: "keywords",
-          content: `${brandName} pool equipment, buy ${brandName} wholesale, ${brandName} pool pumps, ${brandName} pool heaters, authorized ${brandName} distributor, commercial pool supplies`,
+          content: `${brandName} pool equipment USA, buy ${brandName} wholesale USA, ${brandName} pool supplies United States, authorized ${brandName} distributor USA, commercial pool equipment trade pricing`,
         },
         { property: "og:title", content: title },
         { property: "og:description", content: description },

@@ -142,16 +142,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Pool Supply Wholesalers — Wholesale to Retail Pool Equipment Supplier" },
+      { title: "Pool Supply Wholesalers — Wholesale Pool Supplies USA | Commercial Pool Equipment" },
       {
         name: "description",
         content:
-          "America's top wholesale to retail distributor of commercial pool pumps, gas heaters, cartridge filters, salt chlorinators, and automation. Buy wholesale pool supplies directly at retail prices from hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL.",
+          "America's top wholesale distributor of commercial pool pumps, gas heaters, cartridge filters, salt chlorinators & automation. Buy wholesale pool supplies online with fast nationwide shipping across the USA.",
       },
       {
         name: "keywords",
         content:
-          "wholesale to retail pool supplies, wholesale to retail pool equipment, buy wholesale pool equipment at retail, wholesale pool supply distributor, retail pool supplies wholesale prices, commercial pool pumps, variable speed pool pumps, gas pool heaters, pool cartridge filters, salt chlorinators, pentair intelliflo, hayward tristar, jandy pro series, raypak pool heaters, pool automation systems, pool contractor trade pricing, pool supply Nashville TN, pool equipment distributor Los Angeles CA, wholesale pool supplies Dallas TX, commercial pool equipment Orlando FL",
+          "wholesale pool supplies USA, commercial pool equipment wholesale, buy pool equipment online United States, wholesale pool supplies to public, pool equipment distributor USA, commercial pool pumps, variable speed pool pumps, gas pool heaters, pool cartridge filters, salt chlorinators, pentair intelliflo wholesale, hayward pool heater, jandy pro series, raypak pool heaters, pool contractor trade pricing, nationwide pool supply shipping",
       },
       { name: "author", content: "Pool Supply Wholesalers" },
       {
@@ -160,11 +160,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "google-site-verification", content: "CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" },
 
-      // Local SEO geo tags (Nashville HQ)
-      { name: "geo.region", content: "US-TN" },
-      { name: "geo.placename", content: "Nashville, Tennessee" },
-      { name: "geo.position", content: "36.1627;-86.7816" },
-      { name: "ICBM", content: "36.1627, -86.7816" },
+      // Nationwide USA Geo targeting
+      { name: "geo.region", content: "US" },
+      { name: "geo.placename", content: "United States" },
 
       // Prevent iOS auto-linking of phone numbers
       { name: "format-detection", content: "telephone=no" },
@@ -423,7 +421,7 @@ function RootShell({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en-US" suppressHydrationWarning>
       <head>
         {/* ── Google Tag Manager ── Replace GTM-XXXXXXX with your real ID from tagmanager.google.com ── */}
         <script

@@ -57,16 +57,16 @@ function ClientOnly({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pool Supplies & Equipment | Wholesale Prices | Pool Supply Wholesalers" },
+      { title: "Wholesale Pool Supplies USA | Commercial Pool Equipment Direct" },
       {
         name: "description",
         content:
-          "Shop 8,000+ pool supplies from Hayward, Pentair & Jandy at wholesale to retail prices. Commercial & residential pool pumps, heaters, filters, cleaners & lights with same-day shipping from Nashville TN, LA, Dallas TX, and Orlando FL.",
+          "Buy commercial & residential pool supplies wholesale online across the USA. 8,000+ pumps, heaters, filters & salt systems from Pentair, Hayward & Jandy with fast nationwide shipping.",
       },
       {
         name: "keywords",
         content:
-          "pool supplies wholesale, pool equipment wholesale prices, buy pool equipment online, wholesale to retail pool supplies, commercial pool pumps Pentair, Hayward variable speed pumps, Jandy pool heaters wholesale, Raypak pool heaters, cartridge pool filters, salt chlorine generators wholesale, pool automation systems, LED pool lights, robotic pool cleaners, pool supply distributor USA, pool equipment Nashville TN, pool supplies Los Angeles, wholesale pool Dallas TX, pool equipment Orlando FL",
+          "wholesale pool supplies USA, buy pool supplies online United States, commercial pool equipment wholesale, discount pool supplies USA, pool pumps wholesale, pool heaters wholesale USA, pentair distributor USA, hayward pool equipment wholesale, trade pricing pool supplies, pool supply distributor USA",
       },
       {
         name: "robots",
@@ -75,12 +75,12 @@ export const Route = createFileRoute("/")({
       { property: "og:site_name", content: "Pool Supply Wholesalers" },
       {
         property: "og:title",
-        content: "Pool Supplies & Equipment | Wholesale Prices | Pool Supply Wholesalers",
+        content: "Wholesale Pool Supplies USA | Commercial Pool Equipment Direct",
       },
       {
         property: "og:description",
         content:
-          "Shop 8,000+ pool supplies from Hayward, Pentair & Jandy at wholesale prices. Free fast shipping on commercial pool pumps, heaters, filters, and automation.",
+          "Buy commercial & residential pool supplies wholesale online across the USA. 8,000+ pumps, heaters, filters & salt systems with fast nationwide shipping.",
       },
       { property: "og:url", content: "https://poolsupplywholesalers.com/" },
       { property: "og:type", content: "website" },
@@ -90,7 +90,7 @@ export const Route = createFileRoute("/")({
       { property: "og:image:height", content: "630" },
       {
         property: "og:image:alt",
-        content: "Pool Supplies & Equipment | Wholesale Prices | Pool Supply Wholesalers",
+        content: "Wholesale Pool Supplies USA | Commercial Pool Equipment Direct",
       },
       { property: "og:locale", content: "en_US" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -98,12 +98,12 @@ export const Route = createFileRoute("/")({
       { name: "twitter:creator", content: "@poolsupplywholesalers" },
       {
         name: "twitter:title",
-        content: "Pool Supplies & Equipment | Wholesale Prices | Pool Supply Wholesalers",
+        content: "Wholesale Pool Supplies USA | Commercial Pool Equipment Direct",
       },
       {
         name: "twitter:description",
         content:
-          "Shop 8,000+ pool supplies from Hayward, Pentair & Jandy at wholesale prices. Fast shipping from US distribution hubs.",
+          "Buy commercial & residential pool supplies wholesale online across the USA. Fast nationwide shipping from US distribution hubs.",
       },
       { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
     ],

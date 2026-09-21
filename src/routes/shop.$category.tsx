@@ -46,8 +46,8 @@ export const Route = createFileRoute("/shop/$category")({
   },
   head: ({ params, loaderData }) => {
     const name = getCategoryName(params.category);
-    const title = `${name} Wholesale to Retail | Commercial Pool Supplies`;
-    const description = `Shop wholesale to retail commercial-grade ${name} at direct trade pricing. Buy ${name} from Pentair, Hayward, Jandy & Raypak with fast shipping from Nashville TN, LA, Dallas & Orlando.`;
+    const title = `${name} Wholesale to Retail USA | Commercial Pool Supplies Online`;
+    const description = `Shop wholesale to retail commercial-grade ${name} at direct trade pricing across the USA. Fast nationwide shipping on Pentair, Hayward, Jandy & Raypak from US distribution centers.`;
     const categoryUrl = `https://poolsupplywholesalers.com/shop/${params.category}`;
 
     const breadcrumbLd = {
@@ -70,12 +70,12 @@ export const Route = createFileRoute("/shop/$category")({
       ],
     };
 
-    // Build ItemList and CollectionPage schema for AI Search
+    // Build ItemList and CollectionPage schema for AI Search & Google Shopping USA
     const itemListLd = {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: `Top ${name}`,
-      description: `Browse our top selling ${name}.`,
+      name: `Top ${name} USA`,
+      description: `Browse our top selling ${name} with fast nationwide USA shipping.`,
       url: categoryUrl,
       numberOfItems: loaderData?.initialProducts?.length || 0,
       itemListElement: (loaderData?.initialProducts || []).map((prod: any, index: number) => ({
@@ -92,7 +92,34 @@ export const Route = createFileRoute("/shop/$category")({
             price: prod.price,
             priceCurrency: "USD",
             validFrom: "2024-01-01",
+            priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+              .toISOString()
+              .split("T")[0],
             availability: prod.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            areaServed: {
+              "@type": "Country",
+              name: "US",
+            },
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingRate: {
+                "@type": "MonetaryAmount",
+                value: "0",
+                currency: "USD",
+              },
+              shippingDestination: {
+                "@type": "DefinedRegion",
+                addressCountry: "US",
+              },
+            },
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "US",
+              returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 30,
+              returnMethod: "https://schema.org/ReturnByMail",
+              returnFees: "https://schema.org/FreeReturn",
+            },
           }
         }
       }))
@@ -116,7 +143,7 @@ export const Route = createFileRoute("/shop/$category")({
         { name: "description", content: description },
         {
           name: "keywords",
-          content: `wholesale to retail ${name}, buy wholesale ${name} at retail, ${name} wholesale supplier, ${name} Nashville TN, pentair ${name}, hayward ${name}, trade price pool equipment`,
+          content: `wholesale ${name} USA, buy ${name} wholesale USA, ${name} wholesale supplier USA, commercial ${name} United States, wholesale pool equipment USA, discount ${name} online, trade price ${name}, pentair ${name}, hayward ${name}, nationwide pool supply shipping`,
         },
         {
           name: "robots",
