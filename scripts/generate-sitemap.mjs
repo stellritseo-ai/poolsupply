@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 const CATALOG_PATH = path.join(process.cwd(), "src/lib/catalog-products.json");
-const BASE_URL = "https://www.poolsupplywholesalers.com";
+const BASE_URL = "https://poolsupplywholesalers.com";
 const TODAY = new Date().toISOString().split("T")[0];
 
 console.log("Generating sitemaps...");
@@ -90,6 +90,7 @@ const productsXml = `<?xml version="1.0" encoding="UTF-8"?>
       (p) => `
   <url>
     <loc>${BASE_URL}/products/${p.id}</loc>
+    <lastmod>${TODAY}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`,
