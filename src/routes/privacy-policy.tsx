@@ -60,6 +60,7 @@ export const Route = createFileRoute("/privacy-policy")({
           content:
             "privacy policy, data protection, pool supply wholesalers privacy, customer personal data, SSL encryption",
         },
+        { name: "robots", content: "noindex, follow" },
         { property: "og:title", content: "Privacy Policy — Pool Supply Wholesalers" },
         {
           property: "og:description",
@@ -70,7 +71,7 @@ export const Route = createFileRoute("/privacy-policy")({
         { property: "og:type", content: "website" },
         { property: "og:site_name", content: "Pool Supply Wholesalers" },
         { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
-        { property: "og:image:type", content: "image/webp" },
+        { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         { property: "og:image:alt", content: "Privacy Policy — Pool Supply Wholesalers" },
@@ -332,7 +333,7 @@ const SECTIONS = [
           </a>
 
           <a
-            href="tel:+16154770407"
+            href="tel:+18022650320"
             className="p-4 rounded-xl bg-slate-50 hover:bg-white border border-slate-200 hover:border-cyan-500/50 hover:shadow-md transition-all group flex items-start gap-3"
           >
             <div className="p-2.5 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-600 group-hover:scale-105 transition-transform">
@@ -341,7 +342,7 @@ const SECTIONS = [
             <div>
               <div className="text-xs text-slate-500 font-medium">Wholesale Customer Desk</div>
               <div className="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
-                +1 (615) 477-0407
+                +1 (802) 265-0320
               </div>
             </div>
           </a>

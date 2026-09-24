@@ -2678,7 +2678,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
         type: "callout",
         variant: "info",
         title: "Local Pickup Available",
-        text: "Pool contractors in the Nashville metro area can arrange local warehouse pickup at our 412 Ezell Pike location. Same-day pickup is available for in-stock items ordered before 1 PM CST. Contact our Nashville team at (615) 477-0407 to arrange pickup orders.",
+        text: "Pool contractors in the Nashville metro area can arrange local warehouse pickup at our 412 Ezell Pike location. Same-day pickup is available for in-stock items ordered before 1 PM CST. Contact our Nashville team at (802) 265-0320 to arrange pickup orders.",
       },
       { type: "h2", text: "Why Nashville Pool Contractors Choose Pool Supply Wholesalers" },
       {
@@ -2741,18 +2741,18 @@ export const BLOG_ARTICLES: BlogArticle[] = [
         type: "callout",
         variant: "tip",
         title: "Volume Discounts for Tennessee Contractors",
-        text: "Pool contractors in Tennessee ordering 5+ equipment packages per month can apply for our commercial trade account for additional volume pricing. Commercial accounts also receive dedicated account management, priority fulfillment, and Net-30 payment terms. Call (615) 477-0407 to apply.",
+        text: "Pool contractors in Tennessee ordering 5+ equipment packages per month can apply for our commercial trade account for additional volume pricing. Commercial accounts also receive dedicated account management, priority fulfillment, and Net-30 payment terms. Call (802) 265-0320 to apply.",
       },
       { type: "h2", text: "Contact Our Nashville Team" },
       {
         type: "paragraph",
-        text: "For order support, commercial account inquiries, or product advice specific to Tennessee pool builds, our Nashville team is available Monday–Friday, 8 AM–5 PM CST at (615) 477-0407 or via the contact form at poolsupplywholesalers.com/contact. For after-hours technical support on active job site issues, use our online chat.",
+        text: "For order support, commercial account inquiries, or product advice specific to Tennessee pool builds, our Nashville team is available Monday–Friday, 8 AM–5 PM CST at (802) 265-0320 or via the contact form at poolsupplywholesalers.com/contact. For after-hours technical support on active job site issues, use our online chat.",
       },
     ],
     faqs: [
       {
         q: "Where can I buy pool equipment wholesale in Nashville, Tennessee?",
-        a: "Pool Supply Wholesalers operates a distribution hub in Nashville at 412 Ezell Pike, Nashville, TN 37217. We offer wholesale to retail pricing on Pentair, Hayward, Jandy, Raypak, Dolphin, and Polaris equipment with same-day shipping across Tennessee. No membership or minimum order required. Call (615) 477-0407 or shop at poolsupplywholesalers.com.",
+        a: "Pool Supply Wholesalers operates a distribution hub in Nashville at 412 Ezell Pike, Nashville, TN 37217. We offer wholesale to retail pricing on Pentair, Hayward, Jandy, Raypak, Dolphin, and Polaris equipment with same-day shipping across Tennessee. No membership or minimum order required. Call (802) 265-0320 or shop at poolsupplywholesalers.com.",
       },
       {
         q: "Do you ship pool equipment same-day from Nashville?",

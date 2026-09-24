@@ -23,8 +23,106 @@ import {
   Info,
   Share2,
   ExternalLink,
+  ShieldCheck,
+  Sparkles,
+  ShoppingBag,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useProducts, Product } from "@/lib/products";
+import { ProductCard } from "@/components/site/ProductCard";
+
+function getArticleFeaturedEquipment(article: BlogArticle, allProducts: Product[]) {
+  const cat = (article.category || "").toLowerCase();
+  const slug = (article.slug || "").toLowerCase();
+
+  let targetCat = "";
+  if (cat.includes("pump") || slug.includes("pump")) targetCat = "pump";
+  else if (cat.includes("heat") || slug.includes("heat")) targetCat = "heat";
+  else if (cat.includes("filter") || slug.includes("filter")) targetCat = "filter";
+  else if (cat.includes("auto") || slug.includes("auto")) targetCat = "auto";
+  else if (cat.includes("salt") || cat.includes("sanitiz") || slug.includes("salt")) targetCat = "salt";
+  else if (cat.includes("clean") || slug.includes("clean")) targetCat = "clean";
+  else if (cat.includes("light") || slug.includes("light")) targetCat = "light";
+
+  let matched = allProducts.filter((p) => {
+    const pCat = (p.category || "").toLowerCase();
+    const pName = (p.name || "").toLowerCase();
+    if (targetCat === "pump") return pCat.includes("pump") || pName.includes("pump");
+    if (targetCat === "heat") return pCat.includes("heat") || pName.includes("heater");
+    if (targetCat === "filter") return pCat.includes("filter") || pName.includes("filter");
+    if (targetCat === "auto") return pCat.includes("auto") || pName.includes("automation") || pName.includes("controller");
+    if (targetCat === "salt") return pCat.includes("salt") || pCat.includes("chlorin") || pName.includes("salt") || pName.includes("chlorin");
+    if (targetCat === "clean") return pCat.includes("clean") || pName.includes("cleaner") || pName.includes("robotic");
+    if (targetCat === "light") return pCat.includes("light") || pName.includes("light");
+    return true;
+  });
+
+  if (matched.length === 0) {
+    matched = allProducts.slice(0, 4);
+  }
+
+  return matched
+    .sort((a, b) => (b.stock > 0 ? 1 : 0) - (a.stock > 0 ? 1 : 0) || b.rating - a.rating)
+    .slice(0, 4);
+}
+
+function getArticleCategoryHubLinks(article: BlogArticle) {
+  const cat = (article.category || "").toLowerCase();
+  const slug = (article.slug || "").toLowerCase();
+
+  if (cat.includes("pump") || slug.includes("pump")) {
+    return [
+      { name: "All Commercial Pool Pumps", url: "/shop/pool-pumps" },
+      { name: "Pentair Pumps Hub", url: "/brands/pentair/pool-pumps" },
+      { name: "Hayward Pumps Hub", url: "/brands/hayward/pool-pumps" },
+      { name: "Jandy Pumps Hub", url: "/brands/jandy/pool-pumps" },
+    ];
+  }
+  if (cat.includes("heat") || slug.includes("heat")) {
+    return [
+      { name: "All Pool Heaters & Heat Pumps", url: "/shop/pool-heaters" },
+      { name: "Pentair MasterTemp Heaters", url: "/brands/pentair/pool-heaters" },
+      { name: "Hayward H-Series Heaters", url: "/brands/hayward/pool-heaters" },
+      { name: "Raypak Commercial Heaters", url: "/brands/raypak/pool-heaters" },
+    ];
+  }
+  if (cat.includes("filter") || slug.includes("filter")) {
+    return [
+      { name: "All Commercial Pool Filters", url: "/shop/pool-filters" },
+      { name: "Pentair Clean & Clear Filters", url: "/brands/pentair/pool-filters" },
+      { name: "Hayward SwimClear Filters", url: "/brands/hayward/pool-filters" },
+      { name: "Jandy DEV Cartridge Filters", url: "/brands/jandy/pool-filters" },
+    ];
+  }
+  if (cat.includes("auto") || slug.includes("auto")) {
+    return [
+      { name: "All Automation Systems", url: "/shop/automation-systems" },
+      { name: "Pentair IntelliCenter", url: "/brands/pentair/automation-systems" },
+      { name: "Hayward OmniLogic", url: "/brands/hayward/automation-systems" },
+      { name: "Jandy AquaLink", url: "/brands/jandy/automation-systems" },
+    ];
+  }
+  if (cat.includes("salt") || cat.includes("sanitiz") || slug.includes("salt")) {
+    return [
+      { name: "All Salt Chlorination Systems", url: "/shop/salt-systems" },
+      { name: "Pentair IntelliChlor Cells", url: "/brands/pentair/salt-systems" },
+      { name: "Hayward AquaRite Systems", url: "/brands/hayward/salt-systems" },
+    ];
+  }
+  if (cat.includes("clean") || slug.includes("clean")) {
+    return [
+      { name: "All Automatic Pool Cleaners", url: "/shop/pool-cleaners" },
+      { name: "Pentair Kreepy Krauly Cleaners", url: "/brands/pentair/pool-cleaners" },
+      { name: "Polaris Commercial Cleaners", url: "/brands/polaris/pool-cleaners" },
+    ];
+  }
+  return [
+    { name: "All Commercial Equipment", url: "/shop/all" },
+    { name: "Pentair Equipment", url: "/brands/pentair" },
+    { name: "Hayward Equipment", url: "/brands/hayward" },
+    { name: "Jandy Equipment", url: "/brands/jandy" },
+  ];
+}
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -300,6 +398,12 @@ function renderBlock(block: ContentBlock, index: number) {
 function ArticlePage() {
   const { article } = Route.useLoaderData();
   const relatedArticles = getRelatedArticles(article.relatedSlugs);
+  const { products: allProducts } = useProducts();
+  const featuredEquipment = useMemo(
+    () => getArticleFeaturedEquipment(article, allProducts),
+    [article, allProducts],
+  );
+  const hubLinks = useMemo(() => getArticleCategoryHubLinks(article), [article]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-cyan-500 selection:text-white">
@@ -548,6 +652,45 @@ function ArticlePage() {
                 </div>
               </aside>
             </div>
+
+            {/* Featured Equipment in this Guide (Product Cross-Linking & Conversion) */}
+            {featuredEquipment.length > 0 && (
+              <div className="mt-14 pt-10 border-t border-slate-200">
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold uppercase tracking-wider mb-2">
+                      <ShoppingBag className="size-3 text-cyan-600" /> Featured Commercial Equipment
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                      Equipment Sourced in This Guide
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl">
+                      Direct factory-authorized inventory available at wholesale trade pricing with same-day nationwide freight dispatch.
+                    </p>
+                  </div>
+
+                  {/* Hub Links Pills */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {hubLinks.map((h, idx) => (
+                      <Link
+                        key={idx}
+                        to={h.url}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:text-cyan-700 hover:border-cyan-300 transition shadow-2xs"
+                      >
+                        {h.name}
+                        <ArrowRight className="size-3" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {featuredEquipment.map((p, i) => (
+                    <ProductCard key={p.id} product={p} index={i} />
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Related Articles */}
             {relatedArticles.length > 0 && (

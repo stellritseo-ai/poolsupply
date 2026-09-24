@@ -2,6 +2,9 @@
 User-agent: *
 Allow: /
 
+# Allow paginated category pages so crawlers can discover deeper catalog products
+Allow: /shop/*?page=*
+
 # Exclude private checkout, account, and admin routes
 Disallow: /admin/
 Disallow: /admin/*
@@ -10,13 +13,12 @@ Disallow: /account/*
 Disallow: /checkout
 Disallow: /order-confirmation
 
-# Block search/filter parameters to prevent infinite duplicate URLs
+# Block internal query filters to prevent duplicate faceted indexation
 Disallow: /*?q=*
 Disallow: /*?brand=*
 Disallow: /*?sort=*
 Disallow: /*?min=*
 Disallow: /*?max=*
-Disallow: /*?page=*
 
-# Sitemap Location
-Sitemap: https://www.poolsupplywholesalers.com/sitemap.xml
+# Sitemap Location (Canonical non-www)
+Sitemap: https://poolsupplywholesalers.com/sitemap.xml

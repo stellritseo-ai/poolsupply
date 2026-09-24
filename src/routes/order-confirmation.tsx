@@ -69,7 +69,7 @@ function getInitialFallbackOrder(id: string): Order {
     id: id || "AQ-TZRW4H",
     placedAt: new Date().toISOString(),
     email: "alex.harrison@harrisonaquatics.com",
-    phone: "+1 (615) 477-0407",
+    phone: "+1 (802) 265-0320",
     name: "Alex Harrison",
     company: "Harrison Aquatic Systems LLC",
     address: {
@@ -249,7 +249,7 @@ function ConfirmationPage() {
                 id: parsed.id || orderId,
                 placedAt: parsed.placedAt || new Date().toISOString(),
                 email: parsed.email || "commercial.buyer@poolpros.com",
-                phone: parsed.phone || "+1 (615) 477-0407",
+                phone: parsed.phone || "+1 (802) 265-0320",
                 name: parsed.name || "Alex Harrison",
                 company: parsed.company || "Harrison Aquatic Systems LLC",
                 address: {
@@ -418,7 +418,7 @@ function ConfirmationPage() {
               Pool Supply Wholesalers
             </h1>
             <p className="text-xs text-slate-600 mt-1">
-              410 Scott Pike, Hub #B · Nashville, TN 37207 · (615) 477-0407
+              410 Scott Pike, Hub #B · Nashville, TN 37207 · (802) 265-0320
             </p>
             <p className="text-xs text-slate-600">
               EIN: 84-2901928 · sales@poolsupplywholesalers.com
@@ -926,10 +926,10 @@ function ConfirmationPage() {
 
                 <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 relative z-10">
                   <a
-                    href="tel:6154770407"
+                    href="tel:8022650320"
                     className="inline-flex justify-center items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white font-bold text-xs transition-all shadow-md shadow-cyan-500/20 active:scale-95"
                   >
-                    <Phone className="size-3.5" /> (615) 477-0407
+                    <Phone className="size-3.5" /> (802) 265-0320
                   </a>
                   <a
                     href="mailto:sales@poolsupplywholesalers.com"

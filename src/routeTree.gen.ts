@@ -24,12 +24,14 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HubsIndexRouteImport } from './routes/hubs/index'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as ComparisonsIndexRouteImport } from './routes/comparisons/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as ProductsProductIdRouteImport } from './routes/products.$productId'
+import { Route as HubsHubRouteImport } from './routes/hubs/$hub'
 import { Route as GuidesGuideRouteImport } from './routes/guides/$guide'
 import { Route as ComparisonsComparisonRouteImport } from './routes/comparisons/$comparison'
 import { Route as BrandsBrandRouteImport } from './routes/brands.$brand'
@@ -45,6 +47,7 @@ import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminEmailsRouteImport } from './routes/admin/emails'
 import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
 import { Route as AdminChatRouteImport } from './routes/admin/chat'
+import { Route as BrandsBrandCategoryRouteImport } from './routes/brands.$brand.$category'
 
 const WhyUsRoute = WhyUsRouteImport.update({
   id: '/why-us',
@@ -121,6 +124,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HubsIndexRoute = HubsIndexRouteImport.update({
+  id: '/hubs/',
+  path: '/hubs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesIndexRoute = GuidesIndexRouteImport.update({
   id: '/guides/',
   path: '/guides/',
@@ -149,6 +157,11 @@ const ShopCategoryRoute = ShopCategoryRouteImport.update({
 const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
   id: '/products/$productId',
   path: '/products/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HubsHubRoute = HubsHubRouteImport.update({
+  id: '/hubs/$hub',
+  path: '/hubs/$hub',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuidesGuideRoute = GuidesGuideRouteImport.update({
@@ -226,6 +239,11 @@ const AdminChatRoute = AdminChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => AdminRoute,
 } as any)
+const BrandsBrandCategoryRoute = BrandsBrandCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => BrandsBrandRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -255,15 +273,18 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/brands/$brand': typeof BrandsBrandRoute
+  '/brands/$brand': typeof BrandsBrandRouteWithChildren
   '/comparisons/$comparison': typeof ComparisonsComparisonRoute
   '/guides/$guide': typeof GuidesGuideRoute
+  '/hubs/$hub': typeof HubsHubRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/comparisons/': typeof ComparisonsIndexRoute
   '/guides/': typeof GuidesIndexRoute
+  '/hubs/': typeof HubsIndexRoute
+  '/brands/$brand/$category': typeof BrandsBrandCategoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -291,15 +312,18 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/brands/$brand': typeof BrandsBrandRoute
+  '/brands/$brand': typeof BrandsBrandRouteWithChildren
   '/comparisons/$comparison': typeof ComparisonsComparisonRoute
   '/guides/$guide': typeof GuidesGuideRoute
+  '/hubs/$hub': typeof HubsHubRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/comparisons': typeof ComparisonsIndexRoute
   '/guides': typeof GuidesIndexRoute
+  '/hubs': typeof HubsIndexRoute
+  '/brands/$brand/$category': typeof BrandsBrandCategoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -330,15 +354,18 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/brands/$brand': typeof BrandsBrandRoute
+  '/brands/$brand': typeof BrandsBrandRouteWithChildren
   '/comparisons/$comparison': typeof ComparisonsComparisonRoute
   '/guides/$guide': typeof GuidesGuideRoute
+  '/hubs/$hub': typeof HubsHubRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/comparisons/': typeof ComparisonsIndexRoute
   '/guides/': typeof GuidesIndexRoute
+  '/hubs/': typeof HubsIndexRoute
+  '/brands/$brand/$category': typeof BrandsBrandCategoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -373,12 +400,15 @@ export interface FileRouteTypes {
     | '/brands/$brand'
     | '/comparisons/$comparison'
     | '/guides/$guide'
+    | '/hubs/$hub'
     | '/products/$productId'
     | '/shop/$category'
     | '/admin/'
     | '/blog/'
     | '/comparisons/'
     | '/guides/'
+    | '/hubs/'
+    | '/brands/$brand/$category'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -409,12 +439,15 @@ export interface FileRouteTypes {
     | '/brands/$brand'
     | '/comparisons/$comparison'
     | '/guides/$guide'
+    | '/hubs/$hub'
     | '/products/$productId'
     | '/shop/$category'
     | '/admin'
     | '/blog'
     | '/comparisons'
     | '/guides'
+    | '/hubs'
+    | '/brands/$brand/$category'
   id:
     | '__root__'
     | '/'
@@ -447,12 +480,15 @@ export interface FileRouteTypes {
     | '/brands/$brand'
     | '/comparisons/$comparison'
     | '/guides/$guide'
+    | '/hubs/$hub'
     | '/products/$productId'
     | '/shop/$category'
     | '/admin/'
     | '/blog/'
     | '/comparisons/'
     | '/guides/'
+    | '/hubs/'
+    | '/brands/$brand/$category'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -471,13 +507,15 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   WhyUsRoute: typeof WhyUsRoute
-  BrandsBrandRoute: typeof BrandsBrandRoute
+  BrandsBrandRoute: typeof BrandsBrandRouteWithChildren
   ComparisonsComparisonRoute: typeof ComparisonsComparisonRoute
   GuidesGuideRoute: typeof GuidesGuideRoute
+  HubsHubRoute: typeof HubsHubRoute
   ProductsProductIdRoute: typeof ProductsProductIdRoute
   ShopCategoryRoute: typeof ShopCategoryRoute
   ComparisonsIndexRoute: typeof ComparisonsIndexRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
+  HubsIndexRoute: typeof HubsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -587,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hubs/': {
+      id: '/hubs/'
+      path: '/hubs'
+      fullPath: '/hubs/'
+      preLoaderRoute: typeof HubsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/': {
       id: '/guides/'
       path: '/guides'
@@ -627,6 +672,13 @@ declare module '@tanstack/react-router' {
       path: '/products/$productId'
       fullPath: '/products/$productId'
       preLoaderRoute: typeof ProductsProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hubs/$hub': {
+      id: '/hubs/$hub'
+      path: '/hubs/$hub'
+      fullPath: '/hubs/$hub'
+      preLoaderRoute: typeof HubsHubRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guides/$guide': {
@@ -734,6 +786,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminChatRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/brands/$brand/$category': {
+      id: '/brands/$brand/$category'
+      path: '/$category'
+      fullPath: '/brands/$brand/$category'
+      preLoaderRoute: typeof BrandsBrandCategoryRouteImport
+      parentRoute: typeof BrandsBrandRoute
+    }
   }
 }
 
@@ -781,6 +840,18 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface BrandsBrandRouteChildren {
+  BrandsBrandCategoryRoute: typeof BrandsBrandCategoryRoute
+}
+
+const BrandsBrandRouteChildren: BrandsBrandRouteChildren = {
+  BrandsBrandCategoryRoute: BrandsBrandCategoryRoute,
+}
+
+const BrandsBrandRouteWithChildren = BrandsBrandRoute._addFileChildren(
+  BrandsBrandRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -797,13 +868,15 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
   WhyUsRoute: WhyUsRoute,
-  BrandsBrandRoute: BrandsBrandRoute,
+  BrandsBrandRoute: BrandsBrandRouteWithChildren,
   ComparisonsComparisonRoute: ComparisonsComparisonRoute,
   GuidesGuideRoute: GuidesGuideRoute,
+  HubsHubRoute: HubsHubRoute,
   ProductsProductIdRoute: ProductsProductIdRoute,
   ShopCategoryRoute: ShopCategoryRoute,
   ComparisonsIndexRoute: ComparisonsIndexRoute,
   GuidesIndexRoute: GuidesIndexRoute,
+  HubsIndexRoute: HubsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

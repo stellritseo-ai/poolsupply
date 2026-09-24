@@ -76,7 +76,7 @@ const DEFAULT_SETTINGS: GlobalSettingsType = {
     name: "Pool Supply Wholesalers",
     tagline: "Commercial Grade Pool Equipment & Supplies",
     supportEmail: "support@poolsupplywholesalers.com",
-    phone: "(800) 555-POOL",
+    phone: "(802) 265-0320",
     address: "742 Evergreen Terrace, Suite 100, Phoenix, AZ 85001",
     supportHours: "Mon - Fri: 7:00 AM - 6:00 PM MST",
     currency: "USD ($)",

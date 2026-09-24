@@ -1,8 +1,59 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { getComparisonBySlug } from "@/lib/comparisons-content";
-import { ChevronRight, ArrowLeft } from "lucide-react";
+import { getComparisonBySlug, ComparisonContent } from "@/lib/comparisons-content";
+import { ChevronRight, ArrowLeft, Scale, ShoppingBag, ArrowRight, BookOpen } from "lucide-react";
+import { useProducts, Product } from "@/lib/products";
+import { ProductCard } from "@/components/site/ProductCard";
+
+function getComparisonSiloLinks(comp: ComparisonContent) {
+  const slug = comp.slug.toLowerCase();
+  const cat = comp.category.toLowerCase();
+
+  let catSlug = "pool-pumps";
+  let catName = "Pool Pumps";
+  if (cat.includes("heat")) {
+    catSlug = "pool-heaters";
+    catName = "Pool Heaters";
+  } else if (cat.includes("filter")) {
+    catSlug = "pool-filters";
+    catName = "Pool Filters";
+  }
+
+  let brand1 = "pentair";
+  let brand2 = "hayward";
+
+  if (slug.includes("pentair-vs-hayward")) {
+    brand1 = "pentair";
+    brand2 = "hayward";
+  } else if (slug.includes("jandy-vs-pentair")) {
+    brand1 = "jandy";
+    brand2 = "pentair";
+  } else if (slug.includes("gas-vs-electric")) {
+    brand1 = "raypak";
+    brand2 = "pentair";
+  } else if (slug.includes("cartridge-vs-sand")) {
+    brand1 = "hayward";
+    brand2 = "pentair";
+  }
+
+  const brand1Name = brand1.charAt(0).toUpperCase() + brand1.slice(1);
+  const brand2Name = brand2.charAt(0).toUpperCase() + brand2.slice(1);
+
+  return {
+    catSlug,
+    catName,
+    brand1,
+    brand2,
+    brand1Name,
+    brand2Name,
+    guideUrl: `/guides/${catSlug.replace(/s$/, "")}-buying-guide`,
+    brand1Hub: `/brands/${brand1}/${catSlug}`,
+    brand2Hub: `/brands/${brand2}/${catSlug}`,
+    catUrl: `/shop/${catSlug}`,
+  };
+}
 
 export const Route = createFileRoute("/comparisons/$comparison")({
   loader: ({ params }) => {
@@ -25,14 +76,27 @@ export const Route = createFileRoute("/comparisons/$comparison")({
       url: pageUrl,
       datePublished: comp.date,
       dateModified: comp.dateModified,
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", "header p", "table"],
+      },
       author: {
         "@type": "Person",
         name: comp.author,
+        jobTitle: "Master Pool Contractor & Commercial Hydraulics Specialist",
+        description:
+          "Licensed commercial pool contractor and equipment engineer at Pools By Elio and Pool Supply Wholesalers.",
         url: "https://poolsupplywholesalers.com/about",
+        worksFor: {
+          "@type": "Organization",
+          name: "Pool Supply Wholesalers",
+          url: "https://poolsupplywholesalers.com",
+        },
       },
       publisher: {
         "@type": "Organization",
         name: "Pool Supply Wholesalers",
+        url: "https://poolsupplywholesalers.com",
         logo: {
           "@type": "ImageObject",
           url: "https://poolsupplywholesalers.com/logo.png",
@@ -66,16 +130,24 @@ export const Route = createFileRoute("/comparisons/$comparison")({
         { title: comp.metaTitle },
         { name: "description", content: comp.metaDescription },
         { name: "keywords", content: comp.keywords.join(", ") },
+        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
         { property: "og:title", content: comp.metaTitle },
         { property: "og:description", content: comp.metaDescription },
         { property: "og:type", content: "article" },
         { property: "og:url", content: pageUrl },
+        { property: "og:site_name", content: "Pool Supply Wholesalers" },
         { property: "og:image", content: comp.image },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: comp.metaTitle },
+        { property: "og:locale", content: "en_US" },
         { property: "article:published_time", content: comp.date },
         { property: "article:modified_time", content: comp.dateModified },
         { property: "article:author", content: comp.author },
         { property: "article:section", content: comp.category },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:site", content: "@poolsupplywholesalers" },
+        { name: "twitter:creator", content: "@poolsupplywholesalers" },
         { name: "twitter:title", content: comp.metaTitle },
         { name: "twitter:description", content: comp.metaDescription },
         { name: "twitter:image", content: comp.image },
@@ -92,13 +164,35 @@ export const Route = createFileRoute("/comparisons/$comparison")({
 
 function ComparisonDetailPage() {
   const { comp } = Route.useLoaderData();
+  const { products: allProducts } = useProducts();
+  const silo = useMemo(() => getComparisonSiloLinks(comp), [comp]);
+
+  const brand1Products = useMemo(() => {
+    return allProducts
+      .filter((p) => {
+        const brand = (p.brand || "").toLowerCase();
+        const pCat = (p.category || "").toLowerCase();
+        return brand.includes(silo.brand1) && (pCat.includes(silo.catSlug.replace("pool-", "")) || pCat.includes(silo.catSlug));
+      })
+      .slice(0, 2);
+  }, [allProducts, silo]);
+
+  const brand2Products = useMemo(() => {
+    return allProducts
+      .filter((p) => {
+        const brand = (p.brand || "").toLowerCase();
+        const pCat = (p.category || "").toLowerCase();
+        return brand.includes(silo.brand2) && (pCat.includes(silo.catSlug.replace("pool-", "")) || pCat.includes(silo.catSlug));
+      })
+      .slice(0, 2);
+  }, [allProducts, silo]);
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Header />
+      <Header alwaysDark />
 
       {/* Breadcrumbs */}
-      <div className="bg-slate-50 border-b border-slate-200 py-4">
+      <div className="bg-slate-50 border-b border-slate-200 py-4 pt-28">
         <div className="container mx-auto px-4 max-w-4xl">
           <nav className="flex items-center text-sm font-medium text-slate-500">
             <Link to="/" className="hover:text-cyan-600 transition-colors">
@@ -211,19 +305,75 @@ function ComparisonDetailPage() {
             })}
           </div>
 
-          <div className="mt-16 bg-slate-50 rounded-2xl p-8 border border-slate-200 text-center">
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">
-              Find {comp.category} at Wholesale Prices
+          {/* Side-by-Side Equipment Comparison Products */}
+          {(brand1Products.length > 0 || brand2Products.length > 0) && (
+            <div className="mt-16 pt-10 border-t border-slate-200">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold uppercase tracking-wider mb-2">
+                    <ShoppingBag className="size-3 text-cyan-600" /> Factory-Direct Equipment
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                    Shop Compared {silo.catName} at Wholesale
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl">
+                    Compare in-stock commercial and residential models from {silo.brand1Name} and {silo.brand2Name} with trade pricing and factory warranty.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <Link
+                    to={silo.brand1Hub}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 hover:text-cyan-700 hover:border-cyan-300 transition shadow-2xs"
+                  >
+                    All {silo.brand1Name} {silo.catName}
+                    <ArrowRight className="size-3" />
+                  </Link>
+                  <Link
+                    to={silo.brand2Hub}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 hover:text-cyan-700 hover:border-cyan-300 transition shadow-2xs"
+                  >
+                    All {silo.brand2Name} {silo.catName}
+                    <ArrowRight className="size-3" />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {brand1Products.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
+                ))}
+                {brand2Products.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i + 2} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Sizing & Hub Silo Links */}
+          <div className="mt-14 bg-gradient-to-r from-slate-900 to-cyan-950 rounded-2xl p-8 text-center text-white">
+            <h3 className="text-2xl font-bold mb-3">
+              Need Sizing Assistance for Your Pool?
             </h3>
-            <p className="text-slate-600 mb-6">
-              Ready to make a choice? Browse our full selection.
+            <p className="text-slate-300 text-sm max-w-xl mx-auto mb-6">
+              Our master pool contractor team can review your equipment pad specs, calculate turnover rates, and ensure warranty compliance.
             </p>
-            <Link
-              to={`/shop/${comp.category.toLowerCase().replace(/[^a-z0-9-]/g, "-")}`}
-              className="inline-flex items-center justify-center rounded-xl bg-cyan-600 px-6 py-3 text-base font-bold text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-700 hover:-translate-y-0.5 transition-all"
-            >
-              Shop {comp.category}
-            </Link>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to={silo.guideUrl}
+                className="inline-flex items-center justify-center rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3 text-sm font-extrabold shadow-lg shadow-cyan-500/30 transition-all"
+              >
+                Read {silo.catName} Sizing Guide
+                <BookOpen className="size-4 ml-2" />
+              </Link>
+              <Link
+                to={silo.catUrl}
+                className="inline-flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white px-6 py-3 text-sm font-extrabold transition-all"
+              >
+                Browse All {silo.catName}
+                <ArrowRight className="size-4 ml-2" />
+              </Link>
+            </div>
           </div>
         </article>
       </main>

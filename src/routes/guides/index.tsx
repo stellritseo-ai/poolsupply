@@ -5,30 +5,91 @@ import { BUYING_GUIDES } from "@/lib/guides-content";
 import { BookOpen, ChevronRight, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/guides/")({
-  head: () => ({
-    meta: [
-      { title: "Pool Equipment Buying Guides | Pool Supply Wholesalers" },
-      {
-        name: "description",
-        content:
-          "Read our comprehensive pool equipment buying guides. Learn how to size pumps, heaters, and filters for your commercial or residential pool.",
-      },
-      {
-        name: "keywords",
-        content:
-          "pool equipment buying guide, pool pump sizing, pool heater sizing, pool filter comparison, pool automation guide",
-      },
-      { property: "og:title", content: "Pool Equipment Buying Guides" },
-      {
-        property: "og:description",
-        content:
-          "Expert guides for sizing and selecting commercial and residential pool equipment.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://poolsupplywholesalers.com/guides" },
-    ],
-    links: [{ rel: "canonical", href: "https://poolsupplywholesalers.com/guides" }],
-  }),
+  head: () => {
+    const pageUrl = "https://poolsupplywholesalers.com/guides";
+
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Pool Equipment Buying Guides",
+          item: pageUrl,
+        },
+      ],
+    };
+
+    const itemListLd = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Pool Equipment Buying & Sizing Guides",
+      description:
+        "Comprehensive commercial and residential pool equipment buying guides. Sizing calculators and selection rules for pumps, heaters, filters, chlorinators, and automation.",
+      url: pageUrl,
+      numberOfItems: BUYING_GUIDES.length,
+      itemListElement: BUYING_GUIDES.map((g, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: g.title,
+        url: `https://poolsupplywholesalers.com/guides/${g.slug}`,
+      })),
+    };
+
+    return {
+      meta: [
+        { title: "Pool Equipment Buying Guides | Pool Supply Wholesalers" },
+        {
+          name: "description",
+          content:
+            "Read our comprehensive pool equipment buying guides. Learn how to size pumps, heaters, and filters for your commercial or residential pool.",
+        },
+        {
+          name: "keywords",
+          content:
+            "pool equipment buying guide, pool pump sizing, pool heater sizing, pool filter comparison, pool automation guide",
+        },
+        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+        { property: "og:title", content: "Pool Equipment Buying Guides | Pool Supply Wholesalers" },
+        {
+          property: "og:description",
+          content:
+            "Expert guides for sizing and selecting commercial and residential pool equipment. Pump sizing, heater BTUs, filter selection, and automation setup.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: pageUrl },
+        { property: "og:site_name", content: "Pool Supply Wholesalers" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: "Pool Equipment Buying Guides — Pool Supply Wholesalers" },
+        { property: "og:locale", content: "en_US" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:site", content: "@poolsupplywholesalers" },
+        { name: "twitter:creator", content: "@poolsupplywholesalers" },
+        { name: "twitter:title", content: "Pool Equipment Buying Guides | Pool Supply Wholesalers" },
+        {
+          name: "twitter:description",
+          content:
+            "Expert guides for sizing and selecting commercial and residential pool equipment from Pool Supply Wholesalers.",
+        },
+        { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(itemListLd) },
+      ],
+    };
+  },
   component: GuidesIndexPage,
 });
 
@@ -38,7 +99,7 @@ function GuidesIndexPage() {
       <Header />
       <main className="flex-1 pb-24">
         {/* Hero Section */}
-        <div className="bg-slate-900 py-20 text-white relative overflow-hidden">
+        <div className="bg-slate-900 pt-32 pb-20 text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400 via-slate-900 to-slate-900"></div>
           <div className="container relative mx-auto px-4 text-center max-w-4xl">
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">

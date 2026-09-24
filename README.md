@@ -392,4 +392,4 @@ The `/blog` page establishes **topical authority** — a critical ranking signal
 ---
 
 _README maintained by Pool Supply Wholesalers development team._
-_Contact: sales@poolsupplywholesalers.com | +1-615-477-0407_
+_Contact: sales@poolsupplywholesalers.com | +1-802-265-0320_

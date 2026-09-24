@@ -310,7 +310,7 @@ function AdminQuotesPage() {
               <div>
                 <div class="company-name">Pool Supply Wholesalers</div>
                 <div class="company-sub">Commercial & Municipal Pool Equipment Wholesalers</div>
-                <div class="company-sub">Nashville, TN · (615) 477-0407 · sales@poolsupplywholesalers.com</div>
+                <div class="company-sub">Nashville, TN · (802) 265-0320 · sales@poolsupplywholesalers.com</div>
               </div>
             </div>
             <div class="doc-badge">

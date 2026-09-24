@@ -348,7 +348,7 @@ function CustomersAdmin() {
           </div>
 
           <div class="footer">
-            <strong>Pool Supply Wholesalers</strong> · Nashville, Tennessee · sales@poolsupplywholesalers.com · (615) 477-0407<br/>
+            <strong>Pool Supply Wholesalers</strong> · Nashville, Tennessee · sales@poolsupplywholesalers.com · (802) 265-0320<br/>
             Thank you for your commercial business. Genuine OEM equipment warranty applies on all items.
           </div>
         </div>

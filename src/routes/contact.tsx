@@ -52,7 +52,7 @@ export const Route = createFileRoute("/contact")({
       mainEntity: {
         "@type": "WholesaleStore",
         name: "Pool Supply Wholesalers",
-        telephone: "+1-615-477-0407",
+        telephone: "+1-802-265-0320",
         email: "sales@poolsupplywholesalers.com",
         address: {
           "@type": "PostalAddress",
@@ -82,7 +82,7 @@ export const Route = createFileRoute("/contact")({
         {
           property: "og:description",
           content:
-            "Direct support for pool contractors, builders, and service companies. Call (615) 477-0407 or email sales@poolsupplywholesalers.com.",
+            "Direct support for pool contractors, builders, and service companies. Call (802) 265-0320 or email sales@poolsupplywholesalers.com.",
         },
         { property: "og:url", content: pageUrl },
         { property: "og:type", content: "website" },
@@ -156,9 +156,9 @@ const CONTACT_CHANNELS = [
   {
     icon: Phone,
     title: "Direct Trade Hotline",
-    value: "(615) 477-0407",
+    value: "(802) 265-0320",
     sub: "Dedicated trade desk — instant pro routing",
-    href: "tel:6154770407",
+    href: "tel:8022650320",
   },
   {
     icon: Mail,
@@ -668,11 +668,11 @@ function ContactPage() {
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                   <a
-                    href="tel:6154770407"
+                    href="tel:8022650320"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-95 text-white font-extrabold text-xs sm:text-sm shadow-[0_8px_25px_rgba(6,182,212,0.35)] hover:scale-105 transition-all duration-200 cursor-pointer"
                   >
                     <Phone className="size-4" />
-                    <span>Call (615) 477-0407</span>
+                    <span>Call (802) 265-0320</span>
                   </a>
 
                   <Link

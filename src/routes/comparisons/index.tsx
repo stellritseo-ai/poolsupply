@@ -5,29 +5,89 @@ import { COMPARISONS } from "@/lib/comparisons-content";
 import { ArrowLeftRight, ChevronRight, Scale } from "lucide-react";
 
 export const Route = createFileRoute("/comparisons/")({
-  head: () => ({
-    meta: [
-      { title: "Pool Equipment Comparisons & Reviews | Pool Supply Wholesalers" },
-      {
-        name: "description",
-        content:
-          "Compare top pool equipment brands and models. Pentair vs Hayward, Cartridge vs Sand filters, Gas vs Electric heaters. Make the right choice for your pool.",
-      },
-      {
-        name: "keywords",
-        content:
-          "pool equipment comparison, pentair vs hayward, jandy vs pentair, pool heater comparison, pool pump reviews",
-      },
-      { property: "og:title", content: "Pool Equipment Comparisons" },
-      {
-        property: "og:description",
-        content: "Detailed head-to-head comparisons of the industry's top pool equipment.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://poolsupplywholesalers.com/comparisons" },
-    ],
-    links: [{ rel: "canonical", href: "https://poolsupplywholesalers.com/comparisons" }],
-  }),
+  head: () => {
+    const pageUrl = "https://poolsupplywholesalers.com/comparisons";
+
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://poolsupplywholesalers.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Pool Equipment Comparisons",
+          item: pageUrl,
+        },
+      ],
+    };
+
+    const itemListLd = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Head-to-Head Pool Equipment Comparisons",
+      description:
+        "Side-by-side technical comparisons of commercial pool equipment brands and technologies: Pentair vs Hayward, Raypak vs Jandy, Gas vs Heat Pumps, and Cartridge vs Sand.",
+      url: pageUrl,
+      numberOfItems: COMPARISONS.length,
+      itemListElement: COMPARISONS.map((c, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: c.title,
+        url: `https://poolsupplywholesalers.com/comparisons/${c.slug}`,
+      })),
+    };
+
+    return {
+      meta: [
+        { title: "Pool Equipment Comparisons & Reviews | Pool Supply Wholesalers" },
+        {
+          name: "description",
+          content:
+            "Compare top pool equipment brands and models. Pentair vs Hayward, Cartridge vs Sand filters, Gas vs Electric heaters. Make the right choice for your pool.",
+        },
+        {
+          name: "keywords",
+          content:
+            "pool equipment comparison, pentair vs hayward, jandy vs pentair, pool heater comparison, pool pump reviews",
+        },
+        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+        { property: "og:title", content: "Pool Equipment Comparisons & Reviews | Pool Supply Wholesalers" },
+        {
+          property: "og:description",
+          content: "Detailed head-to-head comparisons of the industry's top pool equipment. Pentair vs Hayward, Gas vs Electric, Cartridge vs Sand.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: pageUrl },
+        { property: "og:site_name", content: "Pool Supply Wholesalers" },
+        { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: "Pool Equipment Comparisons — Pool Supply Wholesalers" },
+        { property: "og:locale", content: "en_US" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:site", content: "@poolsupplywholesalers" },
+        { name: "twitter:creator", content: "@poolsupplywholesalers" },
+        { name: "twitter:title", content: "Pool Equipment Comparisons & Reviews | Pool Supply Wholesalers" },
+        {
+          name: "twitter:description",
+          content: "Detailed head-to-head comparisons of the industry's top pool equipment. Make the right choice for your pool.",
+        },
+        { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
+      ],
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(itemListLd) },
+      ],
+    };
+  },
   component: ComparisonsIndexPage,
 });
 
@@ -37,7 +97,7 @@ function ComparisonsIndexPage() {
       <Header />
       <main className="flex-1 pb-24">
         {/* Hero Section */}
-        <div className="bg-slate-900 py-20 text-white relative overflow-hidden">
+        <div className="bg-slate-900 pt-32 pb-20 text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-400 via-slate-900 to-slate-900"></div>
           <div className="container relative mx-auto px-4 text-center max-w-4xl">
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">

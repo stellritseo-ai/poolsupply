@@ -46,6 +46,70 @@ export const Route = createFileRoute("/why-us")({
       ],
     };
 
+    const faqLd = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", ".why-us-intro", ".faq-answer"],
+      },
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Why should I buy pool equipment from Pool Supply Wholesalers?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Pool Supply Wholesalers is a direct authorized commercial distributor for Pentair, Hayward, Jandy, and Raypak. We offer up to 40% below retail MSRP with no membership required, same-day freight dispatch from 4 US logistics hubs in Nashville TN, Dallas TX, Orlando FL, and Los Angeles CA, 100% factory-sealed genuine OEM inventory, and certified technical support from licensed pool contractors.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Do I need a contractor license to buy from Pool Supply Wholesalers?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No. Pool Supply Wholesalers sells wholesale to retail, meaning homeowners, service technicians, pool builders, and commercial facility managers all receive the same direct trade pricing without requiring a contractor license or membership fee.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Does Pool Supply Wholesalers provide factory warranty on equipment?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Every product supplied by Pool Supply Wholesalers is 100% genuine, factory-sealed OEM inventory and qualifies for the full manufacturer warranty from Pentair, Hayward, Jandy, or Raypak when installed per manufacturer specifications.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How fast does Pool Supply Wholesalers ship pool equipment?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Orders placed before 2:00 PM from our nearest regional hub ship same-day. With distribution centers in Nashville TN, Dallas TX, Orlando FL, and Los Angeles CA, 98% of the continental US receives ground delivery within 1\u20132 business days.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What brands does Pool Supply Wholesalers distribute?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Pool Supply Wholesalers is an authorized distributor for Pentair, Hayward, Jandy, Raypak, Zodiac, and Waterway. We stock variable speed pumps, gas heaters, cartridge filters, salt chlorinators, LED lighting, robotic cleaners, and automation systems.",
+          },
+        },
+      ],
+    };
+
+    const webPageLd = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Why Choose Pool Supply Wholesalers",
+      url: pageUrl,
+      description:
+        "Discover why 5,000+ pool contractors and service companies trust Pool Supply Wholesalers for genuine OEM equipment, factory warranties, same-day shipping, and certified technical support.",
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", ".why-us-intro"],
+      },
+    };
+
     return {
       meta: [
         { title: "Why Choose Us — Pool Supply Wholesalers | Wholesale Pool Equipment Distributor" },
@@ -59,6 +123,7 @@ export const Route = createFileRoute("/why-us")({
           content:
             "why choose pool supply wholesalers, commercial pool supplier advantages, wholesale pool equipment trade pricing, genuine OEM pool parts",
         },
+        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
         { property: "og:title", content: "Why Pool Professionals Choose Pool Supply Wholesalers" },
         {
           property: "og:description",
@@ -89,7 +154,11 @@ export const Route = createFileRoute("/why-us")({
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
       links: [{ rel: "canonical", href: pageUrl }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(breadcrumbLd) }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+        { type: "application/ld+json", children: JSON.stringify(faqLd) },
+        { type: "application/ld+json", children: JSON.stringify(webPageLd) },
+      ],
     };
   },
   component: WhyUsPage,

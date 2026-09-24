@@ -26,8 +26,200 @@ import {
   MessageSquare,
   Sparkles,
   ArrowLeft,
+  BookOpen,
+  Scale,
+  ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
+
+function getProductContextLinks(product: Product | null | undefined) {
+  if (!product) return null;
+
+  const rawCat = (product.category || "").toLowerCase();
+  let catSlug = rawCat
+    .replace(/\s+&\s+/g, "-and-")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+  if (catSlug === "pumps") catSlug = "pool-pumps";
+  if (catSlug === "heaters") catSlug = "pool-heaters";
+  if (catSlug === "filters") catSlug = "pool-filters";
+  if (catSlug === "cleaners") catSlug = "pool-cleaners";
+  if (catSlug === "lights") catSlug = "pool-lights";
+  if (catSlug === "automation") catSlug = "automation-systems";
+
+  const brandSlug = (product.brand || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-");
+
+  const brandCatUrl = brandSlug && catSlug ? `/brands/${brandSlug}/${catSlug}` : null;
+  const brandUrl = brandSlug ? `/brands/${brandSlug}` : null;
+
+  const cards: Array<{
+    type: "guide" | "comparison" | "article";
+    tag: string;
+    title: string;
+    desc: string;
+    url: string;
+  }> = [];
+
+  if (catSlug.includes("pump")) {
+    cards.push({
+      type: "guide",
+      tag: "Sizing Guide",
+      title: "Commercial & Residential Pool Pump Sizing Guide",
+      desc: "Calculate required turnover rates, Gallons Per Minute (GPM), and variable speed energy savings.",
+      url: "/guides/pool-pump-buying-guide",
+    });
+    cards.push({
+      type: "comparison",
+      tag: "Head-to-Head",
+      title: "Pentair vs. Hayward Pool Pumps Comparison",
+      desc: "Detailed comparison of flow hydraulics, decibel sound ratings, and DOE efficiency ratings.",
+      url: "/comparisons/pentair-vs-hayward-pool-pumps",
+    });
+    cards.push({
+      type: "article",
+      tag: "DOE Compliance",
+      title: "Variable Speed Pump Regulations & Contractor ROI",
+      desc: "Federal efficiency mandates and operating cost comparison for commercial pool systems.",
+      url: "/blog/how-to-choose-variable-speed-pool-pump-commercial",
+    });
+  } else if (catSlug.includes("heat")) {
+    cards.push({
+      type: "guide",
+      tag: "Sizing Guide",
+      title: "Pool Heater BTU Sizing & Temperature Calculator",
+      desc: "Calculate required BTU output based on surface area, climate zone, and wind exposure.",
+      url: "/guides/pool-heater-buying-guide",
+    });
+    cards.push({
+      type: "comparison",
+      tag: "Efficiency Comparison",
+      title: "Gas Heaters vs. Electric Heat Pumps",
+      desc: "Operating cost breakdown, cold weather performance, and high-COP heat pump metrics.",
+      url: "/comparisons/gas-vs-electric-pool-heaters",
+    });
+    cards.push({
+      type: "article",
+      tag: "Brand Comparison",
+      title: "Pentair vs. Hayward vs. Jandy Pool Heaters",
+      desc: "Cupro-nickel vs titanium heat exchangers and commercial installation requirements.",
+      url: "/blog/pentair-vs-hayward-vs-jandy-pool-heater-comparison-2026",
+    });
+  } else if (catSlug.includes("filter")) {
+    cards.push({
+      type: "guide",
+      tag: "Selection Guide",
+      title: "Cartridge, Sand & D.E. Pool Filter Buying Guide",
+      desc: "Micron filtration ratings, backwash water conservation, and clean PSI pressure ranges.",
+      url: "/guides/pool-filter-buying-guide",
+    });
+    cards.push({
+      type: "comparison",
+      tag: "Filtration Comparison",
+      title: "Cartridge vs. Sand Pool Filters Comparison",
+      desc: "Comprehensive evaluation of filtration clarity, maintenance labor, and replacement costs.",
+      url: "/comparisons/cartridge-vs-sand-pool-filters",
+    });
+    cards.push({
+      type: "article",
+      tag: "Maintenance Guide",
+      title: "Contractor Filter Maintenance & Cleaning",
+      desc: "Commercial filtration protocols, chemical degreasing, and element replacement schedules.",
+      url: "/blog/cartridge-filter-vs-sand-filter-pool-contractor-guide",
+    });
+  } else if (catSlug.includes("automation")) {
+    cards.push({
+      type: "guide",
+      tag: "Setup Guide",
+      title: "Smart Pool Automation Systems Guide",
+      desc: "IntelliCenter, OmniLogic, and AquaLink remote smartphone control setup.",
+      url: "/guides/pool-automation-buying-guide",
+    });
+    cards.push({
+      type: "article",
+      tag: "System Architecture",
+      title: "Pool Automation Systems Explained",
+      desc: "Automated valve actuators, salt chlorinator integration, and schedule timers.",
+      url: "/blog/pool-automation-systems-explained-2026",
+    });
+    cards.push({
+      type: "guide",
+      tag: "Commercial Pad",
+      title: "Commercial Pool Equipment Checklist",
+      desc: "Standard build requirements for commercial aquatic facilities and municipal code.",
+      url: "/blog/commercial-pool-equipment-checklist-complete-build-supply-list",
+    });
+  } else if (catSlug.includes("salt") || catSlug.includes("chlorin")) {
+    cards.push({
+      type: "guide",
+      tag: "Sizing Guide",
+      title: "Salt Chlorine Generator Sizing Guide",
+      desc: "Electrolysis sizing, cell longevity, and maintaining optimal 3,200 ppm salinity.",
+      url: "/guides/salt-chlorine-generator-buying-guide",
+    });
+    cards.push({
+      type: "article",
+      tag: "Sanitization Guide",
+      title: "How to Size a Commercial Pool Salt Chlorinator",
+      desc: "Pounds of pure chlorine production per 24 hours based on pool volume and bather load.",
+      url: "/blog/how-to-size-pool-salt-chlorinator",
+    });
+    cards.push({
+      type: "guide",
+      tag: "Commercial Guide",
+      title: "Commercial Pool Equipment Master Guide",
+      desc: "Commercial sanitization protocols, automation, and hydraulic pad layout.",
+      url: "/guides/commercial-pool-equipment-guide",
+    });
+  } else if (catSlug.includes("cleaner")) {
+    cards.push({
+      type: "article",
+      tag: "Buyer's Guide",
+      title: "Top Commercial & Residential Robotic Cleaners",
+      desc: "Independent filtration, wall climbing capabilities, and dual-scrubbing brushes.",
+      url: "/blog/best-robotic-pool-cleaners-2026-commercial-residential",
+    });
+    cards.push({
+      type: "guide",
+      tag: "Sizing Guide",
+      title: "Complete Commercial Pool Equipment Guide",
+      desc: "Selecting the right automatic cleaning system for commercial and residential pools.",
+      url: "/guides/commercial-pool-equipment-guide",
+    });
+    cards.push({
+      type: "article",
+      tag: "Trade Pricing",
+      title: "Wholesale vs. Retail Pool Equipment Pricing",
+      desc: "Maximizing trade discounts and direct warehouse freight on commercial equipment.",
+      url: "/blog/wholesale-vs-retail-pool-equipment-pricing-how-to-save",
+    });
+  } else {
+    cards.push({
+      type: "guide",
+      tag: "Commercial Guide",
+      title: "Complete Commercial Pool Equipment Guide",
+      desc: "Comprehensive guidelines on sizing, hydraulic efficiency, and commercial code compliance.",
+      url: "/guides/commercial-pool-equipment-guide",
+    });
+    cards.push({
+      type: "article",
+      tag: "Energy Report",
+      title: "Pool Equipment Energy Savings Report",
+      desc: "DOE compliance, hydraulic flow rates, and operating cost reductions.",
+      url: "/blog/pool-equipment-energy-savings-report-2026",
+    });
+    cards.push({
+      type: "article",
+      tag: "Trade Pricing",
+      title: "Wholesale vs. Retail Pool Equipment Pricing",
+      desc: "How pool contractors and service companies access direct wholesale trade terms.",
+      url: "/blog/wholesale-vs-retail-pool-equipment-pricing-how-to-save",
+    });
+  }
+
+  return { brandCatUrl, brandUrl, cards };
+}
 
 export const Route = createFileRoute("/products/$productId")({
   loader: async ({ params }) => {
@@ -310,6 +502,7 @@ function ProductDetailPage() {
 
   const product = dbProduct || loaderData?.product || getProductById(productId);
   const isLoading = isQueryLoading && !product;
+  const contextLinks = useMemo(() => getProductContextLinks(product), [product]);
 
   // Category related products query
   const { data: categoryProducts } = useQuery({
@@ -967,6 +1160,75 @@ function ProductDetailPage() {
                 </div>
               </div>
             </section>
+
+            {/* Technical Sizing Guides & Brand Resources (SEO Silo & Reverse Flow) */}
+            {contextLinks && contextLinks.cards.length > 0 && (
+              <section className="mt-14 sm:mt-20 pt-8 sm:pt-12 border-t border-border">
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                  <div>
+                    <span className="text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-semibold flex items-center gap-1.5">
+                      <BookOpen className="size-3.5" /> Technical Resources & Silo
+                    </span>
+                    <h2 className="mt-2 text-xl sm:text-2xl font-extrabold tracking-tight">
+                      Sizing Guides & Authorized {product?.brand || "Brand"} Resources
+                    </h2>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-xl">
+                      Review contractor sizing formulas, manufacturer comparisons, and complete {product?.brand || ""} catalogs for this {product?.category?.toLowerCase() || "equipment"}.
+                    </p>
+                  </div>
+
+                  {/* Hub Links Pills */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {contextLinks.brandCatUrl && (
+                      <Link
+                        to={contextLinks.brandCatUrl}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-cyan-50 border border-cyan-200 text-xs font-bold text-cyan-800 hover:bg-cyan-100 transition shadow-2xs"
+                      >
+                        All {product?.brand} {product?.category}
+                        <ArrowRight className="size-3" />
+                      </Link>
+                    )}
+                    {contextLinks.brandUrl && (
+                      <Link
+                        to={contextLinks.brandUrl}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 transition shadow-2xs"
+                      >
+                        {product?.brand} Hub
+                        <ArrowRight className="size-3" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {contextLinks.cards.map((card, idx) => (
+                    <Link
+                      key={idx}
+                      to={card.url}
+                      className="group p-5 rounded-2xl bg-surface border border-border hover:border-cyan-400 hover:shadow-xs transition flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-700 uppercase tracking-wider mb-2">
+                          {card.type === "guide" && <BookOpen className="size-3.5" />}
+                          {card.type === "comparison" && <Scale className="size-3.5" />}
+                          {card.type === "article" && <Sparkles className="size-3.5" />}
+                          {card.tag}
+                        </div>
+                        <h3 className="font-bold text-sm text-foreground group-hover:text-cyan-600 transition leading-snug">
+                          {card.title}
+                        </h3>
+                        <p className="text-xs text-muted-foreground mt-2 leading-relaxed line-clamp-2">
+                          {card.desc}
+                        </p>
+                      </div>
+                      <div className="mt-4 pt-3 border-t border-border/60 flex items-center text-xs font-bold text-cyan-600 group-hover:translate-x-0.5 transition-transform gap-1">
+                        Read Technical Guide <ArrowRight className="size-3" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Related Products */}
             {related.length > 0 && (

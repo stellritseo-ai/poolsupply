@@ -31,20 +31,26 @@ export const Route = createFileRoute("/shop/$category")({
   loaderDeps: ({ search: { q } }) => ({ q: q as string | undefined }),
   loader: async ({ params, deps }) => {
     // Fetch initial first-page products for schema generation
-    const res = await getShopProductsPagedDb({
-      data: {
-        category: params.category || "all",
-        page: 1,
-        limit: 12,
-        searchQuery: deps.q || "",
-        sortBy: "rating-desc",
-        brands: [],
-        inStockOnly: false,
-      }
-    });
-    return { initialProducts: res.success ? res.products : [], searchQ: deps.q };
+    try {
+      const res = await getShopProductsPagedDb({
+        data: {
+          category: params.category || "all",
+          page: 1,
+          limit: 12,
+          search: deps.q || undefined,
+          sort: "rating-desc",
+          brands: [],
+        }
+      });
+      return { initialProducts: res.success ? res.products : [], searchQ: deps.q };
+    } catch {
+      return { initialProducts: [], searchQ: deps.q };
+    }
   },
-  head: ({ params, loaderData }) => {
+  head: (ctx) => {
+    const params = ctx?.params;
+    const loaderData = ctx?.loaderData;
+    if (!params?.category) return { meta: [], links: [], scripts: [] };
     const name = getCategoryName(params.category);
     const title = `${name} Wholesale to Retail USA | Commercial Pool Supplies Online`;
     const description = `Shop wholesale to retail commercial-grade ${name} at direct trade pricing across the USA. Fast nationwide shipping on Pentair, Hayward, Jandy & Raypak from US distribution centers.`;
@@ -125,14 +131,44 @@ export const Route = createFileRoute("/shop/$category")({
       }))
     };
 
+    const categoryContent = getCategoryContent(params.category);
+
     const collectionPageLd = {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       name: title,
       description: description,
       url: categoryUrl,
-      mainEntity: itemListLd
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", ".category-intro", ".faq-answer"],
+      },
+      mainEntity: itemListLd,
     };
+
+    const scripts: Array<{ type: string; children: string }> = [
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
+      { type: "application/ld+json", children: JSON.stringify(collectionPageLd) },
+    ];
+
+    if (categoryContent?.faqs && categoryContent.faqs.length > 0) {
+      const faqLd = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: categoryContent.faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.a,
+          },
+        })),
+      };
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify(faqLd),
+      });
+    }
 
     // If there is a search parameter, we noindex to avoid infinite crawl spaces
     const isSearchActive = !!(loaderData?.searchQ);
@@ -169,10 +205,7 @@ export const Route = createFileRoute("/shop/$category")({
         { name: "twitter:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
       ],
       links: [{ rel: "canonical", href: categoryUrl }],
-      scripts: [
-        { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
-        { type: "application/ld+json", children: JSON.stringify(collectionPageLd) }
-      ],
+      scripts,
     };
   },
   component: CategoryPage,
@@ -374,6 +407,149 @@ function getCategoryContent(slug: string) {
         },
       ],
     },
+    "pool-lights": {
+      heading: "Commercial & Residential Pool Lighting Systems",
+      intro:
+        "Illuminate your pool and spa with ultra-bright, energy-efficient LED and color-changing pool lights. From commercial-grade stainless steel fixtures to low-voltage 12V LED retrofits, we carry full light assemblies, replacement bulbs, and niche adapters from Pentair IntelliBrite, Hayward ColorLogic, and Jandy WaterColors.",
+      subcategories: [
+        "Color-Changing LED Lights",
+        "White LED Lights",
+        "12V Low Voltage Lights",
+        "120V High Voltage Lights",
+        "Replacement LED Engines & Niches",
+      ],
+      faqs: [
+        {
+          q: "Should I choose 12V or 120V pool lighting?",
+          a: "12V low-voltage lighting is strongly recommended for safety and is required by electrical code in many jurisdictions for new pool builds and major remodels. 12V fixtures require a step-down transformer installed at your equipment pad, eliminating hazardous high voltage near the water.",
+        },
+        {
+          q: "Can I replace my old halogen pool light with an LED light?",
+          a: "Yes. Modern LED pool lights like Pentair IntelliBrite and Hayward ColorLogic are engineered to fit directly into existing standard wet niches, allowing you to drop power consumption from 300W-500W down to under 50W without draining the pool.",
+        },
+      ],
+    },
+    "electric-heat-pumps": {
+      heading: "High-Efficiency Electric Pool Heat Pumps",
+      intro:
+        "Cut pool heating costs by up to 70% with high-COP electric swimming pool heat pumps. Designed for long swimming seasons and steady temperature maintenance, heat pumps extract ambient heat from the air and transfer it into your pool water with whisper-quiet, emissions-free operation.",
+      subcategories: [
+        "Heat-Only Electric Heat Pumps",
+        "Heat & Cool Dual Mode Units",
+        "Commercial Titanium Heat Pumps",
+        "Digital Defrost Heat Pumps",
+      ],
+      faqs: [
+        {
+          q: "How does a pool heat pump compare to a gas pool heater?",
+          a: "While gas heaters heat water rapidly regardless of outside weather, electric heat pumps operate at 400% to 600% thermal efficiency (COP of 4.0-6.0) and cost a fraction as much to run over a full season. Heat pumps perform best when ambient outdoor temperatures are above 50°F.",
+        },
+        {
+          q: "What electrical service is needed for a pool heat pump?",
+          a: "Most residential pool heat pumps (110k-140k BTU) require a dedicated 230V single-phase circuit with a 40-amp to 50-amp breaker. Commercial units may require 3-phase power.",
+        },
+      ],
+    },
+    "motors": {
+      heading: "Replacement Pool Pump Motors & End Frames",
+      intro:
+        "Restore full water circulation without replacing your entire pump housing. We stock genuine Century (A.O. Smith), US Motors, and Nidec replacement pool pump motors across square flange (56J) and C-face round flange (56C) configurations, including DOE-compliant variable speed drop-in replacements.",
+      subcategories: [
+        "Square Flange Motors (56J)",
+        "C-Face Round Flange Motors (56C)",
+        "Variable Speed Replacement Motors",
+        "Motor Capacitors & Shaft Seals",
+      ],
+      faqs: [
+        {
+          q: "How do I know whether my pump uses a square flange or C-face motor?",
+          a: "Check the mounting face where the motor bolts to the pump housing. Square flange motors (such as on Pentair WhisperFlo and Hayward Super II) have 4 bolt holes in a rectangular/square pattern. C-face motors (such as on Hayward Super Pump) have a circular flange with 4 threaded mounting holes.",
+        },
+        {
+          q: "Should I replace the shaft seal when installing a new motor?",
+          a: "Yes, always. Reusing an old mechanical shaft seal is the leading cause of premature motor failure. A fresh heavy-duty carbon-ceramic shaft seal kit prevents pool water from leaking into the motor front bearing.",
+        },
+      ],
+    },
+    "parts-and-hardware": {
+      heading: "Commercial Pool Plumbing, Valves & Hardware",
+      intro:
+        "Build, plumb, and maintain high-reliability commercial circulation systems. We distribute Schedule 40 and heavy-duty Schedule 80 PVC fittings, Jandy NeverLube diverter valves, check valves, unions, pressure gauges, and replacement O-rings at wholesale contractor pricing.",
+      subcategories: [
+        "2-Way & 3-Way Diverter Valves",
+        "Spring Check Valves",
+        "High-Temp Unions & Flanges",
+        "O-Rings, Gaskets & Rebuild Kits",
+      ],
+      faqs: [
+        {
+          q: "Why should I use high-temp CPVC unions on pump suction and discharge?",
+          a: "Standard white PVC unions can soften and warp under the heat generated if a pump temporarily runs dry or loses prime. High-temperature CPVC unions withstand up to 140°F+ without deforming, preventing air leaks and catastrophic equipment leaks.",
+        },
+        {
+          q: "Do Jandy NeverLube valves really never require grease?",
+          a: "Yes. NeverLube diverter valves use self-lubricating CPVC internal seals that never require silicone grease or maintenance, resisting chemical breakdown and high chlorine concentrations for decades.",
+        },
+      ],
+    },
+    "chemicals": {
+      heading: "Commercial Pool Chemicals & Water Sanitizers",
+      intro:
+        "Maintain balanced, crystal-clear water with professional chemical solutions. We stock commercial-grade trichlor tablets, shock oxidizers, cyanuric acid stabilizers, pH adjusters, algaecides, and clarifying enzymes in bulk quantities for service professionals and commercial facilities.",
+      subcategories: [
+        "Chlorine Tablets & Shock",
+        "pH Increasers & Reducers",
+        "Algaecides & Clarifiers",
+        "Cyanuric Acid Stabilizers",
+        "Calcium Hardness Increasers",
+      ],
+      faqs: [
+        {
+          q: "What is the ideal chemical balance for a commercial swimming pool?",
+          a: "Commercial pools should maintain Free Chlorine at 2.0-4.0 ppm, pH between 7.4 and 7.6, Total Alkalinity between 80 and 120 ppm, Calcium Hardness between 200 and 400 ppm, and Cyanuric Acid between 30 and 50 ppm (or 0 for indoor pools).",
+        },
+        {
+          q: "How does cyanuric acid (CYA) protect pool chlorine?",
+          a: "CYA acts as a sunshield for free chlorine molecules. Without CYA stabilizer, ultraviolet radiation from the sun degrades up to 90% of free chlorine in outdoor swimming pools within two hours.",
+        },
+      ],
+    },
+    "maintenance-and-cleaning": {
+      heading: "Professional Pool Maintenance & Cleaning Equipment",
+      intro:
+        "Equip your service trucks or facility with professional-grade telescopic poles, commercial vacuum heads, heavy-duty skimmer nets, wire algae brushes, and digital water testing photometers engineered for daily commercial durability.",
+      subcategories: [
+        "Heavy-Duty Vacuum Heads & Hoses",
+        "Commercial Skimmer & Leaf Rakes",
+        "Algae & Stainless Steel Brushes",
+        "Fiberglass Telescopic Poles",
+        "Commercial Water Test Kits",
+      ],
+      faqs: [
+        {
+          q: "What is the best vacuum head for commercial vinyl or gunite pools?",
+          a: "For gunite or concrete pools, heavy flexible wheeled vacuum heads weighted with lead strips provide maximum suction across uneven plaster. For vinyl liner pools, brush-lined vacuum heads prevent scratching or puncturing the liner.",
+        },
+      ],
+    },
+    "safety-and-accessibility": {
+      heading: "ADA Compliant Pool Lifts & Safety Equipment",
+      intro:
+        "Ensure commercial facility compliance with Title III ADA regulations and local municipal pool safety codes. We distribute battery-powered ADA pool lifts, safety vacuum release systems (SVRS), life rings, safety rope lines, and VGB-compliant anti-entrapment drain covers.",
+      subcategories: [
+        "ADA Commercial Pool Lifts",
+        "VGB Anti-Entrapment Drain Covers",
+        "Safety Vacuum Release Systems (SVRS)",
+        "Life Rings & Rescue Poles",
+        "Safety Divider Ropes & Floats",
+      ],
+      faqs: [
+        {
+          q: "Are commercial public pools legally required to have an ADA pool lift?",
+          a: "Yes. Under the Americans with Disabilities Act (ADA), public accommodations including hotels, motels, fitness clubs, and municipal aquatic centers must provide an accessible means of water entry, most commonly an ADA-compliant fixed or anchor-mounted pool lift.",
+        },
+      ],
+    },
   };
 
   // Normalize slug to match keys
@@ -382,7 +558,11 @@ function getCategoryContent(slug: string) {
   if (normalizedSlug === "heaters") normalizedSlug = "pool-heaters";
   if (normalizedSlug === "filters") normalizedSlug = "pool-filters";
   if (normalizedSlug === "cleaners") normalizedSlug = "pool-cleaners";
+  if (normalizedSlug === "lights") normalizedSlug = "pool-lights";
   if (normalizedSlug === "automation") normalizedSlug = "automation-systems";
+  if (normalizedSlug === "parts-hardware") normalizedSlug = "parts-and-hardware";
+  if (normalizedSlug === "maintenance-cleaning") normalizedSlug = "maintenance-and-cleaning";
+  if (normalizedSlug === "safety-accessibility") normalizedSlug = "safety-and-accessibility";
 
   return content[normalizedSlug as keyof typeof content] || null;
 }
@@ -605,9 +785,10 @@ function CategoryPage() {
       <main className="flex-1 pt-28 pb-20">
         {/* Category Hero */}
         <section className="bg-gradient-to-b from-surface to-background border-b border-border/50 py-8 md:py-10 mb-6 md:mb-8">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <span className="text-xs sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div>
+                <span className="text-xs sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
                 Wholesale Catalog
               </span>
               <h1 className="mt-1.5 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
@@ -644,6 +825,31 @@ function CategoryPage() {
                 )}
               </div>
             </div>
+            </div>
+
+            {/* Top Brands for this Category (SEO Silo) */}
+            {category !== "all" && availableBrands.length > 0 && (
+              <div className="w-full mt-6 pt-6 border-t border-slate-200/80">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+                  Shop {categoryName} by Authorized Brand:
+                </div>
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                  {availableBrands.slice(0, 10).map((bName) => {
+                    const bSlug = bName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+                    return (
+                      <Link
+                        key={bName}
+                        to="/brands/$brand/$category"
+                        params={{ brand: bSlug, category: category }}
+                        className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-cyan-500 hover:text-cyan-700 text-slate-700 text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-2xs group"
+                      >
+                        <span>{bName} {categoryName}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -935,7 +1141,7 @@ function CategoryPage() {
                   <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
                     {categoryContent.heading}
                   </h2>
-                  <p className="text-slate-600 leading-relaxed text-lg">{categoryContent.intro}</p>
+                  <p className="category-intro text-slate-600 leading-relaxed text-lg">{categoryContent.intro}</p>
                 </div>
 
                 {categoryContent.subcategories && categoryContent.subcategories.length > 0 && (
@@ -964,7 +1170,7 @@ function CategoryPage() {
                           className="bg-white rounded-xl p-6 shadow-sm border border-slate-200"
                         >
                           <h4 className="font-bold text-slate-900 mb-2">{faq.q}</h4>
-                          <p className="text-slate-600 text-sm leading-relaxed">{faq.a}</p>
+                          <p className="faq-answer text-slate-600 text-sm leading-relaxed">{faq.a}</p>
                         </div>
                       ))}
                     </div>

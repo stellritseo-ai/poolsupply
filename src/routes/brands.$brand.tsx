@@ -13,11 +13,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
+  ShieldCheck,
 } from "lucide-react";
 import { ProductCard } from "@/components/site/ProductCard";
 
 export const Route = createFileRoute("/brands/$brand")({
-  head: ({ params }) => {
+  head: ({ params } = {} as any) => {
+    if (!params?.brand) return { meta: [], links: [], scripts: [] };
     const brandName = getBrandName(params.brand);
     const title = `${brandName} Pool Equipment Wholesale | Authorized Distributor`;
     const description = `Shop authentic ${brandName} pool pumps, gas heaters, cartridge filters, and automation systems at direct contractor wholesale pricing. Fast shipping nationwide from Pool Supply Wholesalers.`;
@@ -49,6 +51,33 @@ export const Route = createFileRoute("/brands/$brand")({
       name: brandName,
       url: brandUrl,
       description: `Authorized commercial distributor of genuine ${brandName} pool equipment and replacement parts.`,
+    };
+
+    const faqs = getBrandFaqs(brandName);
+
+    const faqLd = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.a,
+        },
+      })),
+    };
+
+    const collectionLd = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: title,
+      description: description,
+      url: brandUrl,
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", ".brand-overview", ".faq-answer"],
+      },
     };
 
     return {
@@ -83,6 +112,8 @@ export const Route = createFileRoute("/brands/$brand")({
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(breadcrumbLd) },
         { type: "application/ld+json", children: JSON.stringify(brandLd) },
+        { type: "application/ld+json", children: JSON.stringify(faqLd) },
+        { type: "application/ld+json", children: JSON.stringify(collectionLd) },
       ],
     };
   },
@@ -113,6 +144,27 @@ function getBrandOverview(brand: string): string {
     default:
       return "Authorized dealer of high-performance pool equipment. Engineered for long-term durability and efficiency.";
   }
+}
+
+function getBrandFaqs(brandName: string) {
+  return [
+    {
+      q: `Is Pool Supply Wholesalers an authorized distributor for ${brandName}?`,
+      a: `Yes. Pool Supply Wholesalers is a direct commercial wholesale distributor supplying authentic, factory-sealed ${brandName} pool equipment, replacement parts, and accessories with full manufacturer warranty authorization.`
+    },
+    {
+      q: `Does ${brandName} pool equipment come with factory warranty coverage?`,
+      a: `All new ${brandName} products purchased through Pool Supply Wholesalers are 100% genuine and qualify for complete factory warranty coverage when installed in accordance with manufacturer specifications and local codes.`
+    },
+    {
+      q: `How fast does ${brandName} equipment ship?`,
+      a: `Most in-stock ${brandName} pumps, filters, heaters, and accessories ship same-day or within 24 business hours from our strategically located US distribution hubs in Tennessee, Florida, Texas, and California.`
+    },
+    {
+      q: `Do you offer trade and contractor discounts on ${brandName} products?`,
+      a: `Yes. Licensed pool contractors, builders, service professionals, and commercial facility operators qualify for direct wholesale trade pricing, tier discounts, and dedicated account support.`
+    }
+  ];
 }
 
 function BrandPage() {
@@ -211,7 +263,8 @@ function BrandPage() {
       <main className="flex-1 pt-28 pb-20">
         {/* Brand Hero */}
         <section className="bg-gradient-to-b from-surface to-background border-b border-border/50 py-8 md:py-10 mb-6 md:mb-8">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <span className="text-xs sm:text-xs uppercase tracking-[0.25em] text-[oklch(0.50_0.14_232)] font-bold">
                 Authorized Brand Dealer
@@ -219,7 +272,7 @@ function BrandPage() {
               <h1 className="mt-1.5 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
                 {brandName} Equipment
               </h1>
-              <p className="mt-2 text-xs sm:text-sm text-muted-foreground max-w-xl leading-relaxed font-medium">
+              <p className="brand-overview mt-2 text-xs sm:text-sm text-muted-foreground max-w-xl leading-relaxed font-medium">
                 {overview}
               </p>
             </div>
@@ -251,8 +304,46 @@ function BrandPage() {
                 )}
               </div>
             </div>
+
+            {/* Category Quick Browse Links (SEO Silo) */}
+            {brandCategories.length > 0 && (
+              <div className="w-full mt-6 pt-6 border-t border-slate-200/80">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+                  Browse {brandName} Equipment Lines:
+                </div>
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                  {brandCategories.map((cat) => {
+                    const catSlug = cat
+                      .toLowerCase()
+                      .replace(/\s+&\s+/g, "-and-")
+                      .replace(/\s+/g, "-")
+                      .replace(/[^a-z0-9-]/g, "");
+                    const count = dbProducts.filter(
+                      (p) =>
+                        p.brand.toLowerCase() === brandName.toLowerCase() &&
+                        p.category.toLowerCase() === cat.toLowerCase(),
+                    ).length;
+
+                    return (
+                      <Link
+                        key={cat}
+                        to="/brands/$brand/$category"
+                        params={{ brand, category: catSlug }}
+                        className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-cyan-500 hover:text-cyan-700 text-slate-700 text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-2xs group"
+                      >
+                        <span>{cat}</span>
+                        <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-500 group-hover:bg-cyan-50 group-hover:text-cyan-700">
+                          {count}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
-        </section>
+        </div>
+      </section>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="grid lg:grid-cols-[240px_1fr] gap-8 items-start">
@@ -454,6 +545,35 @@ function BrandPage() {
           </div>
         </div>
       </main>
+
+      {/* Brand FAQs & Authorized Dealer Section */}
+      <section className="border-t border-slate-200 bg-slate-50/70 py-16">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold uppercase tracking-wider mb-3">
+              <ShieldCheck className="size-3.5 text-cyan-600" /> Authorized Commercial Distributor
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Frequently Asked Questions About {brandName}
+            </h2>
+            <p className="text-sm text-slate-600 mt-2">
+              Everything you need to know about purchasing genuine {brandName} pool supplies with factory warranty protection.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {getBrandFaqs(brandName).map((faq, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-2xl p-6 border border-slate-200 shadow-2xs hover:shadow-sm transition"
+              >
+                <h3 className="font-bold text-slate-900 text-base mb-2">{faq.q}</h3>
+                <p className="faq-answer text-slate-600 text-sm leading-relaxed">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

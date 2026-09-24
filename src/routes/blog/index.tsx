@@ -159,7 +159,7 @@ export const Route = createFileRoute("/blog/")({
         { property: "og:type", content: "website" },
         { property: "og:site_name", content: "Pool Supply Wholesalers" },
         { property: "og:image", content: "https://poolsupplywholesalers.com/about-hero.png" },
-        { property: "og:image:type", content: "image/webp" },
+        { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         {

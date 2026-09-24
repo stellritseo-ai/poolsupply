@@ -103,7 +103,9 @@ const NAV = [
 
 const MORE_MENU = [
   { label: "About Us", to: "/about", icon: Info },
-  { label: "Blog", to: "/blog", icon: BookOpen },
+  { label: "Distribution Hubs", to: "/hubs", icon: Box },
+  { label: "Buying Guides", to: "/guides", icon: BookOpen },
+  { label: "Blog & Insights", to: "/blog", icon: BookOpen },
   { label: "Product Finder", to: "/finder", icon: Sparkles },
   { label: "Why Us", to: "/why-us", icon: Award },
   { label: "Reviews", to: "/reviews", icon: Star },
@@ -794,10 +796,10 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                     Wholesale Hotline
                   </span>
                   <a
-                    href="tel:6154770407"
+                    href="tel:8022650320"
                     className="flex items-center gap-2 text-sm font-black text-white hover:text-cyan-300 transition"
                   >
-                    <Phone className="size-4 text-cyan-400" /> (615) 477-0407
+                    <Phone className="size-4 text-cyan-400" /> (802) 265-0320
                   </a>
                 </div>
               </div>

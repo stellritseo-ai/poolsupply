@@ -346,7 +346,7 @@ function OrdersManager() {
               <div>
                 <div class="company-name">Pool Supply Wholesalers</div>
                 <div class="company-sub">Commercial & Municipal Pool Equipment Wholesalers</div>
-                <div class="company-sub">Nashville, TN · (615) 477-0407 · sales@poolsupplywholesalers.com</div>
+                <div class="company-sub">Nashville, TN · (802) 265-0320 · sales@poolsupplywholesalers.com</div>
               </div>
             </div>
             <div class="doc-badge">
@@ -412,7 +412,7 @@ function OrdersManager() {
           </div>
 
           <div class="footer">
-            <strong>Pool Supply Wholesalers</strong> · 410 Scott Pike, Nashville, TN 37207 · (615) 477-0407<br/>
+            <strong>Pool Supply Wholesalers</strong> · 410 Scott Pike, Nashville, TN 37207 · (802) 265-0320<br/>
             Authorized wholesale distributor. Genuine OEM warranty applies on all serialized components.
           </div>
         </div>

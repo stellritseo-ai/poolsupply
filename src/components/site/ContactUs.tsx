@@ -140,10 +140,10 @@ export function ContactUs() {
                   Call Our Technicians
                 </h3>
                 <a
-                  href="tel:6154770407"
+                  href="tel:8022650320"
                   className="inline-block text-xs sm:text-[13px] font-black text-cyan-700 hover:text-cyan-800 hover:underline"
                 >
-                  (615) 477-0407{" "}
+                  (802) 265-0320{" "}
                   <span className="text-xs text-slate-400 font-normal ml-1">
                     Mon–Fri 8am-6pm EST
                   </span>

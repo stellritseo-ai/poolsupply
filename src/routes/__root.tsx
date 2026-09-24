@@ -78,6 +78,17 @@ if (typeof window !== "undefined") {
 }
 
 function NotFoundComponent() {
+  useEffect(() => {
+    document.title = "404 Page Not Found | Pool Supply Wholesalers";
+    let meta = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "robots";
+      document.head.appendChild(meta);
+    }
+    meta.content = "noindex, nofollow";
+  }, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -86,12 +97,19 @@ function NotFoundComponent() {
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Go home
+          </Link>
+          <Link
+            to="/shop/$category"
+            params={{ category: "all" }}
+            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+          >
+            Browse Wholesale Catalog
           </Link>
         </div>
       </div>
@@ -260,7 +278,7 @@ function RootShell({ children }: { children: ReactNode }) {
       url: "https://poolsupplywholesalers.com",
       logo: "https://poolsupplywholesalers.com/logo.png",
       image: "https://poolsupplywholesalers.com/about-hero.png",
-      telephone: "+1-615-477-0407",
+      telephone: "+1-802-265-0320",
       email: "sales@poolsupplywholesalers.com",
       priceRange: "$$",
       description:
@@ -269,10 +287,37 @@ function RootShell({ children }: { children: ReactNode }) {
         {
           "@type": "Person",
           name: "Jonathan Elio Rodriguez",
+          jobTitle: "Co-Founder & Head of Commercial Aquatic Logistics",
+          description:
+            "Aquatics engineering specialist and supply chain director with over two decades of commercial pool construction, pump hydraulics, and contractor distribution leadership.",
+          knowsAbout: [
+            "Commercial Pool Hydraulics",
+            "DOE Dedicated Purpose Pool Pump (DPPP) Regulations",
+            "Variable Speed Pump Sizing & Efficiency",
+            "Commercial Aquatic Filtration & Water Sanitation",
+            "Warehouse Freight Logistics",
+          ],
+          worksFor: {
+            "@type": "Organization",
+            name: "Pool Supply Wholesalers",
+          },
         },
         {
           "@type": "Person",
           name: "David Elio Rodriguez",
+          jobTitle: "Co-Founder & Master Pool Construction Director",
+          description:
+            "Master pool contractor, hydronic heating engineer, and commercial equipment specialist with 25+ years overseeing luxury aquatic builds and municipal pool operations.",
+          knowsAbout: [
+            "Pool Heater Sizing & Thermal Dynamics",
+            "Commercial Automation Systems (Pentair IntelliCenter, Hayward OmniLogic)",
+            "Commercial Pool Construction & Plumbing Architecture",
+            "Salt Water Electrolysis Sanitization",
+          ],
+          worksFor: {
+            "@type": "Organization",
+            name: "Pool Supply Wholesalers",
+          },
         },
       ],
       parentOrganization: {
@@ -283,7 +328,7 @@ function RootShell({ children }: { children: ReactNode }) {
       },
       contactPoint: {
         "@type": "ContactPoint",
-        telephone: "+1-615-477-0407",
+        telephone: "+1-802-265-0320",
         contactType: "customer service",
         email: "sales@poolsupplywholesalers.com",
         areaServed: "US",
@@ -337,7 +382,7 @@ function RootShell({ children }: { children: ReactNode }) {
       name: "Pool Supply Wholesalers",
       image: "https://poolsupplywholesalers.com/about-hero.png",
       url: "https://poolsupplywholesalers.com",
-      telephone: "+1-615-477-0407",
+      telephone: "+1-802-265-0320",
       email: "sales@poolsupplywholesalers.com",
       priceRange: "$$",
       address: {
@@ -413,7 +458,7 @@ function RootShell({ children }: { children: ReactNode }) {
           name: "Are Pentair and Hayward pool equipment prices negotiable for commercial accounts?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Pool Supply Wholesalers offers special commercial account pricing for contractors, pool builders, property managers, and aquatic facilities ordering in volume. Contact our team at sales@poolsupplywholesalers.com or call +1-615-477-0407 to set up a commercial wholesale account with dedicated pricing and priority fulfillment.",
+            text: "Pool Supply Wholesalers offers special commercial account pricing for contractors, pool builders, property managers, and aquatic facilities ordering in volume. Contact our team at sales@poolsupplywholesalers.com or call +1-802-265-0320 to set up a commercial wholesale account with dedicated pricing and priority fulfillment.",
           },
         },
       ],
@@ -423,17 +468,14 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en-US" suppressHydrationWarning>
       <head>
-        {/* ── Google Tag Manager ── Replace GTM-XXXXXXX with your real ID from tagmanager.google.com ── */}
+        {/* ── Google Tag Manager ── TODO: Replace GTM-XXXXXXX below with your real GTM Container ID from tagmanager.google.com ── */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');`,
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5FJZ7PMT');`,
           }}
         />
         {/* ── End GTM ── */}
-        <meta
-          name="google-site-verification"
-          content="CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc"
-        />
+        {/* google-site-verification is already in head() meta array above — no duplicate needed here */}
         <HeadContent />
         <script
           type="application/ld+json"
@@ -461,7 +503,7 @@ function RootShell({ children }: { children: ReactNode }) {
         {/* GTM noscript fallback */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5FJZ7PMT"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
