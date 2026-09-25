@@ -418,7 +418,7 @@ function ConfirmationPage() {
               Pool Supply Wholesalers
             </h1>
             <p className="text-xs text-slate-600 mt-1">
-              410 Scott Pike, Hub #B · Nashville, TN 37207 · (802) 265-0320
+              412 Ezell Pike, Nashville, TN 37217 · (802) 265-0320
             </p>
             <p className="text-xs text-slate-600">
               EIN: 84-2901928 · sales@poolsupplywholesalers.com

@@ -178,9 +178,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "google-site-verification", content: "CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" },
 
-      // Nationwide USA Geo targeting
-      { name: "geo.region", content: "US" },
-      { name: "geo.placename", content: "United States" },
+      // Nationwide USA & Regional Geo targeting
+      { name: "geo.region", content: "US-TN" },
+      { name: "geo.placename", content: "Nashville, Tennessee, United States" },
+      { name: "geo.position", content: "36.0965;-86.6671" },
+      { name: "ICBM", content: "36.0965, -86.6671" },
 
       // Prevent iOS auto-linking of phone numbers
       { name: "format-detection", content: "telephone=no" },
@@ -336,10 +338,10 @@ function RootShell({ children }: { children: ReactNode }) {
       },
       address: {
         "@type": "PostalAddress",
-        streetAddress: "410 Scott Pike",
+        streetAddress: "412 Ezell Pike",
         addressLocality: "Nashville",
         addressRegion: "TN",
-        postalCode: "37207",
+        postalCode: "37217",
         addressCountry: "US",
       },
       areaServed: [
@@ -387,16 +389,16 @@ function RootShell({ children }: { children: ReactNode }) {
       priceRange: "$$",
       address: {
         "@type": "PostalAddress",
-        streetAddress: "410 Scott Pike",
+        streetAddress: "412 Ezell Pike",
         addressLocality: "Nashville",
         addressRegion: "TN",
-        postalCode: "37207",
+        postalCode: "37217",
         addressCountry: "US",
       },
       geo: {
         "@type": "GeoCoordinates",
-        latitude: 36.1627,
-        longitude: -86.7816,
+        latitude: 36.0965,
+        longitude: -86.6671,
       },
       openingHoursSpecification: [
         {

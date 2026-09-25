@@ -412,7 +412,7 @@ function OrdersManager() {
           </div>
 
           <div class="footer">
-            <strong>Pool Supply Wholesalers</strong> · 410 Scott Pike, Nashville, TN 37207 · (802) 265-0320<br/>
+            <strong>Pool Supply Wholesalers</strong> · 412 Ezell Pike, Nashville, TN 37217 · (802) 265-0320<br/>
             Authorized wholesale distributor. Genuine OEM warranty applies on all serialized components.
           </div>
         </div>

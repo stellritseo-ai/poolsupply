@@ -56,10 +56,10 @@ export const Route = createFileRoute("/contact")({
         email: "sales@poolsupplywholesalers.com",
         address: {
           "@type": "PostalAddress",
-          streetAddress: "410 Scott Pike",
+          streetAddress: "412 Ezell Pike",
           addressLocality: "Nashville",
           addressRegion: "TN",
-          postalCode: "37207",
+          postalCode: "37217",
           addressCountry: "US",
         },
       },

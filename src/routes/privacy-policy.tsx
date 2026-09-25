@@ -354,7 +354,7 @@ const SECTIONS = [
             <div>
               <div className="text-xs text-slate-500 font-medium">Mailing Address</div>
               <div className="text-sm font-bold text-slate-900">
-                410 Scott Pike, Nashville, TN 37207
+                412 Ezell Pike, Nashville, TN 37217
               </div>
             </div>
           </div>
