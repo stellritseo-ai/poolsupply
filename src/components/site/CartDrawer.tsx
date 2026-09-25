@@ -132,11 +132,20 @@ export function CartDrawer() {
             {items.length > 0 && (
               <footer className="border-t border-border px-6 py-5 space-y-3 bg-surface">
                 <Row label="Subtotal" value={formatUSD(subtotal)} />
+                <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold">
+                  <span className="flex items-center gap-1.5">
+                    Shipping
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200 uppercase">
+                      Nationwide
+                    </span>
+                  </span>
+                  <span className="font-bold text-emerald-600">FREE</span>
+                </div>
                 <Row label="Sales Tax (9.25%)" value={formatUSD(tax)} muted />
                 <div className="h-px bg-border my-1" />
                 <Row label="Estimated Total" value={formatUSD(subtotal + tax)} bold />
-                <p className="text-xs text-muted-foreground text-center">
-                  Shipping & delivery options calculated at checkout
+                <p className="text-xs text-emerald-600 font-semibold text-center">
+                  ✓ Free Nationwide Shipping included
                 </p>
                 <Link
                   to="/checkout"

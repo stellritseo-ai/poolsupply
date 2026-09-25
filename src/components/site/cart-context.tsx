@@ -96,17 +96,35 @@ export function useCart() {
 export const TAX_RATE = 0.0925; // 9.25% fixed TN sales tax
 
 /**
- * Compute order totals with dynamic zone-based shipping.
- * zip and state are optional — when omitted the cart drawer shows a
- * zone-4 estimate ("Regional Ground" ~$X estimated).
+ * Compute order totals.
+ * NOTE: 100% Free Shipping is active across the site.
+ * Dynamic zone/distance shipping calculation is preserved below for future use.
  */
 export function computeTotals(items: CartItem[], zip?: string, state?: string) {
-  const result = computeShipping(items, zip ?? "", state ?? "");
+  // =========================================================================
+  // PRESERVED FOR LATER USE: Dynamic zone & distance-based shipping calculator
+  // const result = computeShipping(items, zip ?? "", state ?? "");
+  // const shipping = result.amount;
+  // =========================================================================
+
   const subtotal = items.reduce((n, i) => n + i.qty * i.price, 0);
-  const shipping = result.amount;
+  const shipping = 0; // Free shipping
   const tax = +(subtotal * TAX_RATE).toFixed(2);
   const total = +(subtotal + shipping + tax).toFixed(2);
-  return { shipping, tax, total, shippingResult: result };
+  return {
+    shipping,
+    tax,
+    total,
+    shippingResult: {
+      amount: 0,
+      isPending: false,
+      zone: 1,
+      zoneLabel: "Free Shipping",
+      baseRate: 0,
+      multiplier: 1,
+      breakdown: [],
+    } as any,
+  };
 }
 
 export function formatUSD(n: number) {

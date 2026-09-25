@@ -910,9 +910,8 @@ function ProductDetailPage() {
                     </button>
                   )}
 
-                  <p className="text-xs text-muted-foreground text-center">
-                    🚚 Distance-based shipping calculated at checkout. Same day dispatch for orders
-                    before 2 PM.
+                  <p className="text-xs text-emerald-700 font-semibold text-center">
+                    🚚 Free Nationwide Shipping included. Same day dispatch for orders before 2 PM.
                   </p>
                 </div>
 
