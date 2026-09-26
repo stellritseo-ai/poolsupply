@@ -29,6 +29,8 @@ import {
   BookOpen,
   Scale,
   ArrowRight,
+  Tag,
+  Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -237,22 +239,28 @@ export const Route = createFileRoute("/products/$productId")({
   head: ({ loaderData, params }) => {
     const product = loaderData?.product || getProductById(params.productId);
 
-    // Build a rich, natural SEO title: Brand + Name + SKU (truncated if needed)
+    // Build high-intent SEO title: [Brand] [SKU / Model] [Product Name] — Wholesale Direct USA
     const buildTitle = () => {
       if (!product?.name) return "Pool Equipment Product Details — Pool Supply Wholesalers";
       const brand = product.brand ? `${product.brand} ` : "";
-      const sku = product.sku ? ` | ${product.sku}` : "";
-      const base = `${brand}${product.name}${sku}`;
-      // Trim to 65 chars max for title tag
-      return base.length > 65 ? `${base.slice(0, 62)}...` : base;
+      const cleanBrand =
+        brand && !product.name.toLowerCase().startsWith(brand.toLowerCase().trim()) ? brand : "";
+      const sku =
+        product.sku && !product.name.toLowerCase().includes(product.sku.toLowerCase())
+          ? `${product.sku} `
+          : "";
+      const base = `${cleanBrand}${sku}${product.name} — Wholesale Direct USA`;
+      return base.length > 70 ? `${base.slice(0, 67)}...` : base;
     };
     const title = buildTitle();
 
-    // Build meta description: prefer details > description snippet, never use "Introducing the..." filler
+    // Build meta description: Include SKU/MPN, OEM status, and 100% Free Freight guarantee
     const buildDescription = () => {
       if (!product)
         return "Commercial pool equipment at direct wholesale trade pricing from Pool Supply Wholesalers.";
-      const priceStr = product.price ? formatUSD(product.price) : "";
+      const priceStr = product.price ? ` at ${formatUSD(product.price)}` : "";
+      const skuStr = product.sku ? `Part / Model #${product.sku}. ` : "";
+      const brandStr = product.brand ? `${product.brand} ` : "";
       // Use 'details' field (manufacturer spec line) when available and not a copy of name
       const detailText =
         product.details && product.details !== product.name ? product.details : null;
@@ -262,8 +270,8 @@ export const Route = createFileRoute("/products/$productId")({
         detailText ||
         (!isFillerDesc ? product.description : null) ||
         `${product.brand || ""} ${product.category || "pool"} equipment`;
-      const snippet = descSource.slice(0, 130).trim();
-      return `Shop ${product.name}${priceStr ? ` for ${priceStr}` : ""}. ${snippet}. Fast shipping from Pool Supply Wholesalers.`;
+      const snippet = descSource.slice(0, 110).trim();
+      return `Buy ${brandStr}${product.sku ? `${product.sku} ` : ""}${product.name}${priceStr}. ${skuStr}${snippet}. Genuine OEM with 100% Free Nationwide Freight.`;
     };
     const description = buildDescription();
 
@@ -314,7 +322,7 @@ export const Route = createFileRoute("/products/$productId")({
             "@type": "Product",
             name: product.name || "Pool Equipment",
             image: [imageUrl],
-            description: descText,
+            description: description,
             ...(product.sku ? { sku: product.sku, mpn: product.sku } : {}),
             productID: product.id,
             category: product.category || "Pool Equipment",
@@ -443,7 +451,7 @@ export const Route = createFileRoute("/products/$productId")({
         { name: "description", content: description },
         {
           name: "keywords",
-          content: `${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale USA, buy ${product?.category || "pool supply"} USA, commercial pool equipment United States, wholesale pool supplies USA, fast nationwide shipping`,
+          content: `${product?.brand || ""} ${product?.sku || ""}, ${product?.sku || ""} model, ${product?.sku || ""} wholesale, OEM ${product?.sku || ""}, ${product?.name || "pool equipment"}, ${product?.brand || "pool brand"} wholesale USA, buy ${product?.category || "pool supply"} USA, commercial pool equipment United States, wholesale pool supplies USA, free freight shipping`,
         },
         { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
         { property: "og:title", content: title },
@@ -751,33 +759,42 @@ function ProductDetailPage() {
                   </div>
                 </div>
 
-                {/* Wholesaler Badges */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                  <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
-                    <Truck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
-                      Fast Shipping
+                {/* Wholesaler Guarantee Badges (Step 2) */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
+                  <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40 shadow-2xs">
+                    <Truck className="size-4 sm:size-5 text-emerald-600 mb-1 sm:mb-1.5" />
+                    <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
+                      100% Free Freight
                     </span>
-                    <span className="text-[8px] sm:text-xs text-muted-foreground mt-0.5">
-                      Distance Calculated
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
-                    <ShieldCheck className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
-                      Genuine Brand
-                    </span>
-                    <span className="text-[8px] sm:text-xs text-muted-foreground mt-0.5">
-                      100% Authorized
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                      Zero Surcharges
                     </span>
                   </div>
-                  <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40">
-                    <Wrench className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
-                    <span className="text-xs sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
-                      Warranty
+                  <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40 shadow-2xs">
+                    <Tag className="size-4 sm:size-5 text-[oklch(0.50_0.14_232)] mb-1 sm:mb-1.5" />
+                    <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
+                      Direct Wholesale
                     </span>
-                    <span className="text-[8px] sm:text-xs text-muted-foreground mt-0.5">
-                      {product.specs?.["Warranty"] || "Full Warranty"}
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                      20–40% Off Retail
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40 shadow-2xs">
+                    <ShieldCheck className="size-4 sm:size-5 text-cyan-600 mb-1 sm:mb-1.5" />
+                    <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
+                      OEM Warranty
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                      {product.specs?.["Warranty"] || "Genuine Brand"}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-surface border border-border/40 shadow-2xs">
+                    <Zap className="size-4 sm:size-5 text-amber-500 mb-1 sm:mb-1.5" />
+                    <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-foreground">
+                      Same-Day Ship
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                      Order by 2 PM CST
                     </span>
                   </div>
                 </div>
@@ -791,12 +808,26 @@ function ProductDetailPage() {
                 className="space-y-5 sm:space-y-6"
               >
                 <div>
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap mb-2">
                     <span className="text-xs uppercase tracking-[0.2em] text-[oklch(0.50_0.14_232)] font-bold">
                       {product.brand}
                     </span>
+                    {product.sku && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-200 border border-cyan-200 dark:border-cyan-800 shadow-2xs">
+                        <span className="text-[10px] uppercase tracking-wider text-cyan-600/90 font-sans font-extrabold">Model / MPN:</span>
+                        {product.sku}
+                      </span>
+                    )}
+                    {product.stock > 0 && (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        In Stock & Ready to Ship
+                      </span>
+                    )}
                   </div>
-                  <h1 className="mt-1.5 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-snug capitalize">
+                  <h1 className="mt-1.5 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-snug">
+                    {product.brand && !product.name.toLowerCase().startsWith(product.brand.toLowerCase()) ? `${product.brand} ` : ""}
+                    {product.sku && !product.name.toLowerCase().includes(product.sku.toLowerCase()) ? `${product.sku} ` : ""}
                     {product.name}
                   </h1>
 
@@ -910,9 +941,15 @@ function ProductDetailPage() {
                     </button>
                   )}
 
-                  <p className="text-xs text-emerald-700 font-semibold text-center">
-                    🚚 Free Nationwide Shipping included. Same day dispatch for orders before 2 PM.
-                  </p>
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-transparent border border-emerald-500/25 space-y-1.5 text-left">
+                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                      <Truck className="size-4 text-emerald-600 shrink-0" />
+                      <span>100% Free Nationwide Freight Included — $0 at Checkout</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-tight">
+                      Zero surprise liftgate, residential, or heavy freight fees at checkout. Direct commercial wholesale fulfillment with genuine manufacturer warranties. Same-day dispatch on orders before 2 PM CST.
+                    </p>
+                  </div>
                 </div>
 
                 {/* Product Tabs */}

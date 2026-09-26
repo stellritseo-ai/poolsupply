@@ -289,6 +289,143 @@ function getCategoryName(slug: string): string {
   }
 }
 
+export interface FacetOption {
+  label: string;
+  value: string;
+}
+
+export interface FacetGroup {
+  name: string;
+  options: FacetOption[];
+}
+
+export function getCategoryFacetGroups(categorySlug: string): FacetGroup[] {
+  const slug = (categorySlug || "").toLowerCase();
+  if (slug === "pumps" || slug === "pool-pumps") {
+    return [
+      {
+        name: "Horsepower (HP)",
+        options: [
+          { label: "1.5 HP", value: "1.5 HP" },
+          { label: "2.0 HP", value: "2.0 HP" },
+          { label: "2.7 HP", value: "2.7 HP" },
+          { label: "3.0 HP", value: "3.0 HP" },
+        ],
+      },
+      {
+        name: "Speed Type",
+        options: [
+          { label: "Variable Speed", value: "Variable Speed" },
+          { label: "Single Speed", value: "Single Speed" },
+        ],
+      },
+      {
+        name: "Voltage",
+        options: [
+          { label: "115V / 230V Dual", value: "115" },
+          { label: "230V Dedicated", value: "230" },
+        ],
+      },
+      {
+        name: "Pipe Size",
+        options: [
+          { label: '2" Ports', value: '2"' },
+          { label: '2.5" Ports', value: '2.5"' },
+        ],
+      },
+    ];
+  }
+  if (slug === "heaters" || slug === "pool-heaters" || slug === "electric-heat-pumps") {
+    return [
+      {
+        name: "Fuel Type",
+        options: [
+          { label: "Natural Gas", value: "Natural Gas" },
+          { label: "Propane (LP)", value: "Propane" },
+          { label: "Heat Pump (Electric)", value: "Heat Pump" },
+        ],
+      },
+      {
+        name: "Heating Capacity",
+        options: [
+          { label: "400,000 BTU (400K)", value: "400" },
+          { label: "250,000 BTU (250K)", value: "250" },
+          { label: "150,000 BTU (150K)", value: "150" },
+        ],
+      },
+      {
+        name: "Emissions",
+        options: [
+          { label: "Low NOx", value: "Low NOx" },
+        ],
+      },
+    ];
+  }
+  if (slug === "filters" || slug === "pool-filters") {
+    return [
+      {
+        name: "Filter Media",
+        options: [
+          { label: "Cartridge Filter", value: "Cartridge" },
+          { label: "Sand Filter", value: "Sand" },
+          { label: "D.E. Filter", value: "D.E." },
+        ],
+      },
+      {
+        name: "Filtration Area",
+        options: [
+          { label: "100 - 200 Sq Ft", value: "100" },
+          { label: "300 - 450 Sq Ft", value: "400" },
+          { label: "500+ Sq Ft", value: "500" },
+        ],
+      },
+    ];
+  }
+  if (slug === "cleaners" || slug === "pool-cleaners") {
+    return [
+      {
+        name: "Cleaner Type",
+        options: [
+          { label: "Robotic Cleaner", value: "Robotic" },
+          { label: "Pressure Side", value: "Pressure" },
+          { label: "Suction Side", value: "Suction" },
+        ],
+      },
+    ];
+  }
+  if (slug === "automation" || slug === "automation-systems") {
+    return [
+      {
+        name: "System Platform",
+        options: [
+          { label: "Pentair IntelliCenter", value: "IntelliCenter" },
+          { label: "Hayward OmniLogic", value: "OmniLogic" },
+          { label: "Jandy AquaLink", value: "AquaLink" },
+        ],
+      },
+      {
+        name: "Connectivity",
+        options: [
+          { label: "Built-in Wi-Fi", value: "Wi-Fi" },
+        ],
+      },
+    ];
+  }
+  return [
+    {
+      name: "Equipment Specifications",
+      options: [
+        { label: "Variable Speed", value: "Variable Speed" },
+        { label: "1.5 HP", value: "1.5 HP" },
+        { label: "3.0 HP", value: "3.0 HP" },
+        { label: "Natural Gas", value: "Natural Gas" },
+        { label: "Cartridge Filter", value: "Cartridge" },
+        { label: "Robotic Cleaner", value: "Robotic" },
+      ],
+    },
+  ];
+}
+
 function getCategoryContent(slug: string) {
   const content = {
     "pool-pumps": {
@@ -583,9 +720,31 @@ function CategoryPage() {
     "rating-desc",
   );
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedFacets, setSelectedFacets] = useState<string[]>([]);
   const [brandSearch, setBrandSearch] = useState("");
   const [inStockOnly, setInStockOnly] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  // Faceted groups and quick filter chips for the active category (Step 3)
+  const categoryFacetGroups = useMemo(() => getCategoryFacetGroups(category), [category]);
+  const quickFacets = useMemo(() => {
+    const list: FacetOption[] = [];
+    for (const g of categoryFacetGroups) {
+      for (const opt of g.options) {
+        if (!list.some((x) => x.value === opt.value)) {
+          list.push(opt);
+        }
+      }
+    }
+    return list.slice(0, 10);
+  }, [categoryFacetGroups]);
+
+  const toggleFacet = (val: string) => {
+    setSelectedFacets((prev) =>
+      prev.includes(val) ? prev.filter((f) => f !== val) : [...prev, val],
+    );
+    setPage(1);
+  };
 
   // Debounce search input (500ms)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -601,7 +760,7 @@ function CategoryPage() {
   // Reset page when filters change
   useEffect(() => {
     setPage(1);
-  }, [category, debouncedSearch, sortBy, selectedBrands, inStockOnly]);
+  }, [category, debouncedSearch, sortBy, selectedBrands, inStockOnly, selectedFacets]);
 
   // Sync URL search param
   useEffect(() => {
@@ -611,9 +770,10 @@ function CategoryPage() {
     }
   }, [urlSearch]);
 
-  // Reset brand selection when category route changes
+  // Reset brand & facet selection when category route changes
   useEffect(() => {
     setSelectedBrands([]);
+    setSelectedFacets([]);
     setBrandSearch("");
   }, [category]);
 
@@ -663,6 +823,7 @@ function CategoryPage() {
       sortBy,
       selectedBrands,
       inStockOnly,
+      selectedFacets,
     ],
     queryFn: async () => {
       const res = await getShopProductsPagedDb({
@@ -674,6 +835,7 @@ function CategoryPage() {
           sort: sortBy,
           brands: selectedBrands.length > 0 ? selectedBrands : undefined,
           inStockOnly: inStockOnly || undefined,
+          facets: selectedFacets.length > 0 ? selectedFacets : undefined,
         },
       });
       return res;
@@ -778,6 +940,64 @@ function CategoryPage() {
     </div>
   );
 
+  // Reusable Equipment Facets Component for Desktop & Mobile Sidebar (Step 3)
+  const CategoryFacetsSection = () => (
+    <div className="space-y-4 pt-4 border-t border-slate-200/80">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+          Equipment Specs
+          {selectedFacets.length > 0 && (
+            <span className="text-xs font-bold bg-cyan-100 text-cyan-800 px-1.5 py-0.5 rounded-full">
+              {selectedFacets.length}
+            </span>
+          )}
+        </h3>
+        {selectedFacets.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setSelectedFacets([])}
+            className="text-xs font-bold text-cyan-600 hover:text-cyan-700 cursor-pointer"
+          >
+            Clear ({selectedFacets.length})
+          </button>
+        )}
+      </div>
+
+      <div className="space-y-3.5">
+        {categoryFacetGroups.map((group) => (
+          <div key={group.name} className="space-y-1.5">
+            <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              {group.name}
+            </h4>
+            <div className="space-y-1">
+              {group.options.map((opt) => {
+                const isChecked = selectedFacets.includes(opt.value);
+                return (
+                  <label
+                    key={opt.value}
+                    className={`flex items-center gap-2.5 px-2 py-1 rounded-lg text-xs font-medium cursor-pointer select-none transition-colors ${
+                      isChecked
+                        ? "bg-cyan-50 text-cyan-900 font-semibold"
+                        : "text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleFacet(opt.value)}
+                      className="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 size-3.5"
+                    />
+                    <span className="truncate">{opt.label}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header alwaysDark />
@@ -850,6 +1070,46 @@ function CategoryPage() {
                 </div>
               </div>
             )}
+
+            {/* Quick Equipment Spec Facets (Step 3: Long-Tail Search Capture) */}
+            {quickFacets.length > 0 && (
+              <div className="w-full mt-5 pt-5 border-t border-slate-200/80">
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Filter by Sizing & Equipment Specs:
+                  </span>
+                  {selectedFacets.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFacets([])}
+                      className="text-xs font-bold text-cyan-600 hover:text-cyan-700 cursor-pointer"
+                    >
+                      Reset Specs ({selectedFacets.length})
+                    </button>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                  {quickFacets.map((facet) => {
+                    const isSelected = selectedFacets.includes(facet.value);
+                    return (
+                      <button
+                        key={facet.value}
+                        type="button"
+                        onClick={() => toggleFacet(facet.value)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-2xs border cursor-pointer ${
+                          isSelected
+                            ? "bg-cyan-600 border-cyan-600 text-white shadow-sm"
+                            : "bg-white border-slate-200 text-slate-700 hover:border-cyan-500 hover:text-cyan-700"
+                        }`}
+                      >
+                        {isSelected && <Check className="size-3 stroke-[3]" />}
+                        <span>{facet.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -863,9 +1123,9 @@ function CategoryPage() {
             >
               <Filter className="size-4 text-cyan-600" />
               {mobileFiltersOpen ? "Hide Filters" : "Filter Products"}
-              {(selectedBrands.length > 0 || inStockOnly) && (
+              {(selectedBrands.length > 0 || inStockOnly || selectedFacets.length > 0) && (
                 <span className="size-5 rounded-full bg-cyan-600 text-white text-xs grid place-items-center font-bold">
-                  {selectedBrands.length + (inStockOnly ? 1 : 0)}
+                  {selectedBrands.length + selectedFacets.length + (inStockOnly ? 1 : 0)}
                 </span>
               )}
             </button>
@@ -881,11 +1141,12 @@ function CategoryPage() {
                 <span className="flex items-center gap-2">
                   <SlidersHorizontal className="size-4 text-cyan-600" /> Filters
                 </span>
-                {(selectedBrands.length > 0 || inStockOnly || searchQuery) && (
+                {(selectedBrands.length > 0 || inStockOnly || searchQuery || selectedFacets.length > 0) && (
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedBrands([]);
+                      setSelectedFacets([]);
                       setInStockOnly(false);
                       setSearchQuery("");
                       setDebouncedSearch("");
@@ -921,6 +1182,9 @@ function CategoryPage() {
               {/* Brands Filter */}
               <BrandFilterSection />
 
+              {/* Equipment Specification Facets (Step 3) */}
+              <CategoryFacetsSection />
+
               {/* Stock Filter */}
               <div className="space-y-3">
                 <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
@@ -943,15 +1207,16 @@ function CategoryPage() {
 
             {/* Products Area */}
             <div className="space-y-6">
-              {/* Active Filter Chips */}
-              {selectedBrands.length > 0 && (
+              {/* Active Filter Chips (Brands & Equipment Facets) */}
+              {(selectedBrands.length > 0 || selectedFacets.length > 0) && (
                 <div className="flex items-center gap-2 flex-wrap pb-2">
-                  <span className="text-xs font-semibold text-slate-500">Active Brands:</span>
+                  <span className="text-xs font-semibold text-slate-500">Active Filters:</span>
                   {selectedBrands.map((b) => (
                     <span
                       key={b}
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-bold"
                     >
+                      <span className="text-[10px] text-cyan-600 font-extrabold uppercase">Brand:</span>
                       {b}
                       <button
                         type="button"
@@ -962,9 +1227,32 @@ function CategoryPage() {
                       </button>
                     </span>
                   ))}
+                  {selectedFacets.map((f) => {
+                    const matchedOpt = quickFacets.find((x) => x.value === f);
+                    const label = matchedOpt ? matchedOpt.label : f;
+                    return (
+                      <span
+                        key={f}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold"
+                      >
+                        <span className="text-[10px] text-emerald-600 font-extrabold uppercase">Spec:</span>
+                        {label}
+                        <button
+                          type="button"
+                          onClick={() => toggleFacet(f)}
+                          className="hover:text-rose-600 cursor-pointer"
+                        >
+                          <X className="size-3" />
+                        </button>
+                      </span>
+                    );
+                  })}
                   <button
                     type="button"
-                    onClick={() => setSelectedBrands([])}
+                    onClick={() => {
+                      setSelectedBrands([]);
+                      setSelectedFacets([]);
+                    }}
                     className="text-xs font-bold text-slate-400 hover:text-slate-600 underline cursor-pointer ml-1"
                   >
                     Clear all

@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Trash2, Truck, ShieldCheck, Tag, Zap } from "lucide-react";
 import { computeTotals, formatUSD, useCart } from "./cart-context";
 
 export function CartDrawer() {
@@ -144,9 +144,30 @@ export function CartDrawer() {
                 <Row label="Sales Tax (9.25%)" value={formatUSD(tax)} muted />
                 <div className="h-px bg-border my-1" />
                 <Row label="Estimated Total" value={formatUSD(subtotal + tax)} bold />
-                <p className="text-xs text-emerald-600 font-semibold text-center">
-                  ✓ Free Nationwide Shipping included
-                </p>
+                {/* Wholesale Trust & True Free Freight Guarantee (Step 2) */}
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent border border-emerald-500/25 space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                    <Truck className="size-4 text-emerald-600 shrink-0" />
+                    <span>True Free Freight Guarantee</span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-snug">
+                    Zero surprise liftgate or weight surcharges at checkout. Authentic OEM equipment backed by factory warranties.
+                  </p>
+                  <div className="grid grid-cols-2 gap-1.5 pt-1.5 border-t border-border/50 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                    <span className="flex items-center gap-1">
+                      <Truck className="size-3 text-emerald-600" /> Free Freight
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Tag className="size-3 text-cyan-600" /> Wholesale Rates
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <ShieldCheck className="size-3 text-cyan-600" /> OEM Warranty
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Zap className="size-3 text-amber-500" /> Same-Day Ship
+                    </span>
+                  </div>
+                </div>
                 <Link
                   to="/checkout"
                   onClick={close}

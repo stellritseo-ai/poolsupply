@@ -34,6 +34,7 @@ import {
   Star,
   PhoneCall,
   Phone,
+  Truck,
   ArrowRight,
   LogOut,
   BookOpen,
@@ -195,12 +196,49 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
 
   return (
     <>
-      <header
-        className={`fixed top-0 inset-x-0 z-50 transition-colors duration-200 py-2.5 sm:py-3.5 ${
-          isDarkText ? "glass" : "bg-transparent"
-        }`}
-      >
-        <div className="mx-auto max-w-[1536px] px-4 sm:px-8 xl:px-12 flex items-center justify-between gap-3 xl:gap-8">
+      <header className="fixed top-0 inset-x-0 z-50 transition-colors duration-200">
+        {/* Top Announcement Bar — True Free Freight & Wholesale Guarantee (Step 2) */}
+        <div className="bg-slate-950 text-white text-[11px] sm:text-xs font-semibold border-b border-slate-800/80 py-1.5 px-3 sm:px-6">
+          <div className="mx-auto max-w-[1536px] flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+              <span className="inline-flex items-center gap-1.5 text-cyan-400 font-bold shrink-0">
+                <Truck className="size-3.5 text-cyan-400 shrink-0" />
+                <span>100% Free Nationwide Freight</span>
+              </span>
+              <span className="text-slate-600 hidden sm:inline">•</span>
+              <span className="text-slate-300 hidden sm:inline truncate">
+                Zero Surprise Liftgate or Weight Surcharges at Checkout
+              </span>
+            </div>
+            <div className="flex items-center gap-2.5 sm:gap-4 shrink-0 text-slate-300 text-[11px] sm:text-xs">
+              <span className="hidden md:inline-flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Direct Wholesale (20–40% Off Retail)</span>
+              </span>
+              <span className="text-slate-700 hidden md:inline">|</span>
+              <span className="hidden lg:inline-flex items-center gap-1">
+                <ShieldCheck className="size-3.5 text-emerald-400" />
+                <span>OEM Factory Warranty</span>
+              </span>
+              <span className="text-slate-700 hidden lg:inline">|</span>
+              <a
+                href="tel:18022650320"
+                className="hover:text-cyan-300 transition-colors flex items-center gap-1 font-bold text-white"
+              >
+                <Phone className="size-3 text-cyan-400" />
+                <span>+1 (802) 265-0320</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Navigation Row */}
+        <div
+          className={`py-2 sm:py-3 transition-colors duration-200 ${
+            isDarkText ? "glass" : "bg-transparent"
+          }`}
+        >
+          <div className="mx-auto max-w-[1536px] px-4 sm:px-8 xl:px-12 flex items-center justify-between gap-3 xl:gap-8">
           {/* Logo */}
           <Link
             to="/"
@@ -495,6 +533,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
             </button>
           </div>
         </div>
+      </div>
 
         {/* Dropdown Live Search Box */}
         <AnimatePresence>

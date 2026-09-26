@@ -133,6 +133,17 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
             const stripped = cleanId.replace(/^p-/, "");
             orConditions.push({ id: stripped });
             orConditions.push({ sku: stripped });
+
+            // Extract the core SKU before any timestamp suffix like -1788796206410-2522
+            const withoutTimestamps = stripped.replace(/-\d{10,}.*$/, "");
+            if (withoutTimestamps && withoutTimestamps !== stripped) {
+              const escCore = withoutTimestamps.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+              orConditions.push({ id: `p-${withoutTimestamps}` });
+              orConditions.push({ id: withoutTimestamps });
+              orConditions.push({ sku: withoutTimestamps });
+              orConditions.push({ sku: { $regex: new RegExp(`^${escCore}$`, "i") } });
+            }
+
             const parts = cleanId.split("-");
             if (parts.length >= 2) {
               const skuPart = parts.slice(1, parts.length - 1).join("-");
@@ -140,6 +151,13 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
                 const escSku = skuPart.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
                 orConditions.push({ sku: skuPart });
                 orConditions.push({ sku: { $regex: new RegExp(`^${escSku}$`, "i") } });
+              }
+              if (parts[1]) {
+                const escFirst = parts[1].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                orConditions.push({ id: `p-${parts[1]}` });
+                orConditions.push({ id: parts[1] });
+                orConditions.push({ sku: parts[1] });
+                orConditions.push({ sku: { $regex: new RegExp(`^${escFirst}$`, "i") } });
               }
             }
           }
@@ -170,11 +188,13 @@ export const getProductByIdDb = createServerFn({ method: "POST" })
 
       // Check defaultProducts static catalog fallback
       const lower = cleanId.toLowerCase();
+      const coreLower = lower.replace(/^p-/, "").replace(/-\d{10,}.*$/, "");
       const defaultFound = defaultProducts.find((p) => {
         if (!p) return false;
         const pId = (p.id || "").toLowerCase();
         const pSku = (p.sku || "").toLowerCase();
         if (pId === lower || pSku === lower) return true;
+        if (coreLower && (pId === coreLower || pSku === coreLower || pId === `p-${coreLower}`)) return true;
         if (pSku && `p-${pSku.replace(/[^a-z0-9]/g, "-")}` === lower) return true;
         if (pId && pId.length >= 4 && (lower.includes(pId) || lower === pId)) return true;
         if (pSku && pSku.length >= 4 && (lower.includes(pSku) || lower === pSku)) return true;
@@ -349,6 +369,7 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
         brand: z.string().optional(),
         brands: z.array(z.string()).optional(),
         inStockOnly: z.boolean().optional(),
+        facets: z.array(z.string()).optional(),
       })
       .optional(),
   )
@@ -409,6 +430,29 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
               { description: { $regex: tReg } },
               { details: { $regex: tReg } },
               { seoKeywords: { $regex: tReg } },
+            ],
+          });
+        }
+      }
+
+      // Equipment Specification Facet Filter (Step 3)
+      if (data?.facets && data.facets.length > 0) {
+        for (const facet of data.facets) {
+          const fReg = new RegExp(facet.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+          conditions.push({
+            $or: [
+              { name: { $regex: fReg } },
+              { details: { $regex: fReg } },
+              { description: { $regex: fReg } },
+              { seoKeywords: { $regex: fReg } },
+              { "specs.Horsepower": { $regex: fReg } },
+              { "specs.Speed": { $regex: fReg } },
+              { "specs.Fuel Type": { $regex: fReg } },
+              { "specs.Type": { $regex: fReg } },
+              { "specs.Voltage": { $regex: fReg } },
+              { "specs.Capacity": { $regex: fReg } },
+              { "specs.Pipe Size": { $regex: fReg } },
+              { "specs.Filter Type": { $regex: fReg } },
             ],
           });
         }
