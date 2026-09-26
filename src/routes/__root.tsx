@@ -177,6 +177,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       },
       { name: "google-site-verification", content: "CDr17vilh1CBHkk-IZPe0Lfqyifp7JGZ6sEvlMrx2Qc" },
+      { name: "msvalidate.01", content: "028651FABCA0EB84B344A4A9221DFA02" },
 
       // Nationwide USA & Regional Geo targeting
       { name: "geo.region", content: "US-TN" },
