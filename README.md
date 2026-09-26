@@ -371,25 +371,78 @@ The `/blog` page establishes **topical authority** — a critical ranking signal
 | ✅ Semantic HTML (h1, h2, article, nav, aside, section, main)    | Done    |
 | ✅ Lazy loading for below-fold components                        | Done    |
 | ✅ SSR Hero + Header for fast LCP                                | Done    |
-| ⬜ sitemap.xml                                                   | Pending |
-| ⬜ robots.txt                                                    | Pending |
-| ⬜ Google Search Console verification                            | Pending |
-| ⬜ Google Analytics / GA4                                        | Pending |
+| ✅ sitemap.xml (Index + 4 Sub-sitemaps)                          | Done    |
+| ✅ robots.txt with facet crawl rules                             | Done    |
+| ✅ Google Search Console verification token                      | Done    |
+| ✅ Bing Webmaster verification tag (msvalidate.01)               | Done    |
+| ✅ Google Tag Manager (GTM-5FJZ7PMT) & GA4 (G-KBGCQS360D)        | Done    |
+| ✅ Unified NAP (412 Ezell Pike, Nashville, TN 37217)             | Done    |
+| ✅ 100% Free Nationwide Freight & Ground Active                  | Done    |
+
+---
+
+## Upcoming Action Plan (Steps 1 to 3)
+
+The following priority enhancements are planned for immediate future deployment:
+
+### Step 1: Model Number / MPN & SKU Title Tag Optimization
+- **Goal:** Capture high-intent transactional search traffic when contractors and pool owners search exact model/part numbers on Google (e.g. `Pentair 011028`, `Hayward W3H400FDN`).
+- **Template Formula:** `[Brand] [SKU / Part Number] [Product Name] — Wholesale Direct USA`
+- **Implementation:** Update PDP `<title>` and `<h1>` generation to automatically front-load the official manufacturer SKU and model code before the descriptive name.
+
+### Step 2: "True Free Freight — No Surprise Surcharges" & Wholesale Guarantee Badges
+- **Goal:** Exploit the #1 consumer complaint against competitors like Pool Supply Unlimited (who surprise customers with $150–$400 freight surcharges post-checkout).
+- **Badges to Deploy:**
+  - 🚚 **100% Free Freight Included** — Zero surprise liftgate or weight surcharges at checkout.
+  - 🏷️ **Direct Wholesale Pricing** — 20% to 40% below retail MSRP, no contractor license required.
+  - 🛡️ **Authentic Factory Warranties** — Genuine OEM components from authorized master distributors.
+  - ⚡ **Same-Day Dispatch** — Orders placed before 2 PM CST ship same day from regional hubs.
+- **Locations:** Header announcement bar, product page buy box, and cart drawer.
+
+### Step 3: Category Filter Facets (Long-Tail Search Capture)
+- **Goal:** Enable faceted navigation on category pages to rank for specific long-tail equipment queries.
+- **Facets to Implement:**
+  - **Pumps:** Horsepower (1.5 HP, 2.0 HP, 2.7 HP, 3.0 HP), Voltage (115V / 230V), Speed (Variable vs Single), Pipe Size (2" vs 2.5").
+  - **Heaters:** Fuel Type (Natural Gas, Propane, Electric Heat Pump), Capacity (150K, 250K, 400K BTU).
+  - **Filters:** Type (Cartridge, Sand, D.E.), Square Footage (100–500 sq ft).
+
+---
+
+## Backlink Building Strategy (Outranking Competitors)
+
+To build domain authority and outrank legacy competitors like Pool Supply Unlimited:
+
+1. **Manufacturer Dealer Locators (DA 80+)**:
+   - Request placement on Pentair, Hayward, Jandy, Raypak, and Waterway "Where to Buy" / "Authorized Regional Distributors" pages.
+2. **Trade Associations**:
+   - PHTA (Pool & Hot Tub Alliance — `phta.org`)
+   - IPSSA (Independent Pool & Spa Service Association — `ipssa.com`)
+   - Regional chapters (Florida FSPA, Northeast NESPA, Texas).
+   - Better Business Bureau (`bbb.org`) accredited profile.
+3. **B2B Industrial Directories**:
+   - ThomasNet (`thomasnet.com`) aquatic equipment supplier listing.
+   - Nashville Area Chamber of Commerce regional business directory.
+4. **Contractor Partner Links**:
+   - Provide a "Preferred Equipment Partner" badge for pool builders, commercial aquatic facilities, and service fleets that buy wholesale.
+5. **Interactive Linkable Assets**:
+   - Publish interactive tools (e.g. *Pool Heater BTU Sizing Calculator*, *DOE Variable Speed Pump Energy Savings Calculator*).
+6. **Digital PR**:
+   - Respond to media queries on Connectively (HARO) and Featured.com for seasonal pool maintenance and equipment efficiency articles.
 
 ---
 
 ## Distribution Hubs
 
-| Hub             | Coverage            |
-| --------------- | ------------------- |
-| Nashville, TN   | Southeast & Midwest |
-| Los Angeles, CA | West Coast          |
-| Dallas, TX      | Southwest & Central |
-| Orlando, FL     | Florida & Southeast |
+| Hub             | Address                             | Coverage            |
+| --------------- | ----------------------------------- | ------------------- |
+| Nashville, TN   | 412 Ezell Pike, Nashville, TN 37217 | Southeast & Midwest |
+| Los Angeles, CA | Fulfillment Center West             | West Coast          |
+| Dallas, TX      | Fulfillment Center Central          | Southwest & Central |
+| Orlando, FL     | Fulfillment Center Southeast        | Florida & Southeast |
 
-**Shipping:** Same-day from nearest hub. 1-5 business days nationwide.
+**Shipping:** 100% Free Nationwide Freight & Ground. Same-day dispatch from nearest hub.
 
 ---
 
-_README maintained by Pool Supply Wholesalers development team._
+_README maintained by Pool Supply Wholesalers development team._  
 _Contact: sales@poolsupplywholesalers.com | +1-802-265-0320_
