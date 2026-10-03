@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams, redirect, notFound } from "@tanstack/react-router";
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { Header } from "@/components/site/Header";
@@ -22,39 +22,86 @@ import {
 } from "lucide-react";
 import { ProductCard } from "@/components/site/ProductCard";
 
+// Alias slugs → single canonical slug (prevents duplicate-content category pages)
+const CATEGORY_SLUG_ALIASES: Record<string, string> = {
+  "pool-pumps": "pumps",
+  "pool-lights": "lights",
+  "pool-cleaners": "cleaners",
+  "pool-heaters": "heaters",
+  "pool-filters": "filters",
+  "automation-systems": "automation",
+  "pool-and-spa": "pool-spa",
+  "parts-and-hardware": "parts-hardware",
+  "maintenance-and-cleaning": "maintenance-cleaning",
+  "safety-and-accessibility": "safety-accessibility",
+};
+
 export const Route = createFileRoute("/shop/$category")({
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      q: (search.q as string) || "",
-    };
+  // `q` must stay optional: a default of "" makes the router append `?q=` to every
+  // category URL, which robots.txt (`Disallow: /*?q=*`) then blocks from crawling.
+  validateSearch: (search: Record<string, unknown>): { q?: string } => {
+    const q = typeof search.q === "string" ? search.q.trim() : "";
+    return q ? { q } : {};
+  },
+  beforeLoad: ({ params }) => {
+    const slug = (params.category || "").toLowerCase();
+    const canonical = CATEGORY_SLUG_ALIASES[slug];
+    if (canonical || slug !== params.category) {
+      throw redirect({
+        to: "/shop/$category",
+        params: { category: canonical || slug },
+        statusCode: 301,
+      });
+    }
   },
   loaderDeps: ({ search: { q } }) => ({ q: q as string | undefined }),
   loader: async ({ params, deps }) => {
-    // Fetch initial first-page products for schema generation
+    // Fetch the exact first page the grid shows (same size + sort) so it can be
+    // server-rendered as real <a href="/products/..."> links for crawlers.
+    let initialResult: { products: Product[]; total: number; pages: number } | null = null;
+    let fetchFailed = false;
     try {
       const res = await getShopProductsPagedDb({
         data: {
           category: params.category || "all",
           page: 1,
-          limit: 12,
+          limit: PAGE_SIZE,
           search: deps.q || undefined,
           sort: "rating-desc",
-          brands: [],
-        }
+        },
       });
-      return { initialProducts: res.success ? res.products : [], searchQ: deps.q };
+      if (res.success) {
+        initialResult = {
+          products: (res.products || []) as Product[],
+          total: res.total || 0,
+          pages: res.pages || 1,
+        };
+      } else {
+        fetchFailed = true;
+      }
     } catch {
-      return { initialProducts: [], searchQ: deps.q };
+      fetchFailed = true;
     }
+    const initialProducts = initialResult?.products || [];
+
+    // Unknown slug with no products → real 404 (avoids infinite indexable soft-404 pages)
+    if (!fetchFailed && !deps.q && initialProducts.length === 0 && !isKnownCategory(params.category)) {
+      throw notFound();
+    }
+
+    return { initialProducts, initialResult, searchQ: deps.q };
   },
   head: (ctx) => {
     const params = ctx?.params;
     const loaderData = ctx?.loaderData;
     if (!params?.category) return { meta: [], links: [], scripts: [] };
     const name = getCategoryName(params.category);
-    const title = `${name} Wholesale to Retail USA | Commercial Pool Supplies Online`;
-    const description = `Shop wholesale to retail commercial-grade ${name} at direct trade pricing across the USA. Fast nationwide shipping on Pentair, Hayward, Jandy & Raypak from US distribution centers.`;
+    const isAll = params.category === "all";
+    const subject = isAll ? "Pool Supplies & Equipment" : name;
+    const title = `${subject} for Sale | Wholesale Prices & Free Shipping`;
+    const description = `Shop ${subject.toLowerCase()} at wholesale prices with free shipping nationwide. Genuine Pentair, Hayward, Jandy & Raypak from US distribution hubs — for pool pros and homeowners.`;
     const categoryUrl = `https://poolsupplywholesalers.com/shop/${params.category}`;
+    const schemaProducts = (loaderData?.initialProducts || []).slice(0, 12);
 
     const breadcrumbLd = {
       "@context": "https://schema.org",
@@ -83,8 +130,8 @@ export const Route = createFileRoute("/shop/$category")({
       name: `Top ${name} USA`,
       description: `Browse our top selling ${name} with fast nationwide USA shipping.`,
       url: categoryUrl,
-      numberOfItems: loaderData?.initialProducts?.length || 0,
-      itemListElement: (loaderData?.initialProducts || []).map((prod: any, index: number) => ({
+      numberOfItems: schemaProducts.length,
+      itemListElement: schemaProducts.map((prod: any, index: number) => ({
         "@type": "ListItem",
         position: index + 1,
         item: {
@@ -210,6 +257,18 @@ export const Route = createFileRoute("/shop/$category")({
   },
   component: CategoryPage,
 });
+
+const KNOWN_CATEGORY_SLUGS = new Set([
+  "all", "pool-spa", "parts-hardware", "chemicals", "maintenance-cleaning",
+  "safety-accessibility", "pumps", "lights", "cleaners", "heaters", "filters",
+  "electric-heat-pumps", "automation", "blowers", "chlorine-feeders", "salt-systems",
+  "skid-systems", "bulk", "motors", "plumbing", "pool-kits", "algaecides", "balancers",
+  "cal-hypo", "dichlor", "deck-products", "maintenance", "plaster", "ladders-and-rails",
+]);
+
+function isKnownCategory(slug: string): boolean {
+  return KNOWN_CATEGORY_SLUGS.has((slug || "").toLowerCase());
+}
 
 function getCategoryName(slug: string): string {
   switch (slug.toLowerCase()) {
@@ -709,6 +768,7 @@ const PAGE_SIZE = 35;
 function CategoryPage() {
   const { category } = useParams({ from: "/shop/$category" });
   const { q: urlSearch } = Route.useSearch();
+  const loaderData = Route.useLoaderData();
   const categoryName = getCategoryName(category);
   const categoryContent = getCategoryContent(category);
 
@@ -762,12 +822,10 @@ function CategoryPage() {
     setPage(1);
   }, [category, debouncedSearch, sortBy, selectedBrands, inStockOnly, selectedFacets]);
 
-  // Sync URL search param
+  // Sync URL search param (also clears search when ?q is removed)
   useEffect(() => {
-    if (urlSearch !== undefined) {
-      setSearchQuery(urlSearch);
-      setDebouncedSearch(urlSearch);
-    }
+    setSearchQuery(urlSearch || "");
+    setDebouncedSearch(urlSearch || "");
   }, [urlSearch]);
 
   // Reset brand & facet selection when category route changes
@@ -809,6 +867,20 @@ function CategoryPage() {
   };
 
   // ── Server-Side Products Query ────────────────────────────────────────────
+  // The default view (page 1, default sort, no filters) matches what the loader
+  // fetched, so seed it — this makes the grid render during SSR for crawlers.
+  const isDefaultView =
+    page === 1 &&
+    sortBy === "rating-desc" &&
+    selectedBrands.length === 0 &&
+    selectedFacets.length === 0 &&
+    !inStockOnly &&
+    (debouncedSearch || "") === (loaderData?.searchQ || "");
+  const seededResult =
+    isDefaultView && loaderData?.initialResult
+      ? { success: true, ...loaderData.initialResult }
+      : undefined;
+
   const {
     data: result,
     isLoading,
@@ -840,6 +912,7 @@ function CategoryPage() {
       });
       return res;
     },
+    initialData: seededResult as any,
     placeholderData: keepPreviousData,
     staleTime: 2 * 60 * 1000,
   });

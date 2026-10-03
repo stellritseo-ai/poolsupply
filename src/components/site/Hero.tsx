@@ -126,7 +126,6 @@ export function Hero() {
               <Link
                 to="/shop/$category"
                 params={{ category: "all" }}
-                search={{ q: "" }}
                 className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs sm:text-sm shadow-[0_8px_20px_rgba(6,182,212,0.3)] hover:shadow-cyan-500/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
               >
                 Shop Equipment Catalog

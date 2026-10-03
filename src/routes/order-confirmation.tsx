@@ -1089,7 +1089,6 @@ function ConfirmationPage() {
             <Link
               to="/shop/$category"
               params={{ category: "all" }}
-              search={{ q: "" }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm shadow-lg shadow-slate-900/10 transition-all active:scale-95 group"
             >
               <span>Continue Wholesale Catalog</span>

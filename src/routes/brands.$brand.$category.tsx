@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams, redirect } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -22,7 +22,29 @@ import {
 } from "lucide-react";
 import { ProductCard } from "@/components/site/ProductCard";
 
+// Alias category slugs → canonical slug used in the sitemap (avoids duplicate pages)
+const BRAND_CATEGORY_ALIASES: Record<string, string> = {
+  "pool-pumps": "pumps",
+  "pool-heaters": "heaters",
+  "pool-filters": "filters",
+  "pool-lights": "lights",
+  "pool-cleaners": "cleaners",
+  "automation-systems": "automation",
+};
+
 export const Route = createFileRoute("/brands/$brand/$category")({
+  beforeLoad: ({ params }) => {
+    const brand = (params.brand || "").toLowerCase();
+    const cat = (params.category || "").toLowerCase();
+    const canonicalCat = BRAND_CATEGORY_ALIASES[cat] || cat;
+    if (brand !== params.brand || canonicalCat !== params.category) {
+      throw redirect({
+        to: "/brands/$brand/$category",
+        params: { brand, category: canonicalCat },
+        statusCode: 301,
+      });
+    }
+  },
   head: ({ params } = {} as any) => {
     if (!params?.brand || !params?.category) return { meta: [], links: [], scripts: [] };
     const brandName = getBrandName(params.brand);
@@ -379,9 +401,9 @@ function BrandCategoryPage() {
               Home
             </Link>
             <span>/</span>
-            <Link to="/#brands" className="hover:text-cyan-600 transition">
+            <a href="/#brands" className="hover:text-cyan-600 transition">
               Brands
-            </Link>
+            </a>
             <span>/</span>
             <Link
               to="/brands/$brand"
@@ -525,7 +547,7 @@ function BrandCategoryPage() {
               <span>
                 Showing{" "}
                 <strong className="text-slate-900 font-bold">
-                  {filteredProducts.length}
+                  {totalItems}
                 </strong>{" "}
                 results
               </span>

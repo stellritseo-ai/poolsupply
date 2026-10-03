@@ -228,9 +228,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", sizes: "512x512", href: "/favicon.png" },
       { rel: "manifest", href: "/manifest.json" },
       { rel: "stylesheet", href: appCss },
-      // Preload hero image for faster LCP — WebP first, PNG fallback
-      { rel: "preload", as: "image", href: "/about-hero.webp", type: "image/webp" },
-      { rel: "preload", as: "image", href: "/about-hero.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://js.stripe.com" },
@@ -241,8 +238,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
       },
-      { rel: "alternate", hrefLang: "en-US", href: "https://poolsupplywholesalers.com/" },
-      { rel: "alternate", hrefLang: "x-default", href: "https://poolsupplywholesalers.com/" },
+      // NOTE: no hreflang — single-language site. A root-level hreflang pointing at "/"
+      // was being inherited by every page, telling Google all URLs were the homepage.
     ],
   }),
   shellComponent: RootShell,
@@ -379,93 +376,7 @@ function RootShell({ children }: { children: ReactNode }) {
         "Wholesale Pool Supplies",
       ],
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      name: "Pool Supply Wholesalers",
-      image: "https://poolsupplywholesalers.com/about-hero.png",
-      url: "https://poolsupplywholesalers.com",
-      telephone: "+1-802-265-0320",
-      email: "sales@poolsupplywholesalers.com",
-      priceRange: "$$",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "412 Ezell Pike",
-        addressLocality: "Nashville",
-        addressRegion: "TN",
-        postalCode: "37217",
-        addressCountry: "US",
-      },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: 36.0965,
-        longitude: -86.6671,
-      },
-      openingHoursSpecification: [
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          opens: "08:00",
-          closes: "17:00",
-        },
-      ],
-      sameAs: [
-        "https://www.facebook.com/poolsupplywholesalers",
-        "https://www.instagram.com/poolsupplywholesalers",
-        "https://www.linkedin.com/company/pool-supply-wholesalers",
-        "https://www.youtube.com/@poolsupplywholesalers",
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      speakable: {
-        "@type": "SpeakableSpecification",
-        cssSelector: [".faq-speakable", "h1", ".hero-description"],
-      },
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What pool equipment brands does Pool Supply Wholesalers carry?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Pool Supply Wholesalers is an authorized wholesale to retail distributor for Pentair, Hayward, Jandy, Raypak, Zodiac, and Waterway. We carry pumps, heaters, filters, automation systems, salt chlorinators, LED lights, and robotic cleaners from all major brands at wholesale to retail pricing.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do I get wholesale pool equipment pricing?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Pool Supply Wholesalers offers wholesale to retail pricing to everyone — contractors, service professionals, and homeowners. No membership required. Simply shop our catalog at poolsupplywholesalers.com and all products display our direct wholesale to retail pricing, typically 20-40% below standard retail MSRP.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does Pool Supply Wholesalers ship nationwide?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Pool Supply Wholesalers ships to all 50 US states with same-day shipping available from distribution hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL. Most orders ship within 1 business day with 2-5 day delivery nationwide.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is the difference between a variable speed pool pump and a single speed pump?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Variable speed pool pumps (VSPs) use a permanent magnet motor that can run at any speed between 600-3,450 RPM, saving 70-90% on electricity versus fixed-speed pumps. Single speed pumps run at a fixed 3,450 RPM at full power always. As of 2021, the US DOE mandates variable speed for most pool pump replacements. Pool Supply Wholesalers carries Pentair IntelliFlo, Hayward TriStar VS, and Jandy FloPro VS at wholesale pricing.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Are Pentair and Hayward pool equipment prices negotiable for commercial accounts?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Pool Supply Wholesalers offers special commercial account pricing for contractors, pool builders, property managers, and aquatic facilities ordering in volume. Contact our team at sales@poolsupplywholesalers.com or call +1-802-265-0320 to set up a commercial wholesale account with dedicated pricing and priority fulfillment.",
-          },
-        },
-      ],
-    },
+    // LocalBusiness + FAQPage live on the homepage route only (see routes/index.tsx).
   ];
 
   return (

@@ -262,7 +262,6 @@ export function BestSellers() {
           <Link
             to="/shop/$category"
             params={{ category: "cleaners" }}
-            search={{ q: "" }}
             className="group hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-slate-800 hover:text-primary hover:border-primary/40 hover:shadow-md transition-all shadow-2xs"
           >
             Shop All Cleaners{" "}

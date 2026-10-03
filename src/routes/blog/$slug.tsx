@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -72,34 +73,34 @@ function getArticleCategoryHubLinks(article: BlogArticle) {
 
   if (cat.includes("pump") || slug.includes("pump")) {
     return [
-      { name: "All Commercial Pool Pumps", url: "/shop/pool-pumps" },
-      { name: "Pentair Pumps Hub", url: "/brands/pentair/pool-pumps" },
-      { name: "Hayward Pumps Hub", url: "/brands/hayward/pool-pumps" },
-      { name: "Jandy Pumps Hub", url: "/brands/jandy/pool-pumps" },
+      { name: "All Commercial Pool Pumps", url: "/shop/pumps" },
+      { name: "Pentair Pumps Hub", url: "/brands/pentair/pumps" },
+      { name: "Hayward Pumps Hub", url: "/brands/hayward/pumps" },
+      { name: "Jandy Pumps Hub", url: "/brands/jandy/pumps" },
     ];
   }
   if (cat.includes("heat") || slug.includes("heat")) {
     return [
-      { name: "All Pool Heaters & Heat Pumps", url: "/shop/pool-heaters" },
-      { name: "Pentair MasterTemp Heaters", url: "/brands/pentair/pool-heaters" },
-      { name: "Hayward H-Series Heaters", url: "/brands/hayward/pool-heaters" },
-      { name: "Raypak Commercial Heaters", url: "/brands/raypak/pool-heaters" },
+      { name: "All Pool Heaters & Heat Pumps", url: "/shop/heaters" },
+      { name: "Pentair MasterTemp Heaters", url: "/brands/pentair/heaters" },
+      { name: "Hayward H-Series Heaters", url: "/brands/hayward/heaters" },
+      { name: "Raypak Commercial Heaters", url: "/brands/raypak/heaters" },
     ];
   }
   if (cat.includes("filter") || slug.includes("filter")) {
     return [
-      { name: "All Commercial Pool Filters", url: "/shop/pool-filters" },
-      { name: "Pentair Clean & Clear Filters", url: "/brands/pentair/pool-filters" },
-      { name: "Hayward SwimClear Filters", url: "/brands/hayward/pool-filters" },
-      { name: "Jandy DEV Cartridge Filters", url: "/brands/jandy/pool-filters" },
+      { name: "All Commercial Pool Filters", url: "/shop/filters" },
+      { name: "Pentair Clean & Clear Filters", url: "/brands/pentair/filters" },
+      { name: "Hayward SwimClear Filters", url: "/brands/hayward/filters" },
+      { name: "Jandy DEV Cartridge Filters", url: "/brands/jandy/filters" },
     ];
   }
   if (cat.includes("auto") || slug.includes("auto")) {
     return [
-      { name: "All Automation Systems", url: "/shop/automation-systems" },
-      { name: "Pentair IntelliCenter", url: "/brands/pentair/automation-systems" },
-      { name: "Hayward OmniLogic", url: "/brands/hayward/automation-systems" },
-      { name: "Jandy AquaLink", url: "/brands/jandy/automation-systems" },
+      { name: "All Automation Systems", url: "/shop/automation" },
+      { name: "Pentair IntelliCenter", url: "/brands/pentair/automation" },
+      { name: "Hayward OmniLogic", url: "/brands/hayward/automation" },
+      { name: "Jandy AquaLink", url: "/brands/jandy/automation" },
     ];
   }
   if (cat.includes("salt") || cat.includes("sanitiz") || slug.includes("salt")) {
@@ -111,9 +112,9 @@ function getArticleCategoryHubLinks(article: BlogArticle) {
   }
   if (cat.includes("clean") || slug.includes("clean")) {
     return [
-      { name: "All Automatic Pool Cleaners", url: "/shop/pool-cleaners" },
-      { name: "Pentair Kreepy Krauly Cleaners", url: "/brands/pentair/pool-cleaners" },
-      { name: "Polaris Commercial Cleaners", url: "/brands/polaris/pool-cleaners" },
+      { name: "All Automatic Pool Cleaners", url: "/shop/cleaners" },
+      { name: "Pentair Kreepy Krauly Cleaners", url: "/brands/pentair/cleaners" },
+      { name: "Polaris Commercial Cleaners", url: "/brands/polaris/cleaners" },
     ];
   }
   return [

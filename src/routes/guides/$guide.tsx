@@ -25,9 +25,9 @@ function getGuideRelatedResources(category: string) {
         },
       ],
       brandHubs: [
-        { name: "Pentair Pumps", url: "/brands/pentair/pool-pumps" },
-        { name: "Hayward Pumps", url: "/brands/hayward/pool-pumps" },
-        { name: "Jandy Pumps", url: "/brands/jandy/pool-pumps" },
+        { name: "Pentair Pumps", url: "/brands/pentair/pumps" },
+        { name: "Hayward Pumps", url: "/brands/hayward/pumps" },
+        { name: "Jandy Pumps", url: "/brands/jandy/pumps" },
       ],
     };
   }
@@ -46,9 +46,9 @@ function getGuideRelatedResources(category: string) {
         },
       ],
       brandHubs: [
-        { name: "Pentair Heaters", url: "/brands/pentair/pool-heaters" },
-        { name: "Hayward Heaters", url: "/brands/hayward/pool-heaters" },
-        { name: "Raypak Heaters", url: "/brands/raypak/pool-heaters" },
+        { name: "Pentair Heaters", url: "/brands/pentair/heaters" },
+        { name: "Hayward Heaters", url: "/brands/hayward/heaters" },
+        { name: "Raypak Heaters", url: "/brands/raypak/heaters" },
       ],
     };
   }
@@ -62,9 +62,9 @@ function getGuideRelatedResources(category: string) {
         },
       ],
       brandHubs: [
-        { name: "Pentair Filters", url: "/brands/pentair/pool-filters" },
-        { name: "Hayward Filters", url: "/brands/hayward/pool-filters" },
-        { name: "Jandy Filters", url: "/brands/jandy/pool-filters" },
+        { name: "Pentair Filters", url: "/brands/pentair/filters" },
+        { name: "Hayward Filters", url: "/brands/hayward/filters" },
+        { name: "Jandy Filters", url: "/brands/jandy/filters" },
       ],
     };
   }

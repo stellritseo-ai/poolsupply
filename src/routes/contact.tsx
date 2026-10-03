@@ -678,7 +678,6 @@ function ContactPage() {
                   <Link
                     to="/shop/$category"
                     params={{ category: "all" }}
-                    search={{ q: "" }}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-extrabold text-xs sm:text-sm backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
                   >
                     <span>Browse 8,000+ SKUs</span>

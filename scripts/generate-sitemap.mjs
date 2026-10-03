@@ -42,8 +42,8 @@ const pages = [
   { path: "/hubs/dallas-tx", changefreq: "weekly", priority: "0.8" },
   { path: "/hubs/orlando-fl", changefreq: "weekly", priority: "0.8" },
   { path: "/hubs/los-angeles-ca", changefreq: "weekly", priority: "0.8" },
-  { path: "/terms-and-conditions", changefreq: "yearly", priority: "0.5" },
-  { path: "/privacy-policy", changefreq: "yearly", priority: "0.5" },
+  // NOTE: /privacy-policy and /terms-and-conditions are intentionally excluded —
+  // they are `noindex`, and listing noindex URLs in a sitemap sends conflicting signals.
 ];
 
 const pagesXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -103,6 +103,10 @@ products.forEach((p) => {
 });
 
 categories.add("all"); // Master catalog category
+// Parent category hubs linked from the main navigation (canonical slugs only)
+["pool-spa", "chemicals", "parts-hardware", "maintenance-cleaning", "safety-accessibility"].forEach(
+  (s) => categories.add(s),
+);
 
 const catBrandXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

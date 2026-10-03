@@ -59,7 +59,6 @@ export function CTA() {
               <Link
                 to="/shop/$category"
                 params={{ category: "all" }}
-                search={{ q: "" }}
                 className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs sm:text-sm shadow-[0_8px_25px_rgba(6,182,212,0.35)] hover:shadow-cyan-500/50 hover:scale-[1.02] active:scale-98 transition-all duration-200 cursor-pointer"
               >
                 <span>Browse Full Catalog</span>

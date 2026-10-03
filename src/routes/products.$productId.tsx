@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams, notFound } from "@tanstack/react-router";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -38,16 +38,10 @@ function getProductContextLinks(product: Product | null | undefined) {
   if (!product) return null;
 
   const rawCat = (product.category || "").toLowerCase();
-  let catSlug = rawCat
+  const catSlug = rawCat
     .replace(/\s+&\s+/g, "-and-")
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
-  if (catSlug === "pumps") catSlug = "pool-pumps";
-  if (catSlug === "heaters") catSlug = "pool-heaters";
-  if (catSlug === "filters") catSlug = "pool-filters";
-  if (catSlug === "cleaners") catSlug = "pool-cleaners";
-  if (catSlug === "lights") catSlug = "pool-lights";
-  if (catSlug === "automation") catSlug = "automation-systems";
 
   const brandSlug = (product.brand || "")
     .toLowerCase()
@@ -225,8 +219,10 @@ function getProductContextLinks(product: Product | null | undefined) {
 
 export const Route = createFileRoute("/products/$productId")({
   loader: async ({ params }) => {
+    let dbReachable = false;
     try {
       const res = await getProductByIdDb({ data: { id: params.productId } });
+      dbReachable = true;
       if (res.success && res.product) {
         return { product: res.product as Product };
       }
@@ -234,6 +230,9 @@ export const Route = createFileRoute("/products/$productId")({
       console.error("Route loader error fetching product:", e);
     }
     const fallback = getProductById(params.productId);
+    // Product genuinely doesn't exist → real HTTP 404 (prevents soft-404 indexing).
+    // If the DB was unreachable we still render the fallback/empty state instead.
+    if (!fallback && dbReachable) throw notFound();
     return { product: fallback || null };
   },
   head: ({ loaderData, params }) => {
@@ -432,7 +431,7 @@ export const Route = createFileRoute("/products/$productId")({
                 "@type": "ListItem",
                 position: 2,
                 name: product.category || "Pool Equipment",
-                item: `https://poolsupplywholesalers.com/shop/${product.category?.toLowerCase().replace(/ /g, "-") || "all"}`,
+                item: `https://poolsupplywholesalers.com/shop/${catSlug}`,
               },
               {
                 "@type": "ListItem",
@@ -708,7 +707,6 @@ function ProductDetailPage() {
               <Link
                 to="/shop/$category"
                 params={{ category: "all" }}
-                search={{ q: "" }}
                 className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-semibold shadow-lg hover:bg-slate-800 transition"
               >
                 <ArrowLeft className="size-4" /> Return to Shop
@@ -997,19 +995,6 @@ function ProductDetailPage() {
                     </div>
                   )}
                 </div>
-
-                {/* SEO Keywords & Search Topics */}
-                {product.seoKeywords && (
-                  <div className="sr-only" aria-label="SEO Keywords and Search Topics">
-                    <h2>SEO Keywords & Search Topics</h2>
-                    <p>{product.seoKeywords}</p>
-                    <div>
-                      {product.seoKeywords.split(",").map((tag, idx) => (
-                        <span key={idx}>#{tag.trim()} </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </motion.div>
             </div>
 

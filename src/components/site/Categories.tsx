@@ -77,7 +77,6 @@ export function Categories() {
               <Link
                 to="/shop/$category"
                 params={{ category: c.slug }}
-                search={{ q: "" }}
                 className="group relative overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] bg-white border border-border/80 p-3 sm:p-5 hover:shadow-[0_30px_60px_-15px_oklch(0.50_0.14_232/0.12)] hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full block"
               >
                 <div className="relative aspect-[4/3] w-full mb-3 sm:mb-5 grid place-items-center overflow-hidden rounded-[1.2rem] sm:rounded-[1.5rem] bg-gradient-to-b from-surface to-muted/40 border border-border/40">

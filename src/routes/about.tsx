@@ -321,7 +321,6 @@ function AboutPage() {
                 <Link
                   to="/shop/$category"
                   params={{ category: "all" }}
-                  search={{ q: "" }}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs sm:text-sm shadow-[0_10px_30px_rgba(6,182,212,0.35)] hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
                 >
                   <span>Explore Wholesale Catalog</span>
@@ -760,7 +759,6 @@ function AboutPage() {
                   <Link
                     to="/shop/$category"
                     params={{ category: "all" }}
-                    search={{ q: "" }}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-extrabold text-xs sm:text-sm backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
                   >
                     <span>Browse 8,000+ SKUs</span>

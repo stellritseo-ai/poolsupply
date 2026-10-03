@@ -1,10 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 
-// These heavy components are only loaded client-side (skipped during SSR)
-// This keeps initial HTML small and fast-loading
+// Below-the-fold sections are code-split but still server-rendered (streamed via
+// Suspense) so crawlers receive their headings, links and copy in the HTML.
 const Categories = lazy(() =>
   import("@/components/site/Categories").then((m) => ({ default: m.Categories })),
 );
@@ -38,20 +38,6 @@ function SectionSkeleton({
       aria-hidden="true"
     />
   );
-}
-
-// ClientOnly wrapper — renders nothing on SSR, then lazy-loads on client
-function ClientOnly({
-  children,
-  fallback,
-}: {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-}) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return <>{fallback}</>;
-  return <>{children}</>;
 }
 
 export const Route = createFileRoute("/")({
@@ -208,6 +194,91 @@ export const Route = createFileRoute("/")({
           ],
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Pool Supply Wholesalers",
+          image: "https://poolsupplywholesalers.com/about-hero.png",
+          url: "https://poolsupplywholesalers.com",
+          telephone: "+1-802-265-0320",
+          email: "sales@poolsupplywholesalers.com",
+          priceRange: "$$",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "412 Ezell Pike",
+            addressLocality: "Nashville",
+            addressRegion: "TN",
+            postalCode: "37217",
+            addressCountry: "US",
+          },
+          geo: { "@type": "GeoCoordinates", latitude: 36.0965, longitude: -86.6671 },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "08:00",
+              closes: "17:00",
+            },
+          ],
+          sameAs: [
+            "https://www.facebook.com/poolsupplywholesalers",
+            "https://www.instagram.com/poolsupplywholesalers",
+            "https://www.linkedin.com/company/pool-supply-wholesalers",
+            "https://www.youtube.com/@poolsupplywholesalers",
+          ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "What pool equipment brands does Pool Supply Wholesalers carry?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Pool Supply Wholesalers is an authorized wholesale to retail distributor for Pentair, Hayward, Jandy, Raypak, Zodiac, and Waterway. We carry pumps, heaters, filters, automation systems, salt chlorinators, LED lights, and robotic cleaners from all major brands at wholesale to retail pricing.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How do I get wholesale pool equipment pricing?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Pool Supply Wholesalers offers wholesale to retail pricing to everyone — contractors, service professionals, and homeowners. No membership required. Simply shop our catalog at poolsupplywholesalers.com and all products display our direct wholesale to retail pricing, typically 20-40% below standard retail MSRP.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Does Pool Supply Wholesalers ship nationwide?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes. Pool Supply Wholesalers ships to all 50 US states with same-day shipping available from distribution hubs in Nashville TN, Los Angeles CA, Dallas TX, and Orlando FL. Most orders ship within 1 business day with 2-5 day delivery nationwide.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What is the difference between a variable speed pool pump and a single speed pump?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Variable speed pool pumps (VSPs) use a permanent magnet motor that can run at any speed between 600-3,450 RPM, saving 70-90% on electricity versus fixed-speed pumps. Single speed pumps run at a fixed 3,450 RPM at full power always. As of 2021, the US DOE mandates variable speed for most pool pump replacements. Pool Supply Wholesalers carries Pentair IntelliFlo, Hayward TriStar VS, and Jandy FloPro VS at wholesale pricing.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Are Pentair and Hayward pool equipment prices negotiable for commercial accounts?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Pool Supply Wholesalers offers special commercial account pricing for contractors, pool builders, property managers, and aquatic facilities ordering in volume. Contact our team at sales@poolsupplywholesalers.com or call +1-802-265-0320 to set up a commercial wholesale account with dedicated pricing and priority fulfillment.",
+              },
+            },
+          ],
+        }),
+      },
     ],
   }),
   component: Index,
@@ -216,66 +287,40 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* Critical path: Header + Hero always SSR'd for fast LCP */}
       <Header />
       <main>
         <Hero />
 
-        {/* All below-the-fold sections: client-only to avoid SSR HTML bloat */}
-        <ClientOnly fallback={<SectionSkeleton height="480px" />}>
-          <Suspense fallback={<SectionSkeleton height="480px" />}>
-            <Categories />
-          </Suspense>
-        </ClientOnly>
-
-        <ClientOnly fallback={<SectionSkeleton height="200px" />}>
-          <Suspense fallback={<SectionSkeleton height="200px" />}>
-            <Brands />
-          </Suspense>
-        </ClientOnly>
-
-        <ClientOnly fallback={<SectionSkeleton height="480px" />}>
-          <Suspense fallback={<SectionSkeleton height="480px" />}>
-            <BestSellers />
-          </Suspense>
-        </ClientOnly>
-
-        <ClientOnly fallback={<SectionSkeleton height="380px" />}>
-          <Suspense fallback={<SectionSkeleton height="380px" />}>
-            <WhyUs />
-          </Suspense>
-        </ClientOnly>
-
-        <ClientOnly fallback={<SectionSkeleton height="600px" />}>
-          <Suspense fallback={<SectionSkeleton height="600px" />}>
-            <Finder />
-          </Suspense>
-        </ClientOnly>
-
-        <ClientOnly fallback={<SectionSkeleton height="380px" />}>
-          <Suspense fallback={<SectionSkeleton height="380px" />}>
-            <Testimonials />
-          </Suspense>
-        </ClientOnly>
-
-        <ClientOnly fallback={<SectionSkeleton height="380px" />}>
-          <Suspense fallback={<SectionSkeleton height="380px" />}>
-            <ContactUs />
-          </Suspense>
-        </ClientOnly>
-
-        <ClientOnly fallback={<SectionSkeleton height="200px" />}>
-          <Suspense fallback={<SectionSkeleton height="200px" />}>
-            <CTA />
-          </Suspense>
-        </ClientOnly>
+        {/* Below-the-fold sections: code-split, but server-rendered for SEO */}
+        <Suspense fallback={<SectionSkeleton height="480px" />}>
+          <Categories />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton height="200px" />}>
+          <Brands />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton height="480px" />}>
+          <BestSellers />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton height="380px" />}>
+          <WhyUs />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton height="600px" />}>
+          <Finder />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton height="380px" />}>
+          <Testimonials />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton height="380px" />}>
+          <ContactUs />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton height="200px" />}>
+          <CTA />
+        </Suspense>
       </main>
 
-      <ClientOnly fallback={<SectionSkeleton height="280px" />}>
-        <Suspense fallback={<SectionSkeleton height="280px" />}>
-          <Footer />
-        </Suspense>
-      </ClientOnly>
+      <Suspense fallback={<SectionSkeleton height="280px" />}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }
