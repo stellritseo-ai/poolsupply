@@ -38,6 +38,8 @@ import {
   ArrowRight,
   LogOut,
   BookOpen,
+  History,
+  Hash,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -47,6 +49,25 @@ import { AuthModal } from "./AuthModal";
 import logo from "@/assets/logo.png";
 import { searchProductsDb } from "@/lib/api/products.functions";
 import { Product, getProductImage } from "@/lib/products";
+
+// ── Part-number search helpers ────────────────────────────────────────────
+const POPULAR_PART_NUMBERS = ["PL-PS-4", "A0406", "RS-PS12", "6614-LDG", "019141"];
+const RECENT_SEARCH_KEY = "psw_recent_searches";
+
+const normalizePart = (s?: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+function getPartNumber(p: Product): string {
+  return p.specs?.["Official SKU / Part Number"] || p.specs?.["Part Number"] || p.sku || "";
+}
+
+function partMatchType(p: Product, query: string): "exact" | "partial" | null {
+  const q = normalizePart(query.replace(/^(sku:|part:|#)/i, ""));
+  if (q.length < 2) return null;
+  const candidates = [normalizePart(p.sku), normalizePart(getPartNumber(p))].filter(Boolean);
+  if (candidates.some((c) => c === q)) return "exact";
+  if (candidates.some((c) => c.includes(q))) return "partial";
+  return null;
+}
 
 const NAV = [
   { label: "Shop All", to: "/shop/all" },
@@ -129,15 +150,80 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+  const rememberSearch = (q: string) => {
+    const clean = q.trim();
+    if (!clean) return;
+    const next = [clean, ...recentSearches.filter((r) => r.toLowerCase() !== clean.toLowerCase())].slice(0, 5);
+    setRecentSearches(next);
+    try {
+      window.localStorage.setItem(RECENT_SEARCH_KEY, JSON.stringify(next));
+    } catch {
+      /* storage unavailable */
+    }
+  };
+
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    try {
+      window.localStorage.removeItem(RECENT_SEARCH_KEY);
+    } catch {
+      /* storage unavailable */
+    }
+  };
+
+  const openSearch = () => {
+    setSearchOpen(true);
+    setUserMenuOpen(false);
+    setMoreMenuOpen(false);
+    setMobileMenuOpen(false);
+  };
+
+  const goToProduct = (id: string) => {
+    rememberSearch(searchQuery);
+    setSearchOpen(false);
+    setMobileMenuOpen(false);
+    setSearchQuery("");
+    navigate({ to: "/products/$productId", params: { productId: id } });
+  };
 
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!searchQuery.trim()) return;
     const query = searchQuery.trim();
+    if (!query) return;
+
+    // Keyboard-highlighted result, or an exact part-number hit → open that product directly
+    const first = searchResults[0];
+    const picked =
+      activeIndex >= 0
+        ? searchResults[activeIndex]
+        : !isSearching && first && partMatchType(first, query) === "exact"
+          ? first
+          : null;
+    if (picked) {
+      goToProduct(picked.id);
+      return;
+    }
+
+    rememberSearch(query);
     setSearchOpen(false);
     setMobileMenuOpen(false);
     setSearchQuery("");
     navigate({ to: "/shop/$category", params: { category: "all" }, search: { q: query } });
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown" && searchResults.length > 0) {
+      e.preventDefault();
+      setActiveIndex((i) => (i + 1) % searchResults.length);
+    } else if (e.key === "ArrowUp" && searchResults.length > 0) {
+      e.preventDefault();
+      setActiveIndex((i) => (i <= 0 ? searchResults.length - 1 : i - 1));
+    } else if (e.key === "Escape") {
+      setSearchOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -179,8 +265,53 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
       setSearchQuery("");
       setSearchResults([]);
       setIsSearching(false);
+      setActiveIndex(-1);
     }
   }, [searchOpen]);
+
+  // Reset keyboard highlight whenever results change
+  useEffect(() => {
+    setActiveIndex(-1);
+  }, [searchResults]);
+
+  // Load recent searches once
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(RECENT_SEARCH_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) setRecentSearches(parsed.filter((s) => typeof s === "string"));
+      }
+    } catch {
+      /* ignore corrupt storage */
+    }
+  }, []);
+
+  // Global shortcuts: Cmd/Ctrl+K or "/" opens search, Esc closes it
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      const typing =
+        !!t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+        setUserMenuOpen(false);
+        setMoreMenuOpen(false);
+        setMobileMenuOpen(false);
+      } else if (e.key === "/" && !typing) {
+        e.preventDefault();
+        setSearchOpen(true);
+        setUserMenuOpen(false);
+        setMoreMenuOpen(false);
+        setMobileMenuOpen(false);
+      } else if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -317,16 +448,29 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
           <div
             className={`flex items-center gap-1 sm:gap-1.5 transition-colors duration-300 ${isDarkText ? "text-foreground" : "text-white"}`}
           >
-            {/* Search Trigger */}
+            {/* Search Trigger — wide pill on large screens (part number discoverability) */}
+            <button
+              aria-label="Search by part number, SKU or product"
+              onClick={openSearch}
+              className={`hidden 2xl:flex items-center gap-2.5 h-10 pl-3.5 pr-2 mr-1 min-w-[220px] rounded-full border text-[13px] font-semibold transition cursor-pointer ${
+                isDarkText
+                  ? "bg-muted/60 border-border/60 text-muted-foreground hover:bg-muted hover:border-primary/40"
+                  : "bg-white/10 border-white/25 text-white/80 hover:bg-white/20"
+              }`}
+            >
+              <Search className="size-4 shrink-0" />
+              <span className="flex-1 text-left truncate">Search by Part # or SKU...</span>
+              <kbd className="px-1.5 py-0.5 rounded-md border border-current/20 text-[10px] font-bold opacity-70">
+                ⌘K
+              </kbd>
+            </button>
             <button
               aria-label="Search"
               onClick={() => {
-                setSearchOpen(!searchOpen);
-                setUserMenuOpen(false);
-                setMoreMenuOpen(false);
-                setMobileMenuOpen(false);
+                if (searchOpen) setSearchOpen(false);
+                else openSearch();
               }}
-              className={`size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer ${
+              className={`2xl:hidden size-9 sm:size-10 grid place-items-center rounded-full transition cursor-pointer ${
                 isDarkText ? "hover:bg-muted" : "hover:bg-white/10"
               }`}
             >
@@ -555,7 +699,11 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by Product Name, SKU, Brand..."
+                    onKeyDown={handleSearchKeyDown}
+                    autoComplete="off"
+                    autoCapitalize="characters"
+                    spellCheck={false}
+                    placeholder="Search by Part #, SKU, Model, or Product Name..."
                     className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/60 text-sm sm:text-base"
                   />
                   {searchQuery ? (
@@ -579,24 +727,65 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                   </button>
                 </form>
 
-                {/* Popular Tags when search is empty */}
+                {/* Recent searches, popular part numbers & tags when search is empty */}
                 {!searchQuery && (
-                  <div className="flex items-center gap-2 flex-wrap text-xs pt-1">
-                    <span className="font-extrabold text-muted-foreground uppercase text-xs tracking-wider">
-                      Popular Searches:
-                    </span>
-                    {["Pentair", "Hayward", "Pool Pumps", "Heaters", "Filters", "Automation"].map(
-                      (tag) => (
+                  <div className="space-y-2.5 text-xs pt-1">
+                    {recentSearches.length > 0 && (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="inline-flex items-center gap-1 font-extrabold text-muted-foreground uppercase text-xs tracking-wider">
+                          <History className="size-3.5" /> Recent:
+                        </span>
+                        {recentSearches.map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            onClick={() => setSearchQuery(r)}
+                            className="px-2.5 py-1 rounded-full bg-white/80 border border-border/80 text-foreground/80 hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition text-xs font-bold cursor-pointer"
+                          >
+                            {r}
+                          </button>
+                        ))}
                         <button
-                          key={tag}
                           type="button"
-                          onClick={() => setSearchQuery(tag)}
-                          className="px-2.5 py-1 rounded-full bg-white/80 border border-border/80 text-foreground/80 hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition text-xs font-bold cursor-pointer"
+                          onClick={clearRecentSearches}
+                          className="text-xs font-semibold text-muted-foreground hover:text-foreground underline cursor-pointer"
                         >
-                          {tag}
+                          Clear
                         </button>
-                      ),
+                      </div>
                     )}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="inline-flex items-center gap-1 font-extrabold text-muted-foreground uppercase text-xs tracking-wider">
+                        <Hash className="size-3.5" /> Popular Part #:
+                      </span>
+                      {POPULAR_PART_NUMBERS.map((pn) => (
+                        <button
+                          key={pn}
+                          type="button"
+                          onClick={() => setSearchQuery(pn)}
+                          className="px-2.5 py-1 rounded-full bg-white/80 border border-border/80 text-foreground/80 hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition text-xs font-mono font-bold cursor-pointer"
+                        >
+                          {pn}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-extrabold text-muted-foreground uppercase text-xs tracking-wider">
+                        Popular Searches:
+                      </span>
+                      {["Pentair", "Hayward", "Pool Pumps", "Heaters", "Filters", "Automation"].map(
+                        (tag) => (
+                          <button
+                            key={tag}
+                            type="button"
+                            onClick={() => setSearchQuery(tag)}
+                            className="px-2.5 py-1 rounded-full bg-white/80 border border-border/80 text-foreground/80 hover:bg-[oklch(0.50_0.14_232)] hover:text-white transition text-xs font-bold cursor-pointer"
+                          >
+                            {tag}
+                          </button>
+                        ),
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -625,16 +814,25 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                           </button>
                         </div>
                         <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-1">
-                          {searchResults.map((product) => (
+                          {searchResults.map((product, idx) => (
                             <Link
                               key={product.id}
                               to="/products/$productId"
                               params={{ productId: product.id }}
+                              ref={(el) => {
+                                if (el && idx === activeIndex) el.scrollIntoView({ block: "nearest" });
+                              }}
+                              onMouseEnter={() => setActiveIndex(idx)}
                               onClick={() => {
+                                rememberSearch(searchQuery);
                                 setSearchOpen(false);
                                 setSearchQuery("");
                               }}
-                              className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/60 border border-transparent hover:border-border/40 transition-all group"
+                              className={`flex items-center gap-4 p-3 rounded-2xl border transition-all group ${
+                                idx === activeIndex
+                                  ? "bg-white/80 border-primary/40 shadow-sm"
+                                  : "border-transparent hover:bg-white/60 hover:border-border/40"
+                              }`}
                             >
                               <div className="size-12 rounded-xl bg-white border border-border/50 p-1 shrink-0 flex items-center justify-center overflow-hidden">
                                 <img
@@ -652,11 +850,20 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                                   <span className="text-xs uppercase font-black text-[oklch(0.50_0.14_232)] tracking-widest">
                                     {product.brand}
                                   </span>
-                                  {product.sku && (
-                                    <span className="text-xs font-mono font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                                      SKU: {product.sku}
+                                  {getPartNumber(product) && (
+                                    <span className="text-xs font-mono font-bold text-foreground/80 bg-muted px-1.5 py-0.5 rounded">
+                                      Part #: {getPartNumber(product)}
                                     </span>
                                   )}
+                                  {partMatchType(product, searchQuery) === "exact" ? (
+                                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full">
+                                      ✓ Exact Part # Match
+                                    </span>
+                                  ) : partMatchType(product, searchQuery) === "partial" ? (
+                                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-700 bg-cyan-50 border border-cyan-200 px-1.5 py-0.5 rounded-full">
+                                      Part # Match
+                                    </span>
+                                  ) : null}
                                 </div>
                                 <h4 className="text-xs sm:text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors capitalize">
                                   {product.name?.toLowerCase()}
@@ -679,6 +886,19 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                       <div className="text-center py-10 text-muted-foreground text-sm space-y-2">
                         <p className="font-bold text-foreground">
                           No products found matching "{searchQuery}"
+                        </p>
+                        <p className="text-xs">
+                          Tip: part numbers work with or without dashes (e.g. "PLPS4" finds "PL-PS-4").
+                        </p>
+                        <p className="text-xs">
+                          Can't identify a part? Call our wholesale hotline{" "}
+                          <a
+                            href="tel:18022650320"
+                            className="font-bold text-[oklch(0.50_0.14_232)] hover:underline"
+                          >
+                            +1 (802) 265-0320
+                          </a>
+                          .
                         </p>
                       </div>
                     )}
@@ -732,7 +952,7 @@ export function Header({ alwaysDark }: { alwaysDark?: boolean } = {}) {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search equipment, SKU..."
+                    placeholder="Search by Part #, SKU, product..."
                     className="w-full h-11 pl-10 pr-4 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
                   />
                   <Search className="absolute left-3.5 top-3.5 size-4 text-slate-400" />

@@ -14,6 +14,55 @@ function toQueryId(id: string): any {
   }
 }
 
+// Builds a regex that tolerates optional separators between every character, so
+// "PLPS4" matches "PL-PS-4" and "6614LDG" matches "6614-LDG" (and vice versa).
+function buildFlexiblePartRegex(str: string): RegExp | null {
+  if (!str) return null;
+  const clean = str.replace(/^(sku:|part:|#)/i, "").trim();
+  const alnum = clean.replace(/[^a-zA-Z0-9]/g, "");
+  if (alnum.length < 2 || alnum.length > 30) return null;
+  return new RegExp(alnum.split("").join("[-_\\s./]?"), "i");
+}
+
+function partNumberOf(product: any): string {
+  return (
+    product?.specs?.["Official SKU / Part Number"] ||
+    product?.specs?.["Part Number"] ||
+    product?.specs?.["Official SKU"] ||
+    product?.partNumber ||
+    ""
+  ).toString();
+}
+
+// Relevance score: exact SKU / Part # first, then prefix, then substring, then name/brand.
+function scoreProductMatch(product: any, queryStr: string): number {
+  if (!product || !queryStr) return 0;
+  const q = queryStr.trim().toLowerCase();
+  const qAlnum = q.replace(/[^a-z0-9]/g, "");
+  const sku = (product.sku || "").toLowerCase();
+  const part = partNumberOf(product).toLowerCase();
+  const skuAlnum = sku.replace(/[^a-z0-9]/g, "");
+  const partAlnum = part.replace(/[^a-z0-9]/g, "");
+  const name = (product.name || "").toLowerCase();
+  const brand = (product.brand || "").toLowerCase();
+
+  let score = 0;
+  if (sku === q || part === q) score += 1000;
+  else if (qAlnum && (skuAlnum === qAlnum || partAlnum === qAlnum)) score += 850;
+  else if (sku.startsWith(q) || part.startsWith(q)) score += 600;
+  else if (qAlnum && (skuAlnum.startsWith(qAlnum) || partAlnum.startsWith(qAlnum))) score += 450;
+  else if (sku.includes(q) || part.includes(q)) score += 300;
+  else if (qAlnum && (skuAlnum.includes(qAlnum) || partAlnum.includes(qAlnum))) score += 200;
+
+  if (brand === q) score += 150;
+  else if (brand.includes(q)) score += 50;
+
+  if (name.includes(q)) score += 100;
+  else score += q.split(/\s+/).filter((t) => t && name.includes(t)).length * 20;
+
+  return score;
+}
+
 export const getProductsDb = createServerFn({ method: "POST" })
   .inputValidator(
     z
@@ -416,22 +465,38 @@ export const getShopProductsPagedDb = createServerFn({ method: "POST" })
         });
       }
 
-      // Full-text search
+      // Full-text search (including Part Numbers & SKUs)
       if (data?.search && data.search.trim()) {
-        const terms = data.search.trim().split(/\s+/).filter(Boolean);
+        const rawSearch = data.search.trim();
+        const flexSearchReg = buildFlexiblePartRegex(rawSearch);
+        const terms = rawSearch.split(/\s+/).filter(Boolean);
         for (const term of terms) {
           const tReg = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-          conditions.push({
-            $or: [
-              { name: { $regex: tReg } },
-              { sku: { $regex: tReg } },
-              { brand: { $regex: tReg } },
-              { category: { $regex: tReg } },
-              { description: { $regex: tReg } },
-              { details: { $regex: tReg } },
-              { seoKeywords: { $regex: tReg } },
-            ],
-          });
+          const termFlex = buildFlexiblePartRegex(term);
+          const orClauses: any[] = [
+            { name: { $regex: tReg } },
+            { sku: { $regex: tReg } },
+            { brand: { $regex: tReg } },
+            { category: { $regex: tReg } },
+            { description: { $regex: tReg } },
+            { details: { $regex: tReg } },
+            { seoKeywords: { $regex: tReg } },
+            { partNumber: { $regex: tReg } },
+            { "specs.Official SKU": { $regex: tReg } },
+            { "specs.Official SKU / Part Number": { $regex: tReg } },
+            { "specs.Part Number": { $regex: tReg } },
+          ];
+          for (const flex of [termFlex, flexSearchReg]) {
+            if (!flex) continue;
+            orClauses.push(
+              { sku: { $regex: flex } },
+              { partNumber: { $regex: flex } },
+              { "specs.Official SKU": { $regex: flex } },
+              { "specs.Official SKU / Part Number": { $regex: flex } },
+              { "specs.Part Number": { $regex: flex } },
+            );
+          }
+          conditions.push({ $or: orClauses });
         }
       }
 
@@ -683,6 +748,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
 
       const terms = queryStr.split(/\s+/).filter(Boolean);
       const escapedTerms = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      const flexSearchReg = buildFlexiblePartRegex(queryStr);
 
       let formatted: Product[] = [];
 
@@ -693,33 +759,58 @@ export const searchProductsDb = createServerFn({ method: "POST" })
 
         const andConditions = escapedTerms.map((term) => {
           const regex = new RegExp(term, "i");
-          return {
-            $or: [
-              { name: { $regex: regex } },
-              { brand: { $regex: regex } },
-              { sku: { $regex: regex } },
-              { category: { $regex: regex } },
-              { parentCategory: { $regex: regex } },
-              { subCategory: { $regex: regex } },
-              { description: { $regex: regex } },
-              { details: { $regex: regex } },
-              { seoKeywords: { $regex: regex } },
-              { productSize: { $regex: regex } },
-              { "specs.Manufacturer / Brand": { $regex: regex } },
-              { "specs.Official SKU": { $regex: regex } },
-              { "specs.Official SKU / Part Number": { $regex: regex } },
-              { "specs.Specific Features": { $regex: regex } },
-              { "specs.Compatibility": { $regex: regex } },
-              { "specs.Horsepower": { $regex: regex } },
-              { "specs.Capacity": { $regex: regex } },
-              { "specs.Capacity (BTU)": { $regex: regex } },
-              { "specs.Voltage": { $regex: regex } },
-              { "specs.Filter Area": { $regex: regex } },
-            ],
-          };
+          const termFlex = buildFlexiblePartRegex(term);
+          const orList: any[] = [
+            { name: { $regex: regex } },
+            { brand: { $regex: regex } },
+            { sku: { $regex: regex } },
+            { category: { $regex: regex } },
+            { parentCategory: { $regex: regex } },
+            { subCategory: { $regex: regex } },
+            { description: { $regex: regex } },
+            { details: { $regex: regex } },
+            { seoKeywords: { $regex: regex } },
+            { productSize: { $regex: regex } },
+            { partNumber: { $regex: regex } },
+            { "specs.Manufacturer / Brand": { $regex: regex } },
+            { "specs.Official SKU": { $regex: regex } },
+            { "specs.Official SKU / Part Number": { $regex: regex } },
+            { "specs.Part Number": { $regex: regex } },
+            { "specs.Specific Features": { $regex: regex } },
+            { "specs.Compatibility": { $regex: regex } },
+            { "specs.Horsepower": { $regex: regex } },
+            { "specs.Capacity": { $regex: regex } },
+            { "specs.Capacity (BTU)": { $regex: regex } },
+            { "specs.Voltage": { $regex: regex } },
+            { "specs.Filter Area": { $regex: regex } },
+          ];
+          if (termFlex) {
+            orList.push(
+              { sku: { $regex: termFlex } },
+              { partNumber: { $regex: termFlex } },
+              { "specs.Official SKU": { $regex: termFlex } },
+              { "specs.Official SKU / Part Number": { $regex: termFlex } },
+              { "specs.Part Number": { $regex: termFlex } },
+            );
+          }
+          return { $or: orList };
         });
 
-        const matched = await productsCol.find({ $and: andConditions }).limit(24).toArray();
+        // Standard multi-term match OR a dash/space-tolerant part number match on the whole query
+        const mongoQuery: any = flexSearchReg
+          ? {
+              $or: [
+                { $and: andConditions },
+                { sku: { $regex: flexSearchReg } },
+                { partNumber: { $regex: flexSearchReg } },
+                { "specs.Official SKU": { $regex: flexSearchReg } },
+                { "specs.Official SKU / Part Number": { $regex: flexSearchReg } },
+                { "specs.Part Number": { $regex: flexSearchReg } },
+              ],
+            }
+          : { $and: andConditions };
+
+        const matched = await productsCol.find(mongoQuery).limit(50).toArray();
 
         formatted = matched.map((p: any) => {
           const { _id, ...rest } = p;
@@ -739,6 +830,10 @@ export const searchProductsDb = createServerFn({ method: "POST" })
           }
           return item as unknown as Product;
         });
+
+        // Exact SKU / Part # matches always rank first
+        formatted.sort((a, b) => scoreProductMatch(b, queryStr) - scoreProductMatch(a, queryStr));
+        formatted = formatted.slice(0, 24);
       } catch (dbErr) {
         console.error("DB Search failed, attempting fallback:", dbErr);
       }
@@ -750,6 +845,7 @@ export const searchProductsDb = createServerFn({ method: "POST" })
             const name = (p.name || "").toLowerCase();
             const brand = (p.brand || "").toLowerCase();
             const sku = (p.sku || "").toLowerCase();
+            const partNum = partNumberOf(p).toLowerCase();
             const category = (p.category || "").toLowerCase();
             const parentCategory = (p.parentCategory || "").toLowerCase();
             const description = (p.description || "").toLowerCase();
@@ -759,10 +855,17 @@ export const searchProductsDb = createServerFn({ method: "POST" })
               ? Object.values(p.specs).filter(Boolean).join(" ").toLowerCase()
               : "";
 
-            const fullText = `${name} ${brand} ${sku} ${category} ${parentCategory} ${description} ${details} ${seoKeywords} ${specsStr}`;
+            if (flexSearchReg && (flexSearchReg.test(sku) || flexSearchReg.test(partNum))) return true;
 
-            return terms.every((term) => fullText.includes(term.toLowerCase()));
+            const fullText = `${name} ${brand} ${sku} ${partNum} ${category} ${parentCategory} ${description} ${details} ${seoKeywords} ${specsStr}`;
+
+            return terms.every((term) => {
+              const termFlex = buildFlexiblePartRegex(term);
+              if (termFlex && (termFlex.test(sku) || termFlex.test(partNum))) return true;
+              return fullText.includes(term.toLowerCase());
+            });
           })
+          .sort((a, b) => scoreProductMatch(b, queryStr) - scoreProductMatch(a, queryStr))
           .slice(0, 24);
 
         formatted = defaultMatched.map((p: any) => {
